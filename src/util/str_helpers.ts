@@ -1,4 +1,4 @@
-import { Lu, Ll, Lt, Lm, Lo, Nl, Mn, Mc, Nd, Pc } from "./unicode.ts";
+import { Ll, Lm, Lo, Lt, Lu, Mc, Mn, Nd, Nl, Pc } from "./unicode.ts";
 
 const the_underscore = "_";
 const Other_ID_Start = "\\u1885-\\u1886\\u2118\\u212E\\u309B-\\u309C";
