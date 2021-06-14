@@ -77,8 +77,6 @@ export class Tokenizer {
     }
 }
 
-const newlinRegex = /(?!\n)/g;
-
 export function readline(text: string): () => string {
     const textasarray: string[] = text.split("\n").map((x) => x + "\n");
     let i = 0;
