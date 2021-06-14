@@ -1,3 +1,8 @@
+import sys
+path_to_cpython = "../cpython"
+sys.path += [path_to_cpython + "/Tools/peg_generator"]
+
+
 import token
 from typing import Any, Dict, Optional, IO, Text, Tuple
 from io import StringIO
@@ -301,3 +306,48 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             # Skip remaining alternatives if a cut was reached.
             if self.has_cut:
                 self.print("if (cut) return null;")  # TODO: Only if needed.
+
+
+
+if __name__ == "__main__":
+    import shutil
+    shutil.copyfile('test.txt', 'test.txt.copy2') #copy src to dst
+
+
+    from pegen.grammar import Grammar
+    from pegen.parser_generator import ParserGenerator
+    from pegen.parser import Parser
+    from pegen.tokenizer import Tokenizer
+    from pegen.build import build_parser
+
+
+
+    def build_js_generator( grammar: Grammar, grammar_file: str, output_file: str, skip_actions: bool = False,) -> ParserGenerator:
+        with open(output_file, "w") as file:
+            gen: ParserGenerator = PythonParserGenerator(grammar, file)  # TODO: skip_actions
+            gen.generate(grammar_file)
+        return gen
+
+    def build_python_parser_and_generator(
+        grammar_file: str,
+        output_file: str,
+        verbose_tokenizer: bool = False,
+        verbose_parser: bool = False,
+        skip_actions: bool = False,
+    ) -> Tuple[Grammar, Parser, Tokenizer, ParserGenerator]:
+        """Generate rules, python parser, tokenizer, parser generator for a given grammar
+
+        Args:
+            grammar_file (string): Path for the grammar file
+            output_file (string): Path for the output file
+            verbose_tokenizer (bool, optional): Whether to display additional output
+            when generating the tokenizer. Defaults to False.
+            verbose_parser (bool, optional): Whether to display additional output
+            when generating the parser. Defaults to False.
+            skip_actions (bool, optional): Whether to pretend no rule has any actions.
+        """
+        grammar, parser, tokenizer = build_parser(grammar_file, verbose_tokenizer, verbose_parser)
+        gen = build_js_generator(grammar, grammar_file, output_file, skip_actions=skip_actions,)
+        return grammar, parser, tokenizer, gen
+
+    build_python_parser_and_generator(path_to_cpython + "/Grammar/python.gram", "out.ts")
