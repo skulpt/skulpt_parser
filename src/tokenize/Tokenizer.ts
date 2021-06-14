@@ -80,9 +80,7 @@ export class Tokenizer {
 const newlinRegex = /(?!\n)/g;
 
 export function readline(text: string): () => string {
-    // const textasarray: string[] = text.split("\n").map((x) => x + "\n");
-    text += "\n";
-    const textasarray: string[] = text.split(newlinRegex);
+    const textasarray: string[] = text.split("\n").map((x) => x + "\n");
     let i = 0;
     return () => textasarray[i++];
 }
