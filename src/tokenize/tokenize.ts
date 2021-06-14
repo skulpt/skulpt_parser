@@ -1,7 +1,7 @@
-import { w } from "../util/unicode";
-import { isIdentifier } from "../util/str_helpers";
-import * as tokens from "./token";
-import { EXACT_TOKEN_TYPES } from "./token";
+import { w } from "../util/unicode.ts";
+import { isIdentifier } from "../util/str_helpers.ts";
+import * as tokens from "./token.ts";
+import { EXACT_TOKEN_TYPES } from "./token.ts";
 
 type token = number;
 type position = [number, number];
@@ -150,9 +150,9 @@ const PseudoExtras = group("\\\\\\r?\\n|$", Comment_, Triple);
 // For a given string prefix plus quotes, endpats maps it to a regex
 //  to match the remainder of that string. _prefix can be empty, for
 //  a normal single or triple quoted string (with no prefix).
-const endpats = {};
+const endpats: { [endpat: string]: string } = {};
 const prefixes = _all_string_prefixes();
-for (let _prefix of prefixes) {
+for (const _prefix of prefixes) {
     endpats[_prefix + "'"] = Single;
     endpats[_prefix + '"'] = Double;
     endpats[_prefix + "'''"] = Single3;
@@ -163,7 +163,7 @@ for (let _prefix of prefixes) {
 //  including the opening quotes.
 const single_quoted = new Set();
 const triple_quoted = new Set();
-for (let t of prefixes) {
+for (const t of prefixes) {
     single_quoted.add(t + '"');
     single_quoted.add(t + "'");
     triple_quoted.add(t + '"""');
@@ -195,21 +195,21 @@ export function generate_tokens(readline: () => string): IterableIterator<TokenI
 function* _tokenize(
     readline: () => string,
     encoding?: string,
-    filename: string = "<tokenize>"
+    filename = "<tokenize>"
 ): IterableIterator<TokenInfo> {
-    let lnum: number = 0,
-        parenlev: number = 0,
-        continued: number = 0,
-        numchars: string = "0123456789",
-        contstr: string = "",
-        needcont: number = 0,
+    const numchars = "0123456789";
+    let lnum = 0,
+        parenlev = 0,
+        continued = 0,
+        contstr = "",
+        needcont = 0,
         contline: null | string = null,
         indents: number[] = [0],
         capos: null | string = null,
-        endprog: RegExp,
-        strstart: position,
+        endprog = / /g, // keep type checker happy (endprog gets used before assignment)
+        strstart: position = [0, 0], // keep type checker happy (strstart gets used before assignment)
         end: number,
-        pseudomatch: RegExpExecArray;
+        pseudomatch: RegExpExecArray | null;
 
     // since we don't do this with bytes this is not used
     if (encoding !== undefined) {
@@ -237,8 +237,8 @@ function* _tokenize(
         //     line = line.decode(encoding)
         lnum += 1;
         let pos = 0;
-        let max = line.length;
-        let endmatch: RegExpExecArray;
+        const max = line.length;
+        let endmatch: RegExpExecArray | null;
 
         if (contstr) {
             // continued string
@@ -264,7 +264,7 @@ function* _tokenize(
                 line.substring(line.length - 2) !== "\\\n" &&
                 line.substring(line.length - 3) !== "\\\r\n"
             ) {
-                yield new TokenInfo(tokens.ERRORTOKEN, contstr + line, strstart, [lnum, line.length], contline);
+                yield new TokenInfo(tokens.ERRORTOKEN, contstr + line, strstart, [lnum, line.length], contline as string);
                 contstr = "";
                 contline = null;
                 continue;
@@ -355,19 +355,19 @@ function* _tokenize(
             }
 
             pseudomatch = PseudoTokenRegexp.exec(line.substring(pos));
-            if (pseudomatch) {
+            if (pseudomatch !== null) {
                 // scan for tokens
-                let start = pos;
-                let end = start + pseudomatch[1].length;
-                let spos: position = [lnum, start];
-                let epos: position = [lnum, end];
+                const start = pos;
+                const end = start + pseudomatch[1].length;
+                const spos: position = [lnum, start];
+                const epos: position = [lnum, end];
                 pos = end;
                 if (start === end) {
                     continue;
                 }
 
                 let token = line.substring(start, end);
-                let initial = line[start];
+                const initial = line[start];
                 //console.log("token:",token, "initial:",initial, start, end);
                 if (
                     numchars.includes(initial) || // ordinary number

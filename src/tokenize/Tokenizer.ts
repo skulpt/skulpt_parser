@@ -1,15 +1,15 @@
-import { isSpace } from "../util/str_helpers";
-import { COMMENT, ERRORTOKEN, EXACT_TOKEN_TYPES, NL } from "./token";
-import { TokenInfo } from "./tokenize";
+import { isSpace } from "../util/str_helpers.ts";
+import { COMMENT, ERRORTOKEN, EXACT_TOKEN_TYPES, NL } from "./token.ts";
+import { TokenInfo } from "./tokenize.ts";
 
 export const exact_token_types = EXACT_TOKEN_TYPES;
 
 export class Tokenizer {
-    _tokengen: Iterator<TokenInfo, TokenInfo>
-    _tokens: TokenInfo[]
-    _index: number
-    _verbose: boolean
-    constructor(tokengen, verbose: boolean = false) {
+    _tokengen: Iterator<TokenInfo, TokenInfo>;
+    _tokens: TokenInfo[];
+    _index: number;
+    _verbose: boolean;
+    constructor(tokengen: Iterator<TokenInfo, TokenInfo>, verbose: boolean = false) {
         this._tokengen = tokengen;
         this._tokens = [];
         this._index = 0;
@@ -72,15 +72,17 @@ export class Tokenizer {
             this.report(true, index < old_index);
         }
     }
-    report(cached, back): void {
+    report(cached: boolean, back: boolean): void {
         // pass
     }
 }
 
-
+const newlinRegex = /(?!\n)/g;
 
 export function readline(text: string): () => string {
-    const textasarray: string[] = text.split("\n").map(x => x + "\n");
-    let i: number = 0;
+    // const textasarray: string[] = text.split("\n").map((x) => x + "\n");
+    text += "\n";
+    const textasarray: string[] = text.split(newlinRegex);
+    let i = 0;
     return () => textasarray[i++];
 }
