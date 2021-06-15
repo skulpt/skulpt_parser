@@ -1,5 +1,6 @@
-from . import path_to_cpython, out_file
+from . import out_file, asdl_path
 from .asdl_js import main
+from ..env import checkout_python_branch
 
-asdl_path = path_to_cpython + "/Parser/Python.asdl"
+checkout_python_branch()
 main(asdl_path, out_file)

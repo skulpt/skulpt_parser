@@ -1,10 +1,17 @@
-from . import path_to_cpython, out_file, js_generator
+from . import (
+    out_file,
+    js_generator,
+    python_parser_path,
+    grammar_file,
+)
 
 import shutil
 import os
 
-python_parser_path = path_to_cpython + "/Tools/peg_generator/pegen/python_generator.py"
-grammar_file = path_to_cpython + "/Grammar/python.gram"
+from ..env import checkout_python_branch
+
+checkout_python_branch()
+
 temp = "tmp.py"
 # make a tmp copy of the python_parser
 shutil.copyfile(python_parser_path, temp)
