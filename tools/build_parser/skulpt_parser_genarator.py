@@ -1,9 +1,3 @@
-import sys
-
-path_to_cpython = "../cpython"
-sys.path += [path_to_cpython + "/Tools/peg_generator"]
-
-
 import token
 from typing import Any, Dict, Optional, IO, Text, Tuple
 from io import StringIO
@@ -62,9 +56,7 @@ def clean_action(action):
     action = re.compile(r" -> v . [\w]+ . ([\w+])").sub(r".\1", action)
 
     action = re.compile(r"\( [\w_]+ \* \)").sub("", action)  # type check
-    action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(
-        r" new astnodes.\1 ", action
-    )  # astnode constructor
+    action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
     action = re.compile(r"asdl_\w+ \*? ,").sub("", action)  # type check
     # action = re.compile(r", p -> arena |, p | p ,").sub("", action)
 
@@ -84,12 +76,8 @@ def clean_action(action):
         .replace("AugOperator *", "AugOperator")
         .replace("RAISE", "pegen.RAISE")
     )
-    action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(
-        r" new astnodes.\1 ", action
-    )  # astnode constructor
-    action = re.compile(r"\( ([bt]) \) \? \( \( expr_ty \) [bt] \)(.\w+) : null").sub(
-        r"\1\2", action
-    )
+    action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
+    action = re.compile(r"\( ([bt]) \) \? \( \( expr_ty \) [bt] \)(.\w+) : null").sub(r"\1\2", action)
     action = re.sub(r"pegen.augoperator \( (new astnodes.\w+) \)", r"\1", action)
     action = re.sub(r"new astnodes.Py_([None|False|True|Ellipsis])", r"py\1", action)
     return action
@@ -294,9 +282,7 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.args.add(name)
             self.print(f"({name} = {call})")
 
-    def visit_Rhs(
-        self, node: Rhs, is_loop: bool = False, is_gather: bool = False
-    ) -> None:
+    def visit_Rhs(self, node: Rhs, is_loop: bool = False, is_gather: bool = False) -> None:
         if is_loop:
             assert len(node.alts) == 1
         for alt in node.alts:
