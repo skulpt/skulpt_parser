@@ -7,8 +7,8 @@ scripts:
             - env
             - run
 
-    build_parser:
-        cmd: python -m tools.build_parser
+    gen_parser:
+        cmd: python -m tools.gen_parser
 
     format:
         cmd: pre-commit run --all-files
