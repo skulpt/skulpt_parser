@@ -10,7 +10,5 @@ scripts:
   build_parser:
     cmd: python -m tools.build_parser
 
-
   format:
     cmd: deno fmt
-    gitHook: pre-commit
