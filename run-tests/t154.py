@@ -1,0 +1,5 @@
+print((str(list(range(-4,-8,-1)))[:5]))
+print((len(list(range(-4,-8,-1)))))
+print((list(range(-4,-8,-1))[0]))
+print((list(range(-4,-8,-1))[1]))
+print((list(range(-4,-8,-1))[-1]))

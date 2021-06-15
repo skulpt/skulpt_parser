@@ -1,0 +1,5 @@
+print((str(list(range(0,5,3)))[:5]))
+print((len(list(range(0,5,3)))))
+print((list(range(0,5,3))[0]))
+print((list(range(0,5,3))[1]))
+print((list(range(0,5,3))[-1]))
