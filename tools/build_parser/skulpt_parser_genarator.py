@@ -1,4 +1,5 @@
 import sys
+
 path_to_cpython = "../cpython"
 sys.path += [path_to_cpython + "/Tools/peg_generator"]
 
@@ -48,40 +49,72 @@ MODULE_SUFFIX = """
 
 # todo mangle names like await
 reserved = {"await"}
+
+
 def fix_reserved(name):
     return name + "_" if name in reserved else name
 
+
 import re
+
+
 def clean_action(action):
     action = re.compile(r" -> v . [\w]+ . ([\w+])").sub(r".\1", action)
 
-    action = re.compile(r"\( [\w_]+ \* \)").sub("", action) # type check
-    action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action) # astnode constructor
-    action = re.compile(r"asdl_\w+ \*? ,").sub("", action) # type check
+    action = re.compile(r"\( [\w_]+ \* \)").sub("", action)  # type check
+    action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(
+        r" new astnodes.\1 ", action
+    )  # astnode constructor
+    action = re.compile(r"asdl_\w+ \*? ,").sub("", action)  # type check
     # action = re.compile(r", p -> arena |, p | p ,").sub("", action)
-    
 
-    action =  action.replace("_Py_", "new astnodes.")\
-                 .replace("NULL", "null")\
-                 .replace("_PyPegen_", "pegen.")\
-                 .replace("EXTRA", "...EXTRA")\
-                 .replace("CHECK ", "")\
-                 .replace("stmt_ty ,", "")\
-                 .replace("expr_ty ,", "")\
-                 .replace("( expor_ty )", "")\
-                 .replace(", p -> arena", "")\
-                 .replace(" p ,", "")\
-                 .replace(", p ", "")\
-                 .replace(" -> ", ".")\
-                 .replace("AugOperator *", "AugOperator")\
-                 .replace("RAISE", "pegen.RAISE")
-    action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action) # astnode constructor
-    action = re.compile(r"\( ([bt]) \) \? \( \( expr_ty \) [bt] \)(.\w+) : null").sub(r"\1\2", action)
+    action = (
+        action.replace("_Py_", "new astnodes.")
+        .replace("NULL", "null")
+        .replace("_PyPegen_", "pegen.")
+        .replace("EXTRA", "...EXTRA")
+        .replace("CHECK ", "")
+        .replace("stmt_ty ,", "")
+        .replace("expr_ty ,", "")
+        .replace("( expor_ty )", "")
+        .replace(", p -> arena", "")
+        .replace(" p ,", "")
+        .replace(", p ", "")
+        .replace(" -> ", ".")
+        .replace("AugOperator *", "AugOperator")
+        .replace("RAISE", "pegen.RAISE")
+    )
+    action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(
+        r" new astnodes.\1 ", action
+    )  # astnode constructor
+    action = re.compile(r"\( ([bt]) \) \? \( \( expr_ty \) [bt] \)(.\w+) : null").sub(
+        r"\1\2", action
+    )
     action = re.sub(r"pegen.augoperator \( (new astnodes.\w+) \)", r"\1", action)
     action = re.sub(r"new astnodes.Py_([None|False|True|Ellipsis])", r"py\1", action)
     return action
 
-non_exact_tok = 'AWAIT', 'OP', 'ERRORTOKEN', 'TYPE_IGNORE', 'TYPE_COMMENT', 'NL', 'NUMBER', 'STRING', 'NAME', 'ASYNC', 'COMMENT', 'ENCODING', 'ENDMARKER', 'NEWLINE', 'INDENT', 'DEDENT'
+
+non_exact_tok = (
+    "AWAIT",
+    "OP",
+    "ERRORTOKEN",
+    "TYPE_IGNORE",
+    "TYPE_COMMENT",
+    "NL",
+    "NUMBER",
+    "STRING",
+    "NAME",
+    "ASYNC",
+    "COMMENT",
+    "ENCODING",
+    "ENDMARKER",
+    "NEWLINE",
+    "INDENT",
+    "DEDENT",
+)
+
+
 class PythonCallMakerVisitor(GrammarVisitor):
     def __init__(self, parser_generator: ParserGenerator):
         self.gen = parser_generator
@@ -217,15 +250,18 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
         else:
             # self.suffix += f"memoizeMethod('{node.name}');\n"
             self.print("@memoize")
-        node_type = node.type and node.type.replace("*", "[]") or "any"
-        self.print(f"{node.name}() {{") # -> Optional[{node_type}] {{")
+        # node_type = node.type and node.type.replace("*", "[]") or "any"
+        self.print(f"{node.name}() {{")  # -> Optional[{node_type}] {{")
         with self.indent():
             self.print(f"//# {node.name}: {rhs}")
             if node.nullable:
                 self.print(f"// # nullable={node.nullable}")
             self.args = {"mark"}
             self.has_cut = False
-            orig_file, tmp_file = self.file, StringIO() # a bit of a hack to get state the args at the top of the file
+            orig_file, tmp_file = (
+                self.file,
+                StringIO(),
+            )  # a bit of a hack to get state the args at the top of the file
             self.file = tmp_file
             self.print("mark = this.mark();")
             if is_loop:
@@ -237,7 +273,7 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.print(tmp_file.getvalue())
             tmp_file.close()
             if is_loop:
-                if (node.name.startswith("_loop0")):
+                if node.name.startswith("_loop0"):
                     self.print("return children;")
                 else:
                     self.print("return children.length ? children : null;")
@@ -258,7 +294,9 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.args.add(name)
             self.print(f"({name} = {call})")
 
-    def visit_Rhs(self, node: Rhs, is_loop: bool = False, is_gather: bool = False) -> None:
+    def visit_Rhs(
+        self, node: Rhs, is_loop: bool = False, is_gather: bool = False
+    ) -> None:
         if is_loop:
             assert len(node.alts) == 1
         for alt in node.alts:
@@ -290,64 +328,17 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
                 if not action:
                     if is_gather:
                         assert len(self.local_variable_names) == 2
-                        action = (
-                            f"[{self.local_variable_names[0]}, ...{self.local_variable_names[1]}]"
-                        )
+                        action = f"[{self.local_variable_names[0]}, ...{self.local_variable_names[1]}]"
                     else:
                         action = f"{', '.join(self.local_variable_names)}"
                 action = clean_action(action)
                 if is_loop:
                     self.print(f"children.push({action});")
-                    self.print(f"mark = this.mark();")
-                else:    
+                    self.print("mark = this.mark();")
+                else:
                     self.print(f"return {action};")
             self.print("}")
             self.print("this.reset(mark);")
             # Skip remaining alternatives if a cut was reached.
             if self.has_cut:
                 self.print("if (cut) return null;")  # TODO: Only if needed.
-
-
-
-if __name__ == "__main__":
-    import shutil
-    shutil.copyfile('test.txt', 'test.txt.copy2') #copy src to dst
-
-
-    from pegen.grammar import Grammar
-    from pegen.parser_generator import ParserGenerator
-    from pegen.parser import Parser
-    from pegen.tokenizer import Tokenizer
-    from pegen.build import build_parser
-
-
-
-    def build_js_generator( grammar: Grammar, grammar_file: str, output_file: str, skip_actions: bool = False,) -> ParserGenerator:
-        with open(output_file, "w") as file:
-            gen: ParserGenerator = PythonParserGenerator(grammar, file)  # TODO: skip_actions
-            gen.generate(grammar_file)
-        return gen
-
-    def build_python_parser_and_generator(
-        grammar_file: str,
-        output_file: str,
-        verbose_tokenizer: bool = False,
-        verbose_parser: bool = False,
-        skip_actions: bool = False,
-    ) -> Tuple[Grammar, Parser, Tokenizer, ParserGenerator]:
-        """Generate rules, python parser, tokenizer, parser generator for a given grammar
-
-        Args:
-            grammar_file (string): Path for the grammar file
-            output_file (string): Path for the output file
-            verbose_tokenizer (bool, optional): Whether to display additional output
-            when generating the tokenizer. Defaults to False.
-            verbose_parser (bool, optional): Whether to display additional output
-            when generating the parser. Defaults to False.
-            skip_actions (bool, optional): Whether to pretend no rule has any actions.
-        """
-        grammar, parser, tokenizer = build_parser(grammar_file, verbose_tokenizer, verbose_parser)
-        gen = build_js_generator(grammar, grammar_file, output_file, skip_actions=skip_actions,)
-        return grammar, parser, tokenizer, gen
-
-    build_python_parser_and_generator(path_to_cpython + "/Grammar/python.gram", "out.ts")
