@@ -7,6 +7,9 @@ scripts:
             - env
             - run
 
+    bundle:
+        cmd: deno bundle src/mod.ts dist/bundle.js
+
     gen_parser:
         cmd: python -m tools.gen_parser
     gen_asdl:
