@@ -1,0 +1,29 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='i', ctx=Store())],
+            value=Constant(value='(')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='i', ctx=Load()),
+                        ops=[
+                            NotIn()],
+                        comparators=[
+                            Constant(value='+-*/)')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='i', ctx=Load()),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Constant(value='+-*/')])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,97 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=BinOp(
+                left=BinOp(
+                    left=Constant(value=1),
+                    op=LShift(),
+                    right=Constant(value=64)),
+                op=Add(),
+                right=Constant(value=1))),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=RShift(),
+            value=Constant(value=3)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=BinOp(
+                left=Constant(value=1),
+                op=LShift(),
+                right=Constant(value=64))),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='y', ctx=Load())],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='y', ctx=Store()),
+            op=Add(),
+            value=Constant(value=1)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='y', ctx=Load())],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='y', ctx=Store()),
+            op=BitAnd(),
+            value=Constant(value=1)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='y', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=BinOp(
+                            left=BinOp(
+                                left=Constant(value=1),
+                                op=LShift(),
+                                right=Constant(value=64)),
+                            op=Add(),
+                            right=Constant(value=1)),
+                        op=BitAnd(),
+                        right=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=BinOp(
+                            left=BinOp(
+                                left=BinOp(
+                                    left=Constant(value=1),
+                                    op=LShift(),
+                                    right=Constant(value=64)),
+                                op=Add(),
+                                right=Constant(value=1)),
+                            op=BitAnd(),
+                            right=Constant(value=1)),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[]))],
+    type_ignores=[])

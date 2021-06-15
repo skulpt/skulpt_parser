@@ -1,0 +1,45 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=BinOp(
+                left=List(
+                    elts=[
+                        Constant(value=0)],
+                    ctx=Load()),
+                op=Mult(),
+                right=Constant(value=10))),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[]),
+            body=[
+                AugAssign(
+                    target=Subscript(
+                        value=Name(id='x', ctx=Load()),
+                        slice=Name(id='i', ctx=Load()),
+                        ctx=Store()),
+                    op=Add(),
+                    value=Name(id='i', ctx=Load())),
+                AugAssign(
+                    target=Subscript(
+                        value=Name(id='x', ctx=Load()),
+                        slice=Name(id='i', ctx=Load()),
+                        ctx=Store()),
+                    op=Add(),
+                    value=BinOp(
+                        left=Name(id='i', ctx=Load()),
+                        op=Mult(),
+                        right=Constant(value=2)))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

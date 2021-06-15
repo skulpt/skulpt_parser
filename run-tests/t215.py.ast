@@ -1,0 +1,105 @@
+Module(
+    body=[
+        FunctionDef(
+            name='wee',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='waa'),
+                    arg(arg='woo'),
+                    arg(arg='wii')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=False),
+                    Constant(value=True)]),
+            body=[
+                Return(
+                    value=Tuple(
+                        elts=[
+                            Constant(value='OK'),
+                            Name(id='waa', ctx=Load()),
+                            Name(id='woo', ctx=Load()),
+                            Name(id='wii', ctx=Load())],
+                        ctx=Load()))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='wee', ctx=Load()),
+                        args=[
+                            Constant(value='stuff')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='wee', ctx=Load()),
+                        args=[
+                            Constant(value='stuff'),
+                            Constant(value='dog')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='wee', ctx=Load()),
+                        args=[
+                            Constant(value='stuff'),
+                            Constant(value='dog'),
+                            Constant(value='cat')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='wee', ctx=Load()),
+                        args=[
+                            Constant(value='stuff')],
+                        keywords=[
+                            keyword(
+                                arg='wii',
+                                value=Constant(value='lamma'))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='wee', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='wii',
+                                value=Constant(value='lamma')),
+                            keyword(
+                                arg='waa',
+                                value=Constant(value='pocky'))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='wee', ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='wii',
+                                value=Constant(value='lamma')),
+                            keyword(
+                                arg='waa',
+                                value=Constant(value='pocky')),
+                            keyword(
+                                arg='woo',
+                                value=Constant(value='blorp'))])],
+                keywords=[]))],
+    type_ignores=[])

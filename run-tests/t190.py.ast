@@ -1,0 +1,54 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4),
+                            Constant(value=5)],
+                        ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=Name(id='i', ctx=Load()),
+                                    op=Mod(),
+                                    right=Constant(value=2)),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Continue()],
+                            orelse=[]),
+                        Expr(
+                            value=Yield(
+                                value=Name(id='i', ctx=Load())))],
+                    orelse=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='f', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

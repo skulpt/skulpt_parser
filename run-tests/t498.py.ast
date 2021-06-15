@@ -1,0 +1,798 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintegers')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=12),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2)),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=4),
+                            Constant(value=5),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4)),
+                            Constant(value=5),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4)),
+                            Constant(value=5),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nlong integers')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=12),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2)),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=4),
+                            Constant(value=5),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4)),
+                            Constant(value=5),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4)),
+                            Constant(value=5),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nfloating point')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=0.0),
+                            Constant(value=0.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=0.0),
+                            Constant(value=3.1)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=12.0),
+                            Constant(value=0.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2.5),
+                            Constant(value=3.7)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintegers and long integers')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2)),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintegers and floating point')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2.5),
+                            Constant(value=3)],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2.5),
+                                    Constant(value=3)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3.5)],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    Constant(value=3.5)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2.5),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2.5),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=3))],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3.5))],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=3.5))],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nfloating point and long integers')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2.5),
+                            Constant(value=3)],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2.5),
+                                    Constant(value=3)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=3.5)],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    Constant(value=3.5)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2.5),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2.5),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=3))],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3.5))],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=3.5))],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nERROR CHECKING:')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=1),
+                                            Constant(value=2)],
+                                        ctx=Load()),
+                                    Constant(value='34')],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="you shouldn't see this")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=1),
+                                            Constant(value=2)],
+                                        ctx=Load()),
+                                    Constant(value='34'),
+                                    Constant(value=5)],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="you shouldn't see this")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=2.5)),
+                                    Constant(value=3.7)],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="you shouldn't see this")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ValueError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=4.0),
+                                    Constant(value=5.0),
+                                    Constant(value=3)],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="you shouldn't see this")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Constant(value=4),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=3)),
+                                    Constant(value=2)],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="you shouldn't see this")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ValueError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

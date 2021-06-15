@@ -1,0 +1,165 @@
+Module(
+    body=[
+        FunctionDef(
+            name='genmaker',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='a'),
+                    arg(arg='b')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='z', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='a', ctx=Load()),
+                        op=Mult(),
+                        right=Name(id='b', ctx=Load()))),
+                FunctionDef(
+                    name='gen',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='y')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=4)],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Yield(
+                                        value=Tuple(
+                                            elts=[
+                                                Name(id='i', ctx=Load()),
+                                                Name(id='a', ctx=Load()),
+                                                Name(id='b', ctx=Load()),
+                                                Name(id='y', ctx=Load()),
+                                                Name(id='z', ctx=Load())],
+                                            ctx=Load())))],
+                            orelse=[])],
+                    decorator_list=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='gen', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Name(id='a', ctx=Load()),
+                                        op=Mult(),
+                                        right=Name(id='a', ctx=Load())),
+                                    op=Mult(),
+                                    right=Name(id='b', ctx=Load())),
+                                op=Mult(),
+                                right=Name(id='b', ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='g1', ctx=Store())],
+            value=Call(
+                func=Name(id='genmaker', ctx=Load()),
+                args=[
+                    Constant(value=3),
+                    Constant(value=4)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='g2', ctx=Store())],
+            value=Call(
+                func=Name(id='genmaker', ctx=Load()),
+                args=[
+                    Constant(value=4),
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g1', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g2', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g1', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g2', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g1', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g2', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g1', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g2', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

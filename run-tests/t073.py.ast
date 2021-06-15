@@ -1,0 +1,26 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='xyzy', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=100),
+                    Constant(value=101),
+                    Constant(value=102),
+                    Constant(value=103),
+                    Constant(value=104),
+                    Constant(value=105),
+                    Constant(value=106),
+                    Constant(value=107)],
+                ctx=Load())),
+        Delete(
+            targets=[
+                Name(id='xyzy', ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='xyzy', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

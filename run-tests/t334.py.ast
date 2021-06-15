@@ -1,0 +1,107 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='One')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Constant(value=1),
+                ops=[
+                    Gt()],
+                comparators=[
+                    Constant(value=10)]),
+            body=[
+                Expr(
+                    value=Name(id='exit', ctx=Load()))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='Two')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Constant(value=1),
+                ops=[
+                    Gt()],
+                comparators=[
+                    Constant(value=10)]),
+            body=[
+                Expr(
+                    value=Name(id='quit', ctx=Load()))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='Three')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Constant(value=1),
+                ops=[
+                    Gt()],
+                comparators=[
+                    Constant(value=10)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='exit', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='Four')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Constant(value=1),
+                ops=[
+                    Gt()],
+                comparators=[
+                    Constant(value=10)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='quit', ctx=Load()),
+                        args=[
+                            Constant(value=42)],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='Five')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Constant(value=1),
+                ops=[
+                    Lt()],
+                comparators=[
+                    Constant(value=10)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='quit', ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='This should never appear')],
+                keywords=[]))],
+    type_ignores=[])

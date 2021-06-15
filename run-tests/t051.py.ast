@@ -1,0 +1,26 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='a', ctx=Store()),
+                        Name(id='b', ctx=Store()),
+                        Name(id='d', ctx=Store())],
+                    ctx=Store())],
+            value=Tuple(
+                elts=[
+                    List(
+                        elts=[
+                            Constant(value=0)],
+                        ctx=Load()),
+                    Constant(value=2),
+                    Constant(value='OK')],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

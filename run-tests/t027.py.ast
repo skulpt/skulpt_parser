@@ -1,0 +1,36 @@
+Module(
+    body=[
+        FunctionDef(
+            name='test',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='OK')],
+                        keywords=[]))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Name(id='test', ctx=Load()),
+                    Constant(value=2)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Subscript(
+                    value=Name(id='x', ctx=Load()),
+                    slice=Constant(value=1),
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

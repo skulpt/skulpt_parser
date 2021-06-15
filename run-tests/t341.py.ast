@@ -1,0 +1,132 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=0)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            Constant(value='abc')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=False),
+                                    Constant(value=False),
+                                    Constant(value=False)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=True),
+                                    Constant(value=True),
+                                    Constant(value=True)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=10)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=1),
+                                    Constant(value=11)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='a'),
+                                    Constant(value='b'),
+                                    Constant(value='c')],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='a'),
+                                    Constant(value=''),
+                                    Constant(value='c')],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

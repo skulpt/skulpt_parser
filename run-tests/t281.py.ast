@@ -1,0 +1,44 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='a'),
+                    arg(arg='b'),
+                    arg(arg='c')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='a', ctx=Load()),
+                                    Name(id='b', ctx=Load()),
+                                    Name(id='c', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='args', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=5),
+                    Constant(value=6),
+                    Constant(value=7)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Starred(
+                        value=Name(id='args', ctx=Load()),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

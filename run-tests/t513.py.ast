@@ -1,0 +1,17 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1.0),
+                    Constant(value=2.0)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

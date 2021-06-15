@@ -1,0 +1,40 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=1)),
+        Assign(
+            targets=[
+                Name(id='t', ctx=Store())],
+            value=Constant(value=0)),
+        While(
+            test=Compare(
+                left=Name(id='x', ctx=Load()),
+                ops=[
+                    LtE()],
+                comparators=[
+                    Constant(value=5)]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='t', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='t', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='x', ctx=Load()))),
+                Assign(
+                    targets=[
+                        Name(id='x', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='x', ctx=Load()),
+                        op=Add(),
+                        right=Constant(value=1)))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='t', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,13 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Constant(value='xOK'),
+                        slice=Slice(
+                            lower=Constant(value=1)),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

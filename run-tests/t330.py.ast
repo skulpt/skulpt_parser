@@ -1,0 +1,19 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Constant(value='foo bar baz'),
+                    attr='split',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

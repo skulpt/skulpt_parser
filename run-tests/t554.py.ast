@@ -1,0 +1,255 @@
+Module(
+    body=[
+        ImportFrom(
+            module='time',
+            names=[
+                alias(name='sleep')],
+            level=0),
+        ClassDef(
+            name='A',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__getitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='item')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='item', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='item is a string, as it should be')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Getting '),
+                                        op=Add(),
+                                        right=Name(id='item', ctx=Load()))],
+                                keywords=[])),
+                        Return(
+                            value=Constant(value=42))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='item'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='item', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='attr is a string, as it should be')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=BinOp(
+                                                left=Constant(value='Intercepted attempt to set '),
+                                                op=Add(),
+                                                right=Name(id='item', ctx=Load())),
+                                            op=Add(),
+                                            right=Constant(value=' to ')),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Name(id='value', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='A', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Constant(value='x'),
+                    ctx=Store())],
+            value=Constant(value=0)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='a["x"] = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Subscript(
+                                    value=Name(id='a', ctx=Load()),
+                                    slice=Constant(value='x'),
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        ClassDef(
+            name='B',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__getitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='item')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Getting '),
+                                        op=Add(),
+                                        right=Name(id='item', ctx=Load()))],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.01)],
+                                keywords=[])),
+                        Return(
+                            value=Constant(value=42))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='item'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=BinOp(
+                                                left=Constant(value='Intercepted attempt to set '),
+                                                op=Add(),
+                                                right=Name(id='item', ctx=Load())),
+                                            op=Add(),
+                                            right=Constant(value=' to ')),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Name(id='value', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.01)],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='B', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='b', ctx=Load()),
+                    slice=Constant(value='x'),
+                    ctx=Store())],
+            value=Constant(value=0)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='b["x"] = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Subscript(
+                                    value=Name(id='b', ctx=Load()),
+                                    slice=Constant(value='x'),
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        AugAssign(
+            target=Subscript(
+                value=Name(id='b', ctx=Load()),
+                slice=Constant(value='x'),
+                ctx=Store()),
+            op=Add(),
+            value=Constant(value=1)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='b["x"] = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Subscript(
+                                    value=Name(id='b', ctx=Load()),
+                                    slice=Constant(value='x'),
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[]))],
+    type_ignores=[])

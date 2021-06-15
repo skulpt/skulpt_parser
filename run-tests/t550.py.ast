@@ -1,0 +1,141 @@
+Module(
+    body=[
+        FunctionDef(
+            name='foo',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='bar', ctx=Store())],
+            value=Constant(value=11)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Call(
+                            func=Name(id='globals', ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        slice=Constant(value='bar'),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value='foo'),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Call(
+                                func=Name(id='globals', ctx=Load()),
+                                args=[],
+                                keywords=[])])],
+                keywords=[])),
+        FunctionDef(
+            name='baz',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Compare(
+                                left=Constant(value='baz'),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Call(
+                                        func=Name(id='globals', ctx=Load()),
+                                        args=[],
+                                        keywords=[])])],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='baz', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        ClassDef(
+            name='MyClass',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Call(
+                                            func=Name(id='globals', ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        slice=Constant(value='__name__'),
+                                        ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Compare(
+                                        left=Constant(value='MyClass'),
+                                        ops=[
+                                            In()],
+                                        comparators=[
+                                            Call(
+                                                func=Name(id='globals', ctx=Load()),
+                                                args=[],
+                                                keywords=[])])],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='type', ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Call(
+                                                    func=Name(id='globals', ctx=Load()),
+                                                    args=[],
+                                                    keywords=[]),
+                                                slice=Constant(value='baz'),
+                                                ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Call(
+                func=Name(id='MyClass', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

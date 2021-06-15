@@ -1,0 +1,121 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)),
+                        op=Mod(),
+                        right=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=3),
+                        op=Mod(),
+                        right=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)),
+                        op=Mod(),
+                        right=Constant(value=3))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=3),
+                        op=Mod(),
+                        right=Constant(value=3))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=2)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=3),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=2)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=3),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=0),
+                        op=Mod(),
+                        right=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=0),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=1)))],
+                keywords=[]))],
+    type_ignores=[])

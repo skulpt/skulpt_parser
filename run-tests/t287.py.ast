@@ -1,0 +1,91 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='in f')],
+                        keywords=[])),
+                Return(
+                    value=Constant(value=10))],
+            decorator_list=[]),
+        FunctionDef(
+            name='g',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='in g')],
+                        keywords=[])),
+                Return(
+                    value=Constant(value=20))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='retval', ctx=Store())],
+            value=Constant(value=True)),
+        FunctionDef(
+            name='h',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Global(
+                    names=[
+                        'retval']),
+                Assign(
+                    targets=[
+                        Name(id='retval', ctx=Store())],
+                    value=UnaryOp(
+                        op=Not(),
+                        operand=Name(id='retval', ctx=Load()))),
+                Return(
+                    value=Name(id='retval', ctx=Load()))],
+            decorator_list=[]),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            IfExp(
+                                test=Call(
+                                    func=Name(id='h', ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                body=Call(
+                                    func=Name(id='f', ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                orelse=Call(
+                                    func=Name(id='g', ctx=Load()),
+                                    args=[],
+                                    keywords=[]))],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

@@ -1,0 +1,230 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expect', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expect', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.ljust')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='ljust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value='12345   ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='ljust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8),
+                            Constant(value='.')],
+                        keywords=[]),
+                    Constant(value='12345...')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.center')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='center',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=7)],
+                        keywords=[]),
+                    Constant(value=' 12345 ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='center',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8),
+                            Constant(value='.')],
+                        keywords=[]),
+                    Constant(value='.12345..')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rjust')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='rjust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value='   12345')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='rjust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8),
+                            Constant(value='.')],
+                        keywords=[]),
+                    Constant(value='...12345')],
+                keywords=[])),
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='str'),
+                    arg(arg='fillchar')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='str', ctx=Load()),
+                                    attr='ljust',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=10),
+                                    Name(id='fillchar', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='str', ctx=Load()),
+                                    attr='center',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=10),
+                                    Name(id='fillchar', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='str', ctx=Load()),
+                                    attr='rjust',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=10),
+                                    Name(id='fillchar', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a'),
+                    Constant(value='-')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='?'),
+                    Constant(value='!')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='-'),
+                    Constant(value='.')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='hello'),
+                    Constant(value='~')],
+                keywords=[]))],
+    type_ignores=[])

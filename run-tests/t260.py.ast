@@ -1,0 +1,31 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            BoolOp(
+                                op=And(),
+                                values=[
+                                    Constant(value=False),
+                                    Constant(value=False)]),
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=False),
+                            BoolOp(
+                                op=And(),
+                                values=[
+                                    Constant(value=False),
+                                    Constant(value=False)])])],
+                keywords=[]))],
+    type_ignores=[])

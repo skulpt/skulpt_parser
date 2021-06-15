@@ -1,0 +1,601 @@
+Module(
+    body=[
+        ImportFrom(
+            module='fucntools',
+            names=[
+                alias(name='cmp_to_key')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='sorted', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=2),
+                            Constant(value=1),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4)),
+                            Constant(value=3),
+                            Constant(value=0),
+                            Constant(value=6)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Constant(value='rksdubtheynjmpwqzlfiovxgac')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=Call(
+                                        func=Name(id='ord', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[])))])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=2),
+                    Constant(value=1),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=4)),
+                    Constant(value=3),
+                    Constant(value=0),
+                    Constant(value=6)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Call(
+                                    func=Name(id='cmp_to_key', ctx=Load()),
+                                    args=[
+                                        Lambda(
+                                            args=arguments(
+                                                posonlyargs=[],
+                                                args=[
+                                                    arg(arg='x'),
+                                                    arg(arg='y')],
+                                                kwonlyargs=[],
+                                                kw_defaults=[],
+                                                defaults=[]),
+                                            body=BinOp(
+                                                left=Name(id='y', ctx=Load()),
+                                                op=Sub(),
+                                                right=Name(id='x', ctx=Load())))],
+                                    keywords=[]))])],
+                keywords=[])),
+        ClassDef(
+            name='Test',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='id'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='id',
+                                    ctx=Store())],
+                            value=Name(id='id', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='value',
+                                    ctx=Store())],
+                            value=Name(id='value', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=Constant(value='id: '),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='id',
+                                                    ctx=Load())],
+                                            keywords=[])),
+                                    op=Add(),
+                                    right=Constant(value=' value: ')),
+                                op=Add(),
+                                right=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='value',
+                                    ctx=Load())))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=List(
+                elts=[
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=4),
+                            Constant(value='test')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=3),
+                            Constant(value='test')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=6),
+                            Constant(value='test')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=1),
+                            Constant(value='test')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value='test')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=9),
+                            Constant(value='test')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='Test', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value='test')],
+                        keywords=[])],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='d', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=Attribute(
+                                        value=Name(id='x', ctx=Load()),
+                                        attr='id',
+                                        ctx=Load()))),
+                            keyword(
+                                arg='reverse',
+                                value=Constant(value=True))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='sort',
+                    ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='reverse',
+                        value=Constant(value=True))])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='sort',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='sort',
+                    ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='key',
+                        value=Lambda(
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='x')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=Call(
+                                func=Name(id='pow', ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load()),
+                                    Constant(value=2)],
+                                keywords=[]))),
+                    keyword(
+                        arg='reverse',
+                        value=Constant(value=True))])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='L', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=7),
+                    Constant(value=3),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2)),
+                    Constant(value=4)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value='a'),
+                    Constant(value='b')],
+                values=[
+                    Constant(value=5),
+                    Constant(value=9)])),
+        FunctionDef(
+            name='g',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='k')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Subscript(
+                        value=Name(id='d', ctx=Load()),
+                        slice=Name(id='k', ctx=Load()),
+                        ctx=Load()))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='g', ctx=Load()),
+                        args=[
+                            Constant(value='a')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='list', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='d', ctx=Load()),
+                                            attr='keys',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Name(id='g', ctx=Load()))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='list', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='d', ctx=Load()),
+                                            attr='keys',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='list', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='d', ctx=Load()),
+                                            attr='keys',
+                                            ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=Subscript(
+                                        value=Name(id='d', ctx=Load()),
+                                        slice=Name(id='x', ctx=Load()),
+                                        ctx=Load())))])],
+                keywords=[])),
+        FunctionDef(
+            name='myabs',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Call(
+                        func=Name(id='abs', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='L', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Name(id='myabs', ctx=Load()))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='L', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=Call(
+                                        func=Name(id='myabs', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[])))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='L', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=Call(
+                                        func=Name(id='abs', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[])))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='L', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Name(id='abs', ctx=Load()))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='L', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=UnaryOp(
+                                        op=USub(),
+                                        operand=Name(id='x', ctx=Load())))),
+                            keyword(
+                                arg='reverse',
+                                value=Constant(value=True))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Name(id='L', ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=UnaryOp(
+                                        op=USub(),
+                                        operand=Name(id='x', ctx=Load()))))])],
+                keywords=[]))],
+    type_ignores=[])

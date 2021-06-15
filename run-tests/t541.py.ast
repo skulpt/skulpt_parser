@@ -1,0 +1,121 @@
+Module(
+    body=[
+        ClassDef(
+            name='A',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='message', ctx=Store())],
+                    value=Constant(value='a')),
+                FunctionDef(
+                    name='test',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='a>'),
+                                        op=Add(),
+                                        right=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='__class__',
+                                                ctx=Load()),
+                                            attr='__name__',
+                                            ctx=Load()))],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='B',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='test',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='b>'),
+                                        op=Add(),
+                                        right=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='__class__',
+                                                ctx=Load()),
+                                            attr='__name__',
+                                            ctx=Load()))],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='C',
+            bases=[
+                Name(id='A', ctx=Load()),
+                Name(id='B', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='test',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='A', ctx=Load()),
+                                    attr='test',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='B', ctx=Load()),
+                                    attr='test',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Call(
+                        func=Name(id='C', ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    attr='test',
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

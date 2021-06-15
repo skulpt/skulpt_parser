@@ -1,0 +1,49 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='t', ctx=Store())],
+            value=ListComp(
+                elt=ListComp(
+                    elt=BinOp(
+                        left=BinOp(
+                            left=Name(id='y', ctx=Load()),
+                            op=Mult(),
+                            right=Constant(value=10)),
+                        op=Add(),
+                        right=Name(id='x', ctx=Load())),
+                    generators=[
+                        comprehension(
+                            target=Name(id='x', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=0),
+                                    Constant(value=10)],
+                                keywords=[]),
+                            ifs=[],
+                            is_async=0)]),
+                generators=[
+                    comprehension(
+                        target=Name(id='y', ctx=Store()),
+                        iter=Call(
+                            func=Name(id='range', ctx=Load()),
+                            args=[
+                                Constant(value=0),
+                                Constant(value=10)],
+                            keywords=[]),
+                        ifs=[],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Subscript(
+                            value=Name(id='t', ctx=Load()),
+                            slice=Constant(value=2),
+                            ctx=Load()),
+                        slice=Constant(value=3),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,233 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-----')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            List(elts=[], ctx=Load()),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Dict(keys=[], values=[]),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Constant(value=False),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Constant(value=True),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-----')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            List(elts=[], ctx=Load()),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Dict(keys=[], values=[]),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=False),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=True),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-----')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Constant(value=5),
+                            List(elts=[], ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Constant(value=5),
+                            Dict(keys=[], values=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Constant(value=5),
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Constant(value=5),
+                            Constant(value=True)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-----')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=5),
+                            List(elts=[], ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=5),
+                            Dict(keys=[], values=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=5),
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Constant(value=5),
+                            Constant(value=True)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-----')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            List(elts=[], ctx=Load()),
+                            Dict(keys=[], values=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            Dict(keys=[], values=[]),
+                            List(elts=[], ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            List(elts=[], ctx=Load()),
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BoolOp(
+                        op=Or(),
+                        values=[
+                            List(elts=[], ctx=Load()),
+                            Constant(value=True)])],
+                keywords=[]))],
+    type_ignores=[])

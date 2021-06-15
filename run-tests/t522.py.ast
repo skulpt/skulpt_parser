@@ -1,0 +1,310 @@
+Module(
+    body=[
+        ClassDef(
+            name='A',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=0))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='A', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='B',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='B', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='C',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__bool__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='C', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='D',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__bool__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='D', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='E',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=1))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='E', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='F',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__bool__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=True))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='F', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='G',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__bool__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=False))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=1))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='G', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='A', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='B', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='C', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='D', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='E', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='F', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='bool', ctx=Load()),
+                        args=[
+                            Name(id='G', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

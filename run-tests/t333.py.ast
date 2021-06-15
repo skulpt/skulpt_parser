@@ -1,0 +1,99 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value='Please make startswith and endswith work')),
+        If(
+            test=Call(
+                func=Attribute(
+                    value=Name(id='x', ctx=Load()),
+                    attr='startswith',
+                    ctx=Load()),
+                args=[
+                    Constant(value='Please')],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Starts with Please')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Not good')],
+                        keywords=[]))]),
+        If(
+            test=Call(
+                func=Attribute(
+                    value=Name(id='x', ctx=Load()),
+                    attr='endswith',
+                    ctx=Load()),
+                args=[
+                    Constant(value='work')],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Ends with work')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Not good')],
+                        keywords=[]))]),
+        If(
+            test=Call(
+                func=Attribute(
+                    value=Name(id='x', ctx=Load()),
+                    attr='startswith',
+                    ctx=Load()),
+                args=[
+                    Constant(value='please')],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Not good')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Does not start with please')],
+                        keywords=[]))]),
+        If(
+            test=Call(
+                func=Attribute(
+                    value=Name(id='x', ctx=Load()),
+                    attr='endswith',
+                    ctx=Load()),
+                args=[
+                    Constant(value='please')],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Not good')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Does not end with please')],
+                        keywords=[]))])],
+    type_ignores=[])

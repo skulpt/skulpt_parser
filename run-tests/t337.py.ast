@@ -1,0 +1,85 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='l', ctx=Load()),
+                    attr='append',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Call(
+                func=Name(id='dict', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='d', ctx=Load()),
+                    slice=Constant(value='zap'),
+                    ctx=Store())],
+            value=Constant(value=1)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='l2', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l2', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='l3', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l3', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,21 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='exit', ctx=Load()),
+                args=[
+                    Constant(value='exit message - quit the program')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value="you shouldn't see this")],
+                keywords=[]))],
+    type_ignores=[])

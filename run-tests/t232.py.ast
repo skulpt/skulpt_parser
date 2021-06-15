@@ -1,0 +1,155 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Constant(value='squirrel')),
+        Assign(
+            targets=[
+                Name(id='time', ctx=Store())],
+            value=Constant(value=0)),
+        FunctionDef(
+            name='x',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Global(
+                    names=[
+                        'time']),
+                AugAssign(
+                    target=Name(id='time', ctx=Store()),
+                    op=Add(),
+                    value=Constant(value=1)),
+                If(
+                    test=Compare(
+                        left=Name(id='time', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='b', ctx=Store())],
+                            value=Constant(value='dog'))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='b', ctx=Store())],
+                            value=Constant(value='banana'))]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='b', ctx=Load()),
+                                    Name(id='c', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                FunctionDef(
+                    name='y',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='d')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='a', ctx=Store())],
+                            value=Constant(value='cat')),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='a', ctx=Load()),
+                                            Name(id='b', ctx=Load()),
+                                            Name(id='d', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        FunctionDef(
+                            name='z',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                For(
+                                    target=Name(id='i', ctx=Store()),
+                                    iter=Call(
+                                        func=Name(id='range', ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=Constant(value=10),
+                                                op=Mult(),
+                                                right=Name(id='time', ctx=Load()))],
+                                        keywords=[]),
+                                    body=[
+                                        Expr(
+                                            value=Yield(
+                                                value=Tuple(
+                                                    elts=[
+                                                        Name(id='i', ctx=Load()),
+                                                        Name(id='a', ctx=Load()),
+                                                        Name(id='b', ctx=Load()),
+                                                        Name(id='c', ctx=Load()),
+                                                        Name(id='d', ctx=Load())],
+                                                    ctx=Load())))],
+                                    orelse=[])],
+                            decorator_list=[]),
+                        Return(
+                            value=Name(id='z', ctx=Load()))],
+                    decorator_list=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='y', ctx=Load()),
+                        args=[
+                            Constant(value='blorp')],
+                        keywords=[]))],
+            decorator_list=[]),
+        For(
+            target=Name(id='v', ctx=Store()),
+            iter=Call(
+                func=Call(
+                    func=Name(id='x', ctx=Load()),
+                    args=[],
+                    keywords=[]),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='v', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        For(
+            target=Name(id='v', ctx=Store()),
+            iter=Call(
+                func=Call(
+                    func=Name(id='x', ctx=Load()),
+                    args=[],
+                    keywords=[]),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='v', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

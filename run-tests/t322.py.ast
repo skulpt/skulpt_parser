@@ -1,0 +1,77 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            Constant(value='0x13'),
+                            Constant(value=16)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            Constant(value='0x13'),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            Constant(value='0b0110'),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            Constant(value=3.2)],
+                        keywords=[])],
+                keywords=[])),
+        FunctionDef(
+            name='foo',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='y'),
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value='K'),
+                    Constant(value='Z')]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='x', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='y', ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='foo', ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='x',
+                        value=Constant(value='P'))]))],
+    type_ignores=[])

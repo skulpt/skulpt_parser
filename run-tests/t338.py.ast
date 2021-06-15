@@ -1,0 +1,55 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=Call(
+                func=Name(id='sorted', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=9),
+                            Constant(value=8),
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=45),
+                            Constant(value=5)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='---------------- DEFAULT')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='l', ctx=Load()),
+                    attr='sort',
+                    ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='reverse',
+                        value=Constant(value=True))])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='---------------- REVERSE')],
+                keywords=[]))],
+    type_ignores=[])

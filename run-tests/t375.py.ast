@@ -1,0 +1,23 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(elts=[], ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='l', ctx=Load()),
+                    attr='pop',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

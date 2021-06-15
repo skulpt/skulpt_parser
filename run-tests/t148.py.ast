@@ -1,0 +1,61 @@
+Module(
+    body=[
+        ClassDef(
+            name='Test',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='v')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='value',
+                                    ctx=Store())],
+                            value=Name(id='v', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__call__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='value',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='Test', ctx=Load()),
+                args=[
+                    Constant(value='OK')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='x', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

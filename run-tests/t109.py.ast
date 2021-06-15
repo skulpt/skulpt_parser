@@ -1,0 +1,14 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=3),
+                            Constant(value=4),
+                            Constant(value=5)],
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,25 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load())),
+        AugAssign(
+            target=Subscript(
+                value=Name(id='a', ctx=Load()),
+                slice=Constant(value=1),
+                ctx=Store()),
+            op=Add(),
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

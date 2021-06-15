@@ -1,0 +1,207 @@
+Module(
+    body=[
+        ImportFrom(
+            module='time',
+            names=[
+                alias(name='sleep')],
+            level=0),
+        ClassDef(
+            name='A',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__getattr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='name')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.001)],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Getting %s'),
+                                        op=Mod(),
+                                        right=Name(id='name', ctx=Load()))],
+                                keywords=[])),
+                        Return(
+                            value=Name(id='name', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setattr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='name'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.001)],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Setting %s to %s'),
+                                        op=Mod(),
+                                        right=Tuple(
+                                            elts=[
+                                                Name(id='name', ctx=Load()),
+                                                Name(id='value', ctx=Load())],
+                                            ctx=Load()))],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='object', ctx=Load()),
+                                    attr='__setattr__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load()),
+                                    Name(id='name', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='B',
+            bases=[
+                Name(id='A', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='C',
+            bases=[
+                Name(id='A', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__getattribute__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='name')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.001)],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Getting %s early'),
+                                        op=Mod(),
+                                        right=Name(id='name', ctx=Load()))],
+                                keywords=[])),
+                        Return(
+                            value=Constant(value='FOO'))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='B', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='b.x = %s'),
+                        op=Mod(),
+                        right=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='x',
+                            ctx=Load()))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='b', ctx=Load()),
+                    attr='x',
+                    ctx=Store())],
+            value=Constant(value='BAR')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='b.x = %s'),
+                        op=Mod(),
+                        right=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='x',
+                            ctx=Load()))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Call(
+                func=Name(id='C', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='c.x = %s'),
+                        op=Mod(),
+                        right=Attribute(
+                            value=Name(id='c', ctx=Load()),
+                            attr='x',
+                            ctx=Load()))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='x',
+                    ctx=Store())],
+            value=Constant(value='BAR')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='c.x = %s'),
+                        op=Mod(),
+                        right=Attribute(
+                            value=Name(id='c', ctx=Load()),
+                            attr='x',
+                            ctx=Load()))],
+                keywords=[]))],
+    type_ignores=[])

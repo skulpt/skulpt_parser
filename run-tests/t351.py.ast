@@ -1,0 +1,29 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Call(
+                    func=Name(id='f', ctx=Load()),
+                    args=[
+                        Constant(value=3)],
+                    keywords=[]),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

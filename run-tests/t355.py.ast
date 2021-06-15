@@ -1,0 +1,113 @@
+Module(
+    body=[
+        ClassDef(
+            name='Foo',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='x')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='lst',
+                                    ctx=Store())],
+                            value=List(
+                                elts=[
+                                    Name(id='x', ctx=Load())],
+                                ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__eq__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='other')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Compare(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='lst',
+                                    ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='other', ctx=Load()),
+                                        attr='lst',
+                                        ctx=Load())]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='f1', ctx=Store())],
+            value=Call(
+                func=Name(id='Foo', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='f2', ctx=Store())],
+            value=Call(
+                func=Name(id='Foo', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='f3', ctx=Store())],
+            value=Call(
+                func=Name(id='Foo', ctx=Load()),
+                args=[
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='f1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='f1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='f1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='f2', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='f1', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='f3', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

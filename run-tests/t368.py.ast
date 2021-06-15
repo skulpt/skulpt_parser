@@ -1,0 +1,14 @@
+Module(
+    body=[
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Constant(value=2),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

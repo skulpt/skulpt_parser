@@ -1,0 +1,74 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='list', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load())),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='list', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=1),
+                                    step=Constant(value=0)),
+                                ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ValueError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='list', ctx=Load()),
+                                slice=Slice(
+                                    lower=Constant(value=1),
+                                    upper=Constant(value=3),
+                                    step=Constant(value=0)),
+                                ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ValueError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

@@ -1,0 +1,46 @@
+Module(
+    body=[
+        ImportFrom(
+            module='math',
+            names=[
+                alias(name='*')],
+            level=0),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='cos', ctx=Load()),
+                        args=[
+                            Name(id='pi', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='pi', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='log', ctx=Load()),
+                        args=[
+                            Constant(value=100),
+                            Constant(value=2)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='pow', ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=24)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

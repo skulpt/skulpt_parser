@@ -1,0 +1,24 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=3)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Dict(
+                            keys=[
+                                Name(id='x', ctx=Load())],
+                            values=[
+                                Constant(value='OK')]),
+                        slice=Name(id='x', ctx=Load()),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

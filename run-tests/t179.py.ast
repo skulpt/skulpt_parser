@@ -1,0 +1,55 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='n')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Constant(value=0)),
+                While(
+                    test=Compare(
+                        left=Name(id='i', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='n', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Yield(
+                                value=Name(id='i', ctx=Load()))),
+                        Expr(
+                            value=Yield(
+                                value=BinOp(
+                                    left=Name(id='i', ctx=Load()),
+                                    op=Mult(),
+                                    right=Constant(value=10)))),
+                        AugAssign(
+                            target=Name(id='i', ctx=Store()),
+                            op=Add(),
+                            value=Constant(value=1))],
+                    orelse=[])],
+            decorator_list=[]),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

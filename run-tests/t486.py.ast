@@ -1,0 +1,13 @@
+Module(
+    body=[
+        Expr(
+            value=ListComp(
+                elt=Name(id='_f', ctx=Load()),
+                generators=[
+                    comprehension(
+                        target=Name(id='_f', ctx=Store()),
+                        iter=Constant(value=8),
+                        ifs=[
+                            Name(id='_f', ctx=Load())],
+                        is_async=0)]))],
+    type_ignores=[])

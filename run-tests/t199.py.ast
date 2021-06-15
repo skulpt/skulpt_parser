@@ -1,0 +1,28 @@
+Module(
+    body=[
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=GeneratorExp(
+                elt=BinOp(
+                    left=Name(id='i', ctx=Load()),
+                    op=Mult(),
+                    right=Constant(value=2)),
+                generators=[
+                    comprehension(
+                        target=Name(id='i', ctx=Store()),
+                        iter=Call(
+                            func=Name(id='range', ctx=Load()),
+                            args=[
+                                Constant(value=3)],
+                            keywords=[]),
+                        ifs=[],
+                        is_async=0)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

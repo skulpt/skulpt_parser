@@ -1,0 +1,545 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintegers')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='int', ctx=Load()),
+                                    args=[],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=332)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=332)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=47))],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=47))],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nlong integers')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='big', ctx=Store())],
+            value=Constant(value=123456789123456789123456789123456789123456789)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='int', ctx=Load()),
+                                    args=[],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=12)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=12)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Name(id='big', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Name(id='big', ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Name(id='big', ctx=Load()))],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Name(id='big', ctx=Load()))],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nfloating points')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='float', ctx=Load()),
+                                    args=[],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='float', ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=33.2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=33.2)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=0.05)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=0.05)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=11.85))],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=11.85))],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstrings')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value='')],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value='')],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value='hello')],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value='hello')],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ntuples')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Tuple(elts=[], ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Tuple(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Tuple(
+                                    elts=[
+                                        Constant(value=1),
+                                        Constant(value=2),
+                                        Constant(value=3)],
+                                    ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintegers and floating point')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=1)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=1.0)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=1)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=1.0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=1)],
+                            keywords=[]),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=1.0)],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=5))],
+                            keywords=[]),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=5))],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=5.0))],
+                                keywords=[])])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1),
+                    Constant(value=3),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=5.0))],
+                values=[
+                    Constant(value=2),
+                    Constant(value=4),
+                    Constant(value=6)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Subscript(
+                            value=Name(id='d', ctx=Load()),
+                            slice=Constant(value=1),
+                            ctx=Load()),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Subscript(
+                                value=Name(id='d', ctx=Load()),
+                                slice=Constant(value=1.0),
+                                ctx=Load()),
+                            Subscript(
+                                value=Name(id='d', ctx=Load()),
+                                slice=Constant(value=1),
+                                ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Subscript(
+                            value=Name(id='d', ctx=Load()),
+                            slice=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5)),
+                            ctx=Load()),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Subscript(
+                                value=Name(id='d', ctx=Load()),
+                                slice=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=5.0)),
+                                ctx=Load()),
+                            Subscript(
+                                value=Name(id='d', ctx=Load()),
+                                slice=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=5)),
+                                ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

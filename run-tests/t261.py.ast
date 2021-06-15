@@ -1,0 +1,40 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='str', ctx=Load()),
+                            attr='lower',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='Hello')],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=4),
+                    Constant(value=5),
+                    Constant(value=0)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='list', ctx=Load()),
+                    attr='sort',
+                    ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

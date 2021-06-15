@@ -1,0 +1,29 @@
+Module(
+    body=[
+        ClassDef(
+            name='C',
+            bases=[],
+            keywords=[],
+            body=[
+                Try(
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='Exception', ctx=Load()),
+                                args=[
+                                    Constant(value='Oops')],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='BaseException', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Caught')],
+                                        keywords=[]))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[])],
+    type_ignores=[])

@@ -1,0 +1,382 @@
+Module(
+    body=[
+        ImportFrom(
+            module='functools',
+            names=[
+                alias(name='reduce')],
+            level=0),
+        Assign(
+            targets=[
+                Name(id='seq', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='newseq', ctx=Store())],
+            value=ListComp(
+                elt=BinOp(
+                    left=Name(id='x', ctx=Load()),
+                    op=Mult(),
+                    right=Name(id='x', ctx=Load())),
+                generators=[
+                    comprehension(
+                        target=Name(id='x', ctx=Store()),
+                        iter=Name(id='seq', ctx=Load()),
+                        ifs=[],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='newseq', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='rseq', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=16)],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='rnewseq', ctx=Store())],
+            value=Call(
+                func=Name(id='reduce', ctx=Load()),
+                args=[
+                    Lambda(
+                        args=arguments(
+                            posonlyargs=[],
+                            args=[
+                                arg(arg='x'),
+                                arg(arg='y')],
+                            kwonlyargs=[],
+                            kw_defaults=[],
+                            defaults=[]),
+                        body=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Add(),
+                            right=Name(id='y', ctx=Load()))),
+                    Name(id='rseq', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='rnewseq', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='rnewseq2', ctx=Store())],
+            value=Call(
+                func=Name(id='reduce', ctx=Load()),
+                args=[
+                    Lambda(
+                        args=arguments(
+                            posonlyargs=[],
+                            args=[
+                                arg(arg='x'),
+                                arg(arg='y')],
+                            kwonlyargs=[],
+                            kw_defaults=[],
+                            defaults=[]),
+                        body=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Add(),
+                            right=Name(id='y', ctx=Load()))),
+                    List(elts=[], ctx=Load()),
+                    Constant(value=8)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='rnewseq2', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='fseq', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=16)],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='fnewseq', ctx=Store())],
+            value=ListComp(
+                elt=Name(id='x', ctx=Load()),
+                generators=[
+                    comprehension(
+                        target=Name(id='x', ctx=Store()),
+                        iter=Name(id='fseq', ctx=Load()),
+                        ifs=[
+                            Compare(
+                                left=BinOp(
+                                    left=Name(id='x', ctx=Load()),
+                                    op=Mod(),
+                                    right=Constant(value=2)),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)])],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='fnewseq', ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Call(
+                        func=Name(id='ord', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='map', ctx=Load()),
+                                args=[
+                                    Name(id='f', ctx=Load()),
+                                    Constant(value='abcdef')],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='string', ctx=Store())],
+            value=ListComp(
+                elt=Name(id='c', ctx=Load()),
+                generators=[
+                    comprehension(
+                        target=Name(id='c', ctx=Store()),
+                        iter=Constant(value='abc'),
+                        ifs=[
+                            Compare(
+                                left=Name(id='c', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Constant(value='a')])],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='string', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='string', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='tup', ctx=Store())],
+            value=ListComp(
+                elt=Name(id='t', ctx=Load()),
+                generators=[
+                    comprehension(
+                        target=Name(id='t', ctx=Store()),
+                        iter=Tuple(
+                            elts=[
+                                Constant(value=1),
+                                Constant(value=2),
+                                Constant(value=3),
+                                Constant(value=4),
+                                Constant(value=5),
+                                Constant(value=6),
+                                Constant(value=7),
+                                Constant(value=8),
+                                Constant(value=9),
+                                Constant(value=10)],
+                            ctx=Load()),
+                        ifs=[
+                            Compare(
+                                left=BinOp(
+                                    left=Name(id='t', ctx=Load()),
+                                    op=Mod(),
+                                    right=Constant(value=2)),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)])],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='tup', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='tup', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=Name(id='_f', ctx=Load()),
+                        generators=[
+                            comprehension(
+                                target=Name(id='_f', ctx=Store()),
+                                iter=List(
+                                    elts=[
+                                        Constant(value=0),
+                                        Constant(value=1),
+                                        Constant(value=''),
+                                        Constant(value='hello'),
+                                        Constant(value=False),
+                                        Constant(value=True)],
+                                    ctx=Load()),
+                                ifs=[
+                                    Name(id='_f', ctx=Load())],
+                                is_async=0)])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=10)],
+                        keywords=[])],
+                keywords=[])),
+        FunctionDef(
+            name='mapy',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x'),
+                    arg(arg='y')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='x', ctx=Store())],
+                            value=Constant(value=0))],
+                    orelse=[]),
+                If(
+                    test=Compare(
+                        left=Name(id='y', ctx=Load()),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Constant(value=None)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='y', ctx=Store())],
+                            value=Constant(value=0))],
+                    orelse=[]),
+                Return(
+                    value=BinOp(
+                        left=Name(id='x', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='y', ctx=Load())))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='map', ctx=Load()),
+                                args=[
+                                    Name(id='mapy', ctx=Load()),
+                                    Name(id='b', ctx=Load()),
+                                    Name(id='c', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=0),
+                                    Constant(value=1),
+                                    Dict(keys=[], values=[]),
+                                    Constant(value=''),
+                                    Constant(value='hello'),
+                                    Constant(value=False),
+                                    Constant(value=True)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,34 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='hello')],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='x', ctx=Load()),
+                    slice=Constant(value=0),
+                    ctx=Store())],
+            value=Constant(value='hi')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='y', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

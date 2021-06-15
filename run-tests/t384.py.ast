@@ -1,0 +1,44 @@
+Module(
+    body=[
+        ClassDef(
+            name='Foo',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='x',
+                                    ctx=Store())],
+                            value=Constant(value=3))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='f', ctx=Store())],
+            value=Call(
+                func=Name(id='Foo', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Subscript(
+                value=Constant(value=None),
+                slice=Constant(value=4),
+                ctx=Load())),
+        Expr(
+            value=Subscript(
+                value=Name(id='f', ctx=Load()),
+                slice=Constant(value=4),
+                ctx=Load()))],
+    type_ignores=[])

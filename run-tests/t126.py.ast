@@ -1,0 +1,111 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=17)],
+                        keywords=[])],
+                keywords=[])),
+        Delete(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Slice(
+                        step=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3))),
+                    ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=16)],
+                        keywords=[])],
+                keywords=[])),
+        Delete(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Slice(
+                        step=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3))),
+                    ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=17)],
+                        keywords=[])],
+                keywords=[])),
+        Delete(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Slice(
+                        step=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=2))),
+                    ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=16)],
+                        keywords=[])],
+                keywords=[])),
+        Delete(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Slice(
+                        step=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=2))),
+                    ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

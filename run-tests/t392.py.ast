@@ -1,0 +1,79 @@
+Module(
+    body=[
+        ClassDef(
+            name='Ship',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='name')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='name',
+                                    ctx=Store())],
+                            value=Name(id='name', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='thrust',
+                                    ctx=Store())],
+                            value=Constant(value=False))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='thrust',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='thrust',
+                                    ctx=Store())],
+                            value=Constant(value=True)),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Thrust'),
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='thrust',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='my_ship', ctx=Store())],
+            value=Call(
+                func=Name(id='Ship', ctx=Load()),
+                args=[
+                    Constant(value='a_name')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='my_ship', ctx=Load()),
+                    attr='thrust',
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

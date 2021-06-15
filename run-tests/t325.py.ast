@@ -1,0 +1,29 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='random')]),
+        While(
+            test=Compare(
+                left=Call(
+                    func=Attribute(
+                        value=Name(id='random', ctx=Load()),
+                        attr='randrange',
+                        ctx=Load()),
+                    args=[
+                        Constant(value=10)],
+                    keywords=[]),
+                ops=[
+                    NotEq()],
+                comparators=[
+                    Constant(value=8)]),
+            body=[
+                Pass()],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='8')],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,327 @@
+Module(
+    body=[
+        Try(
+            body=[
+                Assert(
+                    test=Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Constant(value=10)]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='AssertionError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught AssertionError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch AssertionError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Attribute(
+                                value=Constant(value=None),
+                                attr='notAnAttribute',
+                                ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='AttributeError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught AttributeError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch AttributeError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Import(
+                    names=[
+                        alias(name='notAModule')])],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ImportError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught ImportError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch ImportError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=List(
+                                    elts=[
+                                        Constant(value=0),
+                                        Constant(value=1),
+                                        Constant(value=2),
+                                        Constant(value=3),
+                                        Constant(value=4)],
+                                    ctx=Load()),
+                                slice=Constant(value=5),
+                                ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='IndexError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught IndexError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch IndexError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Dict(
+                                    keys=[
+                                        Constant(value=1),
+                                        Constant(value=3)],
+                                    values=[
+                                        Constant(value=2),
+                                        Constant(value=4)]),
+                                slice=Constant(value=5),
+                                ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='KeyError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught KeyError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch KeyError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='NameError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught NameError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch NameError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=1e-64),
+                                op=Pow(),
+                                right=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=30)))],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='OverflowError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught OverflowError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch OverflowError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=BinOp(
+                        left=Constant(value='10'),
+                        op=Div(),
+                        right=Constant(value='1')))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught TypeError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch TypeError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Constant(value='hello'),
+                                    attr='index',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='S')],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ValueError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught ValueError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch ValueError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=1),
+                                op=Div(),
+                                right=Constant(value=0))],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ZeroDivisionError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Caught ZeroDivisionError')],
+                                keywords=[]))]),
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Did not catch ZeroDivisionError')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

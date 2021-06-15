@@ -1,0 +1,179 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='func'),
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='func', ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='func', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Name(id='x', ctx=Load()))],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='func', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='func', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Call(
+                                            func=Name(id='int', ctx=Load()),
+                                            args=[
+                                                Name(id='x', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='big', ctx=Store())],
+            value=Constant(value=123456789123456789123456789123456789)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nHEX')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='hex', ctx=Load()),
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='hex', ctx=Load()),
+                    Constant(value=255)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='hex', ctx=Load()),
+                    Constant(value=28)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='hex', ctx=Load()),
+                    Constant(value=115)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='hex', ctx=Load()),
+                    Name(id='big', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nOCT')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='oct', ctx=Load()),
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='oct', ctx=Load()),
+                    Constant(value=255)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='oct', ctx=Load()),
+                    Constant(value=28)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='oct', ctx=Load()),
+                    Constant(value=115)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='oct', ctx=Load()),
+                    Name(id='big', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nBIN')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='bin', ctx=Load()),
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='bin', ctx=Load()),
+                    Constant(value=255)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='bin', ctx=Load()),
+                    Constant(value=28)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='bin', ctx=Load()),
+                    Constant(value=115)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Name(id='bin', ctx=Load()),
+                    Name(id='big', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

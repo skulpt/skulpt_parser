@@ -1,0 +1,91 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Constant(value='squirrel')),
+        FunctionDef(
+            name='x',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='b', ctx=Store())],
+                    value=Constant(value='dog')),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='b', ctx=Load()),
+                                    Name(id='c', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                FunctionDef(
+                    name='y',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='a', ctx=Store())],
+                            value=Constant(value='cat')),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='a', ctx=Load()),
+                                            Name(id='b', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        FunctionDef(
+                            name='z',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Return(
+                                    value=Tuple(
+                                        elts=[
+                                            Name(id='a', ctx=Load()),
+                                            Name(id='b', ctx=Load()),
+                                            Name(id='c', ctx=Load())],
+                                        ctx=Load()))],
+                            decorator_list=[]),
+                        Return(
+                            value=Name(id='z', ctx=Load()))],
+                    decorator_list=[]),
+                Return(
+                    value=Call(
+                        func=Name(id='y', ctx=Load()),
+                        args=[],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Call(
+                            func=Name(id='x', ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        args=[],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

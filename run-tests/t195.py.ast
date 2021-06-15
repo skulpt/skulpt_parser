@@ -1,0 +1,86 @@
+Module(
+    body=[
+        FunctionDef(
+            name='foo',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='value')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None)]),
+            body=[
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=List(
+                        elts=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1)),
+                            Constant(value=0),
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4)],
+                        ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='i', ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Continue()],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='i', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Expr(
+                                            value=Yield(
+                                                value=Constant(value=0)))],
+                                    orelse=[
+                                        If(
+                                            test=Compare(
+                                                left=Name(id='i', ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=1)]),
+                                            body=[
+                                                Expr(
+                                                    value=Yield(
+                                                        value=Constant(value=1))),
+                                                Expr(
+                                                    value=Yield(
+                                                        value=Name(id='value', ctx=Load()))),
+                                                Expr(
+                                                    value=Yield(
+                                                        value=Constant(value=2)))],
+                                            orelse=[
+                                                Expr(
+                                                    value=Yield(
+                                                        value=Name(id='i', ctx=Load())))])])])],
+                    orelse=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='foo', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,22 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='var1', ctx=Store())],
+            value=Constant(value='foo')),
+        If(
+            test=Call(
+                func=Name(id='isinstance', ctx=Load()),
+                args=[
+                    Name(id='var1', ctx=Load()),
+                    Name(id='str', ctx=Load())],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='var1 is a string')],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

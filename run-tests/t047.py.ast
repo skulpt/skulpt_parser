@@ -1,0 +1,32 @@
+Module(
+    body=[
+        FunctionDef(
+            name='test',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='y'),
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value='K'),
+                    Constant(value='Z')]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='x', ctx=Load()),
+                                op=Add(),
+                                right=Name(id='y', ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='test', ctx=Load()),
+                args=[
+                    Constant(value='O')],
+                keywords=[]))],
+    type_ignores=[])

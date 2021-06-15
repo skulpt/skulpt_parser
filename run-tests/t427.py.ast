@@ -1,0 +1,260 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='t', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1),
+                    Constant(value=3)],
+                values=[
+                    Constant(value=2),
+                    Constant(value=4)])),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='1234')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='d', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='s', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='t', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='d', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='s', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load()),
+                                    Name(id='d', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load()),
+                                    Name(id='s', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='d', ctx=Load()),
+                                    Name(id='s', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='t', ctx=Load()),
+                                    Name(id='s', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='t', ctx=Load()),
+                                    Name(id='s', ctx=Load()),
+                                    Name(id='d', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='z', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='zip', ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load()),
+                            Name(id='t', ctx=Load()),
+                            Name(id='s', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Starred(
+                                        value=Name(id='z', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='z', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='zip', ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load()),
+                            Name(id='t', ctx=Load()),
+                            Name(id='s', ctx=Load()),
+                            Name(id='d', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='zip', ctx=Load()),
+                                args=[
+                                    Starred(
+                                        value=Name(id='z', ctx=Load()),
+                                        ctx=Load())],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

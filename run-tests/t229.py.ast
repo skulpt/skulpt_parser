@@ -1,0 +1,41 @@
+Module(
+    body=[
+        ClassDef(
+            name='X',
+            bases=[],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='X', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value='wee'),
+                            Constant(value=14)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='X', ctx=Load()),
+                            Constant(value='doggy'),
+                            Constant(value='OK')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

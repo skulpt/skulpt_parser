@@ -1,0 +1,48 @@
+Module(
+    body=[
+        FunctionDef(
+            name='test',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x'),
+                    arg(arg='y')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Name(id='y', ctx=Load()))],
+            decorator_list=[]),
+        Expr(
+            value=BoolOp(
+                op=Or(),
+                values=[
+                    Call(
+                        func=Name(id='test', ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value=1)],
+                        keywords=[]),
+                    BoolOp(
+                        op=And(),
+                        values=[
+                            Call(
+                                func=Name(id='test', ctx=Load()),
+                                args=[
+                                    Constant(value='b'),
+                                    Constant(value=1)],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='test', ctx=Load()),
+                                args=[
+                                    Constant(value='c'),
+                                    Constant(value=0)],
+                                keywords=[])])]))],
+    type_ignores=[])

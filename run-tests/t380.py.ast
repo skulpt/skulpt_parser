@@ -1,0 +1,24 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='lst', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='lst', ctx=Store())],
+            value=BinOp(
+                left=Name(id='lst', ctx=Load()),
+                op=Add(),
+                right=Constant(value=1))),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='lst', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

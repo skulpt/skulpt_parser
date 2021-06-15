@@ -1,0 +1,105 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='a'),
+                    arg(arg='b')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                kwarg=arg(arg='c'),
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='sortc', ctx=Store())],
+                    value=Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            ListComp(
+                                elt=Tuple(
+                                    elts=[
+                                        Name(id='x', ctx=Load()),
+                                        Name(id='y', ctx=Load())],
+                                    ctx=Load()),
+                                generators=[
+                                    comprehension(
+                                        target=Tuple(
+                                            elts=[
+                                                Name(id='x', ctx=Store()),
+                                                Name(id='y', ctx=Store())],
+                                            ctx=Store()),
+                                        iter=Call(
+                                            func=Name(id='list', ctx=Load()),
+                                            args=[
+                                                Call(
+                                                    func=Attribute(
+                                                        value=Name(id='c', ctx=Load()),
+                                                        attr='items',
+                                                        ctx=Load()),
+                                                    args=[],
+                                                    keywords=[])],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='a', ctx=Load()),
+                                    Name(id='b', ctx=Load()),
+                                    Name(id='sortc', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                keywords=[
+                    keyword(
+                        arg='d',
+                        value=Constant(value=4)),
+                    keyword(
+                        arg='e',
+                        value=Constant(value=5))])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[
+                    keyword(
+                        arg='b',
+                        value=Constant(value=4)),
+                    keyword(
+                        arg='e',
+                        value=Constant(value=5))])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[],
+                keywords=[
+                    keyword(
+                        arg='a',
+                        value=Constant(value=1)),
+                    keyword(
+                        arg='b',
+                        value=Constant(value=4)),
+                    keyword(
+                        arg='e',
+                        value=Constant(value=5)),
+                    keyword(
+                        arg='f',
+                        value=Constant(value=6)),
+                    keyword(
+                        arg='g',
+                        value=Constant(value=7))]))],
+    type_ignores=[])

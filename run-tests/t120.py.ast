@@ -1,0 +1,26 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Call(
+                            func=Name(id='list', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=10)],
+                                    keywords=[])],
+                            keywords=[]),
+                        slice=Call(
+                            func=Name(id='slice', ctx=Load()),
+                            args=[
+                                Constant(value=0),
+                                Constant(value=5),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

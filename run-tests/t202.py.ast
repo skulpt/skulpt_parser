@@ -1,0 +1,47 @@
+Module(
+    body=[
+        FunctionDef(
+            name='func',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Constant(value='dog'))],
+            decorator_list=[]),
+        FunctionDef(
+            name='wee',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assert(
+                    test=Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Constant(value=2)])),
+                Assert(
+                    test=Compare(
+                        left=Constant(value='dog'),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='func', ctx=Load()),
+                                args=[],
+                                keywords=[])]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='wee', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

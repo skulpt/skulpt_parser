@@ -1,0 +1,54 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='ctr', ctx=Store())],
+            value=Constant(value=0)),
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Global(
+                    names=[
+                        'ctr']),
+                AugAssign(
+                    target=Name(id='ctr', ctx=Store()),
+                    op=Add(),
+                    value=Constant(value=1)),
+                Return(
+                    value=Name(id='ctr', ctx=Load()))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='lst', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=4)],
+                        keywords=[])],
+                keywords=[])),
+        AugAssign(
+            target=Subscript(
+                value=Name(id='lst', ctx=Load()),
+                slice=Call(
+                    func=Name(id='f', ctx=Load()),
+                    args=[],
+                    keywords=[]),
+                ctx=Store()),
+            op=Add(),
+            value=Constant(value=3)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='lst', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

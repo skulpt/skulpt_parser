@@ -1,0 +1,342 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='random')]),
+        FunctionDef(
+            name='makeset',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='lst')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Dict(keys=[], values=[])),
+                For(
+                    target=Name(id='a', ctx=Store()),
+                    iter=Name(id='lst', ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='a', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Name(id='result', ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='result', ctx=Load()),
+                                            slice=Name(id='a', ctx=Load()),
+                                            ctx=Store())],
+                                    value=List(elts=[], ctx=Load()))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Subscript(
+                                        value=Name(id='result', ctx=Load()),
+                                        slice=Name(id='a', ctx=Load()),
+                                        ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='result', ctx=Load()))],
+            decorator_list=[]),
+        FunctionDef(
+            name='sorttest',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='lst1')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='lst2', ctx=Store())],
+                    value=Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='lst1', ctx=Load()),
+                                slice=Slice(),
+                                ctx=Load())],
+                        keywords=[])),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='lst1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='lst2', ctx=Load())],
+                                keywords=[])])),
+                Assert(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='makeset', ctx=Load()),
+                            args=[
+                                Name(id='lst1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='makeset', ctx=Load()),
+                                args=[
+                                    Name(id='lst2', ctx=Load())],
+                                keywords=[])])),
+                Assign(
+                    targets=[
+                        Name(id='position', ctx=Store())],
+                    value=Dict(keys=[], values=[])),
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Constant(value=0)),
+                Assign(
+                    targets=[
+                        Name(id='err', ctx=Store())],
+                    value=Constant(value=False)),
+                For(
+                    target=Name(id='a', ctx=Store()),
+                    iter=Name(id='lst1', ctx=Load()),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='a', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Name(id='position', ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='position', ctx=Load()),
+                                            slice=Name(id='a', ctx=Load()),
+                                            ctx=Store())],
+                                    value=List(elts=[], ctx=Load()))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Subscript(
+                                        value=Name(id='position', ctx=Load()),
+                                        slice=Name(id='a', ctx=Load()),
+                                        ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='i', ctx=Load())],
+                                keywords=[])),
+                        AugAssign(
+                            target=Name(id='i', ctx=Store()),
+                            op=Add(),
+                            value=Constant(value=1))],
+                    orelse=[]),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='lst2', ctx=Load())],
+                                    keywords=[]),
+                                op=Sub(),
+                                right=Constant(value=1))],
+                        keywords=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='a', ctx=Store()),
+                                        Name(id='b', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='lst2', ctx=Load()),
+                                        slice=Name(id='i', ctx=Load()),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='lst2', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='i', ctx=Load()),
+                                            op=Add(),
+                                            right=Constant(value=1)),
+                                        ctx=Load())],
+                                ctx=Load())),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Compare(
+                                    left=Name(id='a', ctx=Load()),
+                                    ops=[
+                                        LtE()],
+                                    comparators=[
+                                        Name(id='b', ctx=Load())])),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='resulting list is not sorted')],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='err', ctx=Store())],
+                                    value=Constant(value=True))],
+                            orelse=[]),
+                        If(
+                            test=Compare(
+                                left=Name(id='a', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Name(id='b', ctx=Load())]),
+                            body=[
+                                If(
+                                    test=UnaryOp(
+                                        op=Not(),
+                                        operand=Compare(
+                                            left=Subscript(
+                                                value=Subscript(
+                                                    value=Name(id='position', ctx=Load()),
+                                                    slice=Name(id='a', ctx=Load()),
+                                                    ctx=Load()),
+                                                slice=Constant(value=0),
+                                                ctx=Load()),
+                                            ops=[
+                                                Lt()],
+                                            comparators=[
+                                                Subscript(
+                                                    value=Subscript(
+                                                        value=Name(id='position', ctx=Load()),
+                                                        slice=Name(id='b', ctx=Load()),
+                                                        ctx=Load()),
+                                                    slice=UnaryOp(
+                                                        op=USub(),
+                                                        operand=Constant(value=1)),
+                                                    ctx=Load())])),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Constant(value='not stable')],
+                                                keywords=[])),
+                                        Assign(
+                                            targets=[
+                                                Name(id='err', ctx=Store())],
+                                            value=Constant(value=True))],
+                                    orelse=[])],
+                            orelse=[])],
+                    orelse=[]),
+                If(
+                    test=Name(id='err', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='lst1', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='lst2', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[]),
+        For(
+            target=Name(id='v', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Constant(value=137)],
+                keywords=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='up', ctx=Store())],
+                    value=BinOp(
+                        left=Constant(value=1),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                BinOp(
+                                    left=BinOp(
+                                        left=Name(id='v', ctx=Load()),
+                                        op=Mult(),
+                                        right=Call(
+                                            func=Attribute(
+                                                value=Name(id='random', ctx=Load()),
+                                                attr='random',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[])),
+                                    op=Mult(),
+                                    right=Constant(value=2.7))],
+                            keywords=[]))),
+                Assign(
+                    targets=[
+                        Name(id='lst1', ctx=Store())],
+                    value=ListComp(
+                        elt=Call(
+                            func=Attribute(
+                                value=Name(id='random', ctx=Load()),
+                                attr='randrange',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=0),
+                                Name(id='up', ctx=Load())],
+                            keywords=[]),
+                        generators=[
+                            comprehension(
+                                target=Name(id='i', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Name(id='v', ctx=Load())],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)])),
+                Expr(
+                    value=Call(
+                        func=Name(id='sorttest', ctx=Load()),
+                        args=[
+                            Name(id='lst1', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="everything's fine")],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

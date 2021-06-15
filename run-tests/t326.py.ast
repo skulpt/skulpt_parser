@@ -1,0 +1,45 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='math')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%10.5f'),
+                        op=Mod(),
+                        right=Call(
+                            func=Attribute(
+                                value=Name(id='math', ctx=Load()),
+                                attr='radians',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=180)],
+                            keywords=[]))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%10.5f'),
+                        op=Mod(),
+                        right=Call(
+                            func=Attribute(
+                                value=Name(id='math', ctx=Load()),
+                                attr='degrees',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Attribute(
+                                        value=Name(id='math', ctx=Load()),
+                                        attr='radians',
+                                        ctx=Load()),
+                                    args=[
+                                        Constant(value=180)],
+                                    keywords=[])],
+                            keywords=[]))],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,27 @@
+Module(
+    body=[
+        If(
+            test=BoolOp(
+                op=Or(),
+                values=[
+                    Compare(
+                        left=Constant(value='x'),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='x')]),
+                    Compare(
+                        left=Constant(value='y'),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='y')])]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='OK')],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

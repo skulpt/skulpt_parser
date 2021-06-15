@@ -1,0 +1,1413 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expect', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expect', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.capitalize')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='capitalize',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='Hello world')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='HELLO WorlD'),
+                            attr='capitalize',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='Hello world')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.center')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='center',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=7)],
+                        keywords=[]),
+                    Constant(value=' 12345 ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='center',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value=' 12345  ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.count')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc')],
+                        keywords=[]),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='aaaaaaaaaaa '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='aa')],
+                        keywords=[]),
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.find')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='X')],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=3)],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.index')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=3)],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.isdigit')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='isdigit',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='1234'),
+                            attr='isdigit',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='isdigit',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='123.45'),
+                            attr='isdigit',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.isalpha')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABCabc'),
+                            attr='isalpha',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abc123'),
+                            attr='isalpha',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABC abc'),
+                            attr='isalpha',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='isalpha',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.isalnum')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABCabc'),
+                            attr='isalnum',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abc123'),
+                            attr='isalnum',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABC abc'),
+                            attr='isalnum',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='isalnum',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.islower')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abc'),
+                            attr='islower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abc123'),
+                            attr='islower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABC abc'),
+                            attr='islower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='islower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.isupper')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABC'),
+                            attr='isupper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABC123'),
+                            attr='isupper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='ABC abc'),
+                            attr='isupper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='isupper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.isnumeric')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='123'),
+                            attr='isnumeric',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abc123'),
+                            attr='isnumeric',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='1 2 3'),
+                            attr='isnumeric',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='123.4'),
+                            attr='isnumeric',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='isnumeric',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.join')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='-'),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='1234')],
+                        keywords=[]),
+                    Constant(value='1-2-3-4')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='-'),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='1'),
+                                    Constant(value='2'),
+                                    Constant(value='3'),
+                                    Constant(value='4')],
+                                ctx=Load())],
+                        keywords=[]),
+                    Constant(value='1-2-3-4')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='-'),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value='1'),
+                                    Constant(value='2'),
+                                    Constant(value='3'),
+                                    Constant(value='4')],
+                                ctx=Load())],
+                        keywords=[]),
+                    Constant(value='1-2-3-4')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.ljust')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='ljust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value='12345   ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='   12345'),
+                            attr='ljust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value='   12345')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.lower')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='HELLO'),
+                            attr='lower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='Hello woRLd!'),
+                            attr='lower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello world!')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='lower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='lower',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.lstrip')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='    hello'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='     '),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.partition')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='partition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='h')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value=''),
+                            Constant(value='h'),
+                            Constant(value='ello')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='partition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value='he'),
+                            Constant(value='l'),
+                            Constant(value='lo')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='partition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value='hell'),
+                            Constant(value='o'),
+                            Constant(value='')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='partition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='x')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value='hello'),
+                            Constant(value=''),
+                            Constant(value='')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.replace')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value='L')],
+                        keywords=[]),
+                    Constant(value='heLLo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello wOrld!'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='hell wOrld!')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=''),
+                            Constant(value='hello')],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=''),
+                            Constant(value='!')],
+                        keywords=[]),
+                    Constant(value='!h!e!l!l!o!')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcabcaaaabc'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value='123')],
+                        keywords=[]),
+                    Constant(value='123123aaa123')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rfind')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='X')],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=3)],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rindex')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=3)],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rjust')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345'),
+                            attr='rjust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value='   12345')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='12345   '),
+                            attr='rjust',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value='12345   ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rpartition')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='rpartition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='h')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value=''),
+                            Constant(value='h'),
+                            Constant(value='ello')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='rpartition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value='hel'),
+                            Constant(value='l'),
+                            Constant(value='o')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='rpartition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value='hell'),
+                            Constant(value='o'),
+                            Constant(value='')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='rpartition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='x')],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value=''),
+                            Constant(value=''),
+                            Constant(value='hello')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rstrip')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello    '),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='     '),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.split')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='split',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=None)],
+                        keywords=[]),
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='hello')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=None)],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='hello')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world   ! '),
+                            attr='split',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='hello'),
+                            Constant(value='world'),
+                            Constant(value='!')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a')],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value=1)],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l')],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='he'),
+                            Constant(value=''),
+                            Constant(value='o')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=1)],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value='he'),
+                            Constant(value='lo')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.strip')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='    hello    '),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='     '),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.upper')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='upper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='HELLO')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='Hello woRLd!'),
+                            attr='upper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='HELLO WORLD!')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='HELLO'),
+                            attr='upper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='HELLO')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='upper',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,83 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='formatting with just %d argument'),
+                        op=Mod(),
+                        right=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%d %i %o %x %X %e %E %f %F'),
+                        op=Mod(),
+                        right=Tuple(
+                            elts=[
+                                Constant(value=12),
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=12)),
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=7)),
+                                Constant(value=74),
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=74)),
+                                Constant(value=23000000000.0),
+                                Constant(value=2.3e-10),
+                                Constant(value=1.23),
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1.23))],
+                            ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%g %G %g %G'),
+                        op=Mod(),
+                        right=Tuple(
+                            elts=[
+                                Constant(value=1.23e-06),
+                                Constant(value=1.23e-06),
+                                Constant(value=1.4),
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1.4))],
+                            ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%r is a repr and %s is a string'),
+                        op=Mod(),
+                        right=Tuple(
+                            elts=[
+                                Constant(value='this'),
+                                Constant(value='this')],
+                            ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='I can also use a %(structure)s to format.'),
+                        op=Mod(),
+                        right=Dict(
+                            keys=[
+                                Constant(value='structure')],
+                            values=[
+                                Constant(value='dictionary')]))],
+                keywords=[]))],
+    type_ignores=[])

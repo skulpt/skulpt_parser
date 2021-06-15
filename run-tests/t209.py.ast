@@ -1,0 +1,79 @@
+Module(
+    body=[
+        ClassDef(
+            name='X',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='px',
+                                    ctx=Store())],
+                            value=Constant(value=3))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='y',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='l', ctx=Store())],
+                            value=Constant(value='xyz')),
+                        If(
+                            test=Compare(
+                                left=Call(
+                                    func=Name(id='len', ctx=Load()),
+                                    args=[
+                                        Name(id='l', ctx=Load())],
+                                    keywords=[]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='px',
+                                        ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='OK')],
+                                        keywords=[]))],
+                            orelse=[])],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='X', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='x', ctx=Load()),
+                    attr='y',
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

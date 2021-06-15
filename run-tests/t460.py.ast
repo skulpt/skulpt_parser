@@ -1,0 +1,166 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\\W+'),
+                            Constant(value='Words, words, words.')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(\\W+)'),
+                            Constant(value='Words, words, words.')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\\W+'),
+                            Constant(value='Words, words, words.'),
+                            Constant(value=1)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a-f]+'),
+                            Constant(value='0a3B9'),
+                            Constant(value=0),
+                            Attribute(
+                                value=Name(id='re', ctx=Load()),
+                                attr='IGNORECASE',
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(\\W+)'),
+                            Constant(value='...words, words...')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='x*'),
+                            Constant(value='foo')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\\w+'),
+                            Constant(value='Words, words, words.')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(abc)(def)'),
+                            Constant(value='abcdef')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(abc)(def)'),
+                            Constant(value='abcdefabcdefjaabcdef3sabc')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(abc)'),
+                            Constant(value='abcdef')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(abc)|(def)'),
+                            Constant(value='abcdefabcdefjaabcdef3sabc')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

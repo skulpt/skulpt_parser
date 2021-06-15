@@ -1,0 +1,62 @@
+Module(
+    body=[
+        ClassDef(
+            name='Foo',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='arg')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='x',
+                                    ctx=Store())],
+                            value=Constant(value=None))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__getitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='key')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='x',
+                                ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='Foo', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='x', ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

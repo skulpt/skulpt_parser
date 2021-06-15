@@ -1,0 +1,240 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=1)),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Add(),
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=5)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Sub(),
+            value=Constant(value=2)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=3)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Mult(),
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=12)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Div(),
+            value=Constant(value=6)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Mod(),
+            value=Constant(value=5)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2)])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=1)),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Add(),
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=5)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Sub(),
+            value=Constant(value=2)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=3)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Mult(),
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=12)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Div(),
+            value=Constant(value=6)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Mod(),
+            value=Constant(value=5)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2)])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=1.5)),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Add(),
+            value=Constant(value=4.2)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=5.7)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Sub(),
+            value=Constant(value=3.7)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2.0)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Mult(),
+            value=Constant(value=4.25)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=8.5)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Div(),
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2.125)])],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='x', ctx=Store()),
+            op=Mod(),
+            value=Constant(value=2)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0.125)])],
+                keywords=[]))],
+    type_ignores=[])

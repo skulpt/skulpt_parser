@@ -1,0 +1,37 @@
+Module(
+    body=[
+        FunctionDef(
+            name='a',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='x', ctx=Store())],
+                    value=Constant(value='OK')),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])),
+                Delete(
+                    targets=[
+                        Name(id='x', ctx=Del())]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='after')],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='a', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

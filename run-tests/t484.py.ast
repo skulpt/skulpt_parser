@@ -1,0 +1,198 @@
+Module(
+    body=[
+        ClassDef(
+            name='calculator',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='div',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='x'),
+                            arg(arg='y')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Try(
+                            body=[
+                                Return(
+                                    value=BinOp(
+                                        left=Name(id='x', ctx=Load()),
+                                        op=Div(),
+                                        right=Name(id='y', ctx=Load())))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='ZeroDivisionError', ctx=Load()),
+                                    body=[
+                                        Return(
+                                            value=Constant(value="ZeroDivisionError: can't divide by zero"))]),
+                                ExceptHandler(
+                                    type=Name(id='NameError', ctx=Load()),
+                                    name='e',
+                                    body=[
+                                        Return(
+                                            value=Name(id='e', ctx=Load()))]),
+                                ExceptHandler(
+                                    type=Name(id='TypeError', ctx=Load()),
+                                    name='e',
+                                    body=[
+                                        Return(
+                                            value=Name(id='e', ctx=Load()))]),
+                                ExceptHandler(
+                                    type=Name(id='TypeError', ctx=Load()),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Constant(value="DID NOT CATCH 'TypeError as e'")],
+                                                keywords=[])),
+                                        Return(
+                                            value=Constant(value='TypeError'))]),
+                                ExceptHandler(
+                                    type=Name(id='BaseException', ctx=Load()),
+                                    body=[
+                                        Return(
+                                            value=Constant(value='OTHER ERROR'))])],
+                            orelse=[],
+                            finalbody=[])],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Call(
+                func=Name(id='calculator', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='c', ctx=Load()),
+                                    attr='div',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=10),
+                                    Constant(value=1)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='c', ctx=Load()),
+                            attr='div',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=10),
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='c', ctx=Load()),
+                                    attr='div',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='12'),
+                                    Constant(value='6')],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Call(
+                                    func=Attribute(
+                                        value=Name(id='c', ctx=Load()),
+                                        attr='div',
+                                        ctx=Load()),
+                                    args=[
+                                        Constant(value='10'),
+                                        Constant(value='1')],
+                                    keywords=[]),
+                                op=Div(),
+                                right=Constant(value=2))],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='ERROR')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='c', ctx=Load()),
+                                    attr='div',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load()),
+                                    Constant(value=12)],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='NameError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

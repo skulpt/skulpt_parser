@@ -1,0 +1,1038 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x'),
+                    arg(arg='y'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='l', ctx=Store())],
+                    value=BinOp(
+                        left=List(
+                            elts=[
+                                Constant(value=0)],
+                            ctx=Load()),
+                        op=Mult(),
+                        right=Constant(value=6))),
+                If(
+                    test=Compare(
+                        left=Name(id='expect', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='l', ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Store())],
+                            value=Compare(
+                                left=Name(id='x', ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Name(id='y', ctx=Load())])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='l', ctx=Load()),
+                                    slice=Constant(value=1),
+                                    ctx=Store())],
+                            value=Compare(
+                                left=Name(id='x', ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Name(id='y', ctx=Load())])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='l', ctx=Load()),
+                                    slice=Constant(value=2),
+                                    ctx=Store())],
+                            value=Compare(
+                                left=Compare(
+                                    left=Name(id='x', ctx=Load()),
+                                    ops=[
+                                        Gt()],
+                                    comparators=[
+                                        Name(id='y', ctx=Load())]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=False)])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='l', ctx=Load()),
+                                    slice=Constant(value=3),
+                                    ctx=Store())],
+                            value=Compare(
+                                left=Compare(
+                                    left=Name(id='x', ctx=Load()),
+                                    ops=[
+                                        GtE()],
+                                    comparators=[
+                                        Name(id='y', ctx=Load())]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=False)])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='l', ctx=Load()),
+                                    slice=Constant(value=4),
+                                    ctx=Store())],
+                            value=Compare(
+                                left=Compare(
+                                    left=Name(id='x', ctx=Load()),
+                                    ops=[
+                                        Eq()],
+                                    comparators=[
+                                        Name(id='y', ctx=Load())]),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=False)])),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='l', ctx=Load()),
+                                    slice=Constant(value=5),
+                                    ctx=Store())],
+                            value=Compare(
+                                left=Name(id='x', ctx=Load()),
+                                ops=[
+                                    NotEq()],
+                                comparators=[
+                                    Name(id='y', ctx=Load())])),
+                        If(
+                            test=BoolOp(
+                                op=Or(),
+                                values=[
+                                    Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load()),
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='int', ctx=Load()),
+                                                    Name(id='float', ctx=Load()),
+                                                    Name(id='str', ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='isinstance', ctx=Load()),
+                                        args=[
+                                            Name(id='y', ctx=Load()),
+                                            Tuple(
+                                                elts=[
+                                                    Name(id='int', ctx=Load()),
+                                                    Name(id='float', ctx=Load()),
+                                                    Name(id='str', ctx=Load())],
+                                                ctx=Load())],
+                                        keywords=[])]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='l', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Compare(
+                                                left=Compare(
+                                                    left=Name(id='x', ctx=Load()),
+                                                    ops=[
+                                                        Is()],
+                                                    comparators=[
+                                                        Name(id='y', ctx=Load())]),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=False)])],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='l', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Compare(
+                                                left=Name(id='x', ctx=Load()),
+                                                ops=[
+                                                    IsNot()],
+                                                comparators=[
+                                                    Name(id='y', ctx=Load())])],
+                                        keywords=[]))],
+                            orelse=[])],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='expect', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='l', ctx=Load()),
+                                            slice=Constant(value=0),
+                                            ctx=Store())],
+                                    value=Compare(
+                                        left=Compare(
+                                            left=Name(id='x', ctx=Load()),
+                                            ops=[
+                                                Lt()],
+                                            comparators=[
+                                                Name(id='y', ctx=Load())]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=False)])),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='l', ctx=Load()),
+                                            slice=Constant(value=1),
+                                            ctx=Store())],
+                                    value=Compare(
+                                        left=Name(id='x', ctx=Load()),
+                                        ops=[
+                                            LtE()],
+                                        comparators=[
+                                            Name(id='y', ctx=Load())])),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='l', ctx=Load()),
+                                            slice=Constant(value=2),
+                                            ctx=Store())],
+                                    value=Compare(
+                                        left=Compare(
+                                            left=Name(id='x', ctx=Load()),
+                                            ops=[
+                                                Gt()],
+                                            comparators=[
+                                                Name(id='y', ctx=Load())]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=False)])),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='l', ctx=Load()),
+                                            slice=Constant(value=3),
+                                            ctx=Store())],
+                                    value=Compare(
+                                        left=Name(id='x', ctx=Load()),
+                                        ops=[
+                                            GtE()],
+                                        comparators=[
+                                            Name(id='y', ctx=Load())])),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='l', ctx=Load()),
+                                            slice=Constant(value=4),
+                                            ctx=Store())],
+                                    value=Compare(
+                                        left=Name(id='x', ctx=Load()),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='y', ctx=Load())])),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Name(id='l', ctx=Load()),
+                                            slice=Constant(value=5),
+                                            ctx=Store())],
+                                    value=Compare(
+                                        left=Compare(
+                                            left=Name(id='x', ctx=Load()),
+                                            ops=[
+                                                NotEq()],
+                                            comparators=[
+                                                Name(id='y', ctx=Load())]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=False)])),
+                                If(
+                                    test=BoolOp(
+                                        op=Or(),
+                                        values=[
+                                            Call(
+                                                func=Name(id='isinstance', ctx=Load()),
+                                                args=[
+                                                    Name(id='x', ctx=Load()),
+                                                    Tuple(
+                                                        elts=[
+                                                            Name(id='int', ctx=Load()),
+                                                            Name(id='float', ctx=Load()),
+                                                            Name(id='str', ctx=Load())],
+                                                        ctx=Load())],
+                                                keywords=[]),
+                                            Call(
+                                                func=Name(id='isinstance', ctx=Load()),
+                                                args=[
+                                                    Name(id='y', ctx=Load()),
+                                                    Tuple(
+                                                        elts=[
+                                                            Name(id='int', ctx=Load()),
+                                                            Name(id='float', ctx=Load()),
+                                                            Name(id='str', ctx=Load())],
+                                                        ctx=Load())],
+                                                keywords=[])]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Compare(
+                                                        left=Name(id='x', ctx=Load()),
+                                                        ops=[
+                                                            Is()],
+                                                        comparators=[
+                                                            Name(id='y', ctx=Load())])],
+                                                keywords=[])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Compare(
+                                                        left=Compare(
+                                                            left=Name(id='x', ctx=Load()),
+                                                            ops=[
+                                                                IsNot()],
+                                                            comparators=[
+                                                                Name(id='y', ctx=Load())]),
+                                                        ops=[
+                                                            Eq()],
+                                                        comparators=[
+                                                            Constant(value=False)])],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            orelse=[
+                                If(
+                                    test=Compare(
+                                        left=Name(id='expect', ctx=Load()),
+                                        ops=[
+                                            Gt()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    slice=Constant(value=0),
+                                                    ctx=Store())],
+                                            value=Compare(
+                                                left=Compare(
+                                                    left=Name(id='x', ctx=Load()),
+                                                    ops=[
+                                                        Lt()],
+                                                    comparators=[
+                                                        Name(id='y', ctx=Load())]),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=False)])),
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    slice=Constant(value=1),
+                                                    ctx=Store())],
+                                            value=Compare(
+                                                left=Compare(
+                                                    left=Name(id='x', ctx=Load()),
+                                                    ops=[
+                                                        LtE()],
+                                                    comparators=[
+                                                        Name(id='y', ctx=Load())]),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=False)])),
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    slice=Constant(value=2),
+                                                    ctx=Store())],
+                                            value=Compare(
+                                                left=Name(id='x', ctx=Load()),
+                                                ops=[
+                                                    Gt()],
+                                                comparators=[
+                                                    Name(id='y', ctx=Load())])),
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    slice=Constant(value=3),
+                                                    ctx=Store())],
+                                            value=Compare(
+                                                left=Name(id='x', ctx=Load()),
+                                                ops=[
+                                                    GtE()],
+                                                comparators=[
+                                                    Name(id='y', ctx=Load())])),
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    slice=Constant(value=4),
+                                                    ctx=Store())],
+                                            value=Compare(
+                                                left=Compare(
+                                                    left=Name(id='x', ctx=Load()),
+                                                    ops=[
+                                                        Eq()],
+                                                    comparators=[
+                                                        Name(id='y', ctx=Load())]),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Constant(value=False)])),
+                                        Assign(
+                                            targets=[
+                                                Subscript(
+                                                    value=Name(id='l', ctx=Load()),
+                                                    slice=Constant(value=5),
+                                                    ctx=Store())],
+                                            value=Compare(
+                                                left=Name(id='x', ctx=Load()),
+                                                ops=[
+                                                    NotEq()],
+                                                comparators=[
+                                                    Name(id='y', ctx=Load())])),
+                                        If(
+                                            test=BoolOp(
+                                                op=Or(),
+                                                values=[
+                                                    Call(
+                                                        func=Name(id='isinstance', ctx=Load()),
+                                                        args=[
+                                                            Name(id='x', ctx=Load()),
+                                                            Tuple(
+                                                                elts=[
+                                                                    Name(id='int', ctx=Load()),
+                                                                    Name(id='float', ctx=Load()),
+                                                                    Name(id='str', ctx=Load())],
+                                                                ctx=Load())],
+                                                        keywords=[]),
+                                                    Call(
+                                                        func=Name(id='isinstance', ctx=Load()),
+                                                        args=[
+                                                            Name(id='y', ctx=Load()),
+                                                            Tuple(
+                                                                elts=[
+                                                                    Name(id='int', ctx=Load()),
+                                                                    Name(id='float', ctx=Load()),
+                                                                    Name(id='str', ctx=Load())],
+                                                                ctx=Load())],
+                                                        keywords=[])]),
+                                            body=[
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='l', ctx=Load()),
+                                                            attr='append',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Compare(
+                                                                left=Compare(
+                                                                    left=Name(id='x', ctx=Load()),
+                                                                    ops=[
+                                                                        Is()],
+                                                                    comparators=[
+                                                                        Name(id='y', ctx=Load())]),
+                                                                ops=[
+                                                                    Eq()],
+                                                                comparators=[
+                                                                    Constant(value=False)])],
+                                                        keywords=[])),
+                                                Expr(
+                                                    value=Call(
+                                                        func=Attribute(
+                                                            value=Name(id='l', ctx=Load()),
+                                                            attr='append',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Compare(
+                                                                left=Name(id='x', ctx=Load()),
+                                                                ops=[
+                                                                    IsNot()],
+                                                                comparators=[
+                                                                    Name(id='y', ctx=Load())])],
+                                                        keywords=[]))],
+                                            orelse=[])],
+                                    orelse=[])])]),
+                If(
+                    test=BoolOp(
+                        op=And(),
+                        values=[
+                            UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='x', ctx=Load()),
+                                        Tuple(
+                                            elts=[
+                                                Name(id='int', ctx=Load()),
+                                                Name(id='float', ctx=Load()),
+                                                Name(id='str', ctx=Load())],
+                                            ctx=Load())],
+                                    keywords=[])),
+                            UnaryOp(
+                                op=Not(),
+                                operand=Call(
+                                    func=Name(id='isinstance', ctx=Load()),
+                                    args=[
+                                        Name(id='y', ctx=Load()),
+                                        Tuple(
+                                            elts=[
+                                                Name(id='int', ctx=Load()),
+                                                Name(id='float', ctx=Load()),
+                                                Name(id='str', ctx=Load())],
+                                            ctx=Load())],
+                                    keywords=[]))]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='l', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Compare(
+                                        left=Compare(
+                                            left=Name(id='x', ctx=Load()),
+                                            ops=[
+                                                Is()],
+                                            comparators=[
+                                                Name(id='y', ctx=Load())]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=False)])],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='l', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Compare(
+                                        left=Name(id='x', ctx=Load()),
+                                        ops=[
+                                            IsNot()],
+                                        comparators=[
+                                            Name(id='y', ctx=Load())])],
+                                keywords=[]))],
+                    orelse=[]),
+                If(
+                    test=Call(
+                        func=Name(id='all', ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='x', ctx=Load()),
+                                    Name(id='y', ctx=Load()),
+                                    Name(id='l', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nINTEGERS')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=1),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=2),
+                    Constant(value=1),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2)),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2)),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1)),
+                    Constant(value=1),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1)),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nLONG INTEGERS')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=2),
+                    Constant(value=1),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1)),
+                    Constant(value=1),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1)),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nFLOATING POINT')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1.0),
+                    Constant(value=2.0),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1.0),
+                    Constant(value=1.0),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=2.0),
+                    Constant(value=1.0),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2.0)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1.0)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2.0)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2.0)),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1.0)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2.0)),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1.0)),
+                    Constant(value=1.0),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=1.0),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1.0)),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nLISTS')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=1)],
+                        ctx=Load()),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load()),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load()),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=2),
+                            Constant(value=1)],
+                        ctx=Load()),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=1),
+                            Constant(value=5)],
+                        ctx=Load()),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nTUPLES')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='tuple', ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value=1)],
+                        ctx=Load()),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load()),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load()),
+                    Tuple(
+                        elts=[
+                            Constant(value=2),
+                            Constant(value=1)],
+                        ctx=Load()),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=1),
+                            Constant(value=5)],
+                        ctx=Load()),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSTRINGS')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value=''),
+                    Constant(value='a'),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a'),
+                    Constant(value='a'),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='ab'),
+                    Constant(value='a'),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='ABCD'),
+                    Constant(value='abcd'),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='ABCD'),
+                    Constant(value='ABCD'),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='aBCD'),
+                    Constant(value='Abcd'),
+                    Constant(value=1)],
+                keywords=[]))],
+    type_ignores=[])

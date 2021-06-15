@@ -1,0 +1,30 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='a'),
+                        op=Mult(),
+                        right=Constant(value=15))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='dog'),
+                        op=Mult(),
+                        right=Constant(value=19))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=40),
+                        op=Mult(),
+                        right=Constant(value='weee'))],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,56 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='things', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='hi'),
+                    Constant(value='a'),
+                    Constant(value='b'),
+                    Constant(value='c')],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='things', ctx=Load()),
+                    attr='insert',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='things', ctx=Load())],
+                        keywords=[]),
+                    Constant(value='bye')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='things', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='things', ctx=Load()),
+                    attr='insert',
+                    ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='things', ctx=Load())],
+                            keywords=[]),
+                        op=Add(),
+                        right=Constant(value=3)),
+                    Constant(value='surpise')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='things', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

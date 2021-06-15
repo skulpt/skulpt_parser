@@ -1,0 +1,239 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='collections')]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='collections', ctx=Load()),
+                                    attr='defaultdict',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='collections', ctx=Load()),
+                                    attr='defaultdict',
+                                    ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='list', ctx=Load()),
+                                        args=[],
+                                        keywords=[]),
+                                    Dict(keys=[], values=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='collections', ctx=Load()),
+                                    attr='defaultdict',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='list', ctx=Load()),
+                                    Constant(value=12)],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='d', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='collections', ctx=Load()),
+                            attr='defaultdict',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=None)],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='d', ctx=Load()),
+                                slice=Constant(value=5),
+                                ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='KeyError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='d', ctx=Load()),
+                                    attr='get',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=5)],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='d', ctx=Load()),
+                            attr='__missing__',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='d', ctx=Load()),
+                            attr='__missing__',
+                            ctx=Load()),
+                        args=[
+                            Dict(
+                                keys=[
+                                    Constant(value=1)],
+                                values=[
+                                    Constant(value=2)])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='KeyError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

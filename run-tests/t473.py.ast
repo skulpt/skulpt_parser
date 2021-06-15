@@ -1,0 +1,467 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expected')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expected', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expected', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.strip')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='  hello  '),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='  hello  '),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='  hello  ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..hello..'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='..hello..')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..hello..'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.')],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcz'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a-z')],
+                        keywords=[]),
+                    Constant(value='bc')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='z alpha z'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a-z')],
+                        keywords=[]),
+                    Constant(value=' alpha ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^[a-z]*.\\s+.*')],
+                        keywords=[]),
+                    Constant(value='hello world')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='[$]hello-^'),
+                            attr='strip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^[a-z]$')],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.lstrip')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='  hello  '),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello  ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='  hello  '),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='  hello  ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..hello..'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='..hello..')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..hello..'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.')],
+                        keywords=[]),
+                    Constant(value='hello..')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcz'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a-z')],
+                        keywords=[]),
+                    Constant(value='bcz')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='z alpha z'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a-z')],
+                        keywords=[]),
+                    Constant(value=' alpha z')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^[a-z]*.\\s+.*')],
+                        keywords=[]),
+                    Constant(value='hello world')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='[$]hello-^'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^[a-z]$')],
+                        keywords=[]),
+                    Constant(value='hello-^')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rstrip')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='  hello  '),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='  hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='  hello  '),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='  hello  ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..hello..'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Constant(value='..hello..')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..hello..'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.')],
+                        keywords=[]),
+                    Constant(value='..hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcz'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a-z')],
+                        keywords=[]),
+                    Constant(value='abc')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='z alpha z'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a-z')],
+                        keywords=[]),
+                    Constant(value='z alpha ')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^[a-z]*.\\s+.*')],
+                        keywords=[]),
+                    Constant(value='hello world')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='[$]hello-^'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^[a-z]$')],
+                        keywords=[]),
+                    Constant(value='[$]hello')],
+                keywords=[]))],
+    type_ignores=[])

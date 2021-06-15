@@ -1,0 +1,21 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load()),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

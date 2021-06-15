@@ -1,0 +1,85 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=1)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='l', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Name(id='l', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='l', ctx=Load()),
+                        ops=[
+                            GtE()],
+                        comparators=[
+                            Name(id='l', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='l', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='l', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='l', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='l', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='l', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Name(id='l', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='l', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='l', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

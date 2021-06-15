@@ -1,0 +1,227 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='t', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1),
+                    Constant(value=3)],
+                values=[
+                    Constant(value=2),
+                    Constant(value=4)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nlists')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load()),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load()),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ntuples')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Tuple(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Tuple(elts=[], ctx=Load()),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load()),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ndictionaries')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Dict(keys=[], values=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Dict(keys=[], values=[]),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Dict(
+                                keys=[
+                                    Constant(value=1),
+                                    Constant(value=3)],
+                                values=[
+                                    Constant(value=2),
+                                    Constant(value=4)])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='d', ctx=Load()),
+                                    attr='keys',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='d', ctx=Load()),
+                                    attr='values',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Name(id='d', ctx=Load()),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

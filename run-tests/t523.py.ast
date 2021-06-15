@@ -1,0 +1,105 @@
+Module(
+    body=[
+        ClassDef(
+            name='A',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__bool__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value='not the right value'))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='bool', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='A', ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        ClassDef(
+            name='B',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value='not the right value'))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='bool', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='B', ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

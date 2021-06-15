@@ -1,0 +1,44 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Constant(value=4)),
+        FunctionDef(
+            name='test',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='z')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Name(id='a', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        AugAssign(
+                            target=Name(id='z', ctx=Store()),
+                            op=Add(),
+                            value=Name(id='i', ctx=Load()))],
+                    orelse=[]),
+                Return(
+                    value=Name(id='z', ctx=Load()))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='test', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

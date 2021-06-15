@@ -1,0 +1,183 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='abcdabab')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ac')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ac'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='cd')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='cd'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ac')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ac'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ac'),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

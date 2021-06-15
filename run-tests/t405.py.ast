@@ -1,0 +1,75 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='correct', ctx=Store())],
+            value=Constant(value=True)),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Constant(value=256)],
+                keywords=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='x', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='ord', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='chr', ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[])]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='correct', ctx=Store())],
+                            value=Constant(value=False))],
+                    orelse=[])],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='chr and ord are inverses: '),
+                    Name(id='correct', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='chr', ctx=Load()),
+                        args=[
+                            Constant(value=97)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='chr', ctx=Load()),
+                            args=[
+                                Constant(value=97)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='a')])],
+                keywords=[]))],
+    type_ignores=[])

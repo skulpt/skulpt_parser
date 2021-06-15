@@ -1,0 +1,1653 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='match'),
+                    arg(arg='expected')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='expected', ctx=Load()),
+                            Name(id='str', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        If(
+                            test=Name(id='match', ctx=Load()),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=Call(
+                                            func=Attribute(
+                                                value=Name(id='match', ctx=Load()),
+                                                attr='group',
+                                                ctx=Load()),
+                                            args=[
+                                                Constant(value=0)],
+                                            keywords=[]),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Name(id='expected', ctx=Load())]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Constant(value=True)],
+                                                keywords=[]))],
+                                    orelse=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Call(
+                                                        func=Attribute(
+                                                            value=Name(id='match', ctx=Load()),
+                                                            attr='group',
+                                                            ctx=Load()),
+                                                        args=[
+                                                            Constant(value=0)],
+                                                        keywords=[]),
+                                                    Name(id='expected', ctx=Load())],
+                                                keywords=[]))])],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value="didn't get a match")],
+                                        keywords=[]))])],
+                    orelse=[
+                        If(
+                            test=Name(id='match', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Compare(
+                                                left=Constant(value=True),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Name(id='expected', ctx=Load())])],
+                                        keywords=[]))],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Compare(
+                                                left=Constant(value=False),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Name(id='expected', ctx=Load())])],
+                                        keywords=[]))])])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: .')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.a'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a.'),
+                            Constant(value='a\n')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='.a'),
+                            Constant(value='ba')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: ^')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a^'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^a'),
+                            Constant(value='ba')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^a'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^a'),
+                            Constant(value='\na')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a^'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: $')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='$'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='$a'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a$'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a$'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a$'),
+                            Constant(value='a\nb')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a$'),
+                            Constant(value='a\n')],
+                        keywords=[]),
+                    Constant(value=True)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: *')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a*'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*'),
+                            Constant(value='abbbbb')],
+                        keywords=[]),
+                    Constant(value='abbbbb')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*'),
+                            Constant(value='ba')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*'),
+                            Constant(value='bbbb')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: +')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a+'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+'),
+                            Constant(value='abbbbb')],
+                        keywords=[]),
+                    Constant(value='abbbbb')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+'),
+                            Constant(value='ba')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+'),
+                            Constant(value='bbbb')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: ?')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a?'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab?'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab?'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab?'),
+                            Constant(value='abbbbb')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab?'),
+                            Constant(value='ba')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab?'),
+                            Constant(value='bbbb')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: *?')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a*?'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*?'),
+                            Constant(value='abbbb')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*?'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab*?'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: +?')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a+?'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+?'),
+                            Constant(value='abbbb')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+?'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab+?'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: ??')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a??'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab??'),
+                            Constant(value='abbbb')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab??'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ab??'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: {m}')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2}'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2}'),
+                            Constant(value='aa')],
+                        keywords=[]),
+                    Constant(value='aa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2}'),
+                            Constant(value='aaa')],
+                        keywords=[]),
+                    Constant(value='aa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: {m,n}')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}b'),
+                            Constant(value='b')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}b'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}b'),
+                            Constant(value='aab')],
+                        keywords=[]),
+                    Constant(value='aab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}b'),
+                            Constant(value='aaab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}b'),
+                            Constant(value='b')],
+                        keywords=[]),
+                    Constant(value='b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}b'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}b'),
+                            Constant(value='aab')],
+                        keywords=[]),
+                    Constant(value='aab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}b'),
+                            Constant(value='aaab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}b'),
+                            Constant(value='b')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}b'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}b'),
+                            Constant(value='aab')],
+                        keywords=[]),
+                    Constant(value='aab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}b'),
+                            Constant(value='aaab')],
+                        keywords=[]),
+                    Constant(value='aaab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{3,5}'),
+                            Constant(value='aaaaaaaaaa')],
+                        keywords=[]),
+                    Constant(value='aaaaa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,5}'),
+                            Constant(value='aaaaaaaaaa')],
+                        keywords=[]),
+                    Constant(value='aaaaa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{3,}'),
+                            Constant(value='aaaaaaaaaa')],
+                        keywords=[]),
+                    Constant(value='aaaaaaaaaa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: {m,n}?')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}?b'),
+                            Constant(value='b')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}?b'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}?b'),
+                            Constant(value='aab')],
+                        keywords=[]),
+                    Constant(value='aab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{1,2}?b'),
+                            Constant(value='aaab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}?b'),
+                            Constant(value='b')],
+                        keywords=[]),
+                    Constant(value='b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}?b'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}?b'),
+                            Constant(value='aab')],
+                        keywords=[]),
+                    Constant(value='aab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,2}?b'),
+                            Constant(value='aaab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}?b'),
+                            Constant(value='b')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}?b'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}?b'),
+                            Constant(value='aab')],
+                        keywords=[]),
+                    Constant(value='aab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{2,}?b'),
+                            Constant(value='aaab')],
+                        keywords=[]),
+                    Constant(value='aaab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{3,5}?'),
+                            Constant(value='aaaaaaaaaa')],
+                        keywords=[]),
+                    Constant(value='aaa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{,5}?'),
+                            Constant(value='aaaaaaaaaa')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a{3,}?'),
+                            Constant(value='aaaaaaaaaa')],
+                        keywords=[]),
+                    Constant(value='aaa')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: []')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a,b,c]'),
+                            Constant(value='abc')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a-z]'),
+                            Constant(value='bc')],
+                        keywords=[]),
+                    Constant(value='b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[A-Z,0-9]'),
+                            Constant(value='abcdefg')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[^A-Z]'),
+                            Constant(value='ABCDEFGaHIJKL')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a*bc]'),
+                            Constant(value='*')],
+                        keywords=[]),
+                    Constant(value='*')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: |')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='|'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='|a'),
+                            Constant(value='')],
+                        keywords=[]),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a|b'),
+                            Constant(value='ba')],
+                        keywords=[]),
+                    Constant(value='b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='h|ello'),
+                            Constant(value='hello')],
+                        keywords=[]),
+                    Constant(value='h')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: (...)')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='match', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='match',
+                    ctx=Load()),
+                args=[
+                    Constant(value='(b*)'),
+                    Constant(value='bbbba')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Attribute(
+                                        value=Name(id='match', ctx=Load()),
+                                        attr='groups',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSyntax: (?...)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='(?:b*)'),
+                            Constant(value='bbbba')],
+                        keywords=[]),
+                    Constant(value='bbbb')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a(?=b)'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a(?=b)'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a(?!b)'),
+                            Constant(value='a')],
+                        keywords=[]),
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a(?!b)'),
+                            Constant(value='ab')],
+                        keywords=[]),
+                    Constant(value=False)],
+                keywords=[]))],
+    type_ignores=[])

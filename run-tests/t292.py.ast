@@ -1,0 +1,111 @@
+Module(
+    body=[
+        FunctionDef(
+            name='mygen',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='upto')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Name(id='upto', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='i'),
+                                            Name(id='i', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='got', ctx=Store())],
+                            value=Yield(
+                                value=Name(id='i', ctx=Load()))),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='got'),
+                                            Name(id='got', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='handle', ctx=Store())],
+            value=Call(
+                func=Name(id='mygen', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='first', ctx=Store())],
+            value=Constant(value=True)),
+        For(
+            target=Name(id='num', ctx=Store()),
+            iter=Name(id='handle', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='num'),
+                                    Name(id='num', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Name(id='first', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='signalling')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='foo', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='handle', ctx=Load()),
+                                    attr='send',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value='sig')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='foo'),
+                                            Name(id='foo', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='first', ctx=Store())],
+                            value=Constant(value=False))],
+                    orelse=[])],
+            orelse=[])],
+    type_ignores=[])

@@ -1,0 +1,44 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1)],
+                values=[
+                    Constant(value=2)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='d', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='d', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value='abc'),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='d', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

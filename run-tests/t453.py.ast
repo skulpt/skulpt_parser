@@ -1,0 +1,72 @@
+Module(
+    body=[
+        FunctionDef(
+            name='isPrototypeOf',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='toSource',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='hasOwnProperty',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='isPrototypeOf', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='toSource', ctx=Load()),
+                args=[
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='hasOwnProperty', ctx=Load()),
+                args=[
+                    Constant(value=3)],
+                keywords=[]))],
+    type_ignores=[])

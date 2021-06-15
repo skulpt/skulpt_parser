@@ -1,0 +1,38 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='m', ctx=Store())],
+            value=List(
+                elts=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='m', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='m', ctx=Load()),
+                    attr='extend',
+                    ctx=Load()),
+                args=[
+                    Name(id='m', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='m', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,31 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=100),
+                    Constant(value=101),
+                    Constant(value=102),
+                    Constant(value=103),
+                    Constant(value=104),
+                    Constant(value=105),
+                    Constant(value=106),
+                    Constant(value=107)],
+                ctx=Load())),
+        Delete(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Slice(
+                        lower=Constant(value=2),
+                        upper=Constant(value=6)),
+                    ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

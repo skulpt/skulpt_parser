@@ -1,0 +1,19 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Constant(value='X-OK-Y'),
+                                attr='split',
+                                ctx=Load()),
+                            args=[
+                                Constant(value='-')],
+                            keywords=[]),
+                        slice=Constant(value=1),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

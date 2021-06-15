@@ -1,0 +1,25 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Subscript(
+                            value=List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value='OK'),
+                                    Constant(value=4)],
+                                ctx=Load()),
+                            slice=Slice(
+                                lower=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=3)),
+                                upper=Constant(value=3)),
+                            ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

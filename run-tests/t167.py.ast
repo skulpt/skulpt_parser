@@ -1,0 +1,176 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='big', ctx=Store())],
+            value=Constant(value=123456789012345678901234567890)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%5d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%31d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%32d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%-32d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%032d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%-032d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%034d'"),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Name(id='big', ctx=Load())))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%034d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%0+34d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%+34d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%34d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%.2d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%.30d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%.31d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value="'%32.31d'"),
+                        op=Mod(),
+                        right=Name(id='big', ctx=Load()))],
+                keywords=[]))],
+    type_ignores=[])

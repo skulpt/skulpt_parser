@@ -1,0 +1,74 @@
+Module(
+    body=[
+        ImportFrom(
+            module='time',
+            names=[
+                alias(name='sleep')],
+            level=0),
+        FunctionDef(
+            name='sleepFiveTimes',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='param')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='v', ctx=Store())],
+                    value=Constant(value=0)),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=5)],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.01)],
+                                keywords=[])),
+                        Expr(
+                            value=Yield(
+                                value=Name(id='v', ctx=Load()))),
+                        AugAssign(
+                            target=Name(id='v', ctx=Store()),
+                            op=Add(),
+                            value=Name(id='param', ctx=Load()))],
+                    orelse=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='gen', ctx=Store())],
+            value=Call(
+                func=Name(id='sleepFiveTimes', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='gen', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        For(
+            target=Name(id='v', ctx=Store()),
+            iter=Name(id='gen', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='v', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

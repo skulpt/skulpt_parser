@@ -1,0 +1,54 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='mydog'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='my love is awesome'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='m')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='my love is awesome'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='my')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='my love is awesome'),
+                            attr='lstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='not')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

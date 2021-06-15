@@ -1,0 +1,30 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4),
+                    Constant(value=5),
+                    Constant(value=6),
+                    Constant(value=7),
+                    Constant(value=8)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Slice(
+                            lower=Constant(value=5),
+                            step=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4))),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,68 @@
+Module(
+    body=[
+        ClassDef(
+            name='MyTest',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='s')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Store())],
+                            value=Name(id='s', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='length',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='w',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='MyTest', ctx=Load()),
+                args=[
+                    Constant(value='foo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='x', ctx=Load()),
+                            attr='length',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

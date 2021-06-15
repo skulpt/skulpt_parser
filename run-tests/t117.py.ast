@@ -1,0 +1,19 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='abcd')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='s', ctx=Load()),
+                        slice=Slice(
+                            step=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

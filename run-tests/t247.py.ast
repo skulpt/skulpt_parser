@@ -1,0 +1,12 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Constant(value='abc'),
+                        slice=Constant(value=1.5),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

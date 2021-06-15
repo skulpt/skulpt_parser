@@ -1,0 +1,21 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Raise(
+            exc=Call(
+                func=Name(id='SystemExit', ctx=Load()),
+                args=[
+                    Constant(value='quit message')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value=2)],
+                keywords=[]))],
+    type_ignores=[])

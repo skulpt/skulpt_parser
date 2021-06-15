@@ -1,0 +1,76 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='^\\s*$'),
+                            Constant(value='')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\\s*|a'),
+                            Constant(value='   a  b')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a|\\s*'),
+                            Constant(value='   a  b')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\\s*|a'),
+                            Constant(value='   ba  b')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a|\\s*'),
+                            Constant(value='   ba  b')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

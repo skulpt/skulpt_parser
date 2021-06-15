@@ -1,0 +1,164 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        Assign(
+            targets=[
+                Name(id='m', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='match',
+                    ctx=Load()),
+                args=[
+                    Constant(value='([0-9]+)([a-z]+)([A-Z]*)'),
+                    Constant(value='345abu')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ngroup')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='group',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='345abu')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='group',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='345abu')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='group',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=1)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='345')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='group',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='abu')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='group',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=3)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ngroups')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='groups',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='345'),
+                                    Constant(value='abu'),
+                                    Constant(value='')],
+                                ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='m', ctx=Load()),
+                                attr='groups',
+                                ctx=Load()),
+                            args=[
+                                Constant(value='default')],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='345'),
+                                    Constant(value='abu'),
+                                    Constant(value='')],
+                                ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

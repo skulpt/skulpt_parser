@@ -1,0 +1,55 @@
+Module(
+    body=[
+        FunctionDef(
+            name='test',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='i')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='f', ctx=Store())],
+                    value=Constant(value=3)),
+                Try(
+                    body=[
+                        Return(
+                            value=Compare(
+                                left=Name(id='f', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=5)]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ValueError', ctx=Load()),
+                            body=[
+                                Return(
+                                    value=Constant(value=True))])],
+                    orelse=[],
+                    finalbody=[])],
+            decorator_list=[]),
+        If(
+            test=Call(
+                func=Name(id='test', ctx=Load()),
+                args=[
+                    Constant(value=12)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Is true')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Is false')],
+                        keywords=[]))])],
+    type_ignores=[])

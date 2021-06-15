@@ -1,0 +1,23 @@
+Module(
+    body=[
+        ClassDef(
+            name='X',
+            bases=[],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Call(
+                func=Name(id='X', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='OK')],
+                keywords=[]))],
+    type_ignores=[])

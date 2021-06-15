@@ -1,0 +1,33 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Dict(
+                        keys=[
+                            Constant(value='a'),
+                            Constant(value='b'),
+                            Constant(value=999)],
+                        values=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=5),
+                                    Constant(value=6),
+                                    Constant(value=7)],
+                                ctx=Load()),
+                            Dict(
+                                keys=[
+                                    Constant(value='ok'),
+                                    Constant(value='stuff')],
+                                values=[
+                                    Constant(value=1),
+                                    Constant(value=2)])])],
+                keywords=[]))],
+    type_ignores=[])

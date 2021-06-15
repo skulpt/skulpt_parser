@@ -1,0 +1,61 @@
+Module(
+    body=[
+        ClassDef(
+            name='SuperClass',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='apply',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value='SuperClass'))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='SubClassA',
+            bases=[
+                Name(id='SuperClass', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='apply',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value='SubClassA'))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='SubClassA', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='x', ctx=Load()),
+                            attr='apply',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

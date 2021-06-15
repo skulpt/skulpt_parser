@@ -1,0 +1,82 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='a'),
+                    arg(arg='b'),
+                    arg(arg='c')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=3),
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load()),
+                            Name(id='b', ctx=Load()),
+                            Name(id='c', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[
+                    keyword(
+                        arg='c',
+                        value=Constant(value=4))])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value='A stitch in time saves nine.')],
+                        keywords=[
+                            keyword(
+                                arg='flags',
+                                value=Attribute(
+                                    value=Name(id='re', ctx=Load()),
+                                    attr='IGNORECASE',
+                                    ctx=Load()))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[
+                            keyword(
+                                arg='string',
+                                value=Constant(value='A stitch in time saves nine.')),
+                            keyword(
+                                arg='flags',
+                                value=Attribute(
+                                    value=Name(id='re', ctx=Load()),
+                                    attr='IGNORECASE',
+                                    ctx=Load())),
+                            keyword(
+                                arg='pattern',
+                                value=Constant(value='a'))])],
+                keywords=[]))],
+    type_ignores=[])

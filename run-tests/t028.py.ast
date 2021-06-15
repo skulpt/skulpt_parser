@@ -1,0 +1,27 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='z', ctx=Store())],
+            value=Constant(value=0)),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load()),
+            body=[
+                AugAssign(
+                    target=Name(id='z', ctx=Store()),
+                    op=Add(),
+                    value=Name(id='x', ctx=Load()))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='z', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

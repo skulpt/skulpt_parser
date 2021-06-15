@@ -1,0 +1,24 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='pkga.pkgb.modc', asname='c_me')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='c_me', ctx=Load()),
+                        attr='stuff',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='c_me', ctx=Load()),
+                        attr='things',
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

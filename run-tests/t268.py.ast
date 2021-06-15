@@ -1,0 +1,32 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=2),
+                        ops=[
+                            Lt(),
+                            Lt()],
+                        comparators=[
+                            Constant(value=3),
+                            Constant(value=9)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=2),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Compare(
+                                left=Constant(value=3),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=9)])])],
+                keywords=[]))],
+    type_ignores=[])

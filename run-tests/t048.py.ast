@@ -1,0 +1,25 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value=''),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=List(
+                                    elts=[
+                                        Constant(value='O')],
+                                    ctx=Load()),
+                                op=Add(),
+                                right=List(
+                                    elts=[
+                                        Constant(value='K')],
+                                    ctx=Load()))],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

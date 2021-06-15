@@ -1,0 +1,46 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store()),
+                Tuple(
+                    elts=[
+                        Name(id='b', ctx=Store()),
+                        Name(id='c', ctx=Store())],
+                    ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='b', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

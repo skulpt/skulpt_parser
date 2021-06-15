@@ -1,0 +1,14 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value=3),
+                        op=RShift(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)))],
+                keywords=[]))],
+    type_ignores=[])

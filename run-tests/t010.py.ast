@@ -1,0 +1,24 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='a', ctx=Store()),
+                        Name(id='b', ctx=Store())],
+                    ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Name(id='a', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='b', ctx=Load()))],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,93 @@
+Module(
+    body=[
+        ClassDef(
+            name='F',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='a',
+                                    ctx=Store())],
+                            value=Constant(value=1)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='b',
+                                    ctx=Store())],
+                            value=Constant(value=2)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='d',
+                                    ctx=Store())],
+                            value=Constant(value=4))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='f', ctx=Store())],
+            value=Call(
+                func=Name(id='F', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='a')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='b')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='c'),
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='d')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,91 @@
+Module(
+    body=[
+        ClassDef(
+            name='Wee',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='called',
+                                    ctx=Store())],
+                            value=Constant(value=False))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__iter__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Name(id='self', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__next__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='in next')],
+                                keywords=[])),
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='called',
+                                    ctx=Load())),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='called',
+                                            ctx=Store())],
+                                    value=Constant(value=True)),
+                                Return(
+                                    value=Constant(value='dog'))],
+                            orelse=[]),
+                        Raise(
+                            exc=Name(id='StopIteration', ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='Wee', ctx=Load()),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

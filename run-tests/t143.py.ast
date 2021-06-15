@@ -1,0 +1,59 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Dict(
+                                keys=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                values=[
+                                    Constant(value='ok'),
+                                    Constant(value='stuff')])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Constant(value='weewaa')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

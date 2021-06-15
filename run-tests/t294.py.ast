@@ -1,0 +1,169 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='b'),
+                    Constant(value='a'),
+                    Constant(value='d'),
+                    Constant(value='c')],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='m', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='1'),
+                    Constant(value='0'),
+                    Constant(value='4'),
+                    Constant(value='3')],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='m', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='max', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='m', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='max', ctx=Load()),
+                                args=[
+                                    Name(id='m', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='m', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='max', ctx=Load()),
+                                args=[
+                                    Name(id='l', ctx=Load()),
+                                    Name(id='m', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='t', ctx=Store())],
+            value=Call(
+                func=Name(id='tuple', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='u', ctx=Store())],
+            value=Call(
+                func=Name(id='tuple', ctx=Load()),
+                args=[
+                    Name(id='m', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='t', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='max', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='u', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='max', ctx=Load()),
+                                args=[
+                                    Name(id='u', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Call(
+                                func=Name(id='min', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load()),
+                                    Name(id='u', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='max', ctx=Load()),
+                                args=[
+                                    Name(id='t', ctx=Load()),
+                                    Name(id='u', ctx=Load())],
+                                keywords=[])],
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

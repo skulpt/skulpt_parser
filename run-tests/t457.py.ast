@@ -1,0 +1,341 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='math')]),
+        Import(
+            names=[
+                alias(name='random')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=32)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=32),
+                            Constant(value=10)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=32),
+                            Constant(value=2)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log10',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=64)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='trunc',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3.233)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='trunc',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3.78)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='trunc',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=232.83))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='trunc',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=232.1))],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='random', ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1234)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='t', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=8),
+                    Constant(value=9),
+                    Constant(value=10)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='choice',
+                            ctx=Load()),
+                        args=[
+                            Name(id='t', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

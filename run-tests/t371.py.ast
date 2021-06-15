@@ -1,0 +1,2359 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== simple ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=314)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=314)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=3.14)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=3)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=314)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=314)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=3.14))],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=3.9)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=3)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=3.9))],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=3.5)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=3)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=3.5))],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='10'),
+                                Constant(value=16)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=16)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== int with bases ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='100000000000000000000000000000000'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='102002022201221111211'),
+                                Constant(value=3)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='10000000000000000'),
+                                Constant(value=4)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='32244002423141'),
+                                Constant(value=5)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1550104015504'),
+                                Constant(value=6)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='211301422354'),
+                                Constant(value=7)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='40000000000'),
+                                Constant(value=8)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='12068657454'),
+                                Constant(value=9)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4294967296'),
+                                Constant(value=10)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1904440554'),
+                                Constant(value=11)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='9ba461594'),
+                                Constant(value=12)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='535a79889'),
+                                Constant(value=13)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='2ca5b7464'),
+                                Constant(value=14)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1a20dcd81'),
+                                Constant(value=15)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='100000000'),
+                                Constant(value=16)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='a7ffda91'),
+                                Constant(value=17)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='704he7g4'),
+                                Constant(value=18)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4f5aff66'),
+                                Constant(value=19)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='3723ai4g'),
+                                Constant(value=20)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='281d55i4'),
+                                Constant(value=21)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1fj8b184'),
+                                Constant(value=22)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1606k7ic'),
+                                Constant(value=23)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='mb994ag'),
+                                Constant(value=24)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='hek2mgl'),
+                                Constant(value=25)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='dnchbnm'),
+                                Constant(value=26)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='b28jpdm'),
+                                Constant(value=27)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='8pfgih4'),
+                                Constant(value=28)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='76beigg'),
+                                Constant(value=29)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='5qmcpqg'),
+                                Constant(value=30)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4q0jto4'),
+                                Constant(value=31)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4000000'),
+                                Constant(value=32)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='3aokq94'),
+                                Constant(value=33)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='2qhxjli'),
+                                Constant(value=34)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='2br45qb'),
+                                Constant(value=35)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1z141z4'),
+                                Constant(value=36)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-100000000000000000000000000000000'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-102002022201221111211'),
+                                Constant(value=3)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-10000000000000000'),
+                                Constant(value=4)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-32244002423141'),
+                                Constant(value=5)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-1550104015504'),
+                                Constant(value=6)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-211301422354'),
+                                Constant(value=7)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-40000000000'),
+                                Constant(value=8)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-12068657454'),
+                                Constant(value=9)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-4294967296'),
+                                Constant(value=10)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-1904440554'),
+                                Constant(value=11)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-9ba461594'),
+                                Constant(value=12)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-535a79889'),
+                                Constant(value=13)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-2ca5b7464'),
+                                Constant(value=14)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-1a20dcd81'),
+                                Constant(value=15)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-100000000'),
+                                Constant(value=16)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-a7ffda91'),
+                                Constant(value=17)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-704he7g4'),
+                                Constant(value=18)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-4f5aff66'),
+                                Constant(value=19)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-3723ai4g'),
+                                Constant(value=20)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-281d55i4'),
+                                Constant(value=21)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-1fj8b184'),
+                                Constant(value=22)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-1606k7ic'),
+                                Constant(value=23)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-mb994ag'),
+                                Constant(value=24)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-hek2mgl'),
+                                Constant(value=25)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-dnchbnm'),
+                                Constant(value=26)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-b28jpdm'),
+                                Constant(value=27)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-8pfgih4'),
+                                Constant(value=28)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-76beigg'),
+                                Constant(value=29)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-5qmcpqg'),
+                                Constant(value=30)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-4q0jto4'),
+                                Constant(value=31)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-4000000'),
+                                Constant(value=32)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-3aokq94'),
+                                Constant(value=33)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-2qhxjli'),
+                                Constant(value=34)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-2br45qb'),
+                                Constant(value=35)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-1z141z4'),
+                                Constant(value=36)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=4294967296))])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== long with bases ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='100000000000000000000000000000000'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='102002022201221111211'),
+                                Constant(value=3)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='10000000000000000'),
+                                Constant(value=4)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='32244002423141'),
+                                Constant(value=5)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1550104015504'),
+                                Constant(value=6)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='211301422354'),
+                                Constant(value=7)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='40000000000'),
+                                Constant(value=8)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='12068657454'),
+                                Constant(value=9)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4294967296'),
+                                Constant(value=10)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1904440554'),
+                                Constant(value=11)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='9ba461594'),
+                                Constant(value=12)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='535a79889'),
+                                Constant(value=13)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='2ca5b7464'),
+                                Constant(value=14)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1a20dcd81'),
+                                Constant(value=15)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='100000000'),
+                                Constant(value=16)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='a7ffda91'),
+                                Constant(value=17)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='704he7g4'),
+                                Constant(value=18)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4f5aff66'),
+                                Constant(value=19)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='3723ai4g'),
+                                Constant(value=20)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='281d55i4'),
+                                Constant(value=21)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1fj8b184'),
+                                Constant(value=22)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1606k7ic'),
+                                Constant(value=23)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='mb994ag'),
+                                Constant(value=24)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='hek2mgl'),
+                                Constant(value=25)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='dnchbnm'),
+                                Constant(value=26)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='b28jpdm'),
+                                Constant(value=27)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='8pfgih4'),
+                                Constant(value=28)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='76beigg'),
+                                Constant(value=29)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='5qmcpqg'),
+                                Constant(value=30)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4q0jto4'),
+                                Constant(value=31)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='4000000'),
+                                Constant(value=32)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='3aokq94'),
+                                Constant(value=33)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='2qhxjli'),
+                                Constant(value=34)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='2br45qb'),
+                                Constant(value=35)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='1z141z4'),
+                                Constant(value=36)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4294967296)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== simple truncation ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=1.2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='100'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=1.2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=1)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='100'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== base 0 ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=' 0123  '),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=83)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=' 0123  '),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=83)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='000'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0o123'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=83)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0x123'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=291)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0b100'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=' 0O123   '),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=83)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=' 0X123  '),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=291)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value=' 0B100 '),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='+0'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='-0'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='00'),
+                                Constant(value=0)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== base 10 ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0123')],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=123)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0123'),
+                                Constant(value=10)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=123)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== base with prefix ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0x123'),
+                                Constant(value=16)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=291)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0o123'),
+                                Constant(value=8)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=83)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0b100'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0X123'),
+                                Constant(value=16)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=291)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0O123'),
+                                Constant(value=8)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=83)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='int', ctx=Load()),
+                            args=[
+                                Constant(value='0B100'),
+                                Constant(value=2)],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=4)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='==== int -> long ====')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value='1'),
+                                op=Mult(),
+                                right=Constant(value=600))],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

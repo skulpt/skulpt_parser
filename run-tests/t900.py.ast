@@ -1,0 +1,247 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='collections')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='collections', ctx=Load()),
+                            attr='defaultdict',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='collections', ctx=Load()),
+                            attr='defaultdict',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=None)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='collections', ctx=Load()),
+                            attr='defaultdict',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=None),
+                            Dict(keys=[], values=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='collections', ctx=Load()),
+                            attr='defaultdict',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=None),
+                            Dict(
+                                keys=[
+                                    Constant(value=1)],
+                                values=[
+                                    Constant(value=2)])],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='collections', ctx=Load()),
+                    attr='defaultdict',
+                    ctx=Load()),
+                args=[
+                    Name(id='list', ctx=Load()),
+                    Dict(
+                        keys=[
+                            Constant(value=1)],
+                        values=[
+                            Constant(value=2)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='d', ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='d', ctx=Load()),
+                        slice=Constant(value=2),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Subscript(
+                        value=Name(id='d', ctx=Load()),
+                        slice=Constant(value=2),
+                        ctx=Load()),
+                    attr='append',
+                    ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='d', ctx=Load()),
+                        slice=Constant(value=2),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='d', ctx=Load()),
+                        attr='default_factory',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='d', ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2)],
+                        keywords=[])],
+                keywords=[])),
+        FunctionDef(
+            name='abc',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Constant(value=6))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='collections', ctx=Load()),
+                    attr='defaultdict',
+                    ctx=Load()),
+                args=[
+                    Name(id='abc', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='d', ctx=Load()),
+                        slice=Constant(value=4),
+                        ctx=Load())],
+                keywords=[])),
+        AugAssign(
+            target=Subscript(
+                value=Name(id='d', ctx=Load()),
+                slice=Constant(value=4),
+                ctx=Store()),
+            op=Add(),
+            value=Constant(value=8)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1),
+                    Constant(value=4)],
+                values=[
+                    Constant(value=2),
+                    Constant(value=6)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='x', ctx=Load()),
+                            attr='get',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=4)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

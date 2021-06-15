@@ -1,0 +1,83 @@
+Module(
+    body=[
+        FunctionDef(
+            name='divide',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x'),
+                    arg(arg='y')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Try(
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=BinOp(
+                                left=Name(id='x', ctx=Load()),
+                                op=Div(),
+                                right=Name(id='y', ctx=Load())))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='ZeroDivisionError', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='division by zero!')],
+                                        keywords=[]))])],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='result is'),
+                                    Name(id='result', ctx=Load())],
+                                keywords=[]))],
+                    finalbody=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='divide', ctx=Load()),
+                args=[
+                    Constant(value=2),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='divide', ctx=Load()),
+                args=[
+                    Constant(value=2),
+                    Constant(value=0)],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='divide', ctx=Load()),
+                        args=[
+                            Constant(value='2'),
+                            Constant(value='1')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='TypeError', ctx=Load()),
+                    name='e',
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='repr', ctx=Load()),
+                                        args=[
+                                            Name(id='e', ctx=Load())],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

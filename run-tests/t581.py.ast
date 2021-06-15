@@ -1,0 +1,187 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='set_1', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Tuple(elts=[], ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=5)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='set_2', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Tuple(elts=[], ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='set_1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='set_2', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='set_1', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='set_2', ctx=Load())])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='set_1', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Tuple(elts=[], ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='set_2', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Tuple(elts=[], ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='set_1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='set_2', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='set_1', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='set_2', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

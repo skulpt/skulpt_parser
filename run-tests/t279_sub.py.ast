@@ -1,0 +1,67 @@
+Module(
+    body=[
+        FunctionDef(
+            name='wee',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='from wee')],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='waa',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='from waa')],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='woo',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='from woo')],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='blorp',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='from blorp')],
+                        keywords=[]))],
+            decorator_list=[])],
+    type_ignores=[])

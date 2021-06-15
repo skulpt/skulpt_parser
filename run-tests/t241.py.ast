@@ -1,0 +1,71 @@
+Module(
+    body=[
+        ClassDef(
+            name='O',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='F',
+            bases=[
+                Name(id='O', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='E',
+            bases=[
+                Name(id='O', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='D',
+            bases=[
+                Name(id='O', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='C',
+            bases=[
+                Name(id='D', ctx=Load()),
+                Name(id='F', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='B',
+            bases=[
+                Name(id='E', ctx=Load()),
+                Name(id='D', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='A',
+            bases=[
+                Name(id='B', ctx=Load()),
+                Name(id='C', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='A', ctx=Load()),
+                        attr='__mro__',
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

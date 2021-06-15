@@ -1,0 +1,35 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='-inf')],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='inf')],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='-inf')],
+                        keywords=[])],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

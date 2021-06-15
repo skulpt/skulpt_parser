@@ -1,0 +1,107 @@
+Module(
+    body=[
+        FunctionDef(
+            name='domul',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='a'),
+                    arg(arg='b')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=BinOp(
+                        left=Name(id='a', ctx=Load()),
+                        op=Mult(),
+                        right=Name(id='b', ctx=Load())))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            Constant(value=10),
+                            Constant(value=123456789876543)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            Constant(value=876543234567),
+                            Constant(value=123456789876543)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=876543234567)),
+                            Constant(value=123456789876543)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=876543234567)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=123456789876543))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            Constant(value=876543234567),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=123456789876543))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            Constant(value=876543234567),
+                            Constant(value=10)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='domul', ctx=Load()),
+                        args=[
+                            Constant(value=876543234567),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=10))],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])
