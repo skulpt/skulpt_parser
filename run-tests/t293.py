@@ -1,5 +1,5 @@
 # Tests the list functions.
-l = [1,1,2,3,5,8,13,21]
+l = [1, 1, 2, 3, 5, 8, 13, 21]
 print(l)
 print((l.count(1)))
 print((l.reverse()))

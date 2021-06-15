@@ -1,1 +1,2 @@
-for i in "skulpt": print(i)
+for i in "skulpt":
+    print(i)

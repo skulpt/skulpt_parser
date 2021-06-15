@@ -5,8 +5,9 @@ class Ship:
         self.thrust = False
 
     def thrust(self):
-          self.thrust = True
-          print("Thrust", self.thrust)
+        self.thrust = True
+        print("Thrust", self.thrust)
+
 
 my_ship = Ship("a_name")
 my_ship.thrust()

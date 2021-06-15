@@ -8,6 +8,7 @@ class Silly:
     def __str__(self):
         return str(self.h)
 
+
 a = Silly(1)
 b = Silly(2)
 c = Silly(3)

@@ -1,1 +1,2 @@
-x="OK";print(x)
+x = "OK"
+print(x)

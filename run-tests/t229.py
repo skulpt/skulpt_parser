@@ -1,4 +1,7 @@
-class X: pass
+class X:
+    pass
+
+
 x = X()
-print((getattr(x, 'wee', 14)))
-print((getattr(X, 'doggy', 'OK')))
+print((getattr(x, "wee", 14)))
+print((getattr(X, "doggy", "OK")))

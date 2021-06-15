@@ -4,5 +4,6 @@ def f():
         y += 1
         yield y
 
+
 for i in f():
     print(i)

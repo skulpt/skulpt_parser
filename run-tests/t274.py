@@ -1,4 +1,7 @@
-class X: pass
+class X:
+    pass
+
+
 x = X()
 
 methodName = "wee"

@@ -17,12 +17,21 @@ print(hash(0.05) == hash(0.05))
 print(hash(-11.85) == hash(-11.85))
 
 print("\nstrings")
-print(hash('') == hash(''))
+print(hash("") == hash(""))
 print(hash("hello") == hash("hello"))
 
 print("\ntuples")
 print(hash(()) == hash(()))
-print(hash((1,2,3)) == hash((1,2,3,)))
+print(
+    hash((1, 2, 3))
+    == hash(
+        (
+            1,
+            2,
+            3,
+        )
+    )
+)
 
 print("\nintegers and floating point")
 print(hash(1) == hash(1.0))
@@ -31,6 +40,6 @@ print(hash(1.0) == hash(1))
 print(hash(1) == hash(1) == hash(1.0))
 print(hash(-5) == hash(-5) == hash(-5.0))
 
-d = {1:2,3:4,-5.0:6}
+d = {1: 2, 3: 4, -5.0: 6}
 print(d[1] == d[1.0] == d[1])
 print(d[-5] == d[-5.0] == d[-5])

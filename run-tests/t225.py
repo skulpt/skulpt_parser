@@ -3,4 +3,6 @@ def a():
     print(x)
     del x
     print("after")
+
+
 a()

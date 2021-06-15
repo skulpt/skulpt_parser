@@ -1,3 +1,3 @@
 d = {}
-d["__proto__"]="testing"
+d["__proto__"] = "testing"
 print(d)

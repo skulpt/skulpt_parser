@@ -4,6 +4,8 @@ def f(n):
     yield 2
     yield a
     yield b
+
+
 a = 9999
 b = 9999
 for i in f(20):

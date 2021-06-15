@@ -1,5 +1,5 @@
 import pkga.pkgb.modc
-import pkga.pkgb.modc # only one print
+import pkga.pkgb.modc  # only one print
 
 print(("a name", pkga.__name__))
 print(("a.b name", pkga.pkgb.__name__))

@@ -1,1 +1,1 @@
-print({1:'stuff', 'ok':4})
+print({1: "stuff", "ok": 4})

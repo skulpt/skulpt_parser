@@ -1,3 +1,3 @@
-i = '('
-print(i not in '+-*/)')  
-print(i in '+-*/')
+i = "("
+print(i not in "+-*/)")
+print(i in "+-*/")

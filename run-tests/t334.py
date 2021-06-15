@@ -19,4 +19,3 @@ if 1 < 10:
     quit()
 
 print("This should never appear")
-

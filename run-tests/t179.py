@@ -5,5 +5,6 @@ def f(n):
         yield i * 10
         i += 1
 
+
 for i in f(10):
     print(i)

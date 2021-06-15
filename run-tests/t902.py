@@ -32,6 +32,6 @@ except TypeError as e:
     print(repr(e))
 
 try:
-    d.__missing__({1:2})
+    d.__missing__({1: 2})
 except KeyError as e:
     print(repr(e))

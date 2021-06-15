@@ -1,4 +1,4 @@
-s = set([1,2,3])
+s = set([1, 2, 3])
 copy_s = s.copy()
 new_s = set(s)
 copy_s.add(42)

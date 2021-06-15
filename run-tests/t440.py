@@ -1,7 +1,9 @@
 import math
 
+
 def isCloseTo(expected, actual, precision):
-  return math.fabs(expected - actual) < (math.pow(10, -precision) / 2)
+    return math.fabs(expected - actual) < (math.pow(10, -precision) / 2)
+
 
 print("\nmath.acos(x)")
 print(math.acos(1.0))
@@ -28,21 +30,21 @@ print(math.atan(-1.0))
 print(math.atan(-1))
 
 print("\nmath.atan2(y,x)")
-print(math.atan2(1,1))
-print(math.atan2(1,-1))
-print(math.atan2(-1,1))
-print(math.atan2(-1,-1))
-print(math.atan2(-5.1,6.3))
+print(math.atan2(1, 1))
+print(math.atan2(1, -1))
+print(math.atan2(-1, 1))
+print(math.atan2(-1, -1))
+print(math.atan2(-5.1, 6.3))
 
 print("\nmath.cos(x)")
 print(math.cos(0.0))
-print(isCloseTo(0, math.cos(math.pi/2.0), 15))
+print(isCloseTo(0, math.cos(math.pi / 2.0), 15))
 print(math.cos(math.pi))
 print(math.cos(1))
 
 print("\nmath.sin(x)")
 print(math.sin(0.0))
-print(math.sin(math.pi/2.0))
+print(math.sin(math.pi / 2.0))
 print(isCloseTo(0, math.sin(math.pi), 15))
 print(math.sin(1))
 

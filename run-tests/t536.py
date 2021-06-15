@@ -4,4 +4,5 @@ def f():
     yield list(pool[i] for i in range(2))
     print(type(pool))
 
+
 print(list(f()))

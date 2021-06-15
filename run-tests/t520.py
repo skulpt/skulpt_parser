@@ -1,7 +1,7 @@
-x = any([1,2])
+x = any([1, 2])
 print(x, type(x))
 
-y = all([1,2])
+y = all([1, 2])
 print(x, type(x))
 
 z = isinstance(5, int)

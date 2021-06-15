@@ -1,3 +1,8 @@
 X = "OK"
-def test(): print(X)
+
+
+def test():
+    print(X)
+
+
 test()

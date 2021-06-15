@@ -1,2 +1,2 @@
 class C:
-  raise Exception("Oops")
+    raise Exception("Oops")

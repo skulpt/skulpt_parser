@@ -1,3 +1,3 @@
 x = []
 x.append(x)
-print((x<x))
+print((x < x))

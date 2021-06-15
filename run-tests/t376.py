@@ -5,13 +5,16 @@ class HasLen:
     def __len__(self):
         return self.l
 
+
 class SubLen(HasLen):
     def __init__(self, l):
         HasLen.__init__(self, l)
-        
+
+
 class NoLen:
     def __init__(self, l):
         self.l = l
+
 
 h = HasLen(42)
 print(len(h))

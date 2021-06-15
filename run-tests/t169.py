@@ -37,4 +37,3 @@ print(("'%#.32o'" % big))
 print(("'%034.33o'" % big))
 # base marker shouldn't change that
 print(("'%0#34.33o'" % big))
-

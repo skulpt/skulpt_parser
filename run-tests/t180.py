@@ -6,5 +6,6 @@ def f(n):
         yield i
         i += 1
 
+
 for i in f(50):
     print(i)

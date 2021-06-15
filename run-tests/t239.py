@@ -6,10 +6,12 @@ class Base(object):
         print("Base.stuff")
         self.myfunc()
 
+
 class Derived(Base):
     def myfunc(self):
         Base.myfunc(self)
         print("Derived.myfunc")
+
 
 d = Derived()
 d.myfunc()

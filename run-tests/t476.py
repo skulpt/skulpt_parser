@@ -1,5 +1,4 @@
 class Counter:
-
     class CounterIter:
         def __init__(self, c):
             self.c = c
@@ -27,10 +26,10 @@ class Counter:
         return self.count
 
     def __repr__(self):
-        return "< Counter Object: ("+str(self.count)+","+str(self.stop)+") >"
+        return "< Counter Object: (" + str(self.count) + "," + str(self.stop) + ") >"
 
     def __str__(self):
-        return "("+str(self.count)+","+str(self.stop)+")"
+        return "(" + str(self.count) + "," + str(self.stop) + ")"
 
     def __call__(self, x):
         for i in range(x):
@@ -46,6 +45,7 @@ class Counter:
     def __setitem__(self, key, value):
         self.dict[key] = value
 
+
 a = Counter(10)
 
 for x in a:
@@ -55,7 +55,7 @@ print(len(a))
 print(a, str(a), repr(a))
 a(20)
 print(a[5], a[8], a[30])
-a[30] = 'thirty'
+a[30] = "thirty"
 print(a[30])
 
 b = Counter(5)
@@ -71,5 +71,5 @@ print(b.__repr__())
 b.__call__(10)
 print(b.__getitem__(4))
 print(b.__getitem__(15))
-b.__setitem__(15, 'hello')
+b.__setitem__(15, "hello")
 print(b.__getitem__(15))

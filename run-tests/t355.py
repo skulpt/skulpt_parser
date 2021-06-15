@@ -5,6 +5,7 @@ class Foo:
     def __eq__(self, other):
         return self.lst == other.lst
 
+
 f1 = Foo(3)
 f2 = Foo(3)
 f3 = Foo(4)

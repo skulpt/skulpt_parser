@@ -1,4 +1,4 @@
-big = 0x1234567890abcdef12345  # 21 hex digits
+big = 0x1234567890ABCDEF12345  # 21 hex digits
 print(("'%x'" % big))
 print(("'%x'" % -big))
 print(("'%5x'" % -big))

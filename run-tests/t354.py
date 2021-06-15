@@ -11,6 +11,7 @@ class A:
     def update(self, newv):
         self.val1 = newv
 
+
 print("===A===")
 a = A("sa")
 a.do()

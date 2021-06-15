@@ -18,4 +18,3 @@ print(l3)
 # But that would be a separate issue
 # d2 = dict(d.items())
 # print d2
-

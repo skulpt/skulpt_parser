@@ -1,2 +1,2 @@
-print("\W")
+print("\\W")
 print("\n")

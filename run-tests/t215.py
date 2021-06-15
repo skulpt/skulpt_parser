@@ -1,4 +1,6 @@
-wee = lambda waa, woo=False, wii=True: ("OK", waa, woo, wii)
+def wee(waa, woo=False, wii=True):
+    return ("OK", waa, woo, wii)
+
 
 print((wee("stuff")))
 print((wee("stuff", "dog")))

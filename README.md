@@ -11,3 +11,4 @@ Scripts
 -   `vr build` - bundles the typescript files into a javascript bundle
 -   `vr format` - runs the precommit hooks for all files
 -   `vr gen_parser` - generates the javascript parser
+-   `vr gen_ast` - regenerates the ast for the run-test files from python and dumps the ast in .ast files

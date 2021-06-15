@@ -5,9 +5,8 @@ def test(i):
     except ValueError:
         return True
 
-if test(12) :
+
+if test(12):
     print("Is true")
 else:
     print("Is false")
-
-

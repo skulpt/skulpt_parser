@@ -1,5 +1,5 @@
 class C:
-  try:
-    raise Exception("Oops")
-  except:
-    print("Caught")
+    try:
+        raise Exception("Oops")
+    except BaseException:
+        print("Caught")

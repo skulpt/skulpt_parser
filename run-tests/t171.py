@@ -1,5 +1,7 @@
 def do(fmt, val):
     print((fmt % val))
+
+
 do("%d", 42)
 do("%x", 42)
 do("%o", 42)

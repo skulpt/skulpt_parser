@@ -1,6 +1,6 @@
 class calculator:
-
-    def __init__(self): pass
+    def __init__(self):
+        pass
 
     def div(self, x, y):
         try:
@@ -14,21 +14,21 @@ class calculator:
         except TypeError:
             print("DID NOT CATCH 'TypeError as e'")
             return "TypeError"
-        except:
+        except BaseException:
             return "OTHER ERROR"
 
-c = calculator();
-print(repr(c.div(10,1)))
-print(c.div(10,0))
-print(repr(c.div('12','6')))
+
+c = calculator()
+print(repr(c.div(10, 1)))
+print(c.div(10, 0))
+print(repr(c.div("12", "6")))
 
 try:
-    print(c.div('10','1') / 2)
-except:
+    print(c.div("10", "1") / 2)
+except BaseException:
     print("ERROR")
 
 try:
-    print(c.div(x,12))
+    print(c.div(x, 12))
 except NameError as e:
     print(repr(e))
-

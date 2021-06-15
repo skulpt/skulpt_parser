@@ -1,14 +1,18 @@
 def f(*a):
     print(a)
 
+
 def g(x, *a):
     print((x, a))
+
 
 def h(x, y, *a):
     print((x, y, a))
 
+
 def i(x, y=4, *a):
     print((x, y, a))
+
 
 f()
 f(1)

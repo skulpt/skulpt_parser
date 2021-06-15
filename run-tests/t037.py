@@ -1,1 +1,2 @@
-for k in {'OK':0}: print(k)
+for k in {"OK": 0}:
+    print(k)

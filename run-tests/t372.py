@@ -1,1 +1,1 @@
-print(int('22',2))
+print(int("22", 2))

@@ -1,5 +1,6 @@
 import math
 import random
+
 print(math.log(32))
 print(math.log(32, 10))
 print(math.log(32, 2))

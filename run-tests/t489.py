@@ -1,5 +1,6 @@
 import random
 
+
 def makeset(lst):
     result = {}
     for a in lst:
@@ -9,9 +10,9 @@ def makeset(lst):
         result[a].append(True)
     return result
 
+
 def sorttest(lst1):
-    lst2 = lst1[:]
-    lst2.sort()
+    lst2 = sorted(lst1[:])
     assert len(lst1) == len(lst2)
     assert makeset(lst1) == makeset(lst2)
     position = {}
@@ -22,8 +23,8 @@ def sorttest(lst1):
             position[a] = []
         position[a].append(i)
         i += 1
-    for i in range(len(lst2)-1):
-        a, b = lst2[i], lst2[i+1]
+    for i in range(len(lst2) - 1):
+        a, b = lst2[i], lst2[i + 1]
         if not a <= b:
             print("resulting list is not sorted")
             err = True
@@ -34,6 +35,7 @@ def sorttest(lst1):
     if err:
         print(lst1)
         print(lst2)
+
 
 for v in range(137):
     up = 1 + int(v * random.random() * 2.7)

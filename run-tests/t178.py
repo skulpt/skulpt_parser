@@ -11,6 +11,7 @@ def f(n):
     yield i
     yield n + i
 
-for i in f(10): # i to conflict with body
+
+for i in f(10):  # i to conflict with body
     j = 999
     print(i)

@@ -21,7 +21,7 @@ print(string.printable)
 
 s = "I frequently eat pizza; however, I don't particularly like it"
 print(string.split(s))
-print(string.split(s, ';'))
+print(string.split(s, ";"))
 
 s = "capitalize"
 print(string.capitalize(s))
@@ -34,4 +34,4 @@ print(string.join(l, "_"))
 
 s = "i frequently eat pizza; however, i don't particularly like it"
 print(string.capwords(s))
-print(string.capwords(s, '; '))
+print(string.capwords(s, "; "))

@@ -5,7 +5,7 @@ try:
 except TypeError as e:
     print((repr(e)))
 
-c = collections.Counter('hello')
+c = collections.Counter("hello")
 
 try:
     print((c.elements(5)))
@@ -18,7 +18,7 @@ except TypeError as e:
     print((repr(e)))
 
 try:
-    print((c.most_common('hello')))
+    print((c.most_common("hello")))
 except TypeError as e:
     print((repr(e)))
 

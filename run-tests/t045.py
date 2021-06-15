@@ -1,1 +1,1 @@
-print(("-".join(["O","K"])))
+print(("-".join(["O", "K"])))

@@ -10,5 +10,3 @@ print((3 % -3))
 print()
 print((0 % 1))
 print((0 % -1))
-
-

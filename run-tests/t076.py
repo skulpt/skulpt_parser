@@ -1,3 +1,2 @@
-v = [3,2,1]
-v.sort()
+v = sorted([3, 2, 1])
 print((v[0]))

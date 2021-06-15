@@ -1,16 +1,16 @@
-from time import sleep;
+from time import sleep
+
 
 def sleepFiveTimes(param):
-	v = 0
-	for i in range(5):
-		sleep(0.01)
-		yield v
-		v += param
+    v = 0
+    for i in range(5):
+        sleep(0.01)
+        yield v
+        v += param
 
 
-gen = sleepFiveTimes(5);
+gen = sleepFiveTimes(5)
 print(next(gen))
 
 for v in gen:
-	print(v)
-
+    print(v)

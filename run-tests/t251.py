@@ -1,11 +1,28 @@
-class A: pass
-class B: pass
-class C: pass
-class D(A): pass
-class E(A,B): pass
-class F(E,C): pass
+class A:
+    pass
 
-a,b,c,d,e,f = A(),B(),C(),D(),E(),F()
+
+class B:
+    pass
+
+
+class C:
+    pass
+
+
+class D(A):
+    pass
+
+
+class E(A, B):
+    pass
+
+
+class F(E, C):
+    pass
+
+
+a, b, c, d, e, f = A(), B(), C(), D(), E(), F()
 
 print((isinstance(a, A)))
 print((isinstance(a, B)))

@@ -4,11 +4,14 @@
 def toString():
     print("wee")
 
+
 class stuff:
     def toString(self):
         return "waa"
+
     def valueOf(self):
         return "stuff"
+
 
 toString()
 s = stuff()

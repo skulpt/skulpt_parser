@@ -1,4 +1,4 @@
-## tests for operator module
+# tests for operator module
 
 import operator
 
@@ -111,13 +111,13 @@ print(operator.xor(4, 2))
 print(operator.xor(8, 5))
 
 print(operator.concat("he", "llo"))
-print(operator.concat([1,2,3,4], [5,6,7]))
-print(operator.concat((1,2), (3,4)))
+print(operator.concat([1, 2, 3, 4], [5, 6, 7]))
+print(operator.concat((1, 2), (3, 4)))
 
 l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9]
 s = "hello world"
 t = ("a", "b", "c")
-d = {1:1, 2:2, 3:3, 4:4, 5:5}
+d = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
 
 print(operator.contains(l, 2))
 print(operator.contains(l, 30))
@@ -142,7 +142,7 @@ print(l)
 l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9]
 s = "hello world"
 t = ("a", "b", "c")
-d = {1:1, 2:2, 3:3, 4:4, 5:5}
+d = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
 
 print(operator.getitem(l, 2))
 print(operator.getitem(s, 0))
@@ -161,4 +161,3 @@ print(d)
 
 operator.setitem(d, 6, 6)
 print(d)
-

@@ -1,5 +1,7 @@
 def do(fmt, val):
     print((fmt % val))
+
+
 # Some small ints
 do("%d", 42)
 do("%d", -42)

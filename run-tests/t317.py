@@ -7,7 +7,7 @@ class Point:
         return str(self.x) + "," + str(self.y)
 
 
-p = Point(1,2)
+p = Point(1, 2)
 
 print(p)
 print(str(p))

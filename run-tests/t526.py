@@ -1,4 +1,5 @@
 import math
+
 print("integers")
 print(1 + True)
 print(2 - True)

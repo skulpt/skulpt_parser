@@ -22,7 +22,3 @@ try:
     print([2] * "b")
 except TypeError as e:
     print(repr(e))
-
-
-
-

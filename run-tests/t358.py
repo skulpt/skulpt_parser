@@ -8,6 +8,7 @@ class obj:
     def abc(self):
         print(self.num + 1)
 
+
 a = obj()
 a.abc()
 a.delete()

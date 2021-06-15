@@ -1,1 +1,2 @@
-if "x" == "x" or "y" == "y": print("OK")
+if "x" == "x" or "y" == "y":
+    print("OK")
