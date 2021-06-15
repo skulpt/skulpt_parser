@@ -11,4 +11,4 @@ scripts:
         cmd: python -m tools.build_parser
 
     format:
-        cmd: deno fmt
+        cmd: pre-commit run --all-files
