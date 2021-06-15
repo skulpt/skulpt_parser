@@ -1,6 +1,6 @@
 import { NAME, NUMBER, OP, STRING, tok_name } from "../tokenize/token.ts";
-import { exact_token_types } from "../tokenize/Tokenizer.ts";
-import * as tokens from "../tokenize/token.ts";
+import { exact_token_types, Tokenizer } from "../tokenize/Tokenizer.ts";
+import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError, TokenInfo } from "../tokenize/tokenize.ts";
 
 class Load {}
@@ -12,7 +12,7 @@ class Name {
     col_offset: number;
     end_lineno: number;
     end_col_offset: number;
-    constructor(id, ctx, lineno, col_offset, end_lineno, end_col_offset) {
+    constructor(id: any, ctx: Load, lineno: number, col_offset: number, end_lineno: number, end_col_offset: number) {
         this.id = id;
         this.ctx = ctx;
         this.lineno = lineno;
@@ -22,18 +22,11 @@ class Name {
     }
 }
 
-export function logger(
-    // """For non-memoized functions that we want to be logged.
-
-    // (In practice this is only non-leader left-recursive functions.)
-    // """
-    target: Parser,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-) {
+/** For non-memoized functions that we want to be logged.*/
+export function logger(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: (...args: any[]) => any = descriptor.value;
     const method_name = propertyKey;
-    function logger_wrapper(...args) {
+    function logger_wrapper(this: Parser, ...args: any[]) {
         if (!this._verbose) {
             return method.call(this, ...args);
         }
@@ -51,7 +44,7 @@ export function logger(
 export function memoize(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: (...args: any[]) => any = descriptor.value;
     const method_name = propertyKey;
-    function memoize_wrapper(...args) {
+    function memoize_wrapper(this: Parser, ...args: any[]) {
         let mark = this.mark();
         let key = [mark, method_name, args].toString();
         // fast path: cache hit and not verbose
@@ -94,9 +87,9 @@ export function memoize(target: Parser, propertyKey: string, descriptor: Propert
 export function memoize_left_rec(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: (...args: any[]) => any = descriptor.value;
     const method_name = propertyKey;
-    function memoize_left_rec_wrapper() {
-        let mark = this.mark();
-        let key = [mark, method_name, []].toString();
+    function memoize_left_rec_wrapper(this: Parser) {
+        const mark = this.mark();
+        const key = [mark, method_name, []].toString();
         let endmark, tree;
         // fastpath cache hit and not verbose
         if (key in this._cache && !this._verbose) {
@@ -184,14 +177,14 @@ export function memoize_left_rec(target: Parser, propertyKey: string, descriptor
 }
 
 export class Parser {
-    _tokenizer;
+    _tokenizer: Tokenizer;
     _verbose: boolean;
     _level: number;
     _cache: { [key: string]: [any, any] };
     mark: () => number;
-    reset: (number) => null | void;
+    reset: (number: number) => null | void;
     _tokens: TokenInfo[];
-    constructor(tokenizer, verbose = false) {
+    constructor(tokenizer: Tokenizer, verbose = false) {
         this._tokenizer = tokenizer;
         this._verbose = verbose;
         this._level = 0;
@@ -209,7 +202,7 @@ export class Parser {
     }
 
     @memoize
-    name(): null | Name {
+    name(): Name | null {
         let tok = this._tokenizer.peek();
         if (tok.type === NAME) {
             tok = this._tokenizer.getnext();
@@ -217,7 +210,7 @@ export class Parser {
         }
         return null;
     }
-    string() {
+    string(): TokenInfo | null {
         const tok = this._tokenizer.peek();
         if (tok.type === STRING) {
             return this._tokenizer.getnext();
@@ -225,7 +218,7 @@ export class Parser {
         return null;
     }
     @memoize
-    number(): null | any {
+    number(): TokenInfo | null {
         const tok = this._tokenizer.peek();
         if (tok.type === NUMBER) {
             return this._tokenizer.getnext();
@@ -233,7 +226,7 @@ export class Parser {
         return null;
     }
     @memoize
-    op(): null | any {
+    op(): TokenInfo | null {
         const tok = this._tokenizer.peek();
         if (tok.type === OP) {
             return this._tokenizer.getnext();
@@ -241,7 +234,7 @@ export class Parser {
         return null;
     }
     @memoize
-    expect(type) {
+    expect(type: string): TokenInfo | null {
         const tok = this._tokenizer.peek();
         if (tok.string === type) {
             return this._tokenizer.getnext();
@@ -261,13 +254,13 @@ export class Parser {
         }
         return null;
     }
-    positive_lookahead(func, ...args) {
+    positive_lookahead(func: (...args: any[]) => boolean, ...args: any[]) {
         const mark = this.mark();
         const ok = func.call(this, ...args);
         this.reset(mark);
         return ok;
     }
-    negative_lookahead(func, ...args) {
+    negative_lookahead(func: (...args: any[]) => boolean, ...args: any[]) {
         const mark = this.mark();
         const ok = func.call(this, ...args);
         this.reset(mark);
