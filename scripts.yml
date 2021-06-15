@@ -1,0 +1,16 @@
+scripts:
+  build:
+    desc: bundles the source files and copies it to dist folder
+    cmd: deno run scripts/build.ts
+    allow:
+      - read
+      - env
+      - run
+
+  build_parser:
+    cmd: python -m tools.build_parser
+
+
+  format:
+    cmd: deno fmt
+    gitHook: pre-commit
