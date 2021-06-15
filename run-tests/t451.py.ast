@@ -1,0 +1,99 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='d1', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1),
+                    Constant(value=3)],
+                values=[
+                    Constant(value=2),
+                    Constant(value=4)])),
+        Assign(
+            targets=[
+                Name(id='d2', ctx=Store())],
+            value=Dict(keys=[], values=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='d2', ctx=Load()),
+                    slice=Constant(value=1),
+                    ctx=Store())],
+            value=Constant(value=2)),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='d2', ctx=Load()),
+                    slice=Constant(value=3),
+                    ctx=Store())],
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='d1', ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='d2', ctx=Load()),
+                        slice=Constant(value=3),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='d1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=2),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='d1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='d1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='d2', ctx=Load())])],
+                keywords=[])),
+        Delete(
+            targets=[
+                Subscript(
+                    value=Name(id='d1', ctx=Load()),
+                    slice=Constant(value=3),
+                    ctx=Del())]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='d1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='d2', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

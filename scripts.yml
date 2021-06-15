@@ -17,3 +17,6 @@ scripts:
 
     format:
         cmd: pre-commit run --all-files
+
+    gen_ast:
+        cmd: cd run-tests && ls -1 *.py | xargs -n1 python3 tools/dump-ast.py

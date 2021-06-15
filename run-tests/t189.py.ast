@@ -1,0 +1,64 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='n')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Yield(
+                        value=Constant(value=1))),
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='a', ctx=Store()),
+                                Name(id='b', ctx=Store())],
+                            ctx=Store())],
+                    value=Tuple(
+                        elts=[
+                            Name(id='n', ctx=Load()),
+                            BinOp(
+                                left=Name(id='n', ctx=Load()),
+                                op=Add(),
+                                right=Constant(value=1))],
+                        ctx=Load())),
+                Expr(
+                    value=Yield(
+                        value=Constant(value=2))),
+                Expr(
+                    value=Yield(
+                        value=Name(id='a', ctx=Load()))),
+                Expr(
+                    value=Yield(
+                        value=Name(id='b', ctx=Load())))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Constant(value=9999)),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Constant(value=9999)),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=20)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

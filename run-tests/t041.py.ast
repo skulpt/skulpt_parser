@@ -1,0 +1,31 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=ListComp(
+                elt=BinOp(
+                    left=Name(id='v', ctx=Load()),
+                    op=Mult(),
+                    right=Name(id='v', ctx=Load())),
+                generators=[
+                    comprehension(
+                        target=Name(id='v', ctx=Store()),
+                        iter=Call(
+                            func=Name(id='range', ctx=Load()),
+                            args=[
+                                Constant(value=0),
+                                Constant(value=5)],
+                            keywords=[]),
+                        ifs=[],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='x', ctx=Load()),
+                        slice=Constant(value=3),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

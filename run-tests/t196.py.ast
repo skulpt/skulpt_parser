@@ -1,0 +1,57 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=2)]),
+                    body=[
+                        Expr(
+                            value=Yield(
+                                value=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1))))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Constant(value=1),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=1)]),
+                            body=[
+                                Expr(
+                                    value=Yield(
+                                        value=Constant(value=3)))],
+                            orelse=[
+                                Expr(
+                                    value=Yield(
+                                        value=UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))))])])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='f', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

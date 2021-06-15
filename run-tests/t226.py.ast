@@ -1,0 +1,109 @@
+Module(
+    body=[
+        For(
+            target=Name(id='const', ctx=Store()),
+            iter=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='const', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                For(
+                    target=Name(id='const', ctx=Store()),
+                    iter=Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='const', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                For(
+                    target=Name(id='object', ctx=Store()),
+                    iter=Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='object', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='instanceof', ctx=Store())],
+                    value=Constant(value=5)),
+                Assign(
+                    targets=[
+                        Name(id='void', ctx=Store())],
+                    value=Constant(value=6)),
+                Assign(
+                    targets=[
+                        Name(id='var', ctx=Store())],
+                    value=Constant(value=7)),
+                Assign(
+                    targets=[
+                        Name(id='delete', ctx=Store())],
+                    value=Constant(value=8)),
+                Assign(
+                    targets=[
+                        Name(id='switch', ctx=Store())],
+                    value=Constant(value=9)),
+                Assign(
+                    targets=[
+                        Name(id='default', ctx=Store())],
+                    value=Constant(value=10)),
+                Assign(
+                    targets=[
+                        Name(id='catch', ctx=Store())],
+                    value=Constant(value=11)),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='instanceof', ctx=Load()),
+                                    Name(id='void', ctx=Load()),
+                                    Name(id='var', ctx=Load()),
+                                    Name(id='delete', ctx=Load()),
+                                    Name(id='switch', ctx=Load()),
+                                    Name(id='default', ctx=Load()),
+                                    Name(id='catch', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

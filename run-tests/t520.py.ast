@@ -1,0 +1,164 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='any', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Call(
+                func=Name(id='all', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='z', ctx=Store())],
+            value=Call(
+                func=Name(id='isinstance', ctx=Load()),
+                args=[
+                    Constant(value=5),
+                    Name(id='int', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='z', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='z', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hash', ctx=Load()),
+                        args=[
+                            Constant(value=True)],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value=None)],
+                            keywords=[]),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=None)],
+                                keywords=[])]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value=None)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='hash', ctx=Load()),
+                            args=[
+                                Constant(value='hello')],
+                            keywords=[]),
+                        ops=[
+                            Is()],
+                        comparators=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value='hello')],
+                                keywords=[])]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='hash', ctx=Load()),
+                                args=[
+                                    Constant(value='hello')],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='hasattr', ctx=Load()),
+                args=[
+                    Constant(value='hello'),
+                    Constant(value='not_a_method')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,81 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='collections')]),
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='collections', ctx=Load()),
+                    attr='Counter',
+                    ctx=Load()),
+                args=[
+                    Constant(value='hello world')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='subtract',
+                    ctx=Load()),
+                args=[
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='subtract',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='update',
+                    ctx=Load()),
+                args=[
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='c', ctx=Load()),
+                    attr='update',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='c', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

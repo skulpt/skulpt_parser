@@ -1,0 +1,95 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='pkga.pkgb.modc')]),
+        Import(
+            names=[
+                alias(name='pkga.pkgb.modc')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='a name'),
+                            Attribute(
+                                value=Name(id='pkga', ctx=Load()),
+                                attr='__name__',
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='a.b name'),
+                            Attribute(
+                                value=Attribute(
+                                    value=Name(id='pkga', ctx=Load()),
+                                    attr='pkgb',
+                                    ctx=Load()),
+                                attr='__name__',
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='a.b.c name'),
+                            Attribute(
+                                value=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='pkga', ctx=Load()),
+                                        attr='pkgb',
+                                        ctx=Load()),
+                                    attr='modc',
+                                    ctx=Load()),
+                                attr='__name__',
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='stuff'),
+                            Attribute(
+                                value=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='pkga', ctx=Load()),
+                                        attr='pkgb',
+                                        ctx=Load()),
+                                    attr='modc',
+                                    ctx=Load()),
+                                attr='stuff',
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='things'),
+                            Attribute(
+                                value=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='pkga', ctx=Load()),
+                                        attr='pkgb',
+                                        ctx=Load()),
+                                    attr='modc',
+                                    ctx=Load()),
+                                attr='things',
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

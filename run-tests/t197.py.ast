@@ -1,0 +1,54 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='iter')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                For(
+                    target=Name(id='v', ctx=Store()),
+                    iter=Name(id='iter', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='v', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    GeneratorExp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Mult(),
+                            right=Name(id='y', ctx=Load())),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=10)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0),
+                            comprehension(
+                                target=Name(id='y', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Name(id='x', ctx=Load())],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)])],
+                keywords=[]))],
+    type_ignores=[])

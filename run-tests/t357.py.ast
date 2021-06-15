@@ -1,0 +1,52 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value=1),
+                    Constant(value=3)],
+                values=[
+                    Constant(value=2),
+                    Constant(value=4)])),
+        Assign(
+            targets=[
+                Name(id='d2', ctx=Store())],
+            value=Call(
+                func=Name(id='dict', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d2', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='d2', ctx=Load()),
+                    slice=Constant(value=4),
+                    ctx=Store())],
+            value=Constant(value=6)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d2', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

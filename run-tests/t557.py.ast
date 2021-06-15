@@ -1,0 +1,15 @@
+Module(
+    body=[
+        ClassDef(
+            name='C',
+            bases=[],
+            keywords=[],
+            body=[
+                Raise(
+                    exc=Call(
+                        func=Name(id='Exception', ctx=Load()),
+                        args=[
+                            Constant(value='Oops')],
+                        keywords=[]))],
+            decorator_list=[])],
+    type_ignores=[])

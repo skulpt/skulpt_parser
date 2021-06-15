@@ -1,0 +1,248 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='string')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='ascii_lowercase',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='ascii_uppercase',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='ascii_letters',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='lowercase',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='uppercase',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='letters',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='digits',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='hexdigits',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='octdigits',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='punctuation',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='whitespace',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='string', ctx=Load()),
+                        attr='printable',
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value="I frequently eat pizza; however, I don't particularly like it")),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load()),
+                            Constant(value=';')],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='capitalize')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='capitalize',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='Capitalize')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='capitalize',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='this'),
+                    Constant(value='will'),
+                    Constant(value='become'),
+                    Constant(value='a'),
+                    Constant(value='sentence')],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='join',
+                            ctx=Load()),
+                        args=[
+                            Name(id='l', ctx=Load()),
+                            Constant(value='_')],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value="i frequently eat pizza; however, i don't particularly like it")),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='capwords',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='string', ctx=Load()),
+                            attr='capwords',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load()),
+                            Constant(value='; ')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

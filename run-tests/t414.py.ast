@@ -1,0 +1,130 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Constant(value='hello')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=' '),
+                                op=Mult(),
+                                right=Constant(value=10))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Tuple(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=List(
+                                    elts=[
+                                        Constant(value=0)],
+                                    ctx=Load()),
+                                op=Mult(),
+                                right=Constant(value=10))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Dict(keys=[], values=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Dict(
+                                keys=[
+                                    Constant(value=1),
+                                    Constant(value=3)],
+                                values=[
+                                    Constant(value=2),
+                                    Constant(value=4)])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

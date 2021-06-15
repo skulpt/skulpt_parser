@@ -1,0 +1,149 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nlists')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=1)],
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ntuples')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3),
+                                    Constant(value=4)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=1)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2)],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=2),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ndictionaries')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Dict(
+                                keys=[
+                                    Constant(value=1),
+                                    Constant(value=3),
+                                    Constant(value=5)],
+                                values=[
+                                    Constant(value=2),
+                                    Constant(value=4),
+                                    Constant(value=6)])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='max', ctx=Load()),
+                        args=[
+                            Dict(
+                                keys=[
+                                    Constant(value=1),
+                                    Constant(value=3),
+                                    Constant(value=5)],
+                                values=[
+                                    Constant(value=6),
+                                    Constant(value=4),
+                                    Constant(value=2)])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,39 @@
+Module(
+    body=[
+        ClassDef(
+            name='x',
+            bases=[],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Name(id='x', ctx=Load()))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='x', ctx=Load()),
+                    attr='hi',
+                    ctx=Store())],
+            value=Name(id='f', ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='x', ctx=Load()),
+                        attr='hi',
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

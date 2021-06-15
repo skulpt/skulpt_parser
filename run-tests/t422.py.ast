@@ -1,0 +1,1017 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='bugs', ctx=Store())],
+            value=List(
+                elts=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.5)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.025)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.055)),
+                    Constant(value=0.045),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.0025)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.0035)),
+                    Constant(value=0.0045),
+                    Constant(value=0.0055),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=250)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=350)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=450)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=550))],
+                ctx=Load())),
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='iterable'),
+                    arg(arg='expect'),
+                    arg(arg='n')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=None)]),
+            body=[
+                If(
+                    test=Name(id='n', ctx=Load()),
+                    body=[
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Name(id='iterable', ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='r', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='round', ctx=Load()),
+                                        args=[
+                                            Name(id='i', ctx=Load()),
+                                            Name(id='n', ctx=Load())],
+                                        keywords=[])),
+                                If(
+                                    test=BoolOp(
+                                        op=And(),
+                                        values=[
+                                            Compare(
+                                                left=Call(
+                                                    func=Name(id='abs', ctx=Load()),
+                                                    args=[
+                                                        BinOp(
+                                                            left=Name(id='r', ctx=Load()),
+                                                            op=Sub(),
+                                                            right=Name(id='expect', ctx=Load()))],
+                                                    keywords=[]),
+                                                ops=[
+                                                    Gt()],
+                                                comparators=[
+                                                    BinOp(
+                                                        left=Constant(value=1),
+                                                        op=Div(),
+                                                        right=BinOp(
+                                                            left=Constant(value=10.0),
+                                                            op=Pow(),
+                                                            right=BinOp(
+                                                                left=Name(id='n', ctx=Load()),
+                                                                op=Add(),
+                                                                right=Constant(value=1))))]),
+                                            Compare(
+                                                left=Name(id='i', ctx=Load()),
+                                                ops=[
+                                                    NotIn()],
+                                                comparators=[
+                                                    Name(id='bugs', ctx=Load())])]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Constant(value=False),
+                                                    Name(id='i', ctx=Load()),
+                                                    Constant(value='  expected: '),
+                                                    Name(id='expect', ctx=Load()),
+                                                    Constant(value='  result: '),
+                                                    Name(id='r', ctx=Load()),
+                                                    Call(
+                                                        func=Name(id='abs', ctx=Load()),
+                                                        args=[
+                                                            BinOp(
+                                                                left=Name(id='r', ctx=Load()),
+                                                                op=Sub(),
+                                                                right=Name(id='expect', ctx=Load()))],
+                                                        keywords=[])],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            orelse=[])],
+                    orelse=[
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Name(id='iterable', ctx=Load()),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='r', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='round', ctx=Load()),
+                                        args=[
+                                            Name(id='i', ctx=Load())],
+                                        keywords=[])),
+                                If(
+                                    test=BoolOp(
+                                        op=And(),
+                                        values=[
+                                            Compare(
+                                                left=Call(
+                                                    func=Name(id='abs', ctx=Load()),
+                                                    args=[
+                                                        BinOp(
+                                                            left=Name(id='r', ctx=Load()),
+                                                            op=Sub(),
+                                                            right=Name(id='expect', ctx=Load()))],
+                                                    keywords=[]),
+                                                ops=[
+                                                    Gt()],
+                                                comparators=[
+                                                    Constant(value=1e-06)]),
+                                            Compare(
+                                                left=Name(id='i', ctx=Load()),
+                                                ops=[
+                                                    NotIn()],
+                                                comparators=[
+                                                    Name(id='bugs', ctx=Load())])]),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Constant(value=False),
+                                                    Name(id='i', ctx=Load()),
+                                                    Constant(value='  expected: '),
+                                                    Name(id='expect', ctx=Load()),
+                                                    Constant(value='  result: '),
+                                                    Name(id='r', ctx=Load()),
+                                                    Call(
+                                                        func=Name(id='abs', ctx=Load()),
+                                                        args=[
+                                                            BinOp(
+                                                                left=Name(id='r', ctx=Load()),
+                                                                op=Sub(),
+                                                                right=Name(id='expect', ctx=Load()))],
+                                                        keywords=[])],
+                                                keywords=[]))],
+                                    orelse=[])],
+                            orelse=[])])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n-1.4 to 1.4, no ndigit')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=5)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=15)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=4),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=5)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=5),
+                                        Constant(value=15)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n-1.49 to 1.49, no ndigit')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=100.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=50)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=150)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=100.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=40),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=50)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=100.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=50),
+                                        Constant(value=150)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n-0.064 to -0.025, ndigit=2')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=25)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=35)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.03)),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=35)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=46)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.04)),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=46)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=55)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.05)),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=55)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=65)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.06)),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n0.025 to 0.064, ndigit=2')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=25),
+                                        Constant(value=35)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.03),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=35),
+                                        Constant(value=46)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.04),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=46),
+                                        Constant(value=55)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.05),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=1000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=55),
+                                        Constant(value=65)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.06),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n-0.0064 to -0.0025, ndigit=3')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=25)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=35)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.003)),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=35)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=46)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.004)),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=46)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=56)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.005)),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=56)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=65)),
+                                        UnaryOp(
+                                            op=USub(),
+                                            operand=Constant(value=1))],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=0.006)),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n0.0025 to 0.0064, ndigit=3')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=25),
+                                        Constant(value=35)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.003),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=35),
+                                        Constant(value=46)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.004),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=46),
+                                        Constant(value=56)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.005),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Div(),
+                            right=Constant(value=10000.0)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=56),
+                                        Constant(value=65)],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)]),
+                    Constant(value=0.006),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n-649 to -250, ndigit=-2')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=250)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=350)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[])],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=300)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=350)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=450)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[])],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=400)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=450)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=550)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[])],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=500)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=550)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=650)),
+                                    UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=1))],
+                                keywords=[])],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=600)),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\n250 to 649, ndigit=-2')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=250),
+                                    Constant(value=350)],
+                                keywords=[])],
+                        keywords=[]),
+                    Constant(value=300),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=350),
+                                    Constant(value=450)],
+                                keywords=[])],
+                        keywords=[]),
+                    Constant(value=400),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=450),
+                                    Constant(value=550)],
+                                keywords=[])],
+                        keywords=[]),
+                    Constant(value=500),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=550),
+                                    Constant(value=650)],
+                                keywords=[])],
+                        keywords=[]),
+                    Constant(value=600),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=2))],
+                keywords=[]))],
+    type_ignores=[])

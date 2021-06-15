@@ -1,0 +1,352 @@
+Module(
+    body=[
+        Global(
+            names=[
+                'a']),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='A',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='a', ctx=Load()),
+                            attr='add',
+                            ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='B',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='update',
+                            ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='add',
+                            ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='A', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='A', ctx=Load()),
+                args=[
+                    Constant(value=6)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='B', ctx=Load()),
+                args=[
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='a: '),
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='b: '),
+                    Name(id='b', ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='C',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Global(
+                    names=[
+                        'c']),
+                Assign(
+                    targets=[
+                        Name(id='c', ctx=Store())],
+                    value=Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])),
+                FunctionDef(
+                    name='D',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='x')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='x', ctx=Load()),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Name(id='b', ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='c', ctx=Load()),
+                                            attr='add',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load())],
+                                        keywords=[]))],
+                            orelse=[])],
+                    decorator_list=[]),
+                For(
+                    target=Name(id='n', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='D', ctx=Load()),
+                                args=[
+                                    Name(id='n', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='a', ctx=Load()),
+                            attr='update',
+                            ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='C', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='a: '),
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='b: '),
+                    Name(id='b', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='c: '),
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='D',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='a', ctx=Load()),
+                            attr='remove',
+                            ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='update',
+                            ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='a', ctx=Load()),
+                            attr='intersection_update',
+                            ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='D', ctx=Load()),
+                args=[
+                    Constant(value=7)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='a: '),
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='b: '),
+                    Name(id='b', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='c: '),
+                    Name(id='c', ctx=Load())],
+                keywords=[])),
+        FunctionDef(
+            name='E',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='A', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='B', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='C', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='D', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='E', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='a: '),
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='b: '),
+                    Name(id='b', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='c: '),
+                    Name(id='c', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

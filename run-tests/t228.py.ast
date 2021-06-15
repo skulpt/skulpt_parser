@@ -1,0 +1,58 @@
+Module(
+    body=[
+        ClassDef(
+            name='X',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='stuff',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='X', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='f', ctx=Store())],
+            value=Call(
+                func=Name(id='getattr', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Constant(value='stuff')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='f', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='fu', ctx=Store())],
+            value=Call(
+                func=Name(id='getattr', ctx=Load()),
+                args=[
+                    Name(id='X', ctx=Load()),
+                    Constant(value='stuff')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='fu', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

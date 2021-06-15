@@ -1,0 +1,73 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='object', ctx=Load()),
+                        attr='__bases__',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='object', ctx=Load()),
+                        attr='__mro__',
+                        ctx=Load())],
+                keywords=[])),
+        ClassDef(
+            name='X',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='Y',
+            bases=[
+                Name(id='X', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='X', ctx=Load()),
+                        attr='__bases__',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='X', ctx=Load()),
+                        attr='__mro__',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='Y', ctx=Load()),
+                        attr='__bases__',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='Y', ctx=Load()),
+                        attr='__mro__',
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

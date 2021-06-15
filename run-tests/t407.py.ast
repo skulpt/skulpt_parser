@@ -1,0 +1,161 @@
+Module(
+    body=[
+        ClassDef(
+            name='A',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='a',
+                                    ctx=Store())],
+                            value=Constant(value=1)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='b',
+                                    ctx=Store())],
+                            value=Constant(value=2)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='c',
+                                    ctx=Store())],
+                            value=Constant(value=3))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='B',
+            bases=[
+                Name(id='A', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='A', ctx=Load()),
+                                    attr='__init__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='d',
+                                    ctx=Store())],
+                            value=Constant(value=4))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='C',
+            bases=[
+                Name(id='B', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='B', ctx=Load()),
+                                    attr='__init__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__dir__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=List(
+                                elts=[
+                                    Constant(value='a'),
+                                    Constant(value='b'),
+                                    Constant(value='c'),
+                                    Constant(value='d')],
+                                ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='dir', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='A', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='dir', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='B', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='dir', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='C', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

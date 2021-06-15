@@ -1,0 +1,78 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a-z]*ei[a-z]*'),
+                            Constant(value='Is Dr. Greiner your friend, Julie?'),
+                            Attribute(
+                                value=Name(id='re', ctx=Load()),
+                                attr='IGNORECASE',
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a-z]*(ei|ie)[a-z]*'),
+                            Constant(value='Is Dr. Greiner your friend, Julie?'),
+                            Attribute(
+                                value=Name(id='re', ctx=Load()),
+                                attr='IGNORECASE',
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a-z]*(ei|ie)([a-z]*)'),
+                            Constant(value='Is Dr. Greiner your friend, Julie?'),
+                            Attribute(
+                                value=Name(id='re', ctx=Load()),
+                                attr='IGNORECASE',
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='[a-z]*(?:ei|ie)[a-z]*'),
+                            Constant(value='Is Dr. Greiner your friend, Julie?'),
+                            Attribute(
+                                value=Name(id='re', ctx=Load()),
+                                attr='IGNORECASE',
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,66 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='random')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='random', ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='lst', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=0),
+                    Constant(value=0),
+                    Constant(value=0),
+                    Constant(value=0),
+                    Constant(value=0)],
+                ctx=Load())),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Constant(value=1000)],
+                keywords=[]),
+            body=[
+                AugAssign(
+                    target=Subscript(
+                        value=Name(id='lst', ctx=Load()),
+                        slice=Call(
+                            func=Attribute(
+                                value=Name(id='random', ctx=Load()),
+                                attr='randint',
+                                ctx=Load()),
+                            args=[
+                                Constant(value=0),
+                                Constant(value=4)],
+                            keywords=[]),
+                        ctx=Store()),
+                    op=Add(),
+                    value=Constant(value=1))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='lst', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Name(id='lst', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

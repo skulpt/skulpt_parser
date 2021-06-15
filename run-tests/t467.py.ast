@@ -1,0 +1,13 @@
+Module(
+    body=[
+        If(
+            test=Name(id='true', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Hello')],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

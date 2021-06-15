@@ -1,0 +1,62 @@
+Module(
+    body=[
+        FunctionDef(
+            name='funky',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='cheese')],
+                        keywords=[]))],
+            decorator_list=[]),
+        FunctionDef(
+            name='gen',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Constant(value=0)),
+                Expr(
+                    value=Call(
+                        func=Name(id='funky', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                Expr(
+                    value=Yield(
+                        value=Constant(value=1))),
+                AugAssign(
+                    target=Name(id='i', ctx=Store()),
+                    op=Add(),
+                    value=Constant(value=1))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='g', ctx=Store())],
+            value=Call(
+                func=Name(id='gen', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

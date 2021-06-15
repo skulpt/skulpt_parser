@@ -1,0 +1,25 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='v', ctx=Store())],
+            value=Call(
+                func=Name(id='sorted', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=3),
+                            Constant(value=2),
+                            Constant(value=1)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='v', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

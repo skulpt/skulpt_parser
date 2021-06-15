@@ -1,0 +1,444 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='math')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nmath.exp(x)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='exp',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='exp',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='exp',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='exp',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='exp',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=12.3)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='exp',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=21.3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nmath.log(x[,base])')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=1.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2.718281828459045)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=148.4131591025766)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0.006737946999085467)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=219695.9886721379)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=4.551744463083231e-06)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=8),
+                            Constant(value=2)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=16),
+                            Constant(value=4)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=12345),
+                            Constant(value=78)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nmath.log10(x)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log10',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=10)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log10',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=100.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log10',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=12324334.8592)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='log10',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0.0001)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nmath.pow(x,y)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='pow',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3),
+                            Constant(value=5.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='pow',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5.0))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='pow',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3.0)),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='pow',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3.0)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5.0))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='pow',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0.0),
+                            Constant(value=0.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nmath.sqrt(x)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='sqrt',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=4)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='sqrt',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=100.0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='sqrt',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=124.4)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='math', ctx=Load()),
+                            attr='sqrt',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nconstants')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='math', ctx=Load()),
+                        attr='pi',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='math', ctx=Load()),
+                        attr='e',
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

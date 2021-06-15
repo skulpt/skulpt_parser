@@ -1,0 +1,60 @@
+Module(
+    body=[
+        ClassDef(
+            name='C',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='data')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='data',
+                                    ctx=Store())],
+                            value=Name(id='data', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='pr',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='data',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Call(
+                        func=Name(id='C', ctx=Load()),
+                        args=[
+                            Constant(value='OK')],
+                        keywords=[]),
+                    attr='pr',
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

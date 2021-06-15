@@ -1,0 +1,108 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4),
+                    Constant(value=5),
+                    Constant(value=6)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=9),
+                    Constant(value=9),
+                    Constant(value=9)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Slice(
+                        lower=Constant(value=1),
+                        upper=Constant(value=5)),
+                    ctx=Store())],
+            value=Name(id='b', ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='mylist', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='a'),
+                    Constant(value='b'),
+                    Constant(value='c'),
+                    Constant(value='d')],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value='1'),
+                    Constant(value='2')],
+                values=[
+                    Constant(value=1),
+                    Constant(value=2)])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='mylist', ctx=Load()),
+                    slice=Slice(
+                        lower=Constant(value=0),
+                        upper=Constant(value=2)),
+                    ctx=Store())],
+            value=Name(id='d', ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='mylist', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='mylist', ctx=Load()),
+                    slice=Slice(
+                        lower=Constant(value=1),
+                        upper=Constant(value=3)),
+                    ctx=Store())],
+            value=Constant(value='temp')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='mylist', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='mylist', ctx=Load()),
+                    slice=Slice(),
+                    ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='g'),
+                    Constant(value='o'),
+                    Constant(value='o'),
+                    Constant(value='d')],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='mylist', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

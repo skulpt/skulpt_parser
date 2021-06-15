@@ -1,0 +1,210 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='math')]),
+        ClassDef(
+            name='F',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='a',
+                                    ctx=Store())],
+                            value=Constant(value=1)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='b',
+                                    ctx=Store())],
+                            value=Constant(value=2)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='d',
+                                    ctx=Store())],
+                            value=Constant(value=4))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='f', ctx=Store())],
+            value=Call(
+                func=Name(id='F', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='a')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='c')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='f', ctx=Load()),
+                            Constant(value='D')],
+                        keywords=[])],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='hasattr', ctx=Load()),
+                                args=[
+                                    Name(id='f', ctx=Load()),
+                                    Name(id='b', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="You shouldn't see this.")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hasattr', ctx=Load()),
+                                        args=[
+                                            Name(id='f', ctx=Load()),
+                                            Constant(value='b')],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='str', ctx=Load()),
+                            Constant(value='center')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='str', ctx=Load()),
+                            Constant(value='ljust')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='math', ctx=Load()),
+                            Constant(value='pi')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='hasattr', ctx=Load()),
+                        args=[
+                            Name(id='math', ctx=Load()),
+                            Constant(value='tau')],
+                        keywords=[])],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='hasattr', ctx=Load()),
+                                args=[
+                                    Name(id='math', ctx=Load()),
+                                    Constant(value=None)],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="You shouldn't see this.")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='hasattr', ctx=Load()),
+                                        args=[
+                                            Name(id='F', ctx=Load()),
+                                            Constant(value='a')],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

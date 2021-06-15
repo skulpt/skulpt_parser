@@ -1,0 +1,442 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expect', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expect', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.find')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=4),
+                            Constant(value=6)],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value=2),
+                            Constant(value=5)],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5))],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=8)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5))],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='find',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.index')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value=2),
+                            Constant(value=5)],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5))],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=8)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5))],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rfind')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='h'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=2),
+                            Constant(value=4)],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=2),
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1)),
+                            Constant(value=10)],
+                        keywords=[]),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=1),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rfind',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=9)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.rindex')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    Constant(value=9)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value=0),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value=2),
+                            Constant(value=7)],
+                        keywords=[]),
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            Constant(value=2),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    Constant(value=7)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello world'),
+                            attr='rindex',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='o'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=2))],
+                        keywords=[]),
+                    Constant(value=7)],
+                keywords=[]))],
+    type_ignores=[])

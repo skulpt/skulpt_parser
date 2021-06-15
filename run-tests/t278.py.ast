@@ -1,0 +1,13 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Constant(value='\nThe "quick"\nbrown fox\njumps over\nthe \'lazy\' dog.\n')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='y', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

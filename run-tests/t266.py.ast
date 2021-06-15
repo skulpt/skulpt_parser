@@ -1,0 +1,36 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=False),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=None)])],
+                keywords=[])),
+        If(
+            test=UnaryOp(
+                op=Not(),
+                operand=Constant(value=None)),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='This statement evaluates to True.')],
+                        keywords=[]))],
+            orelse=[]),
+        If(
+            test=Constant(value=None),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='This statement evaluates to False.')],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

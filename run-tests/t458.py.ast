@@ -1,0 +1,361 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='0 % 10 ='),
+                    BinOp(
+                        left=Constant(value=0),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='3 % 10 ='),
+                    BinOp(
+                        left=Constant(value=3),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='6 % 10 ='),
+                    BinOp(
+                        left=Constant(value=6),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='10 % 10 ='),
+                    BinOp(
+                        left=Constant(value=10),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='14 % 10 ='),
+                    BinOp(
+                        left=Constant(value=14),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-3 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-6 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=6)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-10 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-14 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=14)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='3.6 % 10 ='),
+                    BinOp(
+                        left=Constant(value=3.6),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-3.6 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3.6)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='35.9 % 10 ='),
+                    BinOp(
+                        left=Constant(value=35.9),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-35.9 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=35.9)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='104 % 10 ='),
+                    BinOp(
+                        left=Constant(value=104),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-104 % 10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=104)),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='0 % -10 ='),
+                    BinOp(
+                        left=Constant(value=0),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='3 % -10 ='),
+                    BinOp(
+                        left=Constant(value=3),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='6 % -10 ='),
+                    BinOp(
+                        left=Constant(value=6),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='10 % -10 ='),
+                    BinOp(
+                        left=Constant(value=10),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='14 % -10 ='),
+                    BinOp(
+                        left=Constant(value=14),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-3 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-6 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=6)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-10 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-14 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=14)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='3.6 % -10 ='),
+                    BinOp(
+                        left=Constant(value=3.6),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-3.6 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=3.6)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='35.9 % -10 ='),
+                    BinOp(
+                        left=Constant(value=35.9),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-35.9 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=35.9)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='104 % -10 ='),
+                    BinOp(
+                        left=Constant(value=104),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='-104 % -10 ='),
+                    BinOp(
+                        left=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=104)),
+                        op=Mod(),
+                        right=UnaryOp(
+                            op=USub(),
+                            operand=Constant(value=10)))],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,38 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Mult(),
+                            right=Name(id='x', ctx=Load())),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Name(id='range', ctx=Load()),
+                                    args=[
+                                        Constant(value=20)],
+                                    keywords=[]),
+                                ifs=[
+                                    Compare(
+                                        left=Name(id='x', ctx=Load()),
+                                        ops=[
+                                            Gt()],
+                                        comparators=[
+                                            Constant(value=10)]),
+                                    Compare(
+                                        left=BinOp(
+                                            left=Name(id='x', ctx=Load()),
+                                            op=Mod(),
+                                            right=Constant(value=2)),
+                                        ops=[
+                                            Eq()],
+                                        comparators=[
+                                            Constant(value=0)])],
+                                is_async=0)])],
+                keywords=[]))],
+    type_ignores=[])

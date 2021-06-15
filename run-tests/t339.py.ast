@@ -1,0 +1,382 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='findall',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='dlkjdsljkdlkdsjlk')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='val', ctx=Load())],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Call(
+                    func=Name(id='len', ctx=Load()),
+                    args=[
+                        Name(id='val', ctx=Load())],
+                    keywords=[]),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value=0)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 1')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 1')],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='findall',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='dlkjd From kdsjlk')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='val', ctx=Load())],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Call(
+                    func=Name(id='len', ctx=Load()),
+                    args=[
+                        Name(id='val', ctx=Load())],
+                    keywords=[]),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value=1)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 2')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 2')],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='findall',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='From dlkjd From kdsjlk')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='val', ctx=Load())],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Call(
+                    func=Name(id='len', ctx=Load()),
+                    args=[
+                        Name(id='val', ctx=Load())],
+                    keywords=[]),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value=2)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 3')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 3')],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='findall',
+                    ctx=Load()),
+                args=[
+                    Constant(value='[0-9]+/[0-9]+'),
+                    Constant(value='1/2 1/3 3/4 1/8 fred 10/0')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='val', ctx=Load())],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Call(
+                    func=Name(id='len', ctx=Load()),
+                    args=[
+                        Name(id='val', ctx=Load())],
+                    keywords=[]),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value=5)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 4')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 4')],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='search',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='dlkjdsljkdlkdsjlk')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Name(id='val', ctx=Load()),
+                ops=[
+                    Is()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 5')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 5'),
+                            Name(id='val', ctx=Load())],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='search',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='dlkjd From kdsjlk')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Name(id='val', ctx=Load()),
+                ops=[
+                    IsNot()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 6')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 6'),
+                            Name(id='val', ctx=Load())],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='search',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='From dlkjd From kdsjlk')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Name(id='val', ctx=Load()),
+                ops=[
+                    IsNot()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 7')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 7'),
+                            Name(id='val', ctx=Load())],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='match',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='dlkjdsljkdlkdsjlk')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Name(id='val', ctx=Load()),
+                ops=[
+                    Is()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 8')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 8'),
+                            Name(id='val', ctx=Load())],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='match',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='dlkjd From kdsjlk')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Name(id='val', ctx=Load()),
+                ops=[
+                    Is()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 9')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 9'),
+                            Name(id='val', ctx=Load())],
+                        keywords=[]))]),
+        Assign(
+            targets=[
+                Name(id='val', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='re', ctx=Load()),
+                    attr='match',
+                    ctx=Load()),
+                args=[
+                    Constant(value='From'),
+                    Constant(value='From dlkjd From kdsjlk')],
+                keywords=[])),
+        If(
+            test=Compare(
+                left=Name(id='val', ctx=Load()),
+                ops=[
+                    IsNot()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='Correct 10')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='InCorrect 10'),
+                            Name(id='val', ctx=Load())],
+                        keywords=[]))])],
+    type_ignores=[])

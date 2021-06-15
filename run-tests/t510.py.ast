@@ -1,0 +1,300 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=4)],
+                ctx=Load())),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Attribute(
+                    value=Name(id='l', ctx=Load()),
+                    attr='__iter__',
+                    ctx=Load()),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        ClassDef(
+            name='MyIterable',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='lst')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='x',
+                                    ctx=Store())],
+                            value=Constant(value=3)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='iter',
+                                    ctx=Store())],
+                            value=Name(id='lst', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__iter__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='iter',
+                                        ctx=Load()),
+                                    attr='__iter__',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='mi', ctx=Store())],
+            value=Call(
+                func=Name(id='MyIterable', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=5),
+                            Constant(value=6),
+                            Constant(value=7)],
+                        ctx=Load())],
+                keywords=[])),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Attribute(
+                    value=Name(id='mi', ctx=Load()),
+                    attr='__iter__',
+                    ctx=Load()),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Name(id='mi', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        ClassDef(
+            name='Counter',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='low'),
+                            arg(arg='high')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='current',
+                                    ctx=Store())],
+                            value=Name(id='low', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='high',
+                                    ctx=Store())],
+                            value=Name(id='high', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__iter__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Name(id='self', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__next__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='current',
+                                    ctx=Load()),
+                                ops=[
+                                    Gt()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='high',
+                                        ctx=Load())]),
+                            body=[
+                                Raise(
+                                    exc=Name(id='StopIteration', ctx=Load()))],
+                            orelse=[
+                                AugAssign(
+                                    target=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='current',
+                                        ctx=Store()),
+                                    op=Add(),
+                                    value=Constant(value=1)),
+                                Return(
+                                    value=BinOp(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='current',
+                                            ctx=Load()),
+                                        op=Sub(),
+                                        right=Constant(value=1)))])],
+                    decorator_list=[])],
+            decorator_list=[]),
+        For(
+            target=Name(id='c', ctx=Store()),
+            iter=Call(
+                func=Name(id='Counter', ctx=Load()),
+                args=[
+                    Constant(value=9),
+                    Constant(value=12)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        ClassDef(
+            name='SillyTupleIter',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='s')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='w',
+                                    ctx=Store())],
+                            value=Call(
+                                func=Name(id='tuple', ctx=Load()),
+                                args=[
+                                    Name(id='s', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__iter__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='w',
+                                        ctx=Load()),
+                                    attr='__iter__',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='SillyTupleIter', ctx=Load()),
+                args=[
+                    Constant(value='foo')],
+                keywords=[])),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Name(id='x', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

@@ -1,0 +1,16 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=Name(id='c', ctx=Load()),
+                        generators=[
+                            comprehension(
+                                target=Name(id='c', ctx=Store()),
+                                iter=Constant(value='asdf'),
+                                ifs=[],
+                                is_async=0)])],
+                keywords=[]))],
+    type_ignores=[])

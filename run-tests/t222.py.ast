@@ -1,0 +1,77 @@
+Module(
+    body=[
+        FunctionDef(
+            name='foo',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Yield(
+                        value=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='x', ctx=Load())],
+                            keywords=[]))),
+                Expr(
+                    value=Yield(
+                        value=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='x', ctx=Load())],
+                            keywords=[])))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='g', ctx=Store())],
+            value=Call(
+                func=Name(id='foo', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=5)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        FunctionDef(
+            name='len',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='y')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=Constant(value=8))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='g', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

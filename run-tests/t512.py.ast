@@ -1,0 +1,30 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='sorted', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='kesy',
+                        value=Lambda(
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='x')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=UnaryOp(
+                                op=USub(),
+                                operand=Name(id='x', ctx=Load())))),
+                    keyword(
+                        arg='reverse',
+                        value=Constant(value=True))]))],
+    type_ignores=[])

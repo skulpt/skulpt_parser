@@ -1,0 +1,137 @@
+Module(
+    body=[
+        FunctionDef(
+            name='enumerate_helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='iterable'),
+                    arg(arg='start')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=0)]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='x', ctx=Store())],
+                    value=List(elts=[], ctx=Load())),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='enumerate', ctx=Load()),
+                        args=[
+                            Name(id='iterable', ctx=Load()),
+                            Name(id='start', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='x', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='i', ctx=Load())],
+                                keywords=[]))],
+                    orelse=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4)],
+                        ctx=Load()),
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    Constant(value='WORLD'),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load()),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=1))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    Dict(
+                        keys=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        values=[
+                            Constant(value='a'),
+                            Constant(value='b'),
+                            Constant(value='c')])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='enumerate_helper', ctx=Load()),
+                args=[
+                    Dict(
+                        keys=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        values=[
+                            Constant(value='a'),
+                            Constant(value='b'),
+                            Constant(value='c')]),
+                    Constant(value=5)],
+                keywords=[]))],
+    type_ignores=[])

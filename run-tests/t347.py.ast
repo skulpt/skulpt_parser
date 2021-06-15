@@ -1,0 +1,67 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='we are stripping'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='g')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='we are not stripping'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='n')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='we are stripping'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ing')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='we are not stripping'),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='we')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='stripping whitespace   '),
+                            attr='rstrip',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

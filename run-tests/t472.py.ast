@@ -1,0 +1,218 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expect', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expect', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.replace')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value='L')],
+                        keywords=[]),
+                    Constant(value='heLLo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value='L'),
+                            Constant(value=1)],
+                        keywords=[]),
+                    Constant(value='heLlo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value='L'),
+                            Constant(value=5)],
+                        keywords=[]),
+                    Constant(value='heLLo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='l'),
+                            Constant(value='L'),
+                            Constant(value=0)],
+                        keywords=[]),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello hello hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ll'),
+                            Constant(value='lll')],
+                        keywords=[]),
+                    Constant(value='helllo helllo helllo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello hello hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ll'),
+                            Constant(value='lll'),
+                            Constant(value=2)],
+                        keywords=[]),
+                    Constant(value='helllo helllo hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello hello hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ll'),
+                            Constant(value='l')],
+                        keywords=[]),
+                    Constant(value='helo helo helo')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='hello hello hello'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ll'),
+                            Constant(value='l'),
+                            Constant(value=2)],
+                        keywords=[]),
+                    Constant(value='helo helo hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcabcaaaabc'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value='123')],
+                        keywords=[]),
+                    Constant(value='123123aaa123')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcabcaaaabc'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value='123'),
+                            Constant(value=2)],
+                        keywords=[]),
+                    Constant(value='123123aaaabc')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcabcaaaabc'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value='123'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))],
+                        keywords=[]),
+                    Constant(value='123123aaa123')],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,52 @@
+Module(
+    body=[
+        ClassDef(
+            name='Stuff',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='blah',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='x'),
+                            arg(arg='y')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=False)]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Name(id='x', ctx=Load()),
+                                            Name(id='y', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Call(
+                func=Name(id='Stuff', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s', ctx=Load()),
+                    attr='blah',
+                    ctx=Load()),
+                args=[
+                    Constant(value='x')],
+                keywords=[
+                    keyword(
+                        arg='y',
+                        value=Constant(value='OK'))]))],
+    type_ignores=[])

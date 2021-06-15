@@ -1,0 +1,27 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=BinOp(
+                            left=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Constant(value=1),
+                                            op=BitOr(),
+                                            right=Constant(value=2)),
+                                        op=BitOr(),
+                                        right=Constant(value=3)),
+                                    op=BitOr(),
+                                    right=Constant(value=4)),
+                                op=BitOr(),
+                                right=Constant(value=5)),
+                            op=BitOr(),
+                            right=Constant(value=6)),
+                        op=BitOr(),
+                        right=Constant(value=128))],
+                keywords=[]))],
+    type_ignores=[])

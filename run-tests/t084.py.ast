@@ -1,0 +1,17 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='..bbb..'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='..'),
+                            Constant(value='X')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

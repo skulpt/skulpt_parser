@@ -1,0 +1,115 @@
+Module(
+    body=[
+        ClassDef(
+            name='Base',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='myfunc',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Base.myfunc')],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='stuff',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Base.stuff')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='myfunc',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='Derived',
+            bases=[
+                Name(id='Base', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='myfunc',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='Base', ctx=Load()),
+                                    attr='myfunc',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Derived.myfunc')],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Call(
+                func=Name(id='Derived', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='d', ctx=Load()),
+                    attr='myfunc',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='Derived', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='b', ctx=Load()),
+                    attr='stuff',
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,33 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=444)),
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='arg')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=BinOp(
+                        left=BinOp(
+                            left=BinOp(
+                                left=Constant(value='OK: '),
+                                op=Add(),
+                                right=Name(id='arg', ctx=Load())),
+                            op=Add(),
+                            right=Constant(value=', ')),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Name(id='x', ctx=Load())],
+                            keywords=[])))],
+            decorator_list=[])],
+    type_ignores=[])

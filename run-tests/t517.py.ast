@@ -1,0 +1,67 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='q', ctx=Store())],
+            value=Constant(value=5.0)),
+        Assign(
+            targets=[
+                Name(id='w', ctx=Store())],
+            value=UnaryOp(
+                op=USub(),
+                operand=Name(id='q', ctx=Load()))),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=True)),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=UnaryOp(
+                op=USub(),
+                operand=Name(id='x', ctx=Load()))),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='q', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='q', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='w', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='w', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='y', ctx=Load()),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Name(id='y', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

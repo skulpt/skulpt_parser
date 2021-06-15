@@ -1,0 +1,121 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Constant(value=4)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            NotEq(),
+                            Lt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=1),
+                        ops=[
+                            NotEq(),
+                            Gt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            NotEq(),
+                            Lt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            Eq(),
+                            Gt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            Eq(),
+                            Lt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            Eq(),
+                            Lt(),
+                            Lt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9),
+                            Constant(value=14)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            Eq(),
+                            Lt(),
+                            Lt(),
+                            Gt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9),
+                            Constant(value=14),
+                            Constant(value=10)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=4),
+                        ops=[
+                            Eq(),
+                            Lt(),
+                            Lt(),
+                            Lt()],
+                        comparators=[
+                            Name(id='x', ctx=Load()),
+                            Constant(value=9),
+                            Constant(value=14),
+                            Constant(value=10)])],
+                keywords=[]))],
+    type_ignores=[])

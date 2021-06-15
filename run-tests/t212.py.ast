@@ -1,0 +1,67 @@
+Module(
+    body=[
+        ClassDef(
+            name='Stuff',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='modes',
+                                    ctx=Store())],
+                            value=Dict(
+                                keys=[
+                                    Constant(value='wee')],
+                                values=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='things',
+                                        ctx=Load())])),
+                        Expr(
+                            value=Call(
+                                func=Subscript(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='modes',
+                                        ctx=Load()),
+                                    slice=Constant(value='wee'),
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='things',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='OK')],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='Stuff', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

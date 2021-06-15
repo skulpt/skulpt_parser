@@ -1,0 +1,291 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='float', ctx=Load()),
+                                args=[
+                                    Constant(value=0)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value=1)],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='float', ctx=Load()),
+                                args=[
+                                    Constant(value=1)],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=3),
+                                op=Div(),
+                                right=Constant(value=2))],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='type', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='float', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value=3),
+                                        op=Div(),
+                                        right=Constant(value=2))],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value=123456789)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value=99999999999999999999)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value=1.234)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value=3),
+                                op=Div(),
+                                right=Constant(value=2.0))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='12.3')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='  0.5 ')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value='0.'),
+                                op=Add(),
+                                right=BinOp(
+                                    left=Constant(value='123456789'),
+                                    op=Mult(),
+                                    right=Constant(value=3)))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Constant(value='123456789'),
+                                op=Mult(),
+                                right=Constant(value=3))],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='nan')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='-nan')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='NAN')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='-NAN')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='+nAn')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='inf')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='-inf')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='INF')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='-INF')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='+inF')],
+                        keywords=[])],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='float', ctx=Load()),
+                                args=[
+                                    Constant(value='734L')],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value="You shouldn't see this.")],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='ValueError', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='float', ctx=Load()),
+                                        args=[
+                                            Constant(value='734')],
+                                        keywords=[])],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

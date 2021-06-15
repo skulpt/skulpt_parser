@@ -1,0 +1,33 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load()),
+                            Constant(value=None),
+                            Constant(value=None)],
+                        keywords=[
+                            keyword(
+                                arg='key',
+                                value=Lambda(
+                                    args=arguments(
+                                        posonlyargs=[],
+                                        args=[
+                                            arg(arg='x')],
+                                        kwonlyargs=[],
+                                        kw_defaults=[],
+                                        defaults=[]),
+                                    body=UnaryOp(
+                                        op=USub(),
+                                        operand=Name(id='x', ctx=Load()))))])],
+                keywords=[]))],
+    type_ignores=[])

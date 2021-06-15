@@ -1,0 +1,42 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='a bc d e'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=' '),
+                            Constant(value=2)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='a b c'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abc'),
+                            attr='split',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

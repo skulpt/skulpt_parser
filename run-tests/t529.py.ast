@@ -1,0 +1,57 @@
+Module(
+    body=[
+        ClassDef(
+            name='test',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__hash__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Constant(value=1))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='test', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='test', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Name(id='a', ctx=Load())],
+                values=[
+                    Constant(value=5)])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='d', ctx=Load()),
+                    slice=Name(id='b', ctx=Load()),
+                    ctx=Store())],
+            value=Constant(value=6)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

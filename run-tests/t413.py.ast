@@ -1,0 +1,276 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='EVALUATE TO TRUE')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Constant(value='hello'),
+                            Name(id='str', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Constant(value=1234),
+                            Name(id='int', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Constant(value=56),
+                            Name(id='int', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Constant(value=7.89),
+                            Name(id='float', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        ClassDef(
+            name='A',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='B',
+            bases=[
+                Name(id='A', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='C',
+            bases=[
+                Name(id='B', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='D',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='A', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load()),
+                            Name(id='A', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='A', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Name(id='A', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='B', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Name(id='A', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='C', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Name(id='A', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='C', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Tuple(
+                                elts=[
+                                    Name(id='D', ctx=Load()),
+                                    Name(id='A', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='EVALUATE TO FALSE')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='D', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Name(id='A', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='A', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Tuple(
+                                elts=[
+                                    Name(id='B', ctx=Load()),
+                                    Name(id='C', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='A', ctx=Load()),
+                                args=[],
+                                keywords=[]),
+                            Tuple(
+                                elts=[
+                                    Name(id='D', ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Name(id='B', ctx=Load()),
+                                            Name(id='C', ctx=Load())],
+                                        ctx=Load())],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='isinstance', ctx=Load()),
+                        args=[
+                            Constant(value='hello'),
+                            Name(id='int', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,35 @@
+Module(
+    body=[
+        FunctionDef(
+            name='wee',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='waa'),
+                    arg(arg='woo'),
+                    arg(arg='wii')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[
+                    Constant(value=True),
+                    Constant(value=False)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='waa', ctx=Load()),
+                                    Name(id='woo', ctx=Load()),
+                                    Name(id='wii', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='wee', ctx=Load()),
+                args=[
+                    Constant(value='OK')],
+                keywords=[]))],
+    type_ignores=[])

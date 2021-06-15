@@ -1,0 +1,35 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=GeneratorExp(
+                elt=Constant(value=1),
+                generators=[
+                    comprehension(
+                        target=Name(id='x', ctx=Store()),
+                        iter=Call(
+                            func=Name(id='range', ctx=Load()),
+                            args=[
+                                Constant(value=3)],
+                            keywords=[]),
+                        ifs=[],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load())],
+                keywords=[])),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Name(id='a', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

@@ -1,0 +1,28 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='t221_sub')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='t221_sub', ctx=Load()),
+                        attr='x',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='t221_sub', ctx=Load()),
+                            attr='f',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='wee')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

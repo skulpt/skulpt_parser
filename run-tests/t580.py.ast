@@ -1,0 +1,33 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='lst', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=2),
+                    Constant(value=2),
+                    Constant(value=2),
+                    Constant(value=2)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='i', ctx=Store())],
+            value=Constant(value=0)),
+        While(
+            test=Compare(
+                left=Subscript(
+                    value=Name(id='lst', ctx=Load()),
+                    slice=Name(id='i', ctx=Load()),
+                    ctx=Load()),
+                ops=[
+                    NotEq()],
+                comparators=[
+                    Constant(value=0)]),
+            body=[
+                AugAssign(
+                    target=Name(id='i', ctx=Store()),
+                    op=Add(),
+                    value=Constant(value=2))],
+            orelse=[])],
+    type_ignores=[])

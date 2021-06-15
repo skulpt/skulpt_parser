@@ -1,0 +1,200 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='a'),
+                    arg(arg='b'),
+                    arg(arg='c'),
+                    arg(arg='d')],
+                vararg=arg(arg='e'),
+                kwonlyargs=[],
+                kw_defaults=[],
+                kwarg=arg(arg='f'),
+                defaults=[
+                    Constant(value=10),
+                    Constant(value=20)]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='sortf', ctx=Store())],
+                    value=Call(
+                        func=Name(id='sorted', ctx=Load()),
+                        args=[
+                            ListComp(
+                                elt=Tuple(
+                                    elts=[
+                                        Name(id='x', ctx=Load()),
+                                        Name(id='y', ctx=Load())],
+                                    ctx=Load()),
+                                generators=[
+                                    comprehension(
+                                        target=Tuple(
+                                            elts=[
+                                                Name(id='x', ctx=Store()),
+                                                Name(id='y', ctx=Store())],
+                                            ctx=Store()),
+                                        iter=Call(
+                                            func=Name(id='list', ctx=Load()),
+                                            args=[
+                                                Call(
+                                                    func=Attribute(
+                                                        value=Name(id='f', ctx=Load()),
+                                                        attr='items',
+                                                        ctx=Load()),
+                                                    args=[],
+                                                    keywords=[])],
+                                            keywords=[]),
+                                        ifs=[],
+                                        is_async=0)])],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Name(id='a', ctx=Load()),
+                                    Name(id='b', ctx=Load()),
+                                    Name(id='c', ctx=Load()),
+                                    Name(id='d', ctx=Load()),
+                                    Name(id='e', ctx=Load()),
+                                    Name(id='sortf', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                keywords=[
+                    keyword(
+                        arg='d',
+                        value=Constant(value=3)),
+                    keyword(
+                        arg='c',
+                        value=Constant(value=5))])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                keywords=[
+                    keyword(
+                        arg='e',
+                        value=List(
+                            elts=[
+                                Constant(value='x'),
+                                Constant(value='y'),
+                                Constant(value='z')],
+                            ctx=Load()))])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                keywords=[
+                    keyword(
+                        arg='d',
+                        value=Constant(value=3)),
+                    keyword(
+                        arg='c',
+                        value=Constant(value=5)),
+                    keyword(
+                        arg='e',
+                        value=List(
+                            elts=[
+                                Constant(value='x'),
+                                Constant(value='y'),
+                                Constant(value='z')],
+                            ctx=Load()))])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=5),
+                    List(
+                        elts=[
+                            Constant(value='x'),
+                            Constant(value='y'),
+                            Constant(value='z')],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=5),
+                    List(
+                        elts=[
+                            Constant(value='x'),
+                            Constant(value='y'),
+                            Constant(value='z')],
+                        ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='z',
+                        value=Constant(value=5)),
+                    keyword(
+                        arg='y',
+                        value=Constant(value=9))])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=5),
+                    List(
+                        elts=[
+                            Constant(value='x'),
+                            Constant(value='y'),
+                            Constant(value='z')],
+                        ctx=Load()),
+                    Constant(value='blorp'),
+                    Constant(value='wee')],
+                keywords=[
+                    keyword(
+                        arg='z',
+                        value=Constant(value=5)),
+                    keyword(
+                        arg='y',
+                        value=Constant(value=9))]))],
+    type_ignores=[])

@@ -1,0 +1,455 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expect', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expect', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        ClassDef(
+            name='Squares',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='max')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='max',
+                                    ctx=Store())],
+                            value=Name(id='max', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='sofar',
+                                    ctx=Store())],
+                            value=List(elts=[], ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='sofar',
+                                        ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__getitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='i')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=UnaryOp(
+                                op=Not(),
+                                operand=Compare(
+                                    left=Constant(value=0),
+                                    ops=[
+                                        LtE(),
+                                        Lt()],
+                                    comparators=[
+                                        Name(id='i', ctx=Load()),
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='max',
+                                            ctx=Load())])),
+                            body=[
+                                Raise(
+                                    exc=Name(id='IndexError', ctx=Load()))],
+                            orelse=[]),
+                        Assign(
+                            targets=[
+                                Name(id='n', ctx=Store())],
+                            value=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='sofar',
+                                        ctx=Load())],
+                                keywords=[])),
+                        While(
+                            test=Compare(
+                                left=Name(id='n', ctx=Load()),
+                                ops=[
+                                    LtE()],
+                                comparators=[
+                                    Name(id='i', ctx=Load())]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='sofar',
+                                                ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            BinOp(
+                                                left=Name(id='n', ctx=Load()),
+                                                op=Mult(),
+                                                right=Name(id='n', ctx=Load()))],
+                                        keywords=[])),
+                                AugAssign(
+                                    target=Name(id='n', ctx=Store()),
+                                    op=Add(),
+                                    value=Constant(value=1))],
+                            orelse=[]),
+                        Return(
+                            value=Subscript(
+                                value=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='sofar',
+                                    ctx=Load()),
+                                slice=Name(id='i', ctx=Load()),
+                                ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        ClassDef(
+            name='Counter',
+            bases=[],
+            keywords=[],
+            body=[
+                ClassDef(
+                    name='CounterIterator',
+                    bases=[],
+                    keywords=[],
+                    body=[
+                        FunctionDef(
+                            name='__init__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self'),
+                                    arg(arg='c')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='count',
+                                            ctx=Store())],
+                                    value=Constant(value=0)),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='c',
+                                            ctx=Store())],
+                                    value=Name(id='c', ctx=Load()))],
+                            decorator_list=[]),
+                        FunctionDef(
+                            name='__next__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                AugAssign(
+                                    target=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='count',
+                                        ctx=Store()),
+                                    op=Add(),
+                                    value=Constant(value=1)),
+                                If(
+                                    test=Compare(
+                                        left=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='count',
+                                            ctx=Load()),
+                                        ops=[
+                                            Lt()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='c',
+                                                    ctx=Load()),
+                                                attr='stop',
+                                                ctx=Load())]),
+                                    body=[
+                                        Return(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='count',
+                                                ctx=Load()))],
+                                    orelse=[]),
+                                Raise(
+                                    exc=Name(id='StopIteration', ctx=Load()))],
+                            decorator_list=[]),
+                        FunctionDef(
+                            name='__iter__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Return(
+                                    value=Name(id='self', ctx=Load()))],
+                            decorator_list=[])],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='stop')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='count',
+                                    ctx=Store())],
+                            value=Constant(value=0)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='stop',
+                                    ctx=Store())],
+                            value=Name(id='stop', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__iter__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='CounterIterator',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    Constant(value=8)],
+                                keywords=[])],
+                        keywords=[]),
+                    Constant(value=27)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    List(
+                                        elts=[
+                                            Constant(value=1)],
+                                        ctx=Load()),
+                                    List(
+                                        elts=[
+                                            Constant(value=2)],
+                                        ctx=Load()),
+                                    List(
+                                        elts=[
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                ctx=Load()),
+                            List(elts=[], ctx=Load())],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    List(
+                                        elts=[
+                                            Constant(value=1),
+                                            Constant(value=2)],
+                                        ctx=Load()),
+                                    List(
+                                        elts=[
+                                            Constant(value=3),
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                ctx=Load()),
+                            List(
+                                elts=[
+                                    Constant(value=5),
+                                    Constant(value=6)],
+                                ctx=Load())],
+                        keywords=[]),
+                    List(
+                        elts=[
+                            Constant(value=5),
+                            Constant(value=6),
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load()),
+                                    Tuple(
+                                        elts=[
+                                            Constant(value=4),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                ctx=Load()),
+                            Tuple(
+                                elts=[
+                                    Constant(value=6),
+                                    Constant(value=7)],
+                                ctx=Load())],
+                        keywords=[]),
+                    Tuple(
+                        elts=[
+                            Constant(value=6),
+                            Constant(value=7),
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4),
+                            Constant(value=5)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='Counter', ctx=Load()),
+                                args=[
+                                    Constant(value=10)],
+                                keywords=[]),
+                            Constant(value=5)],
+                        keywords=[]),
+                    Constant(value=50)],
+                keywords=[]))],
+    type_ignores=[])

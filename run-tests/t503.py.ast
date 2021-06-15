@@ -1,0 +1,133 @@
+Module(
+    body=[
+        ClassDef(
+            name='Comparable',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='value',
+                                    ctx=Store())],
+                            value=Name(id='value', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__lt__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='other')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Compare(
+                                left=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='value',
+                                    ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='other', ctx=Load()),
+                                        attr='value',
+                                        ctx=Load())]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=Constant(value='Value :'),
+                                op=Add(),
+                                right=Call(
+                                    func=Name(id='str', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='value',
+                                            ctx=Load())],
+                                    keywords=[])))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='lst', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=5),
+                    Constant(value=9),
+                    Constant(value=2),
+                    Constant(value=7)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='otherLst', ctx=Store())],
+            value=ListComp(
+                elt=Call(
+                    func=Name(id='Comparable', ctx=Load()),
+                    args=[
+                        Name(id='a', ctx=Load())],
+                    keywords=[]),
+                generators=[
+                    comprehension(
+                        target=Name(id='a', ctx=Store()),
+                        iter=Name(id='lst', ctx=Load()),
+                        ifs=[],
+                        is_async=0)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='lst', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='otherLst', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='min', ctx=Load()),
+                        args=[
+                            Name(id='lst', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='min', ctx=Load()),
+                        args=[
+                            Name(id='otherLst', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,27 @@
+Module(
+    body=[
+        ImportFrom(
+            module='functools',
+            names=[
+                alias(name='reduce')],
+            level=0),
+        Expr(
+            value=Call(
+                func=Name(id='reduce', ctx=Load()),
+                args=[
+                    Lambda(
+                        args=arguments(
+                            posonlyargs=[],
+                            args=[
+                                arg(arg='x'),
+                                arg(arg='y')],
+                            kwonlyargs=[],
+                            kw_defaults=[],
+                            defaults=[]),
+                        body=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Add(),
+                            right=Name(id='y', ctx=Load()))),
+                    List(elts=[], ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

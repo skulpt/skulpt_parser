@@ -1,0 +1,66 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='+%s+'),
+                        op=Mod(),
+                        right=Constant(value='hello'))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='+%d+'),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%c'),
+                        op=Mod(),
+                        right=Constant(value='a'))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%c'),
+                        op=Mod(),
+                        right=Constant(value=34))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%c'),
+                        op=Mod(),
+                        right=Constant(value=36))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%d'),
+                        op=Mod(),
+                        right=Constant(value=10))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%c'),
+                        op=Mod(),
+                        right=Constant(value=127))],
+                keywords=[]))],
+    type_ignores=[])

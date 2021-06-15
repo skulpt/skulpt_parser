@@ -1,0 +1,55 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Tuple(
+                elts=[
+                    Constant(value='a'),
+                    Constant(value='b'),
+                    Constant(value='c')],
+                ctx=Load())),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=BinOp(
+                left=Name(id='a', ctx=Load()),
+                op=Add(),
+                right=Name(id='b', ctx=Load())),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='a:'),
+                            Name(id='a', ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Constant(value='b:'),
+                            Name(id='b', ctx=Load())],
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

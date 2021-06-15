@@ -1,0 +1,48 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='01234')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='s', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6)),
+                            upper=Constant(value=0)),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='s', ctx=Load()),
+                        slice=Slice(
+                            lower=Constant(value='hi'),
+                            upper=List(
+                                elts=[
+                                    Constant(value=0),
+                                    Constant(value=4)],
+                                ctx=Load())),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='s', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3000)),
+                            upper=Constant(value=4.5)),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

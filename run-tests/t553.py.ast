@@ -1,0 +1,217 @@
+Module(
+    body=[
+        ImportFrom(
+            module='time',
+            names=[
+                alias(name='sleep')],
+            level=0),
+        ClassDef(
+            name='GeneratorClass',
+            bases=[],
+            keywords=[],
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='test', ctx=Store())],
+                    value=Constant(value='hi')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Pass()],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='generator',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='test',
+                                        ctx=Load())],
+                                keywords=[])),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=10)],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Yield(
+                                        value=Name(id='i', ctx=Load())))],
+                            orelse=[])],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='sleeping_generator',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='test',
+                                        ctx=Load())],
+                                keywords=[])),
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=10)],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='sleep', ctx=Load()),
+                                        args=[
+                                            Constant(value=0.01)],
+                                        keywords=[])),
+                                Expr(
+                                    value=Yield(
+                                        value=Name(id='i', ctx=Load())))],
+                            orelse=[])],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='gen', ctx=Store())],
+            value=Call(
+                func=Name(id='GeneratorClass', ctx=Load()),
+                args=[],
+                keywords=[])),
+        For(
+            target=Name(id='g', ctx=Store()),
+            iter=Call(
+                func=Attribute(
+                    value=Name(id='gen', ctx=Load()),
+                    attr='generator',
+                    ctx=Load()),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='g', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        For(
+            target=Name(id='g', ctx=Store()),
+            iter=Call(
+                func=Attribute(
+                    value=Name(id='gen', ctx=Load()),
+                    attr='sleeping_generator',
+                    ctx=Load()),
+                args=[],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='g', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='gen', ctx=Load()),
+                                    attr='generator',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Name(id='gen', ctx=Load()),
+                                    attr='sleeping_generator',
+                                    ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Mult(),
+                            right=Constant(value=2)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Attribute(
+                                        value=Name(id='gen', ctx=Load()),
+                                        attr='generator',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=BinOp(
+                            left=Name(id='x', ctx=Load()),
+                            op=Mult(),
+                            right=Constant(value=2)),
+                        generators=[
+                            comprehension(
+                                target=Name(id='x', ctx=Store()),
+                                iter=Call(
+                                    func=Attribute(
+                                        value=Name(id='gen', ctx=Load()),
+                                        attr='sleeping_generator',
+                                        ctx=Load()),
+                                    args=[],
+                                    keywords=[]),
+                                ifs=[],
+                                is_async=0)])],
+                keywords=[]))],
+    type_ignores=[])

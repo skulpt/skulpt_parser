@@ -1,0 +1,137 @@
+Module(
+    body=[
+        ClassDef(
+            name='Matrix',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                Expr(
+                    value=Constant(value='\n    Represents a matrix\n    ')),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='matrix')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=None)]),
+                    body=[
+                        Expr(
+                            value=Constant(value='')),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='mat',
+                                    ctx=Store())],
+                            value=Name(id='matrix', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__getitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='index')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='')),
+                        Return(
+                            value=Subscript(
+                                value=Subscript(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='mat',
+                                        ctx=Load()),
+                                    slice=Subscript(
+                                        value=Name(id='index', ctx=Load()),
+                                        slice=Constant(value=0),
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                slice=Subscript(
+                                    value=Name(id='index', ctx=Load()),
+                                    slice=Constant(value=1),
+                                    ctx=Load()),
+                                ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='index'),
+                            arg(arg='item')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Constant(value='')),
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Subscript(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='mat',
+                                            ctx=Load()),
+                                        slice=Subscript(
+                                            value=Name(id='index', ctx=Load()),
+                                            slice=Constant(value=0),
+                                            ctx=Load()),
+                                        ctx=Load()),
+                                    slice=Subscript(
+                                        value=Name(id='index', ctx=Load()),
+                                        slice=Constant(value=1),
+                                        ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='item', ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='trial', ctx=Store())],
+            value=Call(
+                func=Name(id='Matrix', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            List(
+                                elts=[
+                                    Constant(value=543)],
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='trial', ctx=Load()),
+                    slice=Tuple(
+                        elts=[
+                            Constant(value=0),
+                            Constant(value=0)],
+                        ctx=Load()),
+                    ctx=Store())],
+            value=Constant(value=100)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='trial', ctx=Load()),
+                        slice=Tuple(
+                            elts=[
+                                Constant(value=0),
+                                Constant(value=0)],
+                            ctx=Load()),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

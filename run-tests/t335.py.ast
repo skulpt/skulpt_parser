@@ -1,0 +1,547 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 01')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try')],
+                        keywords=[])),
+                Try(
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Second try - should see Second except next')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='i', ctx=Store())],
+                            value=Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Constant(value='badint')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Second try - should not see this')],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='BaseException', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second except')],
+                                        keywords=[]))])],
+                    orelse=[],
+                    finalbody=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - should see First except next')],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='otherbadint')],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - should not see this')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 01')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 02')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try')],
+                        keywords=[])),
+                Try(
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Second try')],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='BaseException', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second except - should not see this')],
+                                        keywords=[]))])],
+                    orelse=[],
+                    finalbody=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - should see First except next')],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                            Constant(value='otherbadint')],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - should not see this')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 02')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 03')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try')],
+                        keywords=[])),
+                Try(
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Second try')],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='BaseException', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second except - should not see this')],
+                                        keywords=[]))])],
+                    orelse=[],
+                    finalbody=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - after inner try')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except - should not see this')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 03')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 04')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - shuold see First Except next')],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='i', ctx=Store())],
+                    value=Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                            Constant(value='first')],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - should not see this')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except')],
+                                keywords=[])),
+                        Try(
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second try - should see Second except next')],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='i', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Constant(value='badint')],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second try - should not see this')],
+                                        keywords=[]))],
+                            handlers=[
+                                ExceptHandler(
+                                    type=Name(id='BaseException', ctx=Load()),
+                                    body=[
+                                        Expr(
+                                            value=Call(
+                                                func=Name(id='print', ctx=Load()),
+                                                args=[
+                                                    Constant(value='Second except')],
+                                                keywords=[]))])],
+                            orelse=[],
+                            finalbody=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except - After inner try/except')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 04')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 05')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try')],
+                        keywords=[])),
+                Try(
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Second try - should see Second except next')],
+                                keywords=[])),
+                        Assign(
+                            targets=[
+                                Name(id='i', ctx=Store())],
+                            value=Call(
+                                func=Name(id='int', ctx=Load()),
+                                args=[
+                                    Constant(value='badint')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Second try - should not see this')],
+                                keywords=[]))],
+                    handlers=[
+                        ExceptHandler(
+                            type=Name(id='BaseException', ctx=Load()),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second except - should see First except next')],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='i', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='float', ctx=Load()),
+                                        args=[
+                                            Constant(value='otherbadint')],
+                                        keywords=[])),
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Second except - should not see this')],
+                                        keywords=[]))])],
+                    orelse=[],
+                    finalbody=[]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - should not see this')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 05')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 06')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try')],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Constant(value=123),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=12345)]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Constant(value=456),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=4567)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='You should see this')],
+                                        keywords=[]))],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='You should not see this (inner)')],
+                                        keywords=[]))])],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='You should not see this')],
+                                keywords=[]))]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - near the end')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except - should not see this')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 06')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----Start 07')],
+                keywords=[])),
+        Try(
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try')],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=Constant(value=123),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Constant(value=12345)]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Constant(value=456),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=4567)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='Next you should see First except')],
+                                        keywords=[])),
+                                Assign(
+                                    targets=[
+                                        Name(id='i', ctx=Store())],
+                                    value=Call(
+                                        func=Name(id='int', ctx=Load()),
+                                        args=[
+                                            Constant(value='badint')],
+                                        keywords=[]))],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='You should not see this (inner)')],
+                                        keywords=[]))])],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='You should not see this')],
+                                keywords=[]))]),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='First try - near the end - you should not see this')],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='BaseException', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='First except - should see this')],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='----End 07')],
+                keywords=[]))],
+    type_ignores=[])

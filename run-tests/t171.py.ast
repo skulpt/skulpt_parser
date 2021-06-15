@@ -1,0 +1,159 @@
+Module(
+    body=[
+        FunctionDef(
+            name='do',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='fmt'),
+                    arg(arg='val')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='fmt', ctx=Load()),
+                                op=Mod(),
+                                right=Name(id='val', ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%d'),
+                    Constant(value=42)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%x'),
+                    Constant(value=42)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%o'),
+                    Constant(value=42)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%d'),
+                    Constant(value=42)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%x'),
+                    Constant(value=42)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%o'),
+                    Constant(value=42)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%d'),
+                    Constant(value=4200000000000)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%x'),
+                    Constant(value=4200000000000)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%o'),
+                    Constant(value=4200000000000)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%d'),
+                    Constant(value=1161084278931456)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%x'),
+                    Constant(value=1161084278931456)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%o'),
+                    Constant(value=1161084278931456)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%d'),
+                    Constant(value=292057776128)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%x'),
+                    Constant(value=292057776128)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='do', ctx=Load()),
+                args=[
+                    Constant(value='%o'),
+                    Constant(value=292057776128)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='big', ctx=Store())],
+            value=Constant(value=12935167030485801517351291832)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='big', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Name(id='big', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='str', ctx=Load()),
+                        args=[
+                            Name(id='big', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

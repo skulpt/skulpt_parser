@@ -1,0 +1,29 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='   hello '),
+                            attr='partition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='x')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='   hello '),
+                            attr='rpartition',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='x')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

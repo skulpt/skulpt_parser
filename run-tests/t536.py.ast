@@ -1,0 +1,75 @@
+Module(
+    body=[
+        FunctionDef(
+            name='f',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='pool', ctx=Store())],
+                    value=Tuple(
+                        elts=[
+                            Constant(value=8),
+                            Constant(value=9)],
+                        ctx=Load())),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='type', ctx=Load()),
+                                args=[
+                                    Name(id='pool', ctx=Load())],
+                                keywords=[])],
+                        keywords=[])),
+                Expr(
+                    value=Yield(
+                        value=Call(
+                            func=Name(id='list', ctx=Load()),
+                            args=[
+                                GeneratorExp(
+                                    elt=Subscript(
+                                        value=Name(id='pool', ctx=Load()),
+                                        slice=Name(id='i', ctx=Load()),
+                                        ctx=Load()),
+                                    generators=[
+                                        comprehension(
+                                            target=Name(id='i', ctx=Store()),
+                                            iter=Call(
+                                                func=Name(id='range', ctx=Load()),
+                                                args=[
+                                                    Constant(value=2)],
+                                                keywords=[]),
+                                            ifs=[],
+                                            is_async=0)])],
+                            keywords=[]))),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='type', ctx=Load()),
+                                args=[
+                                    Name(id='pool', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='f', ctx=Load()),
+                                args=[],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

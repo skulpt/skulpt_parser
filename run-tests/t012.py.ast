@@ -1,0 +1,24 @@
+Module(
+    body=[
+        If(
+            test=Compare(
+                left=Constant(value=0),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value=1)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='X')],
+                        keywords=[]))],
+            orelse=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='OK')],
+                        keywords=[]))])],
+    type_ignores=[])

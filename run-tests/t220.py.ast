@@ -1,0 +1,57 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='sys')]),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='sys', ctx=Load()),
+                    attr='x',
+                    ctx=Store())],
+            value=Constant(value=4)),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='sys', ctx=Load()),
+                    attr='y',
+                    ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='stuff')],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='sys', ctx=Load()),
+                    attr='z',
+                    ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value='things')],
+                values=[
+                    Attribute(
+                        value=Name(id='sys', ctx=Load()),
+                        attr='x',
+                        ctx=Load())])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Attribute(
+                                value=Name(id='sys', ctx=Load()),
+                                attr='x',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='sys', ctx=Load()),
+                                attr='y',
+                                ctx=Load()),
+                            Attribute(
+                                value=Name(id='sys', ctx=Load()),
+                                attr='z',
+                                ctx=Load())],
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

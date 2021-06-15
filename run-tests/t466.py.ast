@@ -1,0 +1,155 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='re')]),
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='string'),
+                    arg(arg='pattern')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='match', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='match',
+                            ctx=Load()),
+                        args=[
+                            Name(id='string', ctx=Load()),
+                            Name(id='pattern', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Name(id='match', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='match', ctx=Load()),
+                                            attr='group',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False)],
+                                keywords=[]))]),
+                Assign(
+                    targets=[
+                        Name(id='search', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='search',
+                            ctx=Load()),
+                        args=[
+                            Name(id='string', ctx=Load()),
+                            Name(id='pattern', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Name(id='search', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='search', ctx=Load()),
+                                            attr='group',
+                                            ctx=Load()),
+                                        args=[
+                                            Constant(value=0)],
+                                        keywords=[])],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False)],
+                                keywords=[]))]),
+                Assign(
+                    targets=[
+                        Name(id='find', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='re', ctx=Load()),
+                            attr='findall',
+                            ctx=Load()),
+                        args=[
+                            Name(id='string', ctx=Load()),
+                            Name(id='pattern', ctx=Load())],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='find', ctx=Load())],
+                        keywords=[]))],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a{,2}b'),
+                    Constant(value='b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a{,2}b'),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a[{,}]b'),
+                    Constant(value='a{b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a\\{,b'),
+                    Constant(value='a{,b')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a{,2}[a-z]'),
+                    Constant(value='ab')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a{,2}b{,5}'),
+                    Constant(value='')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Constant(value='a[{,[a-z]]b'),
+                    Constant(value='a,cb')],
+                keywords=[]))],
+    type_ignores=[])

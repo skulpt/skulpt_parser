@@ -1,0 +1,147 @@
+Module(
+    body=[
+        ClassDef(
+            name='Stuff',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='a',
+                                    ctx=Store())],
+                            value=Constant(value=0)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='b',
+                                    ctx=Store())],
+                            value=Constant(value='b')),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='c',
+                                    ctx=Store())],
+                            value=List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=2),
+                                    Constant(value=3)],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='d',
+                                    ctx=Store())],
+                            value=Constant(value=100000000000000))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='doit',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='a',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Constant(value=10)),
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='b',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Constant(value='dog')),
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='c',
+                                ctx=Store()),
+                            op=Add(),
+                            value=List(
+                                elts=[
+                                    Constant(value=9),
+                                    Constant(value=10)],
+                                ctx=Load())),
+                        AugAssign(
+                            target=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='d',
+                                ctx=Store()),
+                            op=Add(),
+                            value=Constant(value=10000))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Call(
+                func=Name(id='Stuff', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s', ctx=Load()),
+                    attr='doit',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='s', ctx=Load()),
+                        attr='a',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='s', ctx=Load()),
+                        attr='b',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='s', ctx=Load()),
+                        attr='c',
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='s', ctx=Load()),
+                        attr='d',
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

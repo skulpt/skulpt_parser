@@ -1,0 +1,40 @@
+Module(
+    body=[
+        FunctionDef(
+            name='stuff',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='n')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=Not(),
+                                operand=Name(id='n', ctx=Load()))],
+                        keywords=[]))],
+            decorator_list=[]),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=5)),
+                    Constant(value=5)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='stuff', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

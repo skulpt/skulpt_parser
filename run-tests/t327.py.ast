@@ -1,0 +1,65 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='myList', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=1),
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value='foo'),
+                    Constant(value=4),
+                    Constant(value=5),
+                    Constant(value=True),
+                    Constant(value=False)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='myList', ctx=Load()),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='foo')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value='foo'),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='myList', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='myList', ctx=Load()),
+                            attr='index',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=True)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Constant(value=2),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='myList', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

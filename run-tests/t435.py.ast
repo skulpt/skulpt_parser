@@ -1,0 +1,1935 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=9)],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s1', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s2', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=4),
+                            Constant(value=9)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nlen')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='s2', ctx=Load())],
+                                keywords=[]),
+                            Constant(value=5)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nx in s')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Constant(value=4),
+                            ops=[
+                                In()],
+                            comparators=[
+                                Name(id='s1', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Compare(
+                                left=Constant(value=4),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Name(id='s2', ctx=Load())])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Constant(value=8),
+                            ops=[
+                                In()],
+                            comparators=[
+                                Name(id='s1', ctx=Load())]),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Compare(
+                                left=Constant(value=1),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Name(id='s2', ctx=Load())]),
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nx not in s')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Constant(value=1),
+                            ops=[
+                                NotIn()],
+                            comparators=[
+                                Name(id='s1', ctx=Load())]),
+                        ops=[
+                            Eq(),
+                            Eq()],
+                        comparators=[
+                            Compare(
+                                left=Constant(value=8),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Name(id='s2', ctx=Load())]),
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Constant(value=8),
+                            ops=[
+                                NotIn()],
+                            comparators=[
+                                Name(id='s1', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Compare(
+                                left=Constant(value=1),
+                                ops=[
+                                    NotIn()],
+                                comparators=[
+                                    Name(id='s2', ctx=Load())])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nisdisjoint(other)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='isdisjoint',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s1', ctx=Load()),
+                            attr='isdisjoint',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Name(id='range', ctx=Load()),
+                                        args=[
+                                            Constant(value=5),
+                                            Constant(value=10)],
+                                        keywords=[])],
+                                keywords=[])],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nissubset(other)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s1', ctx=Load()),
+                            attr='issubset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s1', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s1', ctx=Load()),
+                            attr='issubset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='issubset',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nset <= other')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s2', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Name(id='s1', ctx=Load()),
+                            ops=[
+                                LtE()],
+                            comparators=[
+                                Name(id='s2', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nset < other')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s2', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Name(id='s', ctx=Load()),
+                            ops=[
+                                Lt()],
+                            comparators=[
+                                Name(id='s', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Name(id='s1', ctx=Load()),
+                            ops=[
+                                Lt()],
+                            comparators=[
+                                Name(id='s2', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nissuperset(other)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s2', ctx=Load()),
+                            attr='issuperset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s2', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='s', ctx=Load()),
+                            attr='issuperset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='s1', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s2', ctx=Load()),
+                                attr='issuperset',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nset >= other')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s', ctx=Load()),
+                        ops=[
+                            GtE()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s', ctx=Load()),
+                        ops=[
+                            GtE()],
+                        comparators=[
+                            Name(id='s2', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s', ctx=Load()),
+                        ops=[
+                            GtE()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Name(id='s1', ctx=Load()),
+                            ops=[
+                                GtE()],
+                            comparators=[
+                                Name(id='s2', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nset > other')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Name(id='s2', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Name(id='s', ctx=Load()),
+                            ops=[
+                                Gt()],
+                            comparators=[
+                                Name(id='s', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Compare(
+                            left=Name(id='s1', ctx=Load()),
+                            ops=[
+                                Gt()],
+                            comparators=[
+                                Name(id='s2', ctx=Load())]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=False)])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nunion(other,...)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[]),
+                                attr='union',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='union',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='union',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='union',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load()),
+                                Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(
+                                            elts=[
+                                                Constant(value=4),
+                                                Constant(value=5),
+                                                Constant(value=6)],
+                                            ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintersection(other,...)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[]),
+                                attr='intersection',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='intersection',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='intersection',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s', ctx=Load()),
+                                attr='intersection',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load()),
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ndifference(other,...)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[]),
+                                attr='difference',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='difference',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='difference',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s', ctx=Load()),
+                                attr='difference',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load()),
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nsymmetric_difference(other)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[]),
+                                attr='symmetric_difference',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='symmetric_difference',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='symmetric_difference',
+                                ctx=Load()),
+                            args=[
+                                Name(id='s2', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3),
+                                            Constant(value=5),
+                                            Constant(value=6),
+                                            Constant(value=7),
+                                            Constant(value=8)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s', ctx=Load()),
+                                attr='symmetric_difference',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Attribute(
+                                        value=Name(id='s1', ctx=Load()),
+                                        attr='symmetric_difference',
+                                        ctx=Load()),
+                                    args=[
+                                        Name(id='s2', ctx=Load())],
+                                    keywords=[])],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ncopy()')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Call(
+                                    func=Name(id='set', ctx=Load()),
+                                    args=[
+                                        List(elts=[], ctx=Load())],
+                                    keywords=[]),
+                                attr='copy',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='copy',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s3', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s1', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=1),
+                            Constant(value=5)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='s3', ctx=Load())])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='s3', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='add',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='s3', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nupdate(other,...)')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='update',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s2', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load()),
+                    Name(id='s2', ctx=Load()),
+                    Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=4),
+                                    Constant(value=5),
+                                    Constant(value=6)],
+                                ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nintersection_update(other,...)')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='intersection_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='intersection_update',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='intersection_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s2', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='intersection_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load()),
+                    Name(id='s2', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ndifference(other,...)')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='difference_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='difference_update',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='difference_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s2', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='difference_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load()),
+                    Name(id='s2', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nsymmetric_difference_update(other)')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='symmetric_difference_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s1', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='symmetric_difference_update',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='set', ctx=Load()),
+                        args=[
+                            List(elts=[], ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='s1', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='symmetric_difference_update',
+                    ctx=Load()),
+                args=[
+                    Name(id='s2', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3),
+                                            Constant(value=5),
+                                            Constant(value=6),
+                                            Constant(value=7),
+                                            Constant(value=8)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s', ctx=Load()),
+                                attr='symmetric_difference',
+                                ctx=Load()),
+                            args=[
+                                Name(id='empty', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nadd(elem)')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='empty', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(elts=[], ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='add',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=1)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='add',
+                    ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3),
+                                            Constant(value=4),
+                                            Constant(value=5)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nremove(elem)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='remove',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='remove',
+                    ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3),
+                                            Constant(value=4)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\ndiscard(elem)')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='empty', ctx=Load()),
+                    attr='discard',
+                    ctx=Load()),
+                args=[
+                    Constant(value=500)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='empty', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(elts=[], ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='s1', ctx=Load()),
+                    attr='discard',
+                    ctx=Load()),
+                args=[
+                    Constant(value=4)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='s1', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\npop()')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='pop',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='pop',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='pop',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='s1', ctx=Load()),
+                                attr='pop',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Call(
+                                func=Name(id='set', ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value=0),
+                                            Constant(value=1),
+                                            Constant(value=2),
+                                            Constant(value=3)],
+                                        ctx=Load())],
+                                keywords=[])])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='s1', ctx=Load())],
+                            keywords=[]),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)])],
+                keywords=[]))],
+    type_ignores=[])

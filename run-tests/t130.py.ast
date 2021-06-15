@@ -1,0 +1,83 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=30)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=10)),
+                            step=Constant(value=5)),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=10)),
+                            step=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6))),
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='tuple', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=30)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=10)),
+                            step=Constant(value=5)),
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Slice(
+                            lower=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=10)),
+                            step=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6))),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

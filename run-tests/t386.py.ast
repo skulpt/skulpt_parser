@@ -1,0 +1,38 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='random')]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='randint',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=40),
+                            Constant(value=70)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='random', ctx=Load()),
+                            attr='randint',
+                            ctx=Load()),
+                        args=[
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=40)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=70))],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

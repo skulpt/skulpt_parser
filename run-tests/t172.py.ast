@@ -1,0 +1,18 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='%s:%r:%d:%x'),
+                        op=Mod(),
+                        right=Tuple(
+                            elts=[
+                                Constant(value='dog'),
+                                Constant(value='cat'),
+                                Constant(value=23456),
+                                Constant(value=999999999999)],
+                            ctx=Load()))],
+                keywords=[]))],
+    type_ignores=[])

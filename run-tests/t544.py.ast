@@ -1,0 +1,129 @@
+Module(
+    body=[
+        ImportFrom(
+            module='time',
+            names=[
+                alias(name='sleep')],
+            level=0),
+        ClassDef(
+            name='SleepyClass',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Sleeping in __init__')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Sleep returned '),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Call(
+                                                    func=Name(id='sleep', ctx=Load()),
+                                                    args=[
+                                                        Constant(value=0.01)],
+                                                    keywords=[])],
+                                            keywords=[]))],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='doSleep',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='param')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='x', ctx=Store())],
+                            value=Constant(value=42)),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value='Sleeping for .01 seconds')],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Sleep returned '),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Call(
+                                                    func=Name(id='sleep', ctx=Load()),
+                                                    args=[
+                                                        Constant(value=0.01)],
+                                                    keywords=[])],
+                                            keywords=[]))],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Woke up; x = '),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Name(id='x', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='param = '),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Name(id='param', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='sleeper', ctx=Store())],
+            value=Call(
+                func=Name(id='SleepyClass', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='sleeper', ctx=Load()),
+                    attr='doSleep',
+                    ctx=Load()),
+                args=[
+                    Constant(value=7)],
+                keywords=[]))],
+    type_ignores=[])

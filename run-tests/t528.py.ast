@@ -1,0 +1,15 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Dict(
+                        keys=[
+                            Constant(value=1),
+                            Constant(value=1.0)],
+                        values=[
+                            Constant(value=4),
+                            Constant(value=5)])],
+                keywords=[]))],
+    type_ignores=[])

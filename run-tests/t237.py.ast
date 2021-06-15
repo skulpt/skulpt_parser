@@ -1,0 +1,23 @@
+Module(
+    body=[
+        ImportFrom(
+            module='pkga.pkgb.modc',
+            names=[
+                alias(name='stuff', asname='mystuff')],
+            level=0),
+        ImportFrom(
+            module='pkga.pkgb.modc',
+            names=[
+                alias(name='things', asname='mythings')],
+            level=0),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Tuple(
+                        elts=[
+                            Name(id='mystuff', ctx=Load()),
+                            Name(id='mythings', ctx=Load())],
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,35 @@
+Module(
+    body=[
+        FunctionDef(
+            name='test',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='x'),
+                    arg(arg='y')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Return(
+                    value=BinOp(
+                        left=Name(id='x', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='y', ctx=Load())))],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='r', ctx=Store())],
+            value=Call(
+                func=Name(id='test', ctx=Load()),
+                args=[
+                    Constant(value=3),
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='r', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

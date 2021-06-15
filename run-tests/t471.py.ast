@@ -1,0 +1,318 @@
+Module(
+    body=[
+        FunctionDef(
+            name='helper',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='got'),
+                    arg(arg='expect')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='got', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='expect', ctx=Load())]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=True)],
+                                keywords=[]))],
+                    orelse=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Constant(value=False),
+                                    Name(id='expect', ctx=Load()),
+                                    Name(id='got', ctx=Load())],
+                                keywords=[]))])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nstr.count')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc')],
+                        keywords=[]),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='z')],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value=1)],
+                        keywords=[]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value=5)],
+                        keywords=[]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=5))],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value=1),
+                            Constant(value=8)],
+                        keywords=[]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value=4),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1))],
+                        keywords=[]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6)),
+                            Constant(value=10)],
+                        keywords=[]),
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcda '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='ad'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=3))],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6)),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=6))],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value=6),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=7))],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value=3),
+                            Constant(value=1)],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=100)),
+                            Constant(value=100)],
+                        keywords=[]),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='helper', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcd abcba '),
+                            attr='count',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='a'),
+                            Constant(value=100),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=100))],
+                        keywords=[]),
+                    Constant(value=0)],
+                keywords=[]))],
+    type_ignores=[])

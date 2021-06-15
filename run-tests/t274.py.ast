@@ -1,0 +1,54 @@
+Module(
+    body=[
+        ClassDef(
+            name='X',
+            bases=[],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Name(id='X', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='methodName', ctx=Store())],
+            value=Constant(value='wee')),
+        Try(
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='stuff', ctx=Store())],
+                    value=Call(
+                        func=Name(id='getattr', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load()),
+                            Name(id='methodName', ctx=Load())],
+                        keywords=[]))],
+            handlers=[
+                ExceptHandler(
+                    type=Name(id='AttributeError', ctx=Load()),
+                    body=[
+                        Raise(
+                            exc=Call(
+                                func=Name(id='ValueError', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='no such method in %s: %s'),
+                                        op=Mod(),
+                                        right=Tuple(
+                                            elts=[
+                                                Attribute(
+                                                    value=Name(id='x', ctx=Load()),
+                                                    attr='__class__',
+                                                    ctx=Load()),
+                                                Name(id='methodName', ctx=Load())],
+                                            ctx=Load()))],
+                                keywords=[]))])],
+            orelse=[],
+            finalbody=[])],
+    type_ignores=[])

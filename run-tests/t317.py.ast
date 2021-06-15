@@ -1,0 +1,94 @@
+Module(
+    body=[
+        ClassDef(
+            name='Point',
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='initX'),
+                            arg(arg='initY')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='x',
+                                    ctx=Store())],
+                            value=Name(id='initX', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='y',
+                                    ctx=Store())],
+                            value=Name(id='initY', ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__str__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=Call(
+                                        func=Name(id='str', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='x',
+                                                ctx=Load())],
+                                        keywords=[]),
+                                    op=Add(),
+                                    right=Constant(value=',')),
+                                op=Add(),
+                                right=Call(
+                                    func=Name(id='str', ctx=Load()),
+                                    args=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='y',
+                                            ctx=Load())],
+                                    keywords=[])))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='p', ctx=Store())],
+            value=Call(
+                func=Name(id='Point', ctx=Load()),
+                args=[
+                    Constant(value=1),
+                    Constant(value=2)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='p', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='str', ctx=Load()),
+                        args=[
+                            Name(id='p', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

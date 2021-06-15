@@ -1,0 +1,570 @@
+Module(
+    body=[
+        ClassDef(
+            name='Counter',
+            bases=[],
+            keywords=[],
+            body=[
+                ClassDef(
+                    name='CounterIter',
+                    bases=[],
+                    keywords=[],
+                    body=[
+                        FunctionDef(
+                            name='__init__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self'),
+                                    arg(arg='c')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='c',
+                                            ctx=Store())],
+                                    value=Name(id='c', ctx=Load())),
+                                Assign(
+                                    targets=[
+                                        Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='idx',
+                                            ctx=Store())],
+                                    value=Constant(value=0))],
+                            decorator_list=[]),
+                        FunctionDef(
+                            name='__iter__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Return(
+                                    value=Name(id='self', ctx=Load()))],
+                            decorator_list=[]),
+                        FunctionDef(
+                            name='__next__',
+                            args=arguments(
+                                posonlyargs=[],
+                                args=[
+                                    arg(arg='self')],
+                                kwonlyargs=[],
+                                kw_defaults=[],
+                                defaults=[]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='n', ctx=Store())],
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='idx',
+                                        ctx=Load())),
+                                AugAssign(
+                                    target=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='idx',
+                                        ctx=Store()),
+                                    op=Add(),
+                                    value=Constant(value=1)),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='n', ctx=Load()),
+                                        ops=[
+                                            Gt()],
+                                        comparators=[
+                                            Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='self', ctx=Load()),
+                                                    attr='c',
+                                                    ctx=Load()),
+                                                attr='stop',
+                                                ctx=Load())]),
+                                    body=[
+                                        Raise(
+                                            exc=Name(id='StopIteration', ctx=Load()))],
+                                    orelse=[]),
+                                Return(
+                                    value=Name(id='n', ctx=Load()))],
+                            decorator_list=[])],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='stop')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='count',
+                                    ctx=Store())],
+                            value=Constant(value=0)),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='stop',
+                                    ctx=Store())],
+                            value=Name(id='stop', ctx=Load())),
+                        Assign(
+                            targets=[
+                                Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='dict',
+                                    ctx=Store())],
+                            value=Dict(keys=[], values=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__iter__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='CounterIter',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__len__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='count',
+                                ctx=Load()))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__repr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Constant(value='< Counter Object: ('),
+                                            op=Add(),
+                                            right=Call(
+                                                func=Name(id='str', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='count',
+                                                        ctx=Load())],
+                                                keywords=[])),
+                                        op=Add(),
+                                        right=Constant(value=',')),
+                                    op=Add(),
+                                    right=Call(
+                                        func=Name(id='str', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='stop',
+                                                ctx=Load())],
+                                        keywords=[])),
+                                op=Add(),
+                                right=Constant(value=') >')))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__str__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Return(
+                            value=BinOp(
+                                left=BinOp(
+                                    left=BinOp(
+                                        left=BinOp(
+                                            left=Constant(value='('),
+                                            op=Add(),
+                                            right=Call(
+                                                func=Name(id='str', ctx=Load()),
+                                                args=[
+                                                    Attribute(
+                                                        value=Name(id='self', ctx=Load()),
+                                                        attr='count',
+                                                        ctx=Load())],
+                                                keywords=[])),
+                                        op=Add(),
+                                        right=Constant(value=',')),
+                                    op=Add(),
+                                    right=Call(
+                                        func=Name(id='str', ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='stop',
+                                                ctx=Load())],
+                                        keywords=[])),
+                                op=Add(),
+                                right=Constant(value=')')))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__call__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='x')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        For(
+                            target=Name(id='i', ctx=Store()),
+                            iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                If(
+                                    test=Compare(
+                                        left=BinOp(
+                                            left=Name(id='i', ctx=Load()),
+                                            op=Mod(),
+                                            right=Constant(value=2)),
+                                        ops=[
+                                            NotEq()],
+                                        comparators=[
+                                            Constant(value=0)]),
+                                    body=[
+                                        Continue()],
+                                    orelse=[]),
+                                Assign(
+                                    targets=[
+                                        Subscript(
+                                            value=Attribute(
+                                                value=Name(id='self', ctx=Load()),
+                                                attr='dict',
+                                                ctx=Load()),
+                                            slice=Name(id='i', ctx=Load()),
+                                            ctx=Store())],
+                                    value=BinOp(
+                                        left=Name(id='i', ctx=Load()),
+                                        op=Add(),
+                                        right=Constant(value=1)))],
+                            orelse=[])],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__getitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='key')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Compare(
+                                left=Name(id='key', ctx=Load()),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='dict',
+                                        ctx=Load())]),
+                            body=[
+                                Return(
+                                    value=Subscript(
+                                        value=Attribute(
+                                            value=Name(id='self', ctx=Load()),
+                                            attr='dict',
+                                            ctx=Load()),
+                                        slice=Name(id='key', ctx=Load()),
+                                        ctx=Load()))],
+                            orelse=[]),
+                        Return(
+                            value=UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=1)))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setitem__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='key'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Attribute(
+                                        value=Name(id='self', ctx=Load()),
+                                        attr='dict',
+                                        ctx=Load()),
+                                    slice=Name(id='key', ctx=Load()),
+                                    ctx=Store())],
+                            value=Name(id='value', ctx=Load()))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='Counter', ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=Name(id='a', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='a', ctx=Load()),
+                    Call(
+                        func=Name(id='str', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[]),
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Name(id='a', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='a', ctx=Load()),
+                args=[
+                    Constant(value=20)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Constant(value=5),
+                        ctx=Load()),
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Constant(value=8),
+                        ctx=Load()),
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Constant(value=30),
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='a', ctx=Load()),
+                    slice=Constant(value=30),
+                    ctx=Store())],
+            value=Constant(value='thirty')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='a', ctx=Load()),
+                        slice=Constant(value=30),
+                        ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='Counter', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='c', ctx=Store())],
+            value=Call(
+                func=Name(id='Counter', ctx=Load()),
+                args=[
+                    Constant(value=5)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='list', ctx=Load()),
+                        args=[
+                            Name(id='b', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='sum', ctx=Load()),
+                        args=[
+                            Name(id='c', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='__len__',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='__str__',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='__repr__',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='b', ctx=Load()),
+                    attr='__call__',
+                    ctx=Load()),
+                args=[
+                    Constant(value=10)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='__getitem__',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=4)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='__getitem__',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=15)],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='b', ctx=Load()),
+                    attr='__setitem__',
+                    ctx=Load()),
+                args=[
+                    Constant(value=15),
+                    Constant(value='hello')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='b', ctx=Load()),
+                            attr='__getitem__',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=15)],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

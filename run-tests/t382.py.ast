@@ -1,0 +1,22 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='s', ctx=Store())],
+            value=Constant(value='hello')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='s', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Name(id='s', ctx=Load()),
+                        op=Add(),
+                        right=Constant(value=None))],
+                keywords=[]))],
+    type_ignores=[])

@@ -1,0 +1,23 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Dict(keys=[], values=[])),
+        Assign(
+            targets=[
+                Subscript(
+                    value=Name(id='x', ctx=Load()),
+                    slice=Constant(value='y'),
+                    ctx=Store())],
+            value=Constant(value='test')),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='x', ctx=Load()),
+                        slice=Constant(value='y'),
+                        ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

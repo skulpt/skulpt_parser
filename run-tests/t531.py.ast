@@ -1,0 +1,109 @@
+Module(
+    body=[
+        ClassDef(
+            name='Foo',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='Bar',
+            bases=[
+                Name(id='Foo', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='Baz',
+            bases=[
+                Name(id='Bar', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='XXX',
+            bases=[],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        ClassDef(
+            name='Frob',
+            bases=[
+                Name(id='Baz', ctx=Load()),
+                Name(id='XXX', ctx=Load())],
+            keywords=[],
+            body=[
+                Pass()],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Bar', ctx=Load()),
+                            Name(id='Foo', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Foo', ctx=Load()),
+                            Name(id='Bar', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Baz', ctx=Load()),
+                            Name(id='Foo', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Baz', ctx=Load()),
+                            Name(id='Bar', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Foo', ctx=Load()),
+                            Name(id='object', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='issubclass', ctx=Load()),
+                        args=[
+                            Name(id='Frob', ctx=Load()),
+                            Name(id='XXX', ctx=Load())],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

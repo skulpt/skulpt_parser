@@ -1,0 +1,39 @@
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='l1', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value=42)],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='l2', ctx=Store())],
+            value=Name(id='l1', ctx=Load())),
+        AugAssign(
+            target=Name(id='l1', ctx=Store()),
+            op=Add(),
+            value=List(
+                elts=[
+                    Constant(value=99)],
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l1', ctx=Load()),
+                    Name(id='l2', ctx=Load())],
+                keywords=[])),
+        AugAssign(
+            target=Name(id='l1', ctx=Store()),
+            op=Add(),
+            value=Name(id='l1', ctx=Load())),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='l1', ctx=Load()),
+                    Name(id='l2', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

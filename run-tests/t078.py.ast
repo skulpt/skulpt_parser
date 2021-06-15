@@ -1,0 +1,13 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='ord', ctx=Load()),
+                        args=[
+                            Constant(value='X')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

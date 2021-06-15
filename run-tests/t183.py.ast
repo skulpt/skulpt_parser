@@ -1,0 +1,97 @@
+Module(
+    body=[
+        FunctionDef(
+            name='yrange',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='n')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Name(id='n', ctx=Load())],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Yield(
+                                value=Name(id='i', ctx=Load())))],
+                    orelse=[])],
+            decorator_list=[]),
+        FunctionDef(
+            name='creator',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='r', ctx=Store())],
+                    value=Call(
+                        func=Name(id='yrange', ctx=Load()),
+                        args=[
+                            Constant(value=5)],
+                        keywords=[])),
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Tuple(
+                                elts=[
+                                    Constant(value='creator'),
+                                    Call(
+                                        func=Name(id='next', ctx=Load()),
+                                        args=[
+                                            Name(id='r', ctx=Load())],
+                                        keywords=[])],
+                                ctx=Load())],
+                        keywords=[])),
+                Return(
+                    value=Name(id='r', ctx=Load()))],
+            decorator_list=[]),
+        FunctionDef(
+            name='caller',
+            args=arguments(
+                posonlyargs=[],
+                args=[],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='r', ctx=Store())],
+                    value=Call(
+                        func=Name(id='creator', ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                For(
+                    target=Name(id='i', ctx=Store()),
+                    iter=Name(id='r', ctx=Load()),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Tuple(
+                                        elts=[
+                                            Constant(value='caller'),
+                                            Name(id='i', ctx=Load())],
+                                        ctx=Load())],
+                                keywords=[]))],
+                    orelse=[])],
+            decorator_list=[]),
+        Expr(
+            value=Call(
+                func=Name(id='caller', ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])

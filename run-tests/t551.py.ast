@@ -1,0 +1,343 @@
+Module(
+    body=[
+        ImportFrom(
+            module='time',
+            names=[
+                alias(name='sleep')],
+            level=0),
+        ClassDef(
+            name='A',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='object', ctx=Load()),
+                                    attr='__setattr__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load()),
+                                    Constant(value='x'),
+                                    Constant(value=42)],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__getattr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='attr')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='attr', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='attr is a string, as it should be')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='Getting '),
+                                        op=Add(),
+                                        right=Name(id='attr', ctx=Load()))],
+                                keywords=[])),
+                        If(
+                            test=Compare(
+                                left=Name(id='attr', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='y')]),
+                            body=[
+                                Return(
+                                    value=Constant(value=41))],
+                            orelse=[
+                                Return(
+                                    value=Constant(value=43))])],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setattr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='attr'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        If(
+                            test=Call(
+                                func=Name(id='isinstance', ctx=Load()),
+                                args=[
+                                    Name(id='attr', ctx=Load()),
+                                    Name(id='str', ctx=Load())],
+                                keywords=[]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                            Constant(value='attr is a string, as it should be')],
+                                        keywords=[]))],
+                            orelse=[]),
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=BinOp(
+                                            left=BinOp(
+                                                left=Constant(value='Intercepted attempt to set '),
+                                                op=Add(),
+                                                right=Name(id='attr', ctx=Load())),
+                                            op=Add(),
+                                            right=Constant(value=' to ')),
+                                        op=Add(),
+                                        right=Call(
+                                            func=Name(id='str', ctx=Load()),
+                                            args=[
+                                                Name(id='value', ctx=Load())],
+                                            keywords=[]))],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='a', ctx=Store())],
+            value=Call(
+                func=Name(id='A', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='a.x = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='a', ctx=Load()),
+                                    attr='x',
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='a.y = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='a', ctx=Load()),
+                                    attr='y',
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='a.z = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='a', ctx=Load()),
+                                    attr='z',
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='a', ctx=Load()),
+                    attr='x',
+                    ctx=Store())],
+            value=Constant(value=0)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='a.x = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='a', ctx=Load()),
+                                    attr='x',
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        AugAssign(
+            target=Attribute(
+                value=Name(id='a', ctx=Load()),
+                attr='x',
+                ctx=Store()),
+            op=Add(),
+            value=Constant(value=1)),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='A', ctx=Load()),
+                    attr='foo',
+                    ctx=Store())],
+            value=Constant(value='bar')),
+        ClassDef(
+            name='B',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__getattr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='attr')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.01)],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='object', ctx=Load()),
+                                    attr='__getattr__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load()),
+                                    Name(id='attr', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[]),
+                FunctionDef(
+                    name='__setattr__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='attr'),
+                            arg(arg='value')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='sleep', ctx=Load()),
+                                args=[
+                                    Constant(value=0.01)],
+                                keywords=[])),
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='object', ctx=Load()),
+                                    attr='__setattr__',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='self', ctx=Load()),
+                                    Name(id='attr', ctx=Load()),
+                                    Name(id='value', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='b', ctx=Store())],
+            value=Call(
+                func=Name(id='B', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Attribute(
+                    value=Name(id='b', ctx=Load()),
+                    attr='x',
+                    ctx=Store())],
+            value=Constant(value=42)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='b.x = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='b', ctx=Load()),
+                                    attr='x',
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[])),
+        AugAssign(
+            target=Attribute(
+                value=Name(id='b', ctx=Load()),
+                attr='x',
+                ctx=Store()),
+            op=Add(),
+            value=Constant(value=1)),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Constant(value='b.x = '),
+                        op=Add(),
+                        right=Call(
+                            func=Name(id='str', ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='b', ctx=Load()),
+                                    attr='x',
+                                    ctx=Load())],
+                            keywords=[]))],
+                keywords=[]))],
+    type_ignores=[])

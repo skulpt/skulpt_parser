@@ -1,0 +1,156 @@
+Module(
+    body=[
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=Call(
+                func=Name(id='enumerate', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=3)],
+                        keywords=[])],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        For(
+            target=Tuple(
+                elts=[
+                    Name(id='i', ctx=Store()),
+                    Name(id='v', ctx=Store())],
+                ctx=Store()),
+            iter=Call(
+                func=Name(id='enumerate', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            Constant(value=4),
+                            Constant(value=8)],
+                        keywords=[])],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='i', ctx=Load()),
+                            Name(id='v', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=Call(
+                func=Name(id='enumerate', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=14),
+                            Constant(value=8),
+                            Constant(value=2),
+                            Constant(value='abc'),
+                            UnaryOp(
+                                op=USub(),
+                                operand=Constant(value=7))],
+                        ctx=Load()),
+                    Constant(value=2)],
+                keywords=[]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='enumerate', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='e', ctx=Store())],
+            value=Call(
+                func=Name(id='enumerate', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=4),
+                            Constant(value=8),
+                            Constant(value=12)],
+                        ctx=Load()),
+                    UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=3))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='e', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='repr', ctx=Load()),
+                        args=[
+                            Name(id='e', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='next', ctx=Load()),
+                        args=[
+                            Name(id='e', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='d', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Name(id='e', ctx=Load())],
+                values=[
+                    Constant(value=3)])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='d', ctx=Load())],
+                keywords=[])),
+        For(
+            target=Name(id='x', ctx=Store()),
+            iter=Name(id='e', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]))],
+            orelse=[]),
+        For(
+            target=Name(id='y', ctx=Store()),
+            iter=Name(id='e', ctx=Load()),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Name(id='y', ctx=Load())],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

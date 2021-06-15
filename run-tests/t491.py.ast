@@ -1,0 +1,64 @@
+Module(
+    body=[
+        ClassDef(
+            name='f',
+            bases=[
+                Name(id='object', ctx=Load())],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name='__init__',
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[
+                            arg(arg='self'),
+                            arg(arg='w'),
+                            arg(arg='x'),
+                            arg(arg='y'),
+                            arg(arg='z')],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3)]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    Name(id='w', ctx=Load()),
+                                    Name(id='x', ctx=Load()),
+                                    Name(id='y', ctx=Load()),
+                                    Name(id='z', ctx=Load())],
+                                keywords=[]))],
+                    decorator_list=[])],
+            decorator_list=[]),
+        Assign(
+            targets=[
+                Name(id='z', ctx=Store())],
+            value=Constant(value='x')),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value='a')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value='a'),
+                    Constant(value=3)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='f', ctx=Load()),
+                args=[
+                    Constant(value='a'),
+                    Constant(value=3)],
+                keywords=[
+                    keyword(
+                        arg='y',
+                        value=Constant(value='z'))]))],
+    type_ignores=[])

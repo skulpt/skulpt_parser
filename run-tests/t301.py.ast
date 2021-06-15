@@ -1,0 +1,271 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='# actual super & subsets')],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='sup', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=1),
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4),
+                            Constant(value=100)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='sup', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='sub', ctx=Store())],
+            value=Call(
+                func=Name(id='set', ctx=Load()),
+                args=[
+                    List(
+                        elts=[
+                            Constant(value=2),
+                            Constant(value=3),
+                            Constant(value=4)],
+                        ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='sub', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='# forwards')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='sup', ctx=Load()),
+                            attr='isdisjoint',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sub', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sup', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Name(id='sub', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='sup', ctx=Load()),
+                            attr='issuperset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sub', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sup', ctx=Load()),
+                        ops=[
+                            GtE()],
+                        comparators=[
+                            Name(id='sub', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sup', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='sub', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sup', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='sub', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='sup', ctx=Load()),
+                            attr='issubset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sub', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sup', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Name(id='sub', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sup', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='sub', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='# backwards')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='sub', ctx=Load()),
+                            attr='isdisjoint',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sup', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sub', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Name(id='sup', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='sub', ctx=Load()),
+                            attr='issuperset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sup', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sub', ctx=Load()),
+                        ops=[
+                            GtE()],
+                        comparators=[
+                            Name(id='sup', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sub', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Name(id='sup', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sub', ctx=Load()),
+                        ops=[
+                            NotEq()],
+                        comparators=[
+                            Name(id='sup', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='sub', ctx=Load()),
+                            attr='issubset',
+                            ctx=Load()),
+                        args=[
+                            Name(id='sup', ctx=Load())],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sub', ctx=Load()),
+                        ops=[
+                            LtE()],
+                        comparators=[
+                            Name(id='sup', ctx=Load())])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Compare(
+                        left=Name(id='sub', ctx=Load()),
+                        ops=[
+                            Lt()],
+                        comparators=[
+                            Name(id='sup', ctx=Load())])],
+                keywords=[]))],
+    type_ignores=[])

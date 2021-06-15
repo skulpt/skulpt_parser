@@ -1,0 +1,19 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=Invert(),
+                        operand=Constant(value=True))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    UnaryOp(
+                        op=Invert(),
+                        operand=Constant(value=False))],
+                keywords=[]))],
+    type_ignores=[])

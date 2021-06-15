@@ -1,0 +1,18 @@
+Module(
+    body=[
+        If(
+            test=Compare(
+                left=Constant(value=None),
+                ops=[
+                    Is()],
+                comparators=[
+                    Constant(value=None)]),
+            body=[
+                Expr(
+                    value=Call(
+                        func=Name(id='print', ctx=Load()),
+                        args=[
+                            Constant(value='OK')],
+                        keywords=[]))],
+            orelse=[])],
+    type_ignores=[])

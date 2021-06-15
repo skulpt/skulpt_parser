@@ -1,0 +1,45 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcdefghijklmnopqrstuvwxyz'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='w'),
+                            Constant(value='')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='abcdefg'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='abc'),
+                            Constant(value='xyz')],
+                        keywords=[])],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Constant(value='...abcdefg\\!@#$%^&*()_=+'),
+                            attr='replace',
+                            ctx=Load()),
+                        args=[
+                            Constant(value='\\'),
+                            Constant(value='xyz')],
+                        keywords=[])],
+                keywords=[]))],
+    type_ignores=[])

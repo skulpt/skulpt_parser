@@ -1,0 +1,21 @@
+Module(
+    body=[
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    IfExp(
+                        test=Constant(value=True),
+                        body=Constant(value='Yes'),
+                        orelse=Constant(value='No'))],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    IfExp(
+                        test=Constant(value=False),
+                        body=Constant(value='Yes'),
+                        orelse=Constant(value='No'))],
+                keywords=[]))],
+    type_ignores=[])
