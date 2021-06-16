@@ -37,7 +37,7 @@ async function getPyAstDump(content: string, indent: number | null = 4, attrs = 
 async function convertToTs(content: string): Promise<string> {
     let py_ast_dump = await getPyAstDump(content, 4, true, true);
     py_ast_dump = py_ast_dump
-        .replace(/^(\s+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
+        .replace(/([(\s]+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
         .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => {
             if (m2 === "null" || m2 === "True" || m2 === "False") {
                 return m1 + m2.toLowerCase();
@@ -45,7 +45,9 @@ async function convertToTs(content: string): Promise<string> {
                 m2 += "_";
             }
             return m1 + "new astnodes." + m2;
-        });
+        })
+        .replace(/([0-9]{16,})/g, (m, m1) => m1 + "n");
+    // use bigint
     return py_ast_dump;
 }
 
@@ -73,7 +75,7 @@ for await (const dirEntry of Deno.readDir("run-tests/")) {
     files.push(dirEntry.name);
 }
 files.sort();
-const skip = new Set([62, 85, 86, 108].map((x) => `t${x.toString().padStart(3, "0")}.py`));
+const skip = new Set();
 
 for (const test of files) {
     if (skip.has(test)) {
