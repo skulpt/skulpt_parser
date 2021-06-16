@@ -41,7 +41,8 @@ async function convertToTs(content: string): Promise<string> {
         .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => {
             if (m2 === "null" || m2 === "True" || m2 === "False") {
                 return m1 + m2.toLowerCase();
-            } else if (m2 === "arguments") {
+            }
+            if (m2 === "arguments") {
                 m2 += "_";
             }
             return m1 + "new astnodes." + m2;

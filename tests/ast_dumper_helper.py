@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(description="Dump AST from file to file")
 parser.add_argument("content", type=str, help="source to be parsed")
 parser.add_argument("--indent", type=int, default=None, required=False, help="indent")
 parser.add_argument("--attrs", type=int, default=0, required=False, help="show attrs")
-parser.add_argument("--js", type=int, default=0, required=False, help="show attrs")
+parser.add_argument("--js", type=int, default=0, required=False, help="are we generating js sanitized version")
 
 args = parser.parse_args()
 
@@ -14,7 +14,7 @@ parsed = ast.parse(args.content)
 indent = args.indent if args.indent != -1 else None
 
 
-# We need null values to fil empty fields
+# We need null values to fill empty fields
 class Null:
     def __repr__(self):
         return "null"
