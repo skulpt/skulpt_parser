@@ -36,13 +36,14 @@ function _format(node: nodeType | nodeType[], level = 0, indent: string | null =
         }
         return [`[${prefix}${node.map((x) => _format(x, level, indent)[0]).join(sep)}]`, false];
     } else {
+        /** @todo most of this is a hack while we don't have python types */
         let ret: string;
         if (node === true) {
             ret = "True";
         } else if (node === false) {
             ret = "False";
         } else if (typeof node === "number") {
-            if (node > 0 && node < 0.0001) {
+            if ((node > 0 && node < 0.0001) || (node < 0 && node > -0.0001)) {
                 ret = node.toExponential().replace(/(e[-+])([1-9])$/, "$10$2");
             } else {
                 ret = node.toString();
@@ -54,7 +55,7 @@ function _format(node: nodeType | nodeType[], level = 0, indent: string | null =
             ret = node;
         } else if (node instanceof Number) {
             /**Brython trick for floats */
-            if (node > 0 && node < 0.0001) {
+            if ((node > 0 && node < 0.0001) || (node < 0 && node > -0.0001)) {
                 ret = node.toExponential().replace(/(e[-+])([1-9])$/, "$10$2");
             } else {
                 ret = node.toString();
