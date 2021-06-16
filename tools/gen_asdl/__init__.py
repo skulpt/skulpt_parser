@@ -7,5 +7,5 @@ import sys
 
 sys.path += [PATH_TO_CPYTHON + "/Parser"]
 
-out_file = "src/parser/astnodes.ts"
+out_file = "src/ast/astnodes.ts"
 asdl_path = PATH_TO_CPYTHON + "/Parser/Python.asdl"

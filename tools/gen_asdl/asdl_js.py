@@ -6,26 +6,32 @@
 
 import os
 import sys
+import subprocess
 
 import asdl
 
 TABSIZE = 4
-MAX_COL = 80
+MAX_COL = 119
+
+C_TO_TS_TYPES = {"int": "number"}
 
 
-def get_c_type(name):
-    """Return a string for the C name of the type.
+def clean_name(name: str) -> str:
+    if name[-1] == "_":
+        return name[:-1]
+    return name
+
+
+def get_ts_type(name: str) -> str:
+    """Return a string for the ts name of the type.
 
     This function special cases the default types provided by asdl:
     identifier, string, int, bool.
     """
-    # # XXX ack!  need to figure out where Id is useful and where string
-    # if isinstance(name, asdl.TokenId):
-    #     name = name.value
     if name in asdl.builtin_types:
-        return name
+        return C_TO_TS_TYPES.get(name, name)
     else:
-        return "%s_ty" % name
+        return name
 
 
 def reflow_lines(s, depth):
@@ -100,6 +106,9 @@ class EmitVisitor(asdl.VisitorBase):
             line = (" " * TABSIZE * depth) + line + "\n"
             self.file.write(line)
 
+    def emit_tp_name(self, name):
+        self.emit(f'{name}.prototype.tp$name = "{clean_name(name)}";', 0, 0)
+
 
 class TypeDefVisitor(EmitVisitor):
     def visitModule(self, mod):
@@ -114,45 +123,19 @@ class TypeDefVisitor(EmitVisitor):
             self.simple_sum(sum, name, depth)
 
     def simple_sum(self, sum, name, depth):
-        self.emit("/* ----- %s ----- */" % name, depth)
+        def emit(s, depth=depth):
+            self.emit(s, depth)
+
+        emit(f"/* ----- {name} ----- */")
+        emit(f"export class {name} extends AST {{}}")
+        self.emit_tp_name(name)
+        emit("")
+
         for i in range(len(sum.types)):
-            self.emit("/** @constructor */", depth)
             type = sum.types[i]
-            self.emit("Sk.astnodes.%s = function %s() {}" % (type.name, type.name), depth)
-        self.emit("", depth)
-
-    def visitProduct(self, product, name, depth):
-        pass
-
-
-class StructVisitor(EmitVisitor):
-    """Visitor to generate typdefs for AST."""
-
-    def visitModule(self, mod):
-        for dfn in mod.dfns:
-            self.visit(dfn)
-
-    def visitType(self, type, depth=0):
-        self.visit(type.value, type.name, depth)
-
-    def visitSum(self, sum, name, depth):
-        pass
-
-    def visitConstructor(self, cons, depth):
-        pass
-
-    def visitField(self, field, depth):
-        # XXX need to lookup field.type, because it might be something
-        # like a builtin...
-        ctype = get_c_type(field.type)
-        name = field.name
-        if field.seq:
-            if field.type.value in ("cmpop",):
-                self.emit("asdl_int_seq *%(name)s;" % locals(), depth)
-            else:
-                self.emit("asdl_seq *%(name)s;" % locals(), depth)
-        else:
-            self.emit("%(ctype)s %(name)s;" % locals(), depth)
+            emit(f"export class {type.name} extends {name} {{}}")
+            self.emit_tp_name(type.name)
+        emit("")
 
     def visitProduct(self, product, name, depth):
         pass
@@ -172,13 +155,15 @@ class PrototypeVisitor(EmitVisitor):
         if is_simple(sum):
             pass  # XXX
         else:
+            self.emit(f"/* ----- {name} ----- */", 0)
+            self.emit_base(name, self.get_args(sum.attributes))
             for t in sum.types:
                 self.visit(t, name, sum.attributes)
 
     def get_args(self, fields):
-        """Return list of C argument into, one for each field.
+        """Return list of ts argument into, one for each field.
 
-        Argument info is 3-tuple of a C type, variable name, and flag
+        Argument info is 3-tuple of a ts type, variable name, and flag
         that is true if type can be NULL.
         """
         args = []
@@ -194,163 +179,124 @@ class PrototypeVisitor(EmitVisitor):
             # XXX should extend get_c_type() to handle this
             if f.seq:
                 if f.type in ("cmpop",):
-                    ctype = "asdl_int_seq *"
+                    ts_type = "number[]"
                 else:
-                    ctype = "asdl_seq *"
+                    ts_type = f"{f.type}[]"
             else:
-                ctype = get_c_type(f.type)
-            args.append((ctype, name, f.opt or f.seq))
+                ts_type = get_ts_type(f.type)
+            args.append((ts_type, name, f.opt))
         return args
+
+    @staticmethod
+    def args_to_ts(args, attrs=False):
+        ts_args = []
+        for atype, aname, opt in args:
+            atype = atype
+            if opt:
+                # optional types really means can be null rather than optional
+                atype = atype if not opt else atype + " | null"
+            ts_args.append(f"{aname}{'?' if opt and attrs else ''}: {atype}")
+        return ts_args
 
     def visitConstructor(self, cons, type, attrs):
         args = self.get_args(cons.fields)
         attrs = self.get_args(attrs)
-        ctype = get_c_type(type)
-        self.emit_function(cons.name, ctype, args, attrs)
-
-    def emit_function(self, name, ctype, args, attrs, union=1):
-        args = args + attrs
-        if args:
-            argstr = ", ".join(["%s %s" % (atype, aname) for atype, aname, opt in args])
-            argstr += ", PyArena *arena"
-        else:
-            argstr = "PyArena *arena"
-        margs = "a0"
-        for i in range(1, len(args) + 1):
-            margs += ", a%d" % i
-        self.emit("#define %s(%s) _Py_%s(%s)" % (name, margs, name, margs), 0, reflow=0)
-        self.emit("%s _Py_%s(%s);" % (ctype, name, argstr), 0)
+        ts_type = get_ts_type(type)
+        self.emit_function(cons.name, ts_type, args, attrs)
 
     def visitProduct(self, prod, name):
-        self.emit_function(name, get_c_type(name), self.get_args(prod.fields), [], union=0)
+        self.emit(f"/* ----- {name} ----- */", 0)
+        self.emit_function(name, get_ts_type(name), self.get_args(prod.fields), [], union=0)
 
 
 class FunctionVisitor(PrototypeVisitor):
-    """Visitor to generate constructor functions for AST."""
+    """Visitor to generate constructorfunctions for AST."""
 
-    def emit_function(self, name, ctype, args, attrs, union=1):
-        def emit(s, depth=0, reflow=1):
-            self.emit(s, depth, reflow)
+    def emit(self, s, depth=0, reflow=1):
+        super().emit(s, depth, reflow)
 
-        argstr = ", ".join(["/* {%s} */ %s" % (atype, aname) for atype, aname, opt in args + attrs])
-        emit("/** @constructor */")
-        emit("Sk.astnodes.%s = function %s(%s)" % (name, name, argstr))
-        emit("{")
-        for argtype, argname, opt in attrs:
-            if not opt:
-                emit("Sk.asserts.assert(%s !== null && %s !== undefined);" % (argname, argname), 1)
+    def emit_function(self, name, ts_type, args, attrs, union=1):
+        emit = self.emit
+
+        _args = self.args_to_ts(args)
+
+        arg_names = "[" + ", ".join(map(lambda arg: f'"{arg[1]}"', args)) + "]"
+
+        emit(f"export class {name} extends {ts_type if union else 'AST'} {{")
+        for arg in _args:
+            emit(arg + ";", 1)
+
+        _args = ", ".join(_args)
+        if attrs:
+            sep = ", " if args else ""
+            constructorArgs = f"constructor({_args}{sep}...attrs: {ts_type}Attrs) {{"
+            emit(constructorArgs, 1)
+            emit("super(...attrs);", 2)
+        else:
+            emit(f"constructor({_args}) {{", 1)
+            emit("super();", 2)
 
         if union:
             self.emit_body_union(name, args, attrs)
         else:
             self.emit_body_struct(name, args, attrs)
-        emit("return this;", 1)
+        emit("}", 1)
         emit("}")
+        # keep this on the prototype because defining it inside the class, e.g.
+        # _fields = ['arg0', 'arg1'];
+        # is an instance definition not a prototype definition so is created per instance
+        # similarly:
+        # static _fields = ['arg0', 'arg1'];
+        # is also not what we want since to retrieve it from an instance has to call the constructor
+        # js class definitions are almost perfect - apart from this!
+        # related discussion https://github.com/Microsoft/TypeScript/issues/3743
+        # could instead use
+        # get _fields () {return ['arg0', 'arg1'];}
+        emit(f"{name}.prototype._fields = {arg_names};")
+        self.emit_tp_name(name)
         emit("")
 
     def emit_body_union(self, name, args, attrs):
-        def emit(s, depth=0, reflow=1):
-            self.emit(s, depth, reflow)
-
-        for argtype, argname, opt in args:
-            emit("this.%s = %s;" % (argname, argname), 1)
-        for argtype, argname, opt in attrs:
-            emit("this.%s = %s;" % (argname, argname), 1)
+        self.emit_body_attrs(args)
+        # don't both with the attrs since we inherit these from the super class
 
     def emit_body_struct(self, name, args, attrs):
-        def emit(s, depth=0, reflow=1):
-            self.emit(s, depth, reflow)
-
-        for argtype, argname, opt in args:
-            emit("this.%s = %s;" % (argname, argname), 1)
+        self.emit_body_attrs(args)
         assert not attrs
 
+    def emit_body_attrs(self, attrs):
+        emit = self.emit
+        for _, argname, _ in attrs:
+            emit(f"this.{argname} = {argname};", 2)
 
-class PickleVisitor(EmitVisitor):
-    def visitModule(self, mod):
-        for dfn in mod.dfns:
-            self.visit(dfn)
+    def emit_base(self, name, attrs):
+        emit = self.emit
+        _attrs = self.args_to_ts(attrs, True)
 
-    def visitType(self, type):
-        self.visit(type.value, type.name)
+        if not attrs:
+            emit(f"export class {name} extends AST {{}}")
+            self.emit_tp_name(name)
+            emit("")
+            return
 
-    def visitSum(self, sum, name):
-        pass
+        emit(f"export class {name} extends AST {{")
 
-    def visitProduct(self, sum, name):
-        pass
+        for attr in _attrs:
+            emit(attr + ";", 1)
 
-    def visitConstructor(self, cons, name):
-        pass
+        _attrs = ", ".join(_attrs)
 
-    def visitField(self, sum):
-        pass
-
-
-def cleanName(name):
-    name = str(name)
-    if name[-1] == "_":
-        return name[:-1]
-    return name
-
-
-class FieldNamesVisitor(PickleVisitor):
-
-    """note that trailing comma is bad in IE so we have to fiddle a bit to avoid it"""
-
-    def visitProduct(self, prod, name):
-        if prod.fields:
-            self.emit('Sk.astnodes.%s.prototype._astname = "%s";' % (name, cleanName(name)), 0)
-            self.emit("Sk.astnodes.%s.prototype._fields = [" % name, 0)
-            c = 0
-            for f in prod.fields:
-                c += 1
-                self.emit(
-                    '"%s", function(n) { return n.%s; }%s' % (f.name, f.name, "," if c < len(prod.fields) else ""), 1
-                )
-            self.emit("];", 0)
-
-    def visitSum(self, sum, name):
-        if is_simple(sum):
-            for t in sum.types:
-                self.emit('Sk.astnodes.%s.prototype._astname = "%s";' % (t.name, cleanName(t.name)), 0)
-                self.emit("Sk.astnodes.%s.prototype._isenum = true;" % (t.name), 0)
-        else:
-            for t in sum.types:
-                self.visitConstructor(t, name)
-
-    def visitConstructor(self, cons, name):
-        self.emit('Sk.astnodes.%s.prototype._astname = "%s";' % (cons.name, cleanName(cons.name)), 0)
-        self.emit("Sk.astnodes.%s.prototype._fields = [" % cons.name, 0)
-        if cons.fields:
-            c = 0
-            for t in cons.fields:
-                c += 1
-                self.emit(
-                    '"%s", function(n) { return n.%s; }%s' % (t.name, t.name, "," if c < len(cons.fields) else ""), 1
-                )
-        self.emit("];", 0)
-
-
-_SPECIALIZED_SEQUENCES = ("stmt", "expr")
-
-
-def find_sequence(fields, doing_specialization):
-    """Return True if any field uses a sequence."""
-    for f in fields:
-        if f.seq:
-            if not doing_specialization:
-                return True
-            if str(f.type) not in _SPECIALIZED_SEQUENCES:
-                return True
-    return False
-
-
-def has_sequence(types, doing_specialization):
-    for t in types:
-        if find_sequence(t.fields, doing_specialization):
-            return True
-    return False
+        emit(f"constructor({_attrs}) {{", 1)
+        emit("super();", 2)
+        self.emit_body_attrs(attrs)
+        emit("}", 1)
+        emit("}")
+        attr_names = ", ".join(map(lambda arg: f'"{arg[1]}"', attrs))
+        emit(f"{name}.prototype._attributes = [{attr_names}];")
+        self.emit_tp_name(name)
+        emit("")
+        emit(f"type {name}Attrs = [{_attrs}];")
+        emit("")
 
 
 class ChainOfVisitors:
@@ -360,7 +306,6 @@ class ChainOfVisitors:
     def visit(self, object):
         for v in self.visitors:
             v.visit(object)
-            v.emit("", 0)
 
 
 common_msg = "/* File automatically generated by %s. */\n\n"
@@ -371,7 +316,13 @@ def main(asdlfile, outputfile):
     components = argv0.split(os.sep)
     argv0 = os.sep.join(components[-2:])
     auto_gen_msg = common_msg % argv0
-    mod = asdl.parse(asdlfile)
+    with open(asdlfile, "r") as file:
+        lines = file.read().replace("arguments", "arguments_").replace("Continue", "Continue | Debugger")
+    with open("temp.asdl", "w") as f:
+        f.write(lines)
+
+    mod = asdl.parse("temp.asdl")
+    os.remove("temp.asdl")
     if not asdl.check(mod):
         sys.exit(1)
 
@@ -379,24 +330,43 @@ def main(asdlfile, outputfile):
 
     f.write(auto_gen_msg)
     f.write("/* Object that holds all nodes */\n")
-    f.write("Sk.astnodes = {};\n\n")
-
-    c = ChainOfVisitors(
-        TypeDefVisitor(f),
+    f.write(
+        """
+/** @todo these should be a python types */
+export type identifier = string;
+export type constant = any;
+"""
     )
-    c.visit(mod)
 
-    f.write("\n" * 5)
+    f.write(
+        """
+/** base class for all AST nodes */
+export interface AST {
+    _fields: string[];
+    _attributes: string[];
+    tp$name: string;
+}
+
+export class AST {}
+AST.prototype._attributes = [];
+AST.prototype._fields = [];
+AST.prototype.tp$name = "AST";
+
+"""
+    )
+
     f.write("/* ---------------------- */\n")
     f.write("/* constructors for nodes */\n")
     f.write("/* ---------------------- */\n")
-    f.write("\n" * 5)
-    v = ChainOfVisitors(
-        FunctionVisitor(f),
-        FieldNamesVisitor(f),
-    )
+    f.write("\n")
+
+    c = TypeDefVisitor(f)
+    c.visit(mod)
+
+    v = FunctionVisitor(f)
     v.visit(mod)
 
-    f.write('Sk.exportSymbol("Sk.astnodes", Sk.astnodes);\n')
-
     f.close()
+
+    # run prettier over the file
+    subprocess.run(["pre-commit", "run", "prettier", "--files", outputfile])
