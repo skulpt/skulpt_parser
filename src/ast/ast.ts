@@ -43,6 +43,9 @@ function _format(node: nodeType | nodeType[], level = 0, indent: string | null =
             ret = "False";
         } else if (typeof node === "number") {
             ret = "" + node;
+        } else if (node === "None") {
+            /** @todo temporary - since we don't have pyNone */
+            ret = node;
         } else {
             let quote = "'";
             if (node.includes("'") && !node.includes('"')) {

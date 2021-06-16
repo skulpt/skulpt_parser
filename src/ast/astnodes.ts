@@ -754,9 +754,9 @@ YieldFrom.prototype.tp$name = "YieldFrom";
 
 export class Compare extends expr {
     left: expr;
-    ops: number[];
+    ops: cmpop[];
     comparators: expr[];
-    constructor(left: expr, ops: number[], comparators: expr[], ...attrs: exprAttrs) {
+    constructor(left: expr, ops: cmpop[], comparators: expr[], ...attrs: exprAttrs) {
         super(...attrs);
         this.left = left;
         this.ops = ops;
@@ -997,11 +997,27 @@ export class arg extends AST {
     arg: identifier;
     annotation: expr | null;
     type_comment: string | null;
-    constructor(arg: identifier, annotation: expr | null, type_comment: string | null) {
+    lineno: number;
+    col_offset: number;
+    end_lineno: number | null;
+    end_col_offset: number | null;
+    constructor(
+        arg: identifier,
+        annotation: expr | null,
+        type_comment: string | null,
+        lineno: number,
+        col_offset: number,
+        end_lineno: number | null,
+        end_col_offset: number | null
+    ) {
         super();
         this.arg = arg;
         this.annotation = annotation;
         this.type_comment = type_comment;
+        this.lineno = lineno;
+        this.col_offset = col_offset;
+        this.end_lineno = end_lineno;
+        this.end_col_offset = end_col_offset;
     }
 }
 arg.prototype._fields = ["arg", "annotation", "type_comment"];
@@ -1011,10 +1027,25 @@ arg.prototype.tp$name = "arg";
 export class keyword extends AST {
     arg: identifier | null;
     value: expr;
-    constructor(arg: identifier | null, value: expr) {
+    lineno: number;
+    col_offset: number;
+    end_lineno: number | null;
+    end_col_offset: number | null;
+    constructor(
+        arg: identifier | null,
+        value: expr,
+        lineno: number,
+        col_offset: number,
+        end_lineno: number | null,
+        end_col_offset: number | null
+    ) {
         super();
         this.arg = arg;
         this.value = value;
+        this.lineno = lineno;
+        this.col_offset = col_offset;
+        this.end_lineno = end_lineno;
+        this.end_col_offset = end_col_offset;
     }
 }
 keyword.prototype._fields = ["arg", "value"];
