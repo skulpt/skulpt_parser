@@ -178,10 +178,7 @@ class PrototypeVisitor(EmitVisitor):
                 name = f.name
             # XXX should extend get_c_type() to handle this
             if f.seq:
-                if f.type in ("cmpop",):
-                    ts_type = "number[]"
-                else:
-                    ts_type = f"{f.type}[]"
+                ts_type = f"{f.type}[]"
             else:
                 ts_type = get_ts_type(f.type)
             args.append((ts_type, name, f.opt))
@@ -206,7 +203,9 @@ class PrototypeVisitor(EmitVisitor):
 
     def visitProduct(self, prod, name):
         self.emit(f"/* ----- {name} ----- */", 0)
-        self.emit_function(name, get_ts_type(name), self.get_args(prod.fields), [], union=0)
+        self.emit_function(
+            name, get_ts_type(name), self.get_args(prod.fields), self.get_args(prod.attributes), union=0
+        )
 
 
 class FunctionVisitor(PrototypeVisitor):
@@ -214,6 +213,10 @@ class FunctionVisitor(PrototypeVisitor):
 
     def emit(self, s, depth=0, reflow=1):
         super().emit(s, depth, reflow)
+
+    def emit_instance_types(self, args):
+        for arg in args:
+            self.emit(arg + ";", 1)
 
     def emit_function(self, name, ts_type, args, attrs, union=1):
         emit = self.emit
@@ -223,17 +226,20 @@ class FunctionVisitor(PrototypeVisitor):
         arg_names = "[" + ", ".join(map(lambda arg: f'"{arg[1]}"', args)) + "]"
 
         emit(f"export class {name} extends {ts_type if union else 'AST'} {{")
-        for arg in _args:
-            emit(arg + ";", 1)
 
+        self.emit_instance_types(_args)
         _args = ", ".join(_args)
-        if attrs:
-            sep = ", " if args else ""
+        sep = ", " if args else ""
+
+        if union and attrs:
             constructorArgs = f"constructor({_args}{sep}...attrs: {ts_type}Attrs) {{"
             emit(constructorArgs, 1)
             emit("super(...attrs);", 2)
         else:
-            emit(f"constructor({_args}) {{", 1)
+            _attrs = self.args_to_ts(attrs)
+            self.emit_instance_types(_attrs)
+            _attrs = ", ".join(_attrs)
+            emit(f"constructor({_args}{sep}{_attrs}) {{", 1)
             emit("super();", 2)
 
         if union:
@@ -262,7 +268,9 @@ class FunctionVisitor(PrototypeVisitor):
 
     def emit_body_struct(self, name, args, attrs):
         self.emit_body_attrs(args)
-        assert not attrs
+        self.emit_body_attrs(attrs)
+
+        # assert not attrs
 
     def emit_body_attrs(self, attrs):
         emit = self.emit
@@ -281,9 +289,7 @@ class FunctionVisitor(PrototypeVisitor):
 
         emit(f"export class {name} extends AST {{")
 
-        for attr in _attrs:
-            emit(attr + ";", 1)
-
+        self.emit_instance_types(_attrs)
         _attrs = ", ".join(_attrs)
 
         emit(f"constructor({_attrs}) {{", 1)
