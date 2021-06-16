@@ -13,7 +13,8 @@ scripts:
         cmd: deno bundle src/mod.ts dist/bundle.js
 
     gen_parser:
-        cmd: python -m tools.gen_parser
+        cmd: python -m tools.gen_parser && pre-commit run prettier --files src/parser/generated_parser.ts
+
     gen_asdl:
         cmd: python -m tools.gen_asdl
 
@@ -28,3 +29,8 @@ scripts:
         allow:
             - read
             - run
+
+    parse:
+        cmd: deno run src/parse.ts 
+        allow:
+            - read

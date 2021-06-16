@@ -3,24 +3,7 @@ import { exact_token_types, Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError, TokenInfo } from "../tokenize/tokenize.ts";
 
-class Load {}
-
-class Name {
-    id;
-    ctx;
-    lineno: number;
-    col_offset: number;
-    end_lineno: number;
-    end_col_offset: number;
-    constructor(id: any, ctx: Load, lineno: number, col_offset: number, end_lineno: number, end_col_offset: number) {
-        this.id = id;
-        this.ctx = ctx;
-        this.lineno = lineno;
-        this.col_offset = col_offset;
-        this.end_lineno = end_lineno;
-        this.end_col_offset = end_col_offset;
-    }
-}
+import { Name, Load, TypeIgnore } from "../ast/astnodes.ts";
 
 /** For non-memoized functions that we want to be logged.*/
 export function logger(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -184,6 +167,9 @@ export class Parser {
     mark: () => number;
     reset: (number: number) => null | void;
     _tokens: TokenInfo[];
+
+    type_ignore_comments: TypeIgnore[] = [];
+
     constructor(tokenizer: Tokenizer, verbose = false) {
         this._tokenizer = tokenizer;
         this._verbose = verbose;
