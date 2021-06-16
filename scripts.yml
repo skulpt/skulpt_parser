@@ -3,9 +3,11 @@ scripts:
         desc: bundles the source files and copies it to dist folder
         cmd: deno run scripts/build.ts
         allow:
+            - write
             - read
             - env
             - run
+            - net
 
     bundle:
         cmd: deno bundle src/mod.ts dist/bundle.js
