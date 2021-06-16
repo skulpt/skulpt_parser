@@ -242,6 +242,16 @@ class FunctionVisitor(PrototypeVisitor):
             self.emit_body_struct(name, args, attrs)
         emit("}", 1)
         emit("}")
+        # keep this on the prototype because defining it inside the class, e.g.
+        # _fields = ['arg0', 'arg1'];
+        # is an instance definition not a prototype definition so is created per instance
+        # similarly:
+        # static _fields = ['arg0', 'arg1'];
+        # is also not what we want since to retrieve it from an instance has to call the constructor
+        # js class definitions are almost perfect - apart from this!
+        # related discussion https://github.com/Microsoft/TypeScript/issues/3743
+        # could instead use
+        # get _fields () {return ['arg0', 'arg1'];}
         emit(f"{name}.prototype._fields = {arg_names};")
         self.emit_tp_name(name)
         emit("")
@@ -350,10 +360,10 @@ AST.prototype.tp$name = "AST";
     f.write("/* ---------------------- */\n")
     f.write("\n")
 
-    c = ChainOfVisitors(TypeDefVisitor(f))
+    c = TypeDefVisitor(f)
     c.visit(mod)
 
-    v = ChainOfVisitors(FunctionVisitor(f))
+    v = FunctionVisitor(f)
     v.visit(mod)
 
     f.close()
