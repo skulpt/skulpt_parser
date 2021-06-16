@@ -3,7 +3,7 @@ import { dump } from "../src/ast/ast.ts";
 import { assertEquals } from "https://deno.land/std@0.99.0/testing/asserts.ts";
 
 /** Simple name and function, compact form, but not configurable */
-async function getPyAstDump(content: string, indent: number | null = 4, attrs = false): Promise<string> {
+async function getPyAstDump(content: string, indent: number | null = 4, attrs = false, js = false): Promise<string> {
     const cmd = Deno.run({
         cmd: [
             "python3",
@@ -11,6 +11,7 @@ async function getPyAstDump(content: string, indent: number | null = 4, attrs = 
             content,
             `--indent=${indent === null ? -1 : indent}`,
             attrs ? "--attrs=1" : "--attrs=0",
+            js ? "--js=1" : "--js=0",
         ],
         stdout: "piped",
         stderr: "piped",
@@ -24,6 +25,8 @@ async function getPyAstDump(content: string, indent: number | null = 4, attrs = 
     cmd.close(); // Don't forget to close it
 
     if (errorStr) {
+        console.log(outStr);
+        console.error(errorStr);
         throw new Error(errorStr);
     }
 
@@ -31,12 +34,28 @@ async function getPyAstDump(content: string, indent: number | null = 4, attrs = 
 }
 
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
-async function convertToTs(content: string): Promise<void> {
-    let py_ast_dump = await getPyAstDump(content, 4, true);
+async function convertToTs(content: string): Promise<string> {
+    let py_ast_dump = await getPyAstDump(content, 4, true, true);
     py_ast_dump = py_ast_dump
         .replace(/^(\s+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
-        .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => m1 + "new astnodes." + m2);
-    console.log(py_ast_dump);
+        .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => {
+            if (m2 === "null" || m2 === "True" || m2 === "False") {
+                return m1 + m2.toLowerCase();
+            } else if (m2 === "arguments") {
+                m2 += "_";
+            }
+            return m1 + "new astnodes." + m2;
+        });
+    return py_ast_dump;
+}
+
+/** a helper function for debugging a failing file */
+async function convertFileToTs(fileName: string) {
+    const text = await Deno.readTextFile("run-tests/" + fileName);
+    const converted = await convertToTs(text);
+    console.log(converted);
+    const jsAST = eval(converted);
+    return jsAST;
 }
 
 async function doTest(source: string, mod: astnodes.Module) {
@@ -46,186 +65,37 @@ async function doTest(source: string, mod: astnodes.Module) {
     }
 }
 
-Deno.test("#1: t001.py print('hello world')", async () => {
-    const mod = new astnodes.Module(
-        [
-            new astnodes.Expr(
-                new astnodes.Call(
-                    new astnodes.Name("print", new astnodes.Load(), 1, 0, 1, 5),
-                    [new astnodes.Constant("hello world", null, 1, 6, 1, 19)],
-                    [],
-                    1,
-                    0,
-                    1,
-                    20
-                ),
-                1,
-                0,
-                1,
-                20
-            ),
-        ],
-        []
-    );
-    await doTest("print('hello world')", mod);
-});
+const files = [];
+for await (const dirEntry of Deno.readDir("run-tests/")) {
+    if (!dirEntry.name.endsWith(".py")) {
+        continue;
+    }
+    files.push(dirEntry.name);
+}
+files.sort();
+const skip = new Set([62, 85, 86, 108].map((x) => `t${x.toString().padStart(3, "0")}.py`));
 
-Deno.test("#2: t002py a = 3", async () => {
-    const mod = new astnodes.Module(
-        [
-            new astnodes.Assign(
-                [new astnodes.Name("a", new astnodes.Store(), 1, 0, 1, 1)],
-                new astnodes.Constant(3, null, 1, 4, 1, 5),
-                null,
-                1,
-                0,
-                1,
-                5
-            ),
-        ],
-        []
-    );
-    await doTest("a = 3", mod);
-});
-
-Deno.test("#3: t003.py 2 + 3", async () => {
-    const mod = new astnodes.Module(
-        [
-            new astnodes.Expr(
-                new astnodes.BinOp(
-                    new astnodes.Constant(2, null, 1, 0, 1, 1),
-                    new astnodes.Add(),
-                    new astnodes.Constant(3, null, 1, 4, 1, 5),
-                    1,
-                    0,
-                    1,
-                    5
-                ),
-                1,
-                0,
-                1,
-                5
-            ),
-        ],
-        []
-    );
-    await doTest("2 + 3", mod);
-});
-
-Deno.test("#4: t014.py def test(x, y): return x + y ", async () => {
-    const mod = new astnodes.Module(
-        [
-            new astnodes.FunctionDef(
-                "test",
-                new astnodes.arguments_(
-                    [],
-                    [new astnodes.arg("x", null, null, 2, 9, 2, 10), new astnodes.arg("y", null, null, 2, 12, 2, 13)],
-                    null,
-                    [],
-                    [],
-                    null,
-                    []
-                ),
-                [
-                    new astnodes.Return(
-                        new astnodes.BinOp(
-                            new astnodes.Name("x", new astnodes.Load(), 3, 11, 3, 12),
-                            new astnodes.Add(),
-                            new astnodes.Name("y", new astnodes.Load(), 3, 15, 3, 16),
-                            3,
-                            11,
-                            3,
-                            16
-                        ),
-                        3,
-                        4,
-                        3,
-                        16
-                    ),
-                ],
-                [],
-                null,
-                null,
-                2,
-                0,
-                3,
-                16
-            ),
-            new astnodes.Assign(
-                [new astnodes.Name("r", new astnodes.Store(), 6, 0, 6, 1)],
-                new astnodes.Call(
-                    new astnodes.Name("test", new astnodes.Load(), 6, 4, 6, 8),
-                    [new astnodes.Constant(3, null, 6, 9, 6, 10), new astnodes.Constant(5, null, 6, 12, 6, 13)],
-                    [],
-                    6,
-                    4,
-                    6,
-                    14
-                ),
-                null,
-                6,
-                0,
-                6,
-                14
-            ),
-        ],
-        []
-    );
-
-    const content = `
-def test(x, y):
-    return x + y
-
-
-r = test(3, 5)
-`;
-
-    await doTest(content, mod);
-});
-
-/**@todo this should really be pyNone */
-Deno.test("#5: t019.py if None is None", async () => {
-    const mod = new astnodes.Module(
-        [
-            new astnodes.If(
-                new astnodes.Compare(
-                    new astnodes.Constant("None", null, 2, 3, 2, 7),
-                    [new astnodes.Is()],
-                    [new astnodes.Constant("None", null, 2, 11, 2, 15)],
-                    2,
-                    3,
-                    2,
-                    15
-                ),
-                [
-                    new astnodes.Expr(
-                        new astnodes.Call(
-                            new astnodes.Name("print", new astnodes.Load(), 3, 4, 3, 9),
-                            [new astnodes.Constant("OK", null, 3, 10, 3, 14)],
-                            [],
-                            3,
-                            4,
-                            3,
-                            15
-                        ),
-                        3,
-                        4,
-                        3,
-                        15
-                    ),
-                ],
-                [],
-                2,
-                0,
-                3,
-                15
-            ),
-        ],
-        []
-    );
-    const content = `
-if None is None:
-    print("OK")
-`;
-    await doTest(content, mod);
-});
+for (const test of files) {
+    if (skip.has(test)) {
+        continue;
+    }
+    Deno.test({
+        name: test,
+        fn: async () => {
+            new astnodes.Module([], []); // fails without this
+            try {
+                const text = await Deno.readTextFile("run-tests/" + test);
+                const converted = await convertToTs(text);
+                const jsAST = eval(converted);
+                await doTest(text, jsAST);
+            } catch (e) {
+                // // uncomment these to exit at the first fail
+                // console.error(e);
+                // Deno.exit(0);
+                throw e;
+            }
+        },
+        sanitizeExit: false,
+        // allow us to exit early with Deno.exit
+    });
+}
