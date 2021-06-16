@@ -6,7 +6,13 @@ parser = argparse.ArgumentParser(description="Dump AST from file to file")
 parser.add_argument("content", type=str, help="source to be parsed")
 parser.add_argument("--indent", type=int, default=None, required=False, help="indent")
 parser.add_argument("--attrs", type=int, default=0, required=False, help="show attrs")
-parser.add_argument("--js", type=int, default=0, required=False, help="are we generating js sanitized version")
+parser.add_argument(
+    "--js",
+    type=int,
+    default=0,
+    required=False,
+    help="are we generating js sanitized version",
+)
 
 args = parser.parse_args()
 
@@ -63,4 +69,4 @@ class jsVisitor(ast.NodeTransformer):
 if args.js:
     parsed = jsVisitor().generic_visit(parsed)
 
-print(ast.dump(parsed, include_attributes=args.attrs, indent=indent))
+print(ast.dump(parsed, annotate_fields=not args.js, include_attributes=args.attrs, indent=indent))

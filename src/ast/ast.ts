@@ -1,6 +1,6 @@
 import { AST } from "./astnodes.ts";
 
-type nodeType = AST | boolean | string | number;
+type nodeType = AST | boolean | string | number | bigint | Number;
 
 function _format(node: nodeType | nodeType[], level = 0, indent: string | null = null): [string, boolean] {
     let prefix: string, sep: string;
@@ -42,10 +42,24 @@ function _format(node: nodeType | nodeType[], level = 0, indent: string | null =
         } else if (node === false) {
             ret = "False";
         } else if (typeof node === "number") {
-            ret = "" + node;
+            if (node > 0 && node < 0.0001) {
+                ret = node.toExponential().replace(/(e[-+])([1-9])$/, "$10$2");
+            } else {
+                ret = node.toString();
+            }
+        } else if (typeof node === "bigint") {
+            ret = node.toString();
         } else if (node === "None") {
             /** @todo temporary - since we don't have pyNone */
             ret = node;
+        } else if (node instanceof Number) {
+            /**Brython trick for floats */
+            if (node > 0 && node < 0.0001) {
+                ret = node.toExponential().replace(/(e[-+])([1-9])$/, "$10$2");
+            } else {
+                ret = node.toString();
+                ret = ret.includes(".") ? ret : ret + ".0";
+            }
         } else {
             let quote = "'";
             if (node.includes("'") && !node.includes('"')) {

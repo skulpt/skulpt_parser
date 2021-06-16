@@ -37,7 +37,7 @@ async function getPyAstDump(content: string, indent: number | null = 4, attrs = 
 async function convertToTs(content: string): Promise<string> {
     let py_ast_dump = await getPyAstDump(content, 4, true, true);
     py_ast_dump = py_ast_dump
-        .replace(/([(\s]+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
+        .replace(/^(\s+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
         .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => {
             if (m2 === "null" || m2 === "True" || m2 === "False") {
                 return m1 + m2.toLowerCase();
@@ -47,7 +47,8 @@ async function convertToTs(content: string): Promise<string> {
             }
             return m1 + "new astnodes." + m2;
         })
-        .replace(/([0-9]{16,})/g, (m, m1) => m1 + "n");
+        .replace(/^(\s+\-?[0-9]+\.[0-9]+(?:e[\-0-9]+)?)/gm, (m, m1) => "new Number(" + m1 + ")")
+        .replace(/^(\s+\-?[0-9]{16,})/gm, (m, m1) => m1 + "n");
     // use bigint
     return py_ast_dump;
 }
