@@ -184,15 +184,15 @@ const PseudoTokenRegexp = new RegExp(PseudoToken);
 
 // readline takes a callback that gets the next line and return undefined when it's done
 
-export function tokenize(readline: () => string): IterableIterator<TokenInfo> {
+export function tokenize(readline: IterableIterator<string>): IterableIterator<TokenInfo> {
     return _tokenize(readline);
 }
 
-export function generate_tokens(readline: () => string): IterableIterator<TokenInfo> {
+export function generate_tokens(readline: IterableIterator<string>): IterableIterator<TokenInfo> {
     return _tokenize(readline);
 }
 
-function* _tokenize(readline: () => string, encoding?: string, filename = "<tokenize>"): IterableIterator<TokenInfo> {
+function* _tokenize(readline: IterableIterator<string>, encoding?: string, filename = "<tokenize>"): IterableIterator<TokenInfo> {
     const numchars = "0123456789";
     let lnum = 0,
         parenlev = 0,
@@ -226,7 +226,7 @@ function* _tokenize(readline: () => string, encoding?: string, filename = "<toke
         // hence `line` itself will always be overwritten at the end
         // of this loop.
         lasline = line;
-        line = readline() || ""; // readline will return undefined when it's done
+        line = readline.next().value || ""
 
         // lets pretend this doesn't exist for now.
         // if encoding is not None:

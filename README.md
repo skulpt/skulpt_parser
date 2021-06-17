@@ -14,3 +14,4 @@ Scripts
 -   `vr gen_parser` - generates the javascript parser
 -   `vr gen_asdl` - generates the javascript astnodes
 -   `vr gen_ast` - regenerates the ast for the run-test files from python and dumps the ast in .ast files
+-   `vr parse <file>` - parses a python file and prints the ast in `console.log` and `json`
