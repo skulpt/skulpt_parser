@@ -1,6 +1,6 @@
 import * as astnodes from "../src/ast/astnodes.ts";
 import { dump } from "../src/ast/ast.ts";
-import { assertEquals } from "https://deno.land/std@0.99.0/testing/asserts.ts";
+import { assertEquals } from "../deps.ts";
 
 /** Simple name and function, compact form, but not configurable */
 async function getPyAstDump(content: string, indent: number | null = 4, attrs = false, js = false): Promise<string> {

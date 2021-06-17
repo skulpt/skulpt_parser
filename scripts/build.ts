@@ -1,4 +1,4 @@
-import * as esbuild from "https://deno.land/x/esbuild@v0.11.10/mod.js";
+import { esbuild } from "../deps.ts";
 // import * as esbuild from "esbuild";
 // deno run -A scripts/build.ts
 
