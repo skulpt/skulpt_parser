@@ -2,14 +2,11 @@ import { GeneratedParser } from "./parser/generated_parser.ts";
 import { Tokenizer } from "./tokenize/Tokenizer.ts";
 import { tokenize } from "./tokenize/tokenize.ts";
 import { dump } from "./ast/ast.ts";
-
-import { readLines } from "https://deno.land/std@0.99.0/io/mod.ts";
-import { parse } from "https://deno.land/std@0.99.0/flags/mod.ts";
-import * as path from "https://deno.land/std@0.99.0/path/mod.ts";
+import { Colors, parse } from "../deps.ts";
 
 const args = parse(Deno.args);
 
-console.assert(args._.length == 1, "Must pass filename as argument");
+console.assert(args._.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
 
 const filename = path.join(Deno.cwd(), args._[0] as string);
 
@@ -33,9 +30,9 @@ const tokens = tokenize(lineProducer(lines));
 
 const tokenizer = new Tokenizer(tokens);
 
-const parser = new GeneratedParser(tokenizer);
+const parser = new GeneratedParser(tokenizer, args.verbose || false);
 
 const ast = parser.file();
 
-console.log(JSON.stringify(ast, null, 2));
+console.log(Colors.green(JSON.stringify(ast, null, 2)));
 console.log(ast);

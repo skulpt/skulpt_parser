@@ -30,18 +30,19 @@ MODULE_PREFIX = """\
 import * as ast from "../ast/ast.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import * as pegen_real from "./pegen.ts";
+import {{ Colors }} from "../../deps.ts";
 
 import {{memoize, memoize_left_rec, logger, Parser}} from "./parser.ts";
 
 const EXTRA = []; // todo
 
 const pegen = new Proxy(pegen_real, {{
-    get(target, prop, receiver) {{ 
+    get(target, prop, receiver) {{
         if (prop in target) {{
             return target[prop];
         }}
 
-        console.log("Missing pegen func!: " + prop);
+        console.log(Colors.yellow("Missing pegen func!: " + prop));
 
         return (...args) => args
     }}
