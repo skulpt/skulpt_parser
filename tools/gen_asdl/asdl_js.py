@@ -127,13 +127,16 @@ class TypeDefVisitor(EmitVisitor):
             self.emit(s, depth)
 
         emit(f"/* ----- {name} ----- */")
-        emit(f"export class {name} extends AST {{}}")
+        emit(f"export class {name} extends AST {{kind=0;}}")
         self.emit_tp_name(name)
         emit("")
+        for i in range(len(sum.types)):
+            type = sum.types[i]
+            emit(f"export const {type.name}_kind = {i+1};")
 
         for i in range(len(sum.types)):
             type = sum.types[i]
-            emit(f"export class {type.name} extends {name} {{}}")
+            emit(f"export class {type.name} extends {name} {{_kind={i+1};}}")
             self.emit_tp_name(type.name)
         emit("")
 
@@ -156,8 +159,13 @@ class PrototypeVisitor(EmitVisitor):
             pass  # XXX
         else:
             self.emit(f"/* ----- {name} ----- */", 0)
-            self.emit_base(name, self.get_args(sum.attributes))
-            for t in sum.types:
+            self.emit_base(name, self.get_args(sum.attributes), has_kind=True)
+
+            for i, t in enumerate(sum.types, start=1):
+                t.kind = i
+                self.emit(f"export const {t.name}_kind = {i};")
+
+            for i, t in enumerate(sum.types, start=1):
                 self.visit(t, name, sum.attributes)
 
     def get_args(self, fields):
@@ -199,7 +207,7 @@ class PrototypeVisitor(EmitVisitor):
         args = self.get_args(cons.fields)
         attrs = self.get_args(attrs)
         ts_type = get_ts_type(type)
-        self.emit_function(cons.name, ts_type, args, attrs)
+        self.emit_function(cons.name, ts_type, args, attrs, union=cons.kind)
 
     def visitProduct(self, prod, name):
         self.emit(f"/* ----- {name} ----- */", 0)
@@ -232,6 +240,7 @@ class FunctionVisitor(PrototypeVisitor):
         sep = ", " if args else ""
 
         if union and attrs:
+            emit(f"_kind={union};")
             constructorArgs = f"constructor({_args}{sep}...attrs: {ts_type}Attrs) {{"
             emit(constructorArgs, 1)
             emit("super(...attrs);", 2)
@@ -277,7 +286,7 @@ class FunctionVisitor(PrototypeVisitor):
         for _, argname, _ in attrs:
             emit(f"this.{argname} = {argname};", 2)
 
-    def emit_base(self, name, attrs):
+    def emit_base(self, name, attrs, has_kind=False):
         emit = self.emit
         _attrs = self.args_to_ts(attrs, True)
 
@@ -290,6 +299,9 @@ class FunctionVisitor(PrototypeVisitor):
         emit(f"export class {name} extends AST {{")
 
         self.emit_instance_types(_attrs)
+        if has_kind:
+            emit("_kind=0;", 1)
+
         _attrs = ", ".join(_attrs)
 
         emit(f"constructor({_attrs}) {{", 1)
@@ -301,7 +313,7 @@ class FunctionVisitor(PrototypeVisitor):
         emit(f"{name}.prototype._attributes = [{attr_names}];")
         self.emit_tp_name(name)
         emit("")
-        emit(f"type {name}Attrs = [{_attrs}];")
+        emit(f"export type {name}Attrs = [{_attrs}];")
         emit("")
 
 
