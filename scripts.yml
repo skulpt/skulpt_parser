@@ -31,6 +31,6 @@ scripts:
             - run
 
     parse:
-        cmd: deno run src/parse.ts 
+        cmd: deno run src/parse.ts
         allow:
             - read

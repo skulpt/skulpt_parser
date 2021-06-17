@@ -76,9 +76,3 @@ export class Tokenizer {
         // pass
     }
 }
-
-export function readline(text: string): () => string {
-    const textasarray: string[] = text.split("\n").map((x) => x + "\n");
-    let i = 0;
-    return () => textasarray[i++];
-}

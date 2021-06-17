@@ -182,17 +182,22 @@ const PseudoToken = Whitespace + group(PseudoExtras, Number_, Funny, ContStr, Na
 
 const PseudoTokenRegexp = new RegExp(PseudoToken);
 
-// readline takes a callback that gets the next line and return undefined when it's done
-
+/** In python this should actually yield bytes */
 export function tokenize(readline: IterableIterator<string>): IterableIterator<TokenInfo> {
     return _tokenize(readline);
 }
 
+/** In python this the same api i.e. we yield strings except the readline is callable rather than a generator - see tokenize.py */
 export function generate_tokens(readline: IterableIterator<string>): IterableIterator<TokenInfo> {
     return _tokenize(readline);
 }
 
-function* _tokenize(readline: IterableIterator<string>, encoding?: string, filename = "<tokenize>"): IterableIterator<TokenInfo> {
+/** We largely ignore the encoding here. In python the readline might be a bytes iterator */
+function* _tokenize(
+    readline: IterableIterator<string>,
+    encoding?: string,
+    filename = "<tokenize>"
+): IterableIterator<TokenInfo> {
     const numchars = "0123456789";
     let lnum = 0,
         parenlev = 0,
@@ -226,7 +231,7 @@ function* _tokenize(readline: IterableIterator<string>, encoding?: string, filen
         // hence `line` itself will always be overwritten at the end
         // of this loop.
         lasline = line;
-        line = readline.next().value || ""
+        line = readline.next().value || "";
 
         // lets pretend this doesn't exist for now.
         // if encoding is not None:
