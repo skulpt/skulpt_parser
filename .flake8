@@ -5,5 +5,5 @@ max-line-length = 119
 # check out their meaning here
 # https://flake8.pycqa.org/en/latest/user/error-codes.html
 ignore = E203,E266,E501,W503,F403,F401,E402
-# don't lint the run-tests 
+# don't lint the run-tests
 exclude = run-tests

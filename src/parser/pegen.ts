@@ -1,9 +1,9 @@
 import { Module, stmt } from "../ast/astnodes.ts";
-import { Parser } from "./parser.ts"
+import { Parser } from "./parser.ts";
 
 export function make_module(p: Parser, a: stmt[]) {
     // Ingoring the #type: ignore comment mangling here
-    return new Module(a, [])
+    return new Module(a, []);
 }
 
 export function new_type_comment(p: Parser, c: any): any {
