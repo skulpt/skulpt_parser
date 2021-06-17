@@ -15,7 +15,9 @@ import {
     exprAttrs,
     Call,
     Load,
+    Constant,
 } from "../ast/astnodes.ts";
+import { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
@@ -107,6 +109,12 @@ export function new_type_comment(c: any): any {
 //     return 0;
 // }
 
+export function new_identifier(/*p: Parser, */ n: string) {
+    // todo pull in the identifier check stuff we already have
+    // this will have to return an interned python string
+    return n;
+}
+
 // PyObject *
 // _PyPegen_new_identifier(Parser *p, char *n)
 // {
@@ -162,6 +170,10 @@ export function new_type_comment(c: any): any {
 //     p->error_indicator = 1;
 //     return NULL;
 // }
+
+export function _create_dummy_identifier(/*p: Parser*/) {
+    return new_identifier("");
+}
 
 // static PyObject *
 // _create_dummy_identifier(Parser *p)
@@ -532,6 +544,12 @@ export function new_type_comment(c: any): any {
 //     // Insert new node.
 //     return _PyPegen_insert_memo(p, mark, type, node);
 // }
+
+export function dummy_name(/* p: Parser */): Name {
+    // we don't care about caching yet, but it's a smart move when we're
+    // creating big ol python string objects for this dummy thing everytime
+    return new Name(_create_dummy_identifier(), new Load(), 1, 0, 1, 0);
+}
 
 // // Return dummy NAME.
 // void *
@@ -2013,6 +2031,29 @@ export function set_expr_context(expr: expr, ctx: expr_context): expr {
 //                         class_def->end_col_offset, p->arena);
 // }
 
+class KeywordOrStarred {
+    element: any;
+    is_keyword: boolean;
+
+    constructor(element: any, is_keyword: boolean) {
+        this.element = element;
+        this.is_keyword = is_keyword;
+    }
+}
+
+// @stu help me out here a void pointer!? aaaahhhhh
+// @stu for this to be a boolean we need to change the grammar aaaahhhhh
+/*
+kwarg_or_starred[KeywordOrStarred*]:
+    | a=NAME '=' b=expression {
+        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 0) } <<-- here
+    | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
+    | invalid_kwarg
+*/
+export function keyword_or_starred(p: Parser, element: null, is_keyword: boolean) {
+    return new KeywordOrStarred(element, is_keyword);
+}
+
 // /* Construct a KeywordOrStarred */
 // KeywordOrStarred *
 // _PyPegen_keyword_or_starred(Parser *p, void *element, int is_keyword)
@@ -2039,6 +2080,10 @@ export function set_expr_context(expr: expr, ctx: expr_context): expr {
 //     }
 //     return n;
 // }
+
+export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]) {
+    return kwargs.filter((k) => k.is_keyword);
+}
 
 // /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
 // asdl_seq *
@@ -2086,6 +2131,10 @@ export function set_expr_context(expr: expr, ctx: expr_context): expr {
 //     }
 //     return new_seq;
 // }
+
+export function concatenate_strings(a: Constant[]) {
+    return a.map((t) => t.value).join();
+}
 
 // expr_ty
 // _PyPegen_concatenate_strings(Parser *p, asdl_seq *strings)
@@ -2305,12 +2354,20 @@ export function make_module(a: stmt[]) {
 //     );
 // }
 
-export function collect_call_seqs(a: expr[], b: AST[], ...attrs: stmtAttrs) {
-    console.log(b, a);
-    if (b === null) {
-        return new Call(new Name("dummy", new Load(), 1, 0, 1, 0), a, [], ...attrs);
+// @stu why does our parser not call these functions with the parser?
+export function collect_call_seqs(a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: stmtAttrs) {
+    const args_len = a.length;
+    const total_len = args_len;
+
+    if (b === 1) {
+        // because that's actually what happens
+        return new Call(dummy_name(), a, [], ...attrs);
     }
-    return new Call(new Name("dummy", new Load(), 1, 0, 1, 0), a, [], ...attrs);
+
+    // const starreds = seq_extract_starred_exprs(p, b);
+    // keywords: KeywordOrStarred[] = seq_extract_delete_starred_exprs(p, b);
+
+    throw new Error("we don't deal with kwargs stargs etc yet, but I've done some of the functions");
 }
 
 // expr_ty _PyPegen_collect_call_seqs(Parser *p, asdl_seq *a, asdl_seq *b,
