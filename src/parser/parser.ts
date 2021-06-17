@@ -3,7 +3,8 @@ import { exact_token_types, Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError, TokenInfo } from "../tokenize/tokenize.ts";
 
-import { Name, Load, TypeIgnore } from "../ast/astnodes.ts";
+import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
+import { Colors } from "../../deps.ts";
 
 /** For non-memoized functions that we want to be logged.*/
 export function logger(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -196,18 +197,20 @@ export class Parser {
         }
         return null;
     }
-    string(): TokenInfo | null {
-        const tok = this._tokenizer.peek();
+    string(): null | Constant {
+        let tok = this._tokenizer.peek();
         if (tok.type === STRING) {
-            return this._tokenizer.getnext();
+            tok = this._tokenizer.getnext();
+            return new Constant(tok.string, "str", tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }
     @memoize
-    number(): TokenInfo | null {
-        const tok = this._tokenizer.peek();
+    number(): null | Constant {
+        let tok = this._tokenizer.peek();
         if (tok.type === NUMBER) {
-            return this._tokenizer.getnext();
+            tok = this._tokenizer.getnext();
+            return new Constant(tok.string, "float", tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }
@@ -215,6 +218,7 @@ export class Parser {
     op(): TokenInfo | null {
         const tok = this._tokenizer.peek();
         if (tok.type === OP) {
+            // i'm guessing this needs to return something else...
             return this._tokenizer.getnext();
         }
         return null;
