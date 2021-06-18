@@ -31,8 +31,19 @@ export function assert(expr: unknown, msg = ""): asserts expr {
     }
 }
 
+/** see pegen.h for implementation */
+export function NEW_TYPE_COMMENT(tc: TokenInfo | null): string | null {
+    if (tc === null) {
+        return null;
+    }
+    return new_type_comment(tc.string);
+}
+
 // PyObject *
-export function new_type_comment(c: any): any {
+/** @todo pyTypes - at the moment this is just a js string or null */
+export function new_type_comment(s: string | null): string | null {
+    return s;
+    // return null;
     // _PyPegen_new_type_comment(Parser *p, char *s)
     // {
     //     PyObject *res = PyUnicode_DecodeUTF8(s, strlen(s), NULL);
