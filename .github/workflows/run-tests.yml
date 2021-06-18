@@ -23,6 +23,12 @@ jobs:
             # - run: git clone https://github.com/python/cpython.git --branch 3.9
             - run: deno install -qAn vr https://deno.land/x/velociraptor@1.0.1/cli.ts
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - run: vr gen_parser
-            - run: git diff-index --quiet --cached HEAD --
-            - run: vr test
+            - name: build parser
+              run: vr gen_parser
+              working-directory: "./skulpt_parser"
+            - name: assert clean repo
+              run: git diff-index --quiet --cached HEAD --
+              working-directory: "./skulpt_parser"
+            - name: run tests
+              run: vr test
+              working-directory: "./skulpt_parser"
