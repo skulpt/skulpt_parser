@@ -13,7 +13,11 @@ export interface AST {
     tp$name: string;
 }
 
-export class AST {}
+export class AST {
+    get [Symbol.toStringTag]() {
+        return this.tp$name;
+    }
+}
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
 AST.prototype.tp$name = "AST";
