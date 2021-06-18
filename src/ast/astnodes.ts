@@ -24,7 +24,7 @@ AST.prototype.tp$name = "AST";
 
 /* ----- expr_context ----- */
 export class expr_context extends AST {
-    kind = 0;
+    _kind = 0;
 }
 expr_context.prototype.tp$name = "expr_context";
 
@@ -46,7 +46,7 @@ Del.prototype.tp$name = "Del";
 
 /* ----- boolop ----- */
 export class boolop extends AST {
-    kind = 0;
+    _kind = 0;
 }
 boolop.prototype.tp$name = "boolop";
 
@@ -63,7 +63,7 @@ Or.prototype.tp$name = "Or";
 
 /* ----- operator ----- */
 export class operator extends AST {
-    kind = 0;
+    _kind = 0;
 }
 operator.prototype.tp$name = "operator";
 
@@ -135,7 +135,7 @@ FloorDiv.prototype.tp$name = "FloorDiv";
 
 /* ----- unaryop ----- */
 export class unaryop extends AST {
-    kind = 0;
+    _kind = 0;
 }
 unaryop.prototype.tp$name = "unaryop";
 
@@ -162,7 +162,7 @@ USub.prototype.tp$name = "USub";
 
 /* ----- cmpop ----- */
 export class cmpop extends AST {
-    kind = 0;
+    _kind = 0;
 }
 cmpop.prototype.tp$name = "cmpop";
 
@@ -228,6 +228,7 @@ export const FunctionType_kind = 4;
 export class Module extends mod {
     body: stmt[];
     type_ignores: type_ignore[];
+    _kind = 1;
     constructor(body: stmt[], type_ignores: type_ignore[]) {
         super();
         this.body = body;
@@ -239,6 +240,7 @@ Module.prototype.tp$name = "Module";
 
 export class Interactive extends mod {
     body: stmt[];
+    _kind = 2;
     constructor(body: stmt[]) {
         super();
         this.body = body;
@@ -249,6 +251,7 @@ Interactive.prototype.tp$name = "Interactive";
 
 export class Expression extends mod {
     body: expr;
+    _kind = 3;
     constructor(body: expr) {
         super();
         this.body = body;
@@ -260,6 +263,7 @@ Expression.prototype.tp$name = "Expression";
 export class FunctionType extends mod {
     argtypes: expr[];
     returns: expr;
+    _kind = 4;
     constructor(argtypes: expr[], returns: expr) {
         super();
         this.argtypes = argtypes;
@@ -1316,6 +1320,7 @@ export const TypeIgnore_kind = 1;
 export class TypeIgnore extends type_ignore {
     lineno: number;
     tag: string;
+    _kind = 1;
     constructor(lineno: number, tag: string) {
         super();
         this.lineno = lineno;
