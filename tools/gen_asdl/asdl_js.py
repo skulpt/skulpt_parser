@@ -109,9 +109,6 @@ class EmitVisitor(asdl.VisitorBase):
     def emit_tp_name(self, name):
         self.emit(f'{name}.prototype.tp$name = "{clean_name(name)}";', 0, 0)
 
-    def get_kind(self, kind=0):
-        return f"_kind={kind}"
-
 
 class TypeDefVisitor(EmitVisitor):
     def visitModule(self, mod):
@@ -130,17 +127,14 @@ class TypeDefVisitor(EmitVisitor):
             self.emit(s, depth)
 
         emit(f"/* ----- {name} ----- */")
-        emit(f"export class {name} extends AST {{{self.get_kind()};}}")
+        emit(f"export class {name} extends AST {{}}")
 
         self.emit_tp_name(name)
         emit("")
         for i in range(len(sum.types)):
             type = sum.types[i]
-            emit(f"export const {type.name}{self.get_kind(i+1)};")
+            emit(f"export class {type.name} extends {name} {{}}")
 
-        for i in range(len(sum.types)):
-            type = sum.types[i]
-            emit(f"export class {type.name} extends {name} {{{self.get_kind(i + 1)};}}")
             self.emit_tp_name(type.name)
         emit("")
 
@@ -163,13 +157,9 @@ class PrototypeVisitor(EmitVisitor):
             pass  # XXX
         else:
             self.emit(f"/* ----- {name} ----- */", 0)
-            self.emit_base(name, self.get_args(sum.attributes), has_kind=True)
+            self.emit_base(name, self.get_args(sum.attributes))
 
-            for i, t in enumerate(sum.types, start=1):
-                t.kind = i
-                self.emit(f"export const {t.name}{self.get_kind(i)};")
-
-            for i, t in enumerate(sum.types, start=1):
+            for t in sum.types:
                 self.visit(t, name, sum.attributes)
 
     def get_args(self, fields):
@@ -211,7 +201,7 @@ class PrototypeVisitor(EmitVisitor):
         args = self.get_args(cons.fields)
         attrs = self.get_args(attrs)
         ts_type = get_ts_type(type)
-        self.emit_function(cons.name, ts_type, args, attrs, union=cons.kind)
+        self.emit_function(cons.name, ts_type, args, attrs)
 
     def visitProduct(self, prod, name):
         self.emit(f"/* ----- {name} ----- */", 0)
@@ -242,9 +232,6 @@ class FunctionVisitor(PrototypeVisitor):
         self.emit_instance_types(_args)
         _args = ", ".join(_args)
         sep = ", " if args else ""
-
-        if union:
-            emit(f"{self.get_kind(union)};")
 
         if union and attrs:
             constructorArgs = f"constructor({_args}{sep}...attrs: {ts_type}Attrs) {{"
@@ -292,7 +279,7 @@ class FunctionVisitor(PrototypeVisitor):
         for _, argname, _ in attrs:
             emit(f"this.{argname} = {argname};", 2)
 
-    def emit_base(self, name, attrs, has_kind=False):
+    def emit_base(self, name, attrs):
         emit = self.emit
         _attrs = self.args_to_ts(attrs, True)
 
@@ -305,9 +292,6 @@ class FunctionVisitor(PrototypeVisitor):
         emit(f"export class {name} extends AST {{")
 
         self.emit_instance_types(_attrs)
-        if has_kind:
-            emit(f"{self.get_kind()};", 1)
-
         _attrs = ", ".join(_attrs)
 
         emit(f"constructor({_attrs}) {{", 1)
