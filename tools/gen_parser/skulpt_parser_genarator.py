@@ -171,7 +171,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
         if call.endswith(","):
             return "opt", call
         else:
-            return "opt", f"{call} || 1"
+            return "opt", f"{call}, 1"
 
     def visit_Repeat0(self, node: Repeat0) -> Tuple[str, str]:
         if node in self.cache:

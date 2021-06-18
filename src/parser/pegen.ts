@@ -2359,7 +2359,7 @@ export function collect_call_seqs(a: expr[], b: KeywordOrStarred[] | null | 1, .
     const args_len = a.length;
     const total_len = args_len;
 
-    if (b === 1) {
+    if (b === null) {
         // because that's actually what happens
         return new Call(dummy_name(), a, [], ...attrs);
     }

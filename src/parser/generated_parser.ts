@@ -29,7 +29,7 @@ export class GeneratedParser extends Parser {
         //# file: statements? $
         let a, endmarker, mark;
         mark = this.mark();
-        if ((a = this.statements() || 1) && (endmarker = this.expect("ENDMARKER"))) {
+        if (((a = this.statements()), 1) && (endmarker = this.expect("ENDMARKER"))) {
             return pegen.make_module(a);
         }
         this.reset(mark);
@@ -70,7 +70,7 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if (
             (literal = this.expect("(")) &&
-            (a = this.type_expressions() || 1) &&
+            ((a = this.type_expressions()), 1) &&
             (literal_1 = this.expect(")")) &&
             (literal_2 = this.expect("->")) &&
             (b = this.expression()) &&
@@ -226,7 +226,7 @@ export class GeneratedParser extends Parser {
             return pegen.singleton_seq(a);
         }
         this.reset(mark);
-        if ((a = this._gather_12()) && (opt = this.expect(";") || 1) && (newline = this.expect("NEWLINE"))) {
+        if ((a = this._gather_12()) && ((opt = this.expect(";")), 1) && (newline = this.expect("NEWLINE"))) {
             return a;
         }
         this.reset(mark);
@@ -352,7 +352,7 @@ export class GeneratedParser extends Parser {
             (a = this.name()) &&
             (literal = this.expect(":")) &&
             (b = this.expression()) &&
-            (c = this._tmp_19() || 1)
+            ((c = this._tmp_19()), 1)
         ) {
             return CHECK_VERSION(
                 6,
@@ -365,7 +365,7 @@ export class GeneratedParser extends Parser {
             (a = this._tmp_20()) &&
             (literal = this.expect(":")) &&
             (b = this.expression()) &&
-            (c = this._tmp_21() || 1)
+            ((c = this._tmp_21()), 1)
         ) {
             return CHECK_VERSION(6, "Variable annotations syntax is", new astnodes.AnnAssign(a, b, c, 0, ...EXTRA));
         }
@@ -374,7 +374,7 @@ export class GeneratedParser extends Parser {
             (a = this._loop1_22()) &&
             (b = this._tmp_23()) &&
             this.negative_lookahead(this.expect, "=") &&
-            (tc = this.expect("TYPE_COMMENT") || 1)
+            ((tc = this.expect("TYPE_COMMENT")), 1)
         ) {
             return new astnodes.Assign(a, b, NEW_TYPE_COMMENT(tc), ...EXTRA);
         }
@@ -498,7 +498,7 @@ export class GeneratedParser extends Parser {
         //# assert_stmt: 'assert' expression [',' expression]
         let a, b, literal, mark;
         mark = this.mark();
-        if ((literal = this.expect("assert")) && (a = this.expression()) && (b = this._tmp_29() || 1)) {
+        if ((literal = this.expect("assert")) && (a = this.expression()) && ((b = this._tmp_29()), 1)) {
             return new astnodes.Assert(a, b, ...EXTRA);
         }
         this.reset(mark);
@@ -589,7 +589,7 @@ export class GeneratedParser extends Parser {
         if (
             (literal = this.expect("(")) &&
             (a = this.import_from_as_names()) &&
-            (opt = this.expect(",") || 1) &&
+            ((opt = this.expect(",")), 1) &&
             (literal_1 = this.expect(")"))
         ) {
             return a;
@@ -629,7 +629,7 @@ export class GeneratedParser extends Parser {
         //# import_from_as_name: NAME ['as' NAME]
         let a, b, mark;
         mark = this.mark();
-        if ((a = this.name()) && (b = this._tmp_35() || 1)) {
+        if ((a = this.name()) && ((b = this._tmp_35()), 1)) {
             return new astnodes.alias(a.id, b.id);
         }
         this.reset(mark);
@@ -655,7 +655,7 @@ export class GeneratedParser extends Parser {
         //# dotted_as_name: dotted_name ['as' NAME]
         let a, b, mark;
         mark = this.mark();
-        if ((a = this.dotted_name()) && (b = this._tmp_38() || 1)) {
+        if ((a = this.dotted_name()) && ((b = this._tmp_38()), 1)) {
             return new astnodes.alias(a.id, b.id);
         }
         this.reset(mark);
@@ -700,7 +700,7 @@ export class GeneratedParser extends Parser {
             (a = this.named_expression()) &&
             (literal_1 = this.expect(":")) &&
             (b = this.block()) &&
-            (c = this.else_block() || 1)
+            ((c = this.else_block()), 1)
         ) {
             return new astnodes.If(a, b, c, ...EXTRA);
         }
@@ -729,7 +729,7 @@ export class GeneratedParser extends Parser {
             (a = this.named_expression()) &&
             (literal_1 = this.expect(":")) &&
             (b = this.block()) &&
-            (c = this.else_block() || 1)
+            ((c = this.else_block()), 1)
         ) {
             return new astnodes.If(a, b, c, ...EXTRA);
         }
@@ -761,7 +761,7 @@ export class GeneratedParser extends Parser {
             (a = this.named_expression()) &&
             (literal_1 = this.expect(":")) &&
             (b = this.block()) &&
-            (c = this.else_block() || 1)
+            ((c = this.else_block()), 1)
         ) {
             return new astnodes.While(a, b, c, ...EXTRA);
         }
@@ -782,9 +782,9 @@ export class GeneratedParser extends Parser {
             (cut = true) &&
             (ex = this.star_expressions()) &&
             (literal_2 = this.expect(":")) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block()) &&
-            (el = this.else_block() || 1)
+            ((el = this.else_block()), 1)
         ) {
             return new astnodes.For(t, ex, b, el, NEW_TYPE_COMMENT(tc), ...EXTRA);
         }
@@ -799,9 +799,9 @@ export class GeneratedParser extends Parser {
             (cut = true) &&
             (ex = this.star_expressions()) &&
             (literal_2 = this.expect(":")) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block()) &&
-            (el = this.else_block() || 1)
+            ((el = this.else_block()), 1)
         ) {
             return CHECK_VERSION(
                 5,
@@ -829,7 +829,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("with")) &&
             (literal_1 = this.expect("(")) &&
             (a = this._gather_39()) &&
-            (opt = this.expect(",") || 1) &&
+            ((opt = this.expect(",")), 1) &&
             (literal_2 = this.expect(")")) &&
             (literal_3 = this.expect(":")) &&
             (b = this.block())
@@ -841,7 +841,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("with")) &&
             (a = this._gather_41()) &&
             (literal_1 = this.expect(":")) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block())
         ) {
             return new astnodes.With(a, b, NEW_TYPE_COMMENT(tc), ...EXTRA);
@@ -852,7 +852,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("with")) &&
             (literal_1 = this.expect("(")) &&
             (a = this._gather_43()) &&
-            (opt = this.expect(",") || 1) &&
+            ((opt = this.expect(",")), 1) &&
             (literal_2 = this.expect(")")) &&
             (literal_3 = this.expect(":")) &&
             (b = this.block())
@@ -865,7 +865,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("with")) &&
             (a = this._gather_45()) &&
             (literal_1 = this.expect(":")) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block())
         ) {
             return CHECK_VERSION(
@@ -924,8 +924,8 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (b = this.block()) &&
             (ex = this._loop1_48()) &&
-            (el = this.else_block() || 1) &&
-            (f = this.finally_block() || 1)
+            ((el = this.else_block()), 1) &&
+            ((f = this.finally_block()), 1)
         ) {
             return new astnodes.Try(b, ex, el, f, ...EXTRA);
         }
@@ -942,7 +942,7 @@ export class GeneratedParser extends Parser {
         if (
             (literal = this.expect("except")) &&
             (e = this.expression()) &&
-            (t = this._tmp_49() || 1) &&
+            ((t = this._tmp_49()), 1) &&
             (literal_1 = this.expect(":")) &&
             (b = this.block())
         ) {
@@ -975,7 +975,7 @@ export class GeneratedParser extends Parser {
         //# return_stmt: 'return' star_expressions?
         let a, literal, mark;
         mark = this.mark();
-        if ((literal = this.expect("return")) && (a = this.star_expressions() || 1)) {
+        if ((literal = this.expect("return")) && ((a = this.star_expressions()), 1)) {
             return new astnodes.Return(a, ...EXTRA);
         }
         this.reset(mark);
@@ -988,7 +988,7 @@ export class GeneratedParser extends Parser {
         //# raise_stmt: 'raise' expression ['from' expression] | 'raise'
         let a, b, literal, mark;
         mark = this.mark();
-        if ((literal = this.expect("raise")) && (a = this.expression()) && (b = this._tmp_50() || 1)) {
+        if ((literal = this.expect("raise")) && (a = this.expression()) && ((b = this._tmp_50()), 1)) {
             return new astnodes.Raise(a, b, ...EXTRA);
         }
         this.reset(mark);
@@ -1026,11 +1026,11 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("def")) &&
             (n = this.name()) &&
             (literal_1 = this.expect("(")) &&
-            (params = this.params() || 1) &&
+            ((params = this.params()), 1) &&
             (literal_2 = this.expect(")")) &&
-            (a = this._tmp_51() || 1) &&
+            ((a = this._tmp_51()), 1) &&
             (literal_3 = this.expect(":")) &&
-            (tc = this.func_type_comment() || 1) &&
+            ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
         ) {
             return new astnodes.FunctionDef(
@@ -1049,11 +1049,11 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("def")) &&
             (n = this.name()) &&
             (literal_1 = this.expect("(")) &&
-            (params = this.params() || 1) &&
+            ((params = this.params()), 1) &&
             (literal_2 = this.expect(")")) &&
-            (a = this._tmp_52() || 1) &&
+            ((a = this._tmp_52()), 1) &&
             (literal_3 = this.expect(":")) &&
-            (tc = this.func_type_comment() || 1) &&
+            ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
         ) {
             return CHECK_VERSION(
@@ -1126,20 +1126,20 @@ export class GeneratedParser extends Parser {
             (a = this.slash_no_default()) &&
             (b = this._loop0_54()) &&
             (c = this._loop0_55()) &&
-            (d = this.star_etc() || 1)
+            ((d = this.star_etc()), 1)
         ) {
             return pegen.make_arguments(a, null, b, c, d);
         }
         this.reset(mark);
-        if ((a = this.slash_with_default()) && (b = this._loop0_56()) && (c = this.star_etc() || 1)) {
+        if ((a = this.slash_with_default()) && (b = this._loop0_56()) && ((c = this.star_etc()), 1)) {
             return pegen.make_arguments(null, a, null, b, c);
         }
         this.reset(mark);
-        if ((a = this._loop1_57()) && (b = this._loop0_58()) && (c = this.star_etc() || 1)) {
+        if ((a = this._loop1_57()) && (b = this._loop0_58()) && ((c = this.star_etc()), 1)) {
             return pegen.make_arguments(null, null, a, b, c);
         }
         this.reset(mark);
-        if ((a = this._loop1_59()) && (b = this.star_etc() || 1)) {
+        if ((a = this._loop1_59()) && ((b = this.star_etc()), 1)) {
             return pegen.make_arguments(null, null, null, a, b);
         }
         this.reset(mark);
@@ -1204,7 +1204,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("*")) &&
             (a = this.param_no_default()) &&
             (b = this._loop0_66()) &&
-            (c = this.kwds() || 1)
+            ((c = this.kwds()), 1)
         ) {
             return pegen.star_etc(a, b, c);
         }
@@ -1213,7 +1213,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("*")) &&
             (literal_1 = this.expect(",")) &&
             (b = this._loop1_67()) &&
-            (c = this.kwds() || 1)
+            ((c = this.kwds()), 1)
         ) {
             return pegen.star_etc(null, b, c);
         }
@@ -1248,13 +1248,13 @@ export class GeneratedParser extends Parser {
         //# param_no_default: param ',' TYPE_COMMENT? | param TYPE_COMMENT? &')'
         let a, literal, mark, tc;
         mark = this.mark();
-        if ((a = this.param()) && (literal = this.expect(",")) && (tc = this.expect("TYPE_COMMENT") || 1)) {
+        if ((a = this.param()) && (literal = this.expect(",")) && ((tc = this.expect("TYPE_COMMENT")), 1)) {
             return pegen.add_type_comment_to_arg(a, tc);
         }
         this.reset(mark);
         if (
             (a = this.param()) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             this.positive_lookahead(this.expect, ")")
         ) {
             return pegen.add_type_comment_to_arg(a, tc);
@@ -1273,7 +1273,7 @@ export class GeneratedParser extends Parser {
             (a = this.param()) &&
             (c = this.default()) &&
             (literal = this.expect(",")) &&
-            (tc = this.expect("TYPE_COMMENT") || 1)
+            ((tc = this.expect("TYPE_COMMENT")), 1)
         ) {
             return pegen.name_default_pair(a, c, tc);
         }
@@ -1281,7 +1281,7 @@ export class GeneratedParser extends Parser {
         if (
             (a = this.param()) &&
             (c = this.default()) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             this.positive_lookahead(this.expect, ")")
         ) {
             return pegen.name_default_pair(a, c, tc);
@@ -1298,17 +1298,17 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if (
             (a = this.param()) &&
-            (c = this.default() || 1) &&
+            ((c = this.default()), 1) &&
             (literal = this.expect(",")) &&
-            (tc = this.expect("TYPE_COMMENT") || 1)
+            ((tc = this.expect("TYPE_COMMENT")), 1)
         ) {
             return pegen.name_default_pair(a, c, tc);
         }
         this.reset(mark);
         if (
             (a = this.param()) &&
-            (c = this.default() || 1) &&
-            (tc = this.expect("TYPE_COMMENT") || 1) &&
+            ((c = this.default()), 1) &&
+            ((tc = this.expect("TYPE_COMMENT")), 1) &&
             this.positive_lookahead(this.expect, ")")
         ) {
             return pegen.name_default_pair(a, c, tc);
@@ -1323,7 +1323,7 @@ export class GeneratedParser extends Parser {
         //# param: NAME annotation?
         let a, b, mark;
         mark = this.mark();
-        if ((a = this.name()) && (b = this.annotation() || 1)) {
+        if ((a = this.name()) && ((b = this.annotation()), 1)) {
             return new astnodes.arg(a.id, b, null, ...EXTRA);
         }
         this.reset(mark);
@@ -1395,7 +1395,7 @@ export class GeneratedParser extends Parser {
         if (
             (literal = this.expect("class")) &&
             (a = this.name()) &&
-            (b = this._tmp_69() || 1) &&
+            ((b = this._tmp_69()), 1) &&
             (literal_1 = this.expect(":")) &&
             (c = this.block())
         ) {
@@ -1437,7 +1437,7 @@ export class GeneratedParser extends Parser {
         //# star_expressions: star_expression ((',' star_expression))+ ','? | star_expression ',' | star_expression
         let a, b, literal, mark, opt, star_expression;
         mark = this.mark();
-        if ((a = this.star_expression()) && (b = this._loop1_70()) && (opt = this.expect(",") || 1)) {
+        if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(",")), 1)) {
             return new astnodes.Tuple(pegen.seq_insert_in_front(a, b), new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
@@ -1475,7 +1475,7 @@ export class GeneratedParser extends Parser {
         //# star_named_expressions: ','.star_named_expression+ ','?
         let a, mark, opt;
         mark = this.mark();
-        if ((a = this._gather_71()) && (opt = this.expect(",") || 1)) {
+        if ((a = this._gather_71()) && ((opt = this.expect(",")), 1)) {
             return a;
         }
         this.reset(mark);
@@ -1545,7 +1545,7 @@ export class GeneratedParser extends Parser {
         //# expressions: expression ((',' expression))+ ','? | expression ',' | expression
         let a, b, expression, literal, mark, opt;
         mark = this.mark();
-        if ((a = this.expression()) && (b = this._loop1_73()) && (opt = this.expect(",") || 1)) {
+        if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(",")), 1)) {
             return new astnodes.Tuple(pegen.seq_insert_in_front(a, b), new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
@@ -1595,7 +1595,7 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if (
             (literal = this.expect("lambda")) &&
-            (a = this.lambda_params() || 1) &&
+            ((a = this.lambda_params()), 1) &&
             (literal_1 = this.expect(":")) &&
             (b = this.expression())
         ) {
@@ -1632,20 +1632,20 @@ export class GeneratedParser extends Parser {
             (a = this.lambda_slash_no_default()) &&
             (b = this._loop0_74()) &&
             (c = this._loop0_75()) &&
-            (d = this.lambda_star_etc() || 1)
+            ((d = this.lambda_star_etc()), 1)
         ) {
             return pegen.make_arguments(a, null, b, c, d);
         }
         this.reset(mark);
-        if ((a = this.lambda_slash_with_default()) && (b = this._loop0_76()) && (c = this.lambda_star_etc() || 1)) {
+        if ((a = this.lambda_slash_with_default()) && (b = this._loop0_76()) && ((c = this.lambda_star_etc()), 1)) {
             return pegen.make_arguments(null, a, null, b, c);
         }
         this.reset(mark);
-        if ((a = this._loop1_77()) && (b = this._loop0_78()) && (c = this.lambda_star_etc() || 1)) {
+        if ((a = this._loop1_77()) && (b = this._loop0_78()) && ((c = this.lambda_star_etc()), 1)) {
             return pegen.make_arguments(null, null, a, b, c);
         }
         this.reset(mark);
-        if ((a = this._loop1_79()) && (b = this.lambda_star_etc() || 1)) {
+        if ((a = this._loop1_79()) && ((b = this.lambda_star_etc()), 1)) {
             return pegen.make_arguments(null, null, null, a, b);
         }
         this.reset(mark);
@@ -1710,7 +1710,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("*")) &&
             (a = this.lambda_param_no_default()) &&
             (b = this._loop0_86()) &&
-            (c = this.lambda_kwds() || 1)
+            ((c = this.lambda_kwds()), 1)
         ) {
             return pegen.star_etc(a, b, c);
         }
@@ -1719,7 +1719,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("*")) &&
             (literal_1 = this.expect(",")) &&
             (b = this._loop1_87()) &&
-            (c = this.lambda_kwds() || 1)
+            ((c = this.lambda_kwds()), 1)
         ) {
             return pegen.star_etc(null, b, c);
         }
@@ -1788,11 +1788,11 @@ export class GeneratedParser extends Parser {
         //# lambda_param_maybe_default: lambda_param default? ',' | lambda_param default? &':'
         let a, c, literal, mark;
         mark = this.mark();
-        if ((a = this.lambda_param()) && (c = this.default() || 1) && (literal = this.expect(","))) {
+        if ((a = this.lambda_param()) && ((c = this.default()), 1) && (literal = this.expect(","))) {
             return pegen.name_default_pair(a, c, null);
         }
         this.reset(mark);
-        if ((a = this.lambda_param()) && (c = this.default() || 1) && this.positive_lookahead(this.expect, ":")) {
+        if ((a = this.lambda_param()) && ((c = this.default()), 1) && this.positive_lookahead(this.expect, ":")) {
             return pegen.name_default_pair(a, c, null);
         }
         this.reset(mark);
@@ -2275,7 +2275,7 @@ export class GeneratedParser extends Parser {
         if (
             (a = this.primary()) &&
             (literal = this.expect("(")) &&
-            (b = this.arguments() || 1) &&
+            ((b = this.arguments()), 1) &&
             (literal_1 = this.expect(")"))
         ) {
             return new astnodes.Call(a, b.args, b.keywords, ...EXTRA);
@@ -2307,7 +2307,7 @@ export class GeneratedParser extends Parser {
             return a;
         }
         this.reset(mark);
-        if ((a = this._gather_91()) && (opt = this.expect(",") || 1)) {
+        if ((a = this._gather_91()) && ((opt = this.expect(",")), 1)) {
             return new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
@@ -2321,10 +2321,10 @@ export class GeneratedParser extends Parser {
         let a, b, c, literal, mark;
         mark = this.mark();
         if (
-            (a = this.expression() || 1) &&
+            ((a = this.expression()), 1) &&
             (literal = this.expect(":")) &&
-            (b = this.expression() || 1) &&
-            (c = this._tmp_93() || 1)
+            ((b = this.expression()), 1) &&
+            ((c = this._tmp_93()), 1)
         ) {
             return new astnodes.Slice(a, b, c, ...EXTRA);
         }
@@ -2410,7 +2410,7 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if (
             (literal = this.expect("[")) &&
-            (a = this.star_named_expressions() || 1) &&
+            ((a = this.star_named_expressions()), 1) &&
             (literal_1 = this.expect("]"))
         ) {
             return new astnodes.List(a, new astnodes.Load(), ...EXTRA);
@@ -2450,7 +2450,7 @@ export class GeneratedParser extends Parser {
         //# tuple: '(' [star_named_expression ',' star_named_expressions?] ')'
         let a, literal, literal_1, mark;
         mark = this.mark();
-        if ((literal = this.expect("(")) && (a = this._tmp_98() || 1) && (literal_1 = this.expect(")"))) {
+        if ((literal = this.expect("(")) && ((a = this._tmp_98()), 1) && (literal_1 = this.expect(")"))) {
             return new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
@@ -2545,7 +2545,7 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if (
             (literal = this.expect("{")) &&
-            (a = this.double_starred_kvpairs() || 1) &&
+            ((a = this.double_starred_kvpairs()), 1) &&
             (literal_1 = this.expect("}"))
         ) {
             return new astnodes.Dict(pegen.get_keys(a), pegen.get_values(a), ...EXTRA);
@@ -2582,7 +2582,7 @@ export class GeneratedParser extends Parser {
         //# double_starred_kvpairs: ','.double_starred_kvpair+ ','?
         let a, mark, opt;
         mark = this.mark();
-        if ((a = this._gather_100()) && (opt = this.expect(",") || 1)) {
+        if ((a = this._gather_100()) && ((opt = this.expect(",")), 1)) {
             return a;
         }
         this.reset(mark);
@@ -2682,7 +2682,7 @@ export class GeneratedParser extends Parser {
             return new astnodes.YieldFrom(a, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("yield")) && (a = this.star_expressions() || 1)) {
+        if ((literal = this.expect("yield")) && ((a = this.star_expressions()), 1)) {
             return new astnodes.Yield(a, ...EXTRA);
         }
         this.reset(mark);
@@ -2695,7 +2695,7 @@ export class GeneratedParser extends Parser {
         //# arguments: args ','? &')' | invalid_arguments
         let a, invalid_arguments, mark, opt;
         mark = this.mark();
-        if ((a = this.args()) && (opt = this.expect(",") || 1) && this.positive_lookahead(this.expect, ")")) {
+        if ((a = this.args()) && ((opt = this.expect(",")), 1) && this.positive_lookahead(this.expect, ")")) {
             return a;
         }
         this.reset(mark);
@@ -2712,7 +2712,7 @@ export class GeneratedParser extends Parser {
         //# args: ','.(starred_expression | named_expression !'=')+ [',' kwargs] | kwargs
         let a, b, mark;
         mark = this.mark();
-        if ((a = this._gather_105()) && (b = this._tmp_107() || 1)) {
+        if ((a = this._gather_105()) && ((b = this._tmp_107()), 1)) {
             return pegen.collect_call_seqs(a, b, ...EXTRA);
         }
         this.reset(mark);
@@ -2814,7 +2814,7 @@ export class GeneratedParser extends Parser {
             return a;
         }
         this.reset(mark);
-        if ((a = this.star_target()) && (b = this._loop0_116()) && (opt = this.expect(",") || 1)) {
+        if ((a = this.star_target()) && (b = this._loop0_116()) && ((opt = this.expect(",")), 1)) {
             return new astnodes.Tuple(pegen.seq_insert_in_front(a, b), new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
@@ -2827,7 +2827,7 @@ export class GeneratedParser extends Parser {
         //# star_targets_list_seq: ','.star_target+ ','?
         let a, mark, opt;
         mark = this.mark();
-        if ((a = this._gather_117()) && (opt = this.expect(",") || 1)) {
+        if ((a = this._gather_117()) && ((opt = this.expect(",")), 1)) {
             return a;
         }
         this.reset(mark);
@@ -2840,7 +2840,7 @@ export class GeneratedParser extends Parser {
         //# star_targets_tuple_seq: star_target ((',' star_target))+ ','? | star_target ','
         let a, b, literal, mark, opt;
         mark = this.mark();
-        if ((a = this.star_target()) && (b = this._loop1_119()) && (opt = this.expect(",") || 1)) {
+        if ((a = this.star_target()) && (b = this._loop1_119()) && ((opt = this.expect(",")), 1)) {
             return pegen.seq_insert_in_front(a, b);
         }
         this.reset(mark);
@@ -2920,7 +2920,7 @@ export class GeneratedParser extends Parser {
         this.reset(mark);
         if (
             (literal = this.expect("(")) &&
-            (a = this.star_targets_tuple_seq() || 1) &&
+            ((a = this.star_targets_tuple_seq()), 1) &&
             (literal_1 = this.expect(")"))
         ) {
             return new astnodes.Tuple(a, new astnodes.Store(), ...EXTRA);
@@ -2928,7 +2928,7 @@ export class GeneratedParser extends Parser {
         this.reset(mark);
         if (
             (literal = this.expect("[")) &&
-            (a = this.star_targets_list_seq() || 1) &&
+            ((a = this.star_targets_list_seq()), 1) &&
             (literal_1 = this.expect("]"))
         ) {
             return new astnodes.List(a, new astnodes.Store(), ...EXTRA);
@@ -2992,7 +2992,7 @@ export class GeneratedParser extends Parser {
         //# del_targets: ','.del_target+ ','?
         let a, mark, opt;
         mark = this.mark();
-        if ((a = this._gather_121()) && (opt = this.expect(",") || 1)) {
+        if ((a = this._gather_121()) && ((opt = this.expect(",")), 1)) {
             return a;
         }
         this.reset(mark);
@@ -3045,11 +3045,11 @@ export class GeneratedParser extends Parser {
             return pegen.set_expr_context(a, new astnodes.Del());
         }
         this.reset(mark);
-        if ((literal = this.expect("(")) && (a = this.del_targets() || 1) && (literal_1 = this.expect(")"))) {
+        if ((literal = this.expect("(")) && ((a = this.del_targets()), 1) && (literal_1 = this.expect(")"))) {
             return new astnodes.Tuple(a, new astnodes.Del(), ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("[")) && (a = this.del_targets() || 1) && (literal_1 = this.expect("]"))) {
+        if ((literal = this.expect("[")) && ((a = this.del_targets()), 1) && (literal_1 = this.expect("]"))) {
             return new astnodes.List(a, new astnodes.Del(), ...EXTRA);
         }
         this.reset(mark);
@@ -3062,7 +3062,7 @@ export class GeneratedParser extends Parser {
         //# targets: ','.target+ ','?
         let a, mark, opt;
         mark = this.mark();
-        if ((a = this._gather_123()) && (opt = this.expect(",") || 1)) {
+        if ((a = this._gather_123()) && ((opt = this.expect(",")), 1)) {
             return a;
         }
         this.reset(mark);
@@ -3133,7 +3133,7 @@ export class GeneratedParser extends Parser {
         if (
             (a = this.t_primary()) &&
             (literal = this.expect("(")) &&
-            (b = this.arguments() || 1) &&
+            ((b = this.arguments()), 1) &&
             (literal_1 = this.expect(")")) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
@@ -3182,11 +3182,11 @@ export class GeneratedParser extends Parser {
             return pegen.set_expr_context(a, new astnodes.Store());
         }
         this.reset(mark);
-        if ((literal = this.expect("(")) && (b = this.targets() || 1) && (literal_1 = this.expect(")"))) {
+        if ((literal = this.expect("(")) && ((b = this.targets()), 1) && (literal_1 = this.expect(")"))) {
             return new astnodes.Tuple(b, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("[")) && (b = this.targets() || 1) && (literal_1 = this.expect("]"))) {
+        if ((literal = this.expect("[")) && ((b = this.targets()), 1) && (literal_1 = this.expect("]"))) {
             return new astnodes.List(b, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
@@ -3207,7 +3207,7 @@ export class GeneratedParser extends Parser {
             (a = this.expression()) &&
             (for_if_clauses = this.for_if_clauses()) &&
             (literal = this.expect(",")) &&
-            (opt = this._tmp_125() || 1)
+            ((opt = this._tmp_125()), 1)
         ) {
             return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
         }
@@ -3518,7 +3518,7 @@ export class GeneratedParser extends Parser {
         //# invalid_for_target: ASYNC? 'for' star_expressions
         let a, literal, mark, opt;
         mark = this.mark();
-        if ((opt = this.expect("ASYNC") || 1) && (literal = this.expect("for")) && (a = this.star_expressions())) {
+        if (((opt = this.expect("ASYNC")), 1) && (literal = this.expect("for")) && (a = this.star_expressions())) {
             return pegen.RAISE_SYNTAX_ERROR_INVALID_TARGET(FOR_TARGETS, a);
         }
         this.reset(mark);
@@ -4559,7 +4559,7 @@ export class GeneratedParser extends Parser {
         //# _tmp_69: '(' arguments? ')'
         let literal, literal_1, mark, z;
         mark = this.mark();
-        if ((literal = this.expect("(")) && (z = this.arguments() || 1) && (literal_1 = this.expect(")"))) {
+        if ((literal = this.expect("(")) && ((z = this.arguments()), 1) && (literal_1 = this.expect(")"))) {
             return z;
         }
         this.reset(mark);
@@ -4913,7 +4913,7 @@ export class GeneratedParser extends Parser {
         //# _tmp_93: ':' expression?
         let d, literal, mark;
         mark = this.mark();
-        if ((literal = this.expect(":")) && (d = this.expression() || 1)) {
+        if ((literal = this.expect(":")) && ((d = this.expression()), 1)) {
             return d;
         }
         this.reset(mark);
@@ -5007,7 +5007,7 @@ export class GeneratedParser extends Parser {
         if (
             (y = this.star_named_expression()) &&
             (literal = this.expect(",")) &&
-            (z = this.star_named_expressions() || 1)
+            ((z = this.star_named_expressions()), 1)
         ) {
             return pegen.seq_insert_in_front(y, z);
         }
