@@ -60,7 +60,7 @@ export class GeneratedParser extends Parser {
         let a, mark;
         mark = this.mark();
         if ((a = this.statement_newline())) {
-            return Interactive(a);
+            return new astnodes.Interactive(a);
         }
         this.reset(mark);
 
@@ -73,7 +73,7 @@ export class GeneratedParser extends Parser {
         let _loop0_1, a, endmarker, mark;
         mark = this.mark();
         if ((a = this.expressions()) && (_loop0_1 = this._loop0_1()) && (endmarker = this.expect("ENDMARKER"))) {
-            return Expression(a);
+            return new astnodes.Expression(a);
         }
         this.reset(mark);
 
@@ -94,7 +94,7 @@ export class GeneratedParser extends Parser {
             (_loop0_2 = this._loop0_2()) &&
             (endmarker = this.expect("ENDMARKER"))
         ) {
-            return FunctionType(a, b);
+            return new astnodes.FunctionType(a, b);
         }
         this.reset(mark);
 
@@ -128,7 +128,7 @@ export class GeneratedParser extends Parser {
             (literal_3 = this.expect("**")) &&
             (c = this.expression())
         ) {
-            return pegen.seq_append_to_end(this, pegen.seq_append_to_end(this, a, b), c);
+            return pegen.seq_append_to_end(this, CHECK(pegen.seq_append_to_end(this, a, b)), c);
         }
         this.reset(mark);
         if (
@@ -156,7 +156,7 @@ export class GeneratedParser extends Parser {
             (literal_2 = this.expect("**")) &&
             (b = this.expression())
         ) {
-            return pegen.seq_append_to_end(this, pegen.singleton_seq(this, a), b);
+            return pegen.seq_append_to_end(this, CHECK(pegen.singleton_seq(this, a)), b);
         }
         this.reset(mark);
         if ((literal = this.expect("*")) && (a = this.expression())) {
@@ -219,7 +219,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((newline = this.expect("NEWLINE"))) {
-            return pegen.singleton_seq(this, new astnodes.Pass(...EXTRA));
+            return pegen.singleton_seq(this, CHECK(new astnodes.Pass(EXTRA)));
         }
         this.reset(mark);
         if ((endmarker = this.expect("ENDMARKER"))) {
@@ -288,7 +288,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect("pass"))) {
-            return new astnodes.Pass(...EXTRA);
+            return new astnodes.Pass(EXTRA);
         }
         this.reset(mark);
         if (this.positive_lookahead(this.expect, "del") && (del_stmt = this.del_stmt())) {
@@ -304,11 +304,11 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect("break"))) {
-            return new astnodes.Break(...EXTRA);
+            return new astnodes.Break(EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("continue"))) {
-            return new astnodes.Continue(...EXTRA);
+            return new astnodes.Continue(EXTRA);
         }
         this.reset(mark);
         if (this.positive_lookahead(this.expect, "global") && (global_stmt = this.global_stmt())) {
@@ -374,7 +374,7 @@ export class GeneratedParser extends Parser {
             return CHECK_VERSION(
                 6,
                 "Variable annotation syntax is",
-                new astnodes.AnnAssign(pegen.set_expr_context(this, a, new astnodes.Store()), b, c, 1, ...EXTRA)
+                new astnodes.AnnAssign(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), b, c, 1, ...EXTRA)
             );
         }
         this.reset(mark);
@@ -393,7 +393,7 @@ export class GeneratedParser extends Parser {
             this.negative_lookahead(this.expect, "=") &&
             ((tc = this.expect("TYPE_COMMENT")), 1)
         ) {
-            return new astnodes.Assign(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
+            return new astnodes.Assign(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.single_target()) && (b = this.augassign()) && (cut = true) && (c = this._tmp_24())) {
@@ -477,7 +477,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("global")) && (a = this._gather_25())) {
-            return new astnodes.Global(pegen.map_names_to_ids(this, a), ...EXTRA);
+            return new astnodes.Global(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA);
         }
         this.reset(mark);
 
@@ -490,7 +490,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("nonlocal")) && (a = this._gather_27())) {
-            return new astnodes.Nonlocal(pegen.map_names_to_ids(this, a), ...EXTRA);
+            return new astnodes.Nonlocal(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA);
         }
         this.reset(mark);
 
@@ -582,7 +582,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("import")) &&
             (c = this.import_from_targets())
         ) {
-            return new astnodes.ImportFrom(b.id, c, pegen.seq_count_dots(a), ...EXTRA);
+            return new astnodes.ImportFrom(b.v.Name.id, c, pegen.seq_count_dots(a), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -617,7 +617,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect("*"))) {
-            return pegen.singleton_seq(this, pegen.alias_for_star(p));
+            return pegen.singleton_seq(this, CHECK(pegen.alias_for_star(p)));
         }
         this.reset(mark);
         if ((invalid_import_from_targets = this.invalid_import_from_targets())) {
@@ -647,7 +647,7 @@ export class GeneratedParser extends Parser {
         let a, b, mark;
         mark = this.mark();
         if ((a = this.name()) && ((b = this._tmp_35()), 1)) {
-            return new astnodes.alias(a.id, b.id);
+            return new astnodes.alias(a.v.Name.id, b ? b.v.Name.id : null);
         }
         this.reset(mark);
 
@@ -673,7 +673,7 @@ export class GeneratedParser extends Parser {
         let a, b, mark;
         mark = this.mark();
         if ((a = this.dotted_name()) && ((b = this._tmp_38()), 1)) {
-            return new astnodes.alias(a.id, b.id);
+            return new astnodes.alias(a.v.Name.id, b ? b.v.Name.id : null);
         }
         this.reset(mark);
 
@@ -709,7 +709,7 @@ export class GeneratedParser extends Parser {
             (b = this.block()) &&
             (c = this.elif_stmt())
         ) {
-            return new astnodes.If(a, b, pegen.singleton_seq(this, c), ...EXTRA);
+            return new astnodes.If(a, b, CHECK(pegen.singleton_seq(this, c)), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -738,7 +738,7 @@ export class GeneratedParser extends Parser {
             (b = this.block()) &&
             (c = this.elif_stmt())
         ) {
-            return new astnodes.If(a, b, pegen.singleton_seq(this, c), ...EXTRA);
+            return new astnodes.If(a, b, CHECK(pegen.singleton_seq(this, c)), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -803,7 +803,7 @@ export class GeneratedParser extends Parser {
             (b = this.block()) &&
             ((el = this.else_block()), 1)
         ) {
-            return new astnodes.For(t, ex, b, el, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
+            return new astnodes.For(t, ex, b, el, NEW_TYPE_COMMENT(this, tc), ...EXTRA);
         }
         this.reset(mark);
         if (cut) return null;
@@ -823,7 +823,7 @@ export class GeneratedParser extends Parser {
             return CHECK_VERSION(
                 5,
                 "Async for loops are",
-                new astnodes.AsyncFor(t, ex, b, el, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
+                new astnodes.AsyncFor(t, ex, b, el, NEW_TYPE_COMMENT(this, tc), ...EXTRA)
             );
         }
         this.reset(mark);
@@ -861,7 +861,7 @@ export class GeneratedParser extends Parser {
             ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block())
         ) {
-            return new astnodes.With(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
+            return new astnodes.With(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -888,7 +888,7 @@ export class GeneratedParser extends Parser {
             return CHECK_VERSION(
                 5,
                 "Async with statements are",
-                new astnodes.AsyncWith(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
+                new astnodes.AsyncWith(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA)
             );
         }
         this.reset(mark);
@@ -963,7 +963,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (b = this.block())
         ) {
-            return new astnodes.ExceptHandler(e, t.id, b, ...EXTRA);
+            return new astnodes.ExceptHandler(e, t ? t.v.Name.id : null, b, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("except")) && (literal_1 = this.expect(":")) && (b = this.block())) {
@@ -1051,12 +1051,12 @@ export class GeneratedParser extends Parser {
             (b = this.block())
         ) {
             return new astnodes.FunctionDef(
-                n.id,
-                params ? params : pegen.empty_arguments(p),
+                n.v.Name.id,
+                params ? params : CHECK(pegen.empty_arguments(p)),
                 b,
                 null,
                 a,
-                pegen.NEW_TYPE_COMMENT(this, tc),
+                NEW_TYPE_COMMENT(this, tc),
                 ...EXTRA
             );
         }
@@ -1077,12 +1077,12 @@ export class GeneratedParser extends Parser {
                 5,
                 "Async functions are",
                 new astnodes.AsyncFunctionDef(
-                    n.id,
-                    params ? params : pegen.empty_arguments(p),
+                    n.v.Name.id,
+                    params ? params : CHECK(pegen.empty_arguments(p)),
                     b,
                     null,
                     a,
-                    pegen.NEW_TYPE_COMMENT(this, tc),
+                    NEW_TYPE_COMMENT(this, tc),
                     ...EXTRA
                 )
             );
@@ -1118,7 +1118,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    params(): arguments_ | null {
+    params(): arguments | null {
         //# params: invalid_parameters | parameters
         let invalid_parameters, mark, parameters;
         mark = this.mark();
@@ -1135,7 +1135,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    parameters(): arguments_ | null {
+    parameters(): arguments | null {
         //# parameters: slash_no_default param_no_default* param_with_default* star_etc? | slash_with_default param_with_default* star_etc? | param_no_default+ param_with_default* star_etc? | param_with_default+ star_etc? | star_etc
         let a, b, c, d, mark;
         mark = this.mark();
@@ -1341,7 +1341,7 @@ export class GeneratedParser extends Parser {
         let a, b, mark;
         mark = this.mark();
         if ((a = this.name()) && ((b = this.annotation()), 1)) {
-            return new astnodes.arg(a.id, b, null, ...EXTRA);
+            return new astnodes.arg(a.v.Name.id, b, null, ...EXTRA);
         }
         this.reset(mark);
 
@@ -1416,7 +1416,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (c = this.block())
         ) {
-            return new astnodes.ClassDef(a.id, b.args, b.keywords, c, null, ...EXTRA);
+            return new astnodes.ClassDef(a.v.Name.id, b ? b.args : null, b ? b.keywords : null, c, null, ...EXTRA);
         }
         this.reset(mark);
 
@@ -1455,11 +1455,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, opt, star_expression;
         mark = this.mark();
         if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(pegen.seq_insert_in_front(this, a, b), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), Load, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.star_expression()) && (literal = this.expect(","))) {
-            return new astnodes.Tuple(pegen.singleton_seq(this, a), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), Load, ...EXTRA);
         }
         this.reset(mark);
         if ((star_expression = this.star_expression())) {
@@ -1523,7 +1523,7 @@ export class GeneratedParser extends Parser {
         let a, b, cut, expression, invalid_named_expression, literal, mark;
         mark = this.mark();
         if ((a = this.name()) && (literal = this.expect(":=")) && (cut = true) && (b = this.expression())) {
-            return new astnodes.NamedExpr(pegen.set_expr_context(this, a, new astnodes.Store()), b, ...EXTRA);
+            return new astnodes.NamedExpr(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), b, ...EXTRA);
         }
         this.reset(mark);
         if (cut) return null;
@@ -1563,11 +1563,11 @@ export class GeneratedParser extends Parser {
         let a, b, expression, literal, mark, opt;
         mark = this.mark();
         if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(pegen.seq_insert_in_front(this, a, b), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), Load, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.expression()) && (literal = this.expect(","))) {
-            return new astnodes.Tuple(pegen.singleton_seq(this, a), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), Load, ...EXTRA);
         }
         this.reset(mark);
         if ((expression = this.expression())) {
@@ -1616,7 +1616,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (b = this.expression())
         ) {
-            return new astnodes.Lambda(a ? a : pegen.empty_arguments(p), b, ...EXTRA);
+            return new astnodes.Lambda(a ? a : CHECK(pegen.empty_arguments(p)), b, ...EXTRA);
         }
         this.reset(mark);
 
@@ -1624,7 +1624,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_params(): arguments_ | null {
+    lambda_params(): arguments | null {
         //# lambda_params: invalid_lambda_parameters | lambda_parameters
         let invalid_lambda_parameters, lambda_parameters, mark;
         mark = this.mark();
@@ -1641,7 +1641,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_parameters(): arguments_ | null {
+    lambda_parameters(): arguments | null {
         //# lambda_parameters: lambda_slash_no_default lambda_param_no_default* lambda_param_with_default* lambda_star_etc? | lambda_slash_with_default lambda_param_with_default* lambda_star_etc? | lambda_param_no_default+ lambda_param_with_default* lambda_star_etc? | lambda_param_with_default+ lambda_star_etc? | lambda_star_etc
         let a, b, c, d, mark;
         mark = this.mark();
@@ -1823,7 +1823,7 @@ export class GeneratedParser extends Parser {
         let a, mark;
         mark = this.mark();
         if ((a = this.name())) {
-            return new astnodes.arg(a.id, null, null, ...EXTRA);
+            return new astnodes.arg(a.v.Name.id, null, null, ...EXTRA);
         }
         this.reset(mark);
 
@@ -1836,7 +1836,7 @@ export class GeneratedParser extends Parser {
         let a, b, conjunction, mark;
         mark = this.mark();
         if ((a = this.conjunction()) && (b = this._loop1_88())) {
-            return new astnodes.BoolOp(Or, pegen.seq_insert_in_front(this, a, b), ...EXTRA);
+            return new astnodes.BoolOp(Or, CHECK(pegen.seq_insert_in_front(this, a, b)), EXTRA);
         }
         this.reset(mark);
         if ((conjunction = this.conjunction())) {
@@ -1853,7 +1853,7 @@ export class GeneratedParser extends Parser {
         let a, b, inversion, mark;
         mark = this.mark();
         if ((a = this.inversion()) && (b = this._loop1_89())) {
-            return new astnodes.BoolOp(And, pegen.seq_insert_in_front(this, a, b), ...EXTRA);
+            return new astnodes.BoolOp(And, CHECK(pegen.seq_insert_in_front(this, a, b)), EXTRA);
         }
         this.reset(mark);
         if ((inversion = this.inversion())) {
@@ -1887,7 +1887,12 @@ export class GeneratedParser extends Parser {
         let a, b, bitwise_or, mark;
         mark = this.mark();
         if ((a = this.bitwise_or()) && (b = this._loop1_90())) {
-            return new astnodes.Compare(a, pegen.get_cmpops(this, b), pegen.get_exprs(this, b), ...EXTRA);
+            return new astnodes.Compare(
+                a,
+                CHECK(pegen.get_cmpops(this, b)),
+                CHECK(pegen.get_exprs(this, b)),
+                ...EXTRA
+            );
         }
         this.reset(mark);
         if ((bitwise_or = this.bitwise_or())) {
@@ -1963,7 +1968,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("==")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, Eq, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.Eq(), a);
         }
         this.reset(mark);
 
@@ -1976,7 +1981,7 @@ export class GeneratedParser extends Parser {
         let a, mark, tok;
         mark = this.mark();
         if ((tok = this.expect("!=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, NotEq, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.NotEq(), a);
         }
         this.reset(mark);
 
@@ -1989,7 +1994,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("<=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, LtE, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.LtE(), a);
         }
         this.reset(mark);
 
@@ -2002,7 +2007,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("<")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, Lt, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.Lt(), a);
         }
         this.reset(mark);
 
@@ -2015,7 +2020,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect(">=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, GtE, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.GtE(), a);
         }
         this.reset(mark);
 
@@ -2028,7 +2033,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect(">")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, Gt, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.Gt(), a);
         }
         this.reset(mark);
 
@@ -2041,7 +2046,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("not")) && (literal_1 = this.expect("in")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, NotIn, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.NotIn(), a);
         }
         this.reset(mark);
 
@@ -2054,7 +2059,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("in")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, In, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.In(), a);
         }
         this.reset(mark);
 
@@ -2067,7 +2072,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("is")) && (literal_1 = this.expect("not")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, IsNot, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.IsNot(), a);
         }
         this.reset(mark);
 
@@ -2080,7 +2085,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("is")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, Is, a);
+            return pegen.cmpop_expr_pair(this, new astnodes.Is(), a);
         }
         this.reset(mark);
 
@@ -2093,7 +2098,7 @@ export class GeneratedParser extends Parser {
         let a, b, bitwise_xor, literal, mark;
         mark = this.mark();
         if ((a = this.bitwise_or()) && (literal = this.expect("|")) && (b = this.bitwise_xor())) {
-            return new astnodes.BinOp(a, BitOr, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.BitOr(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((bitwise_xor = this.bitwise_xor())) {
@@ -2110,7 +2115,7 @@ export class GeneratedParser extends Parser {
         let a, b, bitwise_and, literal, mark;
         mark = this.mark();
         if ((a = this.bitwise_xor()) && (literal = this.expect("^")) && (b = this.bitwise_and())) {
-            return new astnodes.BinOp(a, BitXor, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.BitXor(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((bitwise_and = this.bitwise_and())) {
@@ -2127,7 +2132,7 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, shift_expr;
         mark = this.mark();
         if ((a = this.bitwise_and()) && (literal = this.expect("&")) && (b = this.shift_expr())) {
-            return new astnodes.BinOp(a, BitAnd, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.BitAnd(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((shift_expr = this.shift_expr())) {
@@ -2144,11 +2149,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, sum;
         mark = this.mark();
         if ((a = this.shift_expr()) && (literal = this.expect("<<")) && (b = this.sum())) {
-            return new astnodes.BinOp(a, LShift, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.LShift(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.shift_expr()) && (literal = this.expect(">>")) && (b = this.sum())) {
-            return new astnodes.BinOp(a, RShift, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.RShift(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((sum = this.sum())) {
@@ -2165,11 +2170,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, term;
         mark = this.mark();
         if ((a = this.sum()) && (literal = this.expect("+")) && (b = this.term())) {
-            return new astnodes.BinOp(a, Add, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.Add(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.sum()) && (literal = this.expect("-")) && (b = this.term())) {
-            return new astnodes.BinOp(a, Sub, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.Sub(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((term = this.term())) {
@@ -2186,19 +2191,19 @@ export class GeneratedParser extends Parser {
         let a, b, factor, literal, mark;
         mark = this.mark();
         if ((a = this.term()) && (literal = this.expect("*")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, Mult, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.Mult(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("/")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, Div, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.Div(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("//")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, FloorDiv, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.FloorDiv(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("%")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, Mod, b, ...EXTRA);
+            return new astnodes.BinOp(a, new astnodes.Mod(), b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("@")) && (b = this.factor())) {
@@ -2219,15 +2224,15 @@ export class GeneratedParser extends Parser {
         let a, literal, mark, power;
         mark = this.mark();
         if ((literal = this.expect("+")) && (a = this.factor())) {
-            return new astnodes.UnaryOp(UAdd, a, ...EXTRA);
+            return new astnodes.UnaryOp(new astnodes.UAdd(), a, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("-")) && (a = this.factor())) {
-            return new astnodes.UnaryOp(USub, a, ...EXTRA);
+            return new astnodes.UnaryOp(new astnodes.USub(), a, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("~")) && (a = this.factor())) {
-            return new astnodes.UnaryOp(Invert, a, ...EXTRA);
+            return new astnodes.UnaryOp(new astnodes.Invert(), a, ...EXTRA);
         }
         this.reset(mark);
         if ((power = this.power())) {
@@ -2282,11 +2287,11 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.primary()) && (literal = this.expect(".")) && (b = this.name())) {
-            return new astnodes.Attribute(a, b.id, Load, ...EXTRA);
+            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.primary()) && (b = this.genexp())) {
-            return new astnodes.Call(a, pegen.singleton_seq(this, b), null, ...EXTRA);
+            return new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -2295,7 +2300,7 @@ export class GeneratedParser extends Parser {
             ((b = this.arguments_()), 1) &&
             (literal_1 = this.expect(")"))
         ) {
-            return new astnodes.Call(a, b.args, b.keywords, ...EXTRA);
+            return new astnodes.Call(a, b ? b.args : null, b ? b.keywords : null, EXTRA);
         }
         this.reset(mark);
         if (
@@ -2304,7 +2309,7 @@ export class GeneratedParser extends Parser {
             (b = this.slices()) &&
             (literal_1 = this.expect("]"))
         ) {
-            return new astnodes.Subscript(a, b, Load, ...EXTRA);
+            return new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((atom = this.atom())) {
@@ -2325,7 +2330,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this._gather_91()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(a, Load, ...EXTRA);
+            return new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
 
@@ -2376,7 +2381,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect("__peg_parser__"))) {
-            return pegen.RAISE_SYNTAX_ERROR("You found it!");
+            return RAISE_SYNTAX_ERROR("You found it!");
         }
         this.reset(mark);
         if (this.positive_lookahead(this.string) && (strings = this.strings())) {
@@ -2430,7 +2435,7 @@ export class GeneratedParser extends Parser {
             ((a = this.star_named_expressions()), 1) &&
             (literal_1 = this.expect("]"))
         ) {
-            return new astnodes.List(a, Load, ...EXTRA);
+            return new astnodes.List(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
 
@@ -2565,7 +2570,7 @@ export class GeneratedParser extends Parser {
             ((a = this.double_starred_kvpairs()), 1) &&
             (literal_1 = this.expect("}"))
         ) {
-            return new astnodes.Dict(pegen.get_keys(this, a), pegen.get_values(this, a), ...EXTRA);
+            return new astnodes.Dict(CHECK(pegen.get_keys(this, a)), CHECK(pegen.get_values(this, a)), ...EXTRA);
         }
         this.reset(mark);
 
@@ -2736,9 +2741,9 @@ export class GeneratedParser extends Parser {
         if ((a = this.kwargs())) {
             return new astnodes.Call(
                 pegen.dummy_name(p),
-                CHECK_null_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
-                CHECK_null_ALLOWED(pegen.seq_delete_starred_exprs(this, a)),
-                ...EXTRA
+                CHECK_NULL_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
+                CHECK_NULL_ALLOWED(pegen.seq_delete_starred_exprs(this, a)),
+                EXTRA
             );
         }
         this.reset(mark);
@@ -2786,7 +2791,7 @@ export class GeneratedParser extends Parser {
         let a, b, invalid_kwarg, literal, mark;
         mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
-            return pegen.keyword_or_starred(this, new astnodes.keyword(a.id, b, ...EXTRA), true);
+            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.v.Name.id, b, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((a = this.starred_expression())) {
@@ -2807,11 +2812,11 @@ export class GeneratedParser extends Parser {
         let a, b, invalid_kwarg, literal, mark;
         mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
-            return fkeyword_or_starred(this, new astnodes.keyword(a.id, b, ...EXTRA), 1);
+            return fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.v.Name.id, b, ...EXTRA)), 1);
         }
         this.reset(mark);
         if ((literal = this.expect("**")) && (a = this.expression())) {
-            return pegen.keyword_or_starred(this, new astnodes.keyword(null, a, ...EXTRA), 1);
+            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), 1);
         }
         this.reset(mark);
         if ((invalid_kwarg = this.invalid_kwarg())) {
@@ -2832,7 +2837,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.star_target()) && (b = this._loop0_116()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(pegen.seq_insert_in_front(this, a, b), new astnodes.Store(), ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
 
@@ -2876,7 +2881,7 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this._tmp_120())) {
             return new astnodes.Starred(
-                pegen.set_expr_context(this, a, new astnodes.Store()),
+                CHECK(pegen.set_expr_context(this, a, new astnodes.Store())),
                 new astnodes.Store(),
                 ...EXTRA
             );
@@ -2901,7 +2906,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -2987,7 +2992,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3028,7 +3033,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, Del, ...EXTRA);
+            return new astnodes.Attribute(a, b.v.Name.id, Del, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3098,7 +3103,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3130,7 +3135,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, Load, ...EXTRA);
+            return new astnodes.Attribute(a, b.v.Name.id, Load, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3144,7 +3149,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.t_primary()) && (b = this.genexp()) && this.positive_lookahead(this.t_lookahead)) {
-            return new astnodes.Call(a, pegen.singleton_seq(this, b), null, ...EXTRA);
+            return new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3154,7 +3159,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(")")) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Call(a, b.args, b.keywords, ...EXTRA);
+            return new astnodes.Call(a, b ? b.args : null, b ? b.keywords : null, EXTRA);
         }
         this.reset(mark);
         if ((a = this.atom()) && this.positive_lookahead(this.t_lookahead)) {
@@ -3217,7 +3222,7 @@ export class GeneratedParser extends Parser {
         let a, args, for_if_clauses, literal, literal_1, mark, opt;
         mark = this.mark();
         if ((args = this.args()) && (literal = this.expect(",")) && (literal_1 = this.expect("*"))) {
-            return pegen.RAISE_SYNTAX_ERROR("iterable argument unpacking follows keyword argument unpacking");
+            return RAISE_SYNTAX_ERROR("iterable argument unpacking follows keyword argument unpacking");
         }
         this.reset(mark);
         if (
@@ -3226,7 +3231,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect(",")) &&
             ((opt = this._tmp_125()), 1)
         ) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
         }
         this.reset(mark);
         if ((a = this.args()) && (for_if_clauses = this.for_if_clauses())) {
@@ -3239,7 +3244,7 @@ export class GeneratedParser extends Parser {
             (a = this.expression()) &&
             (for_if_clauses = this.for_if_clauses())
         ) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
         }
         this.reset(mark);
         if ((a = this.args()) && (literal = this.expect(",")) && (args = this.args())) {
@@ -3256,7 +3261,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((a = this.expression()) && (literal = this.expect("="))) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
                 a,
                 'expression cannot contain assignment, perhaps you meant "=="?'
             );
@@ -3272,7 +3277,7 @@ export class GeneratedParser extends Parser {
         let a, expression, literal, mark;
         mark = this.mark();
         if ((a = this.expression()) && (literal = this.expect(":=")) && (expression = this.expression())) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
                 a,
                 "cannot use assignment expressions with %s",
                 pegen.get_expr_name(a)
@@ -3293,7 +3298,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect(":")) &&
             (expression = this.expression())
         ) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
                 a,
                 "only single target (not %s) can be annotated",
                 pegen.get_expr_name(a)
@@ -3307,23 +3312,23 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (expression = this.expression())
         ) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "only single target (not tuple) can be annotated");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "only single target (not tuple) can be annotated");
         }
         this.reset(mark);
         if ((a = this.expression()) && (literal = this.expect(":")) && (expression = this.expression())) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "illegal target for annotation");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "illegal target for annotation");
         }
         this.reset(mark);
         if ((_loop0_127 = this._loop0_127()) && (a = this.star_expressions()) && (literal = this.expect("="))) {
-            return pegen.RAISE_SYNTAX_ERROR_INVALID_TARGET(STAR_TARGETS, a);
+            return RAISE_SYNTAX_ERROR_INVALID_TARGET(STAR_TARGETS, a);
         }
         this.reset(mark);
         if ((_loop0_128 = this._loop0_128()) && (a = this.yield_expr()) && (literal = this.expect("="))) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "assignment to yield expression not possible");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "assignment to yield expression not possible");
         }
         this.reset(mark);
         if ((a = this.star_expressions()) && (augassign = this.augassign()) && (_tmp_129 = this._tmp_129())) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
                 a,
                 "'%s' is an illegal expression for augmented assignment",
                 pegen.get_expr_name(a)
@@ -3361,7 +3366,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("del")) && (a = this.star_expressions())) {
-            return pegen.RAISE_SYNTAX_ERROR_INVALID_TARGET(DEL_TARGETS, a);
+            return RAISE_SYNTAX_ERROR_INVALID_TARGET(DEL_TARGETS, a);
         }
         this.reset(mark);
 
@@ -3374,7 +3379,7 @@ export class GeneratedParser extends Parser {
         let mark, newline;
         mark = this.mark();
         if ((newline = this.expect("NEWLINE")) && this.negative_lookahead(this.expect, "INDENT")) {
-            return pegen.RAISE_INDENTATION_ERROR("expected an indented block");
+            return RAISE_INDENTATION_ERROR("expected an indented block");
         }
         this.reset(mark);
 
@@ -3387,7 +3392,7 @@ export class GeneratedParser extends Parser {
         let a, mark, primary;
         mark = this.mark();
         if ((primary = this.primary()) && (a = this.expect("{"))) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "invalid syntax");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "invalid syntax");
         }
         this.reset(mark);
 
@@ -3404,7 +3409,7 @@ export class GeneratedParser extends Parser {
             (a = this.starred_expression()) &&
             (for_if_clauses = this.for_if_clauses())
         ) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "iterable unpacking cannot be used in comprehension");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "iterable unpacking cannot be used in comprehension");
         }
         this.reset(mark);
 
@@ -3423,7 +3428,7 @@ export class GeneratedParser extends Parser {
             (for_if_clauses = this.for_if_clauses()) &&
             (literal_1 = this.expect("}"))
         ) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "dict unpacking cannot be used in dict comprehension");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "dict unpacking cannot be used in dict comprehension");
         }
         this.reset(mark);
 
@@ -3440,7 +3445,7 @@ export class GeneratedParser extends Parser {
             (_tmp_132 = this._tmp_132()) &&
             (param_no_default = this.param_no_default())
         ) {
-            return pegen.RAISE_SYNTAX_ERROR("non-default argument follows default argument");
+            return RAISE_SYNTAX_ERROR("non-default argument follows default argument");
         }
         this.reset(mark);
 
@@ -3457,7 +3462,7 @@ export class GeneratedParser extends Parser {
             (_tmp_134 = this._tmp_134()) &&
             (lambda_param_no_default = this.lambda_param_no_default())
         ) {
-            return pegen.RAISE_SYNTAX_ERROR("non-default argument follows default argument");
+            return RAISE_SYNTAX_ERROR("non-default argument follows default argument");
         }
         this.reset(mark);
 
@@ -3470,7 +3475,7 @@ export class GeneratedParser extends Parser {
         let _tmp_135, literal, literal_1, mark, type_comment;
         mark = this.mark();
         if ((literal = this.expect("*")) && (_tmp_135 = this._tmp_135())) {
-            return pegen.RAISE_SYNTAX_ERROR("named arguments must follow bare *");
+            return RAISE_SYNTAX_ERROR("named arguments must follow bare *");
         }
         this.reset(mark);
         if (
@@ -3478,7 +3483,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(",")) &&
             (type_comment = this.expect("TYPE_COMMENT"))
         ) {
-            return pegen.RAISE_SYNTAX_ERROR("bare * has associated type comment");
+            return RAISE_SYNTAX_ERROR("bare * has associated type comment");
         }
         this.reset(mark);
 
@@ -3491,7 +3496,7 @@ export class GeneratedParser extends Parser {
         let _tmp_136, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("*")) && (_tmp_136 = this._tmp_136())) {
-            return pegen.RAISE_SYNTAX_ERROR("named arguments must follow bare *");
+            return RAISE_SYNTAX_ERROR("named arguments must follow bare *");
         }
         this.reset(mark);
 
@@ -3510,7 +3515,7 @@ export class GeneratedParser extends Parser {
             (newline_1 = this.expect("NEWLINE")) &&
             (indent = this.expect("INDENT"))
         ) {
-            return pegen.RAISE_SYNTAX_ERROR("Cannot have two type comments on def");
+            return RAISE_SYNTAX_ERROR("Cannot have two type comments on def");
         }
         this.reset(mark);
 
@@ -3523,7 +3528,7 @@ export class GeneratedParser extends Parser {
         let a, expression, literal, mark;
         mark = this.mark();
         if ((expression = this.expression()) && (literal = this.expect("as")) && (a = this.expression())) {
-            return pegen.RAISE_SYNTAX_ERROR_INVALID_TARGET(STAR_TARGETS, a);
+            return RAISE_SYNTAX_ERROR_INVALID_TARGET(STAR_TARGETS, a);
         }
         this.reset(mark);
 
@@ -3536,7 +3541,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark, opt;
         mark = this.mark();
         if (((opt = this.expect("ASYNC")), 1) && (literal = this.expect("for")) && (a = this.star_expressions())) {
-            return pegen.RAISE_SYNTAX_ERROR_INVALID_TARGET(FOR_TARGETS, a);
+            return RAISE_SYNTAX_ERROR_INVALID_TARGET(FOR_TARGETS, a);
         }
         this.reset(mark);
 
@@ -3549,7 +3554,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("(")) && (a = this.starred_expression()) && (literal_1 = this.expect(")"))) {
-            return pegen.RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "can't use starred expression here");
+            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "can't use starred expression here");
         }
         this.reset(mark);
 
@@ -3562,7 +3567,7 @@ export class GeneratedParser extends Parser {
         let import_from_as_names, literal, mark;
         mark = this.mark();
         if ((import_from_as_names = this.import_from_as_names()) && (literal = this.expect(","))) {
-            return pegen.RAISE_SYNTAX_ERROR("trailing comma not allowed without surrounding parentheses");
+            return RAISE_SYNTAX_ERROR("trailing comma not allowed without surrounding parentheses");
         }
         this.reset(mark);
 

@@ -85,9 +85,8 @@ import re
 
 def clean_type(t):
     t = t.replace("_ty", "").replace("*", "").replace("asdl_seq", "any")
-    if t == "arguments":
-        return "arguments_"
-    elif t == "AugOperator":
+
+    if t == "AugOperator":
         return "operator"
     return t
 
@@ -358,7 +357,7 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
                         action = f"[{self.local_variable_names[0]}, ...{self.local_variable_names[1]}]"
                     else:
                         action = f"{', '.join(self.local_variable_names)}"
-                action = clean_action(action)
+                # action = clean_action(action)
                 if is_loop:
                     self.print(f"children.push({action});")
                     self.print("mark = this.mark();")
