@@ -416,55 +416,55 @@ export class GeneratedParser extends Parser {
         let literal, mark;
         mark = this.mark();
         if ((literal = this.expect("+="))) {
-            return pegen.augoperator(this, Add);
+            return pegen.augoperator(this, new astnodes.Add());
         }
         this.reset(mark);
         if ((literal = this.expect("-="))) {
-            return pegen.augoperator(this, Sub);
+            return pegen.augoperator(this, new astnodes.Sub());
         }
         this.reset(mark);
         if ((literal = this.expect("*="))) {
-            return pegen.augoperator(this, Mult);
+            return pegen.augoperator(this, new astnodes.Mult());
         }
         this.reset(mark);
         if ((literal = this.expect("@="))) {
-            return CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, MatMult));
+            return CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, new astnodes.MatMult()));
         }
         this.reset(mark);
         if ((literal = this.expect("/="))) {
-            return pegen.augoperator(this, Div);
+            return pegen.augoperator(this, new astnodes.Div());
         }
         this.reset(mark);
         if ((literal = this.expect("%="))) {
-            return pegen.augoperator(this, Mod);
+            return pegen.augoperator(this, new astnodes.Mod());
         }
         this.reset(mark);
         if ((literal = this.expect("&="))) {
-            return pegen.augoperator(this, BitAnd);
+            return pegen.augoperator(this, new astnodes.BitAnd());
         }
         this.reset(mark);
         if ((literal = this.expect("|="))) {
-            return pegen.augoperator(this, BitOr);
+            return pegen.augoperator(this, new astnodes.BitOr());
         }
         this.reset(mark);
         if ((literal = this.expect("^="))) {
-            return pegen.augoperator(this, BitXor);
+            return pegen.augoperator(this, new astnodes.BitXor());
         }
         this.reset(mark);
         if ((literal = this.expect("<<="))) {
-            return pegen.augoperator(this, LShift);
+            return pegen.augoperator(this, new astnodes.LShift());
         }
         this.reset(mark);
         if ((literal = this.expect(">>="))) {
-            return pegen.augoperator(this, RShift);
+            return pegen.augoperator(this, new astnodes.RShift());
         }
         this.reset(mark);
         if ((literal = this.expect("**="))) {
-            return pegen.augoperator(this, Pow);
+            return pegen.augoperator(this, new astnodes.Pow());
         }
         this.reset(mark);
         if ((literal = this.expect("//="))) {
-            return pegen.augoperator(this, FloorDiv);
+            return pegen.augoperator(this, new astnodes.FloorDiv());
         }
         this.reset(mark);
 

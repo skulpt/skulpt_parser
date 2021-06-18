@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..9a5500ce5c 100644
+index 64e205e7fd..38d11f53dd 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -113,19 +113,19 @@ index 64e205e7fd..9a5500ce5c 100644
 -    | '>>=' { _PyPegen_augoperator(p, RShift) }
 -    | '**=' { _PyPegen_augoperator(p, Pow) }
 -    | '//=' { _PyPegen_augoperator(p, FloorDiv) }
-+    | '+=' { pegen.augoperator(this, Add) }
-+    | '-=' { pegen.augoperator(this, Sub) }
-+    | '*=' { pegen.augoperator(this, Mult) }
-+    | '@=' { CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, MatMult)) }
-+    | '/=' { pegen.augoperator(this, Div) }
-+    | '%=' { pegen.augoperator(this, Mod) }
-+    | '&=' { pegen.augoperator(this, BitAnd) }
-+    | '|=' { pegen.augoperator(this, BitOr) }
-+    | '^=' { pegen.augoperator(this, BitXor) }
-+    | '<<=' { pegen.augoperator(this, LShift) }
-+    | '>>=' { pegen.augoperator(this, RShift) }
-+    | '**=' { pegen.augoperator(this, Pow) }
-+    | '//=' { pegen.augoperator(this, FloorDiv) }
++    | '+=' { pegen.augoperator(this, new astnodes.Add()) }
++    | '-=' { pegen.augoperator(this, new astnodes.Sub()) }
++    | '*=' { pegen.augoperator(this, new astnodes.Mult()) }
++    | '@=' { CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, new astnodes.MatMult())) }
++    | '/=' { pegen.augoperator(this, new astnodes.Div()) }
++    | '%=' { pegen.augoperator(this, new astnodes.Mod()) }
++    | '&=' { pegen.augoperator(this, new astnodes.BitAnd()) }
++    | '|=' { pegen.augoperator(this, new astnodes.BitOr()) }
++    | '^=' { pegen.augoperator(this, new astnodes.BitXor()) }
++    | '<<=' { pegen.augoperator(this, new astnodes.LShift()) }
++    | '>>=' { pegen.augoperator(this, new astnodes.RShift()) }
++    | '**=' { pegen.augoperator(this, new astnodes.Pow()) }
++    | '//=' { pegen.augoperator(this, new astnodes.FloorDiv()) }
  
  global_stmt[stmt_ty]: 'global' a=','.NAME+ {
 -    _Py_Global(CHECK(_PyPegen_map_names_to_ids(p, a)), EXTRA) }
