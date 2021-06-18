@@ -197,28 +197,29 @@ export class Parser {
         }
         return null;
     }
-    string(): null | Constant {
+    string(): TokenInfo | null {
         let tok = this._tokenizer.peek();
         if (tok.type === STRING) {
-            tok = this._tokenizer.getnext();
-            return new Constant(tok.string, "str", tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
+            // this gets handled by concatenate strings which always follows this.string();
+            return this._tokenizer.getnext();
         }
         return null;
     }
     @memoize
-    number(): null | Constant {
+    number(): Constant | null {
         let tok = this._tokenizer.peek();
         if (tok.type === NUMBER) {
             tok = this._tokenizer.getnext();
-            return new Constant(tok.string, "float", tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
+            /** @todo parsenumber() */
+            return new Constant(new Number(tok.string), null, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }
     @memoize
     op(): TokenInfo | null {
+        // this never gets called in the generated parser - probably only relevant for the grammar parser
         const tok = this._tokenizer.peek();
         if (tok.type === OP) {
-            // i'm guessing this needs to return something else...
             return this._tokenizer.getnext();
         }
         return null;

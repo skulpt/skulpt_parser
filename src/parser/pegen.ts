@@ -2128,8 +2128,12 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 //     return new_seq;
 // }
 
-export function concatenate_strings(a: Constant[]) {
-    return a.map((t) => t.value).join();
+/** concatenate strings from python like `'foo' 'bar'` */
+export function concatenate_strings(a: TokenInfo[]): Constant {
+    const [lineno, col_offset] = a[0].start;
+    const [end_lineno, end_col_offset] = a[a.length - 1].end;
+    /** @todo parse_string.c */
+    return new Constant(a.map((t) => t.string).join(), null, lineno, col_offset, end_lineno, end_col_offset);
 }
 
 // expr_ty
