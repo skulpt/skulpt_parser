@@ -4,6 +4,18 @@
 
 import * as ast from "../ast/ast.ts";
 import * as astnodes from "../ast/astnodes.ts";
+import {
+    mod,
+    expr,
+    stmt,
+    operator,
+    alias,
+    withitem,
+    excepthandler,
+    arguments_,
+    arg,
+    comprehension,
+} from "../ast/astnodes.ts";
 import * as pegen_real from "./pegen.ts";
 import { Colors } from "../../deps.ts";
 
@@ -25,7 +37,7 @@ const pegen = new Proxy(pegen_real, {
 
 export class GeneratedParser extends Parser {
     @memoize
-    file() {
+    file(): mod | null {
         //# file: statements? $
         let a, endmarker, mark;
         mark = this.mark();
@@ -38,7 +50,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    interactive() {
+    interactive(): mod | null {
         //# interactive: statement_newline
         let a, mark;
         mark = this.mark();
@@ -51,7 +63,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    eval() {
+    eval(): mod | null {
         //# eval: expressions NEWLINE* $
         let _loop0_1, a, endmarker, mark;
         mark = this.mark();
@@ -64,7 +76,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    func_type() {
+    func_type(): mod | null {
         //# func_type: '(' type_expressions? ')' '->' expression NEWLINE* $
         let _loop0_2, a, b, endmarker, literal, literal_1, literal_2, mark;
         mark = this.mark();
@@ -85,7 +97,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    fstring() {
+    fstring(): expr | null {
         //# fstring: star_expressions
         let mark, star_expressions;
         mark = this.mark();
@@ -98,7 +110,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    type_expressions() {
+    type_expressions(): any | null {
         //# type_expressions: ','.expression+ ',' '*' expression ',' '**' expression | ','.expression+ ',' '*' expression | ','.expression+ ',' '**' expression | '*' expression ',' '**' expression | '*' expression | '**' expression | ','.expression+
         let _gather_9, a, b, c, literal, literal_1, literal_2, literal_3, mark;
         mark = this.mark();
@@ -159,7 +171,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    statements() {
+    statements(): any | null {
         //# statements: statement+
         let a, mark;
         mark = this.mark();
@@ -172,7 +184,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    statement() {
+    statement(): any | null {
         //# statement: compound_stmt | simple_stmt
         let a, mark, simple_stmt;
         mark = this.mark();
@@ -189,7 +201,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    statement_newline() {
+    statement_newline(): any | null {
         //# statement_newline: compound_stmt NEWLINE | simple_stmt | NEWLINE | $
         let a, endmarker, mark, newline, simple_stmt;
         mark = this.mark();
@@ -214,7 +226,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    simple_stmt() {
+    simple_stmt(): any | null {
         //# simple_stmt: small_stmt !';' NEWLINE | ';'.small_stmt+ ';'? NEWLINE
         let a, mark, newline, opt;
         mark = this.mark();
@@ -235,7 +247,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    small_stmt() {
+    small_stmt(): stmt | null {
         //# small_stmt: assignment | star_expressions | &'return' return_stmt | &('import' | 'from') import_stmt | &'raise' raise_stmt | 'pass' | &'del' del_stmt | &'yield' yield_stmt | &'assert' assert_stmt | 'break' | 'continue' | &'global' global_stmt | &'nonlocal' nonlocal_stmt
         let assert_stmt,
             assignment,
@@ -307,7 +319,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    compound_stmt() {
+    compound_stmt(): stmt | null {
         //# compound_stmt: &('def' | '@' | ASYNC) function_def | &'if' if_stmt | &('class' | '@') class_def | &('with' | ASYNC) with_stmt | &('for' | ASYNC) for_stmt | &'try' try_stmt | &'while' while_stmt
         let class_def, for_stmt, function_def, if_stmt, mark, try_stmt, while_stmt, with_stmt;
         mark = this.mark();
@@ -344,7 +356,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    assignment() {
+    assignment(): stmt | null {
         //# assignment: NAME ':' expression ['=' annotated_rhs] | ('(' single_target ')' | single_subscript_attribute_target) ':' expression ['=' annotated_rhs] | ((star_targets '='))+ (yield_expr | star_expressions) !'=' TYPE_COMMENT? | single_target augassign ~ (yield_expr | star_expressions) | invalid_assignment
         let a, b, c, cut, invalid_assignment, literal, mark, tc;
         mark = this.mark();
@@ -394,7 +406,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    augassign() {
+    augassign(): operator | null {
         //# augassign: '+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=' | '**=' | '//='
         let literal, mark;
         mark = this.mark();
@@ -455,7 +467,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    global_stmt() {
+    global_stmt(): stmt | null {
         //# global_stmt: 'global' ','.NAME+
         let a, literal, mark;
         mark = this.mark();
@@ -468,7 +480,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    nonlocal_stmt() {
+    nonlocal_stmt(): stmt | null {
         //# nonlocal_stmt: 'nonlocal' ','.NAME+
         let a, literal, mark;
         mark = this.mark();
@@ -481,7 +493,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    yield_stmt() {
+    yield_stmt(): stmt | null {
         //# yield_stmt: yield_expr
         let mark, y;
         mark = this.mark();
@@ -494,7 +506,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    assert_stmt() {
+    assert_stmt(): stmt | null {
         //# assert_stmt: 'assert' expression [',' expression]
         let a, b, literal, mark;
         mark = this.mark();
@@ -507,7 +519,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    del_stmt() {
+    del_stmt(): stmt | null {
         //# del_stmt: 'del' del_targets &(';' | NEWLINE) | invalid_del_stmt
         let a, invalid_del_stmt, literal, mark;
         mark = this.mark();
@@ -524,7 +536,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    import_stmt() {
+    import_stmt(): stmt | null {
         //# import_stmt: import_name | import_from
         let import_from, import_name, mark;
         mark = this.mark();
@@ -541,7 +553,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    import_name() {
+    import_name(): stmt | null {
         //# import_name: 'import' dotted_as_names
         let a, literal, mark;
         mark = this.mark();
@@ -554,7 +566,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    import_from() {
+    import_from(): stmt | null {
         //# import_from: 'from' (('.' | '...'))* dotted_name 'import' import_from_targets | 'from' (('.' | '...'))+ 'import' import_from_targets
         let a, b, c, literal, literal_1, mark;
         mark = this.mark();
@@ -582,7 +594,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    import_from_targets() {
+    import_from_targets(): any | null {
         //# import_from_targets: '(' import_from_as_names ','? ')' | import_from_as_names !',' | '*' | invalid_import_from_targets
         let a, import_from_as_names, invalid_import_from_targets, literal, literal_1, mark, opt;
         mark = this.mark();
@@ -612,7 +624,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    import_from_as_names() {
+    import_from_as_names(): any | null {
         //# import_from_as_names: ','.import_from_as_name+
         let a, mark;
         mark = this.mark();
@@ -625,7 +637,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    import_from_as_name() {
+    import_from_as_name(): alias | null {
         //# import_from_as_name: NAME ['as' NAME]
         let a, b, mark;
         mark = this.mark();
@@ -638,7 +650,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    dotted_as_names() {
+    dotted_as_names(): any | null {
         //# dotted_as_names: ','.dotted_as_name+
         let a, mark;
         mark = this.mark();
@@ -651,7 +663,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    dotted_as_name() {
+    dotted_as_name(): alias | null {
         //# dotted_as_name: dotted_name ['as' NAME]
         let a, b, mark;
         mark = this.mark();
@@ -664,7 +676,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    dotted_name() {
+    dotted_name(): expr | null {
         //# dotted_name: dotted_name '.' NAME | NAME
         let a, b, literal, mark, name;
         mark = this.mark();
@@ -681,7 +693,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    if_stmt() {
+    if_stmt(): stmt | null {
         //# if_stmt: 'if' named_expression ':' block elif_stmt | 'if' named_expression ':' block else_block?
         let a, b, c, literal, literal_1, mark;
         mark = this.mark();
@@ -710,7 +722,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    elif_stmt() {
+    elif_stmt(): stmt | null {
         //# elif_stmt: 'elif' named_expression ':' block elif_stmt | 'elif' named_expression ':' block else_block?
         let a, b, c, literal, literal_1, mark;
         mark = this.mark();
@@ -739,7 +751,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    else_block() {
+    else_block(): any | null {
         //# else_block: 'else' ':' block
         let b, literal, literal_1, mark;
         mark = this.mark();
@@ -752,7 +764,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    while_stmt() {
+    while_stmt(): stmt | null {
         //# while_stmt: 'while' named_expression ':' block else_block?
         let a, b, c, literal, literal_1, mark;
         mark = this.mark();
@@ -771,7 +783,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    for_stmt() {
+    for_stmt(): stmt | null {
         //# for_stmt: 'for' star_targets 'in' ~ star_expressions ':' TYPE_COMMENT? block else_block? | ASYNC 'for' star_targets 'in' ~ star_expressions ':' TYPE_COMMENT? block else_block? | invalid_for_target
         let async, b, cut, el, ex, invalid_for_target, literal, literal_1, literal_2, mark, t, tc;
         mark = this.mark();
@@ -821,7 +833,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    with_stmt() {
+    with_stmt(): stmt | null {
         //# with_stmt: 'with' '(' ','.with_item+ ','? ')' ':' block | 'with' ','.with_item+ ':' TYPE_COMMENT? block | ASYNC 'with' '(' ','.with_item+ ','? ')' ':' block | ASYNC 'with' ','.with_item+ ':' TYPE_COMMENT? block
         let a, async, b, literal, literal_1, literal_2, literal_3, mark, opt, tc;
         mark = this.mark();
@@ -880,7 +892,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    with_item() {
+    with_item(): withitem | null {
         //# with_item: expression 'as' star_target &(',' | ')' | ':') | invalid_with_item | expression
         let e, invalid_with_item, literal, mark, t;
         mark = this.mark();
@@ -906,7 +918,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    try_stmt() {
+    try_stmt(): stmt | null {
         //# try_stmt: 'try' ':' block finally_block | 'try' ':' block except_block+ else_block? finally_block?
         let b, el, ex, f, literal, literal_1, mark;
         mark = this.mark();
@@ -935,7 +947,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    except_block() {
+    except_block(): excepthandler | null {
         //# except_block: 'except' expression ['as' NAME] ':' block | 'except' ':' block
         let b, e, literal, literal_1, mark, t;
         mark = this.mark();
@@ -958,7 +970,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    finally_block() {
+    finally_block(): any | null {
         //# finally_block: 'finally' ':' block
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -971,7 +983,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    return_stmt() {
+    return_stmt(): stmt | null {
         //# return_stmt: 'return' star_expressions?
         let a, literal, mark;
         mark = this.mark();
@@ -984,7 +996,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    raise_stmt() {
+    raise_stmt(): stmt | null {
         //# raise_stmt: 'raise' expression ['from' expression] | 'raise'
         let a, b, literal, mark;
         mark = this.mark();
@@ -1001,7 +1013,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    function_def() {
+    function_def(): stmt | null {
         //# function_def: decorators function_def_raw | function_def_raw
         let d, f, function_def_raw, mark;
         mark = this.mark();
@@ -1018,7 +1030,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    function_def_raw() {
+    function_def_raw(): stmt | null {
         //# function_def_raw: 'def' NAME '(' params? ')' ['->' expression] ':' func_type_comment? block | ASYNC 'def' NAME '(' params? ')' ['->' expression] ':' func_type_comment? block
         let a, async, b, literal, literal_1, literal_2, literal_3, mark, n, params, tc;
         mark = this.mark();
@@ -1076,7 +1088,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    func_type_comment() {
+    func_type_comment(): Token | null {
         //# func_type_comment: NEWLINE TYPE_COMMENT &(NEWLINE INDENT) | invalid_double_type_comments | TYPE_COMMENT
         let invalid_double_type_comments, mark, newline, t, type_comment;
         mark = this.mark();
@@ -1101,7 +1113,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    params() {
+    params(): arguments_ | null {
         //# params: invalid_parameters | parameters
         let invalid_parameters, mark, parameters;
         mark = this.mark();
@@ -1118,7 +1130,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    parameters() {
+    parameters(): arguments_ | null {
         //# parameters: slash_no_default param_no_default* param_with_default* star_etc? | slash_with_default param_with_default* star_etc? | param_no_default+ param_with_default* star_etc? | param_with_default+ star_etc? | star_etc
         let a, b, c, d, mark;
         mark = this.mark();
@@ -1152,7 +1164,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    slash_no_default() {
+    slash_no_default(): any | null {
         //# slash_no_default: param_no_default+ '/' ',' | param_no_default+ '/' &')'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -1169,7 +1181,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    slash_with_default() {
+    slash_with_default(): SlashWithDefault | null {
         //# slash_with_default: param_no_default* param_with_default+ '/' ',' | param_no_default* param_with_default+ '/' &')'
         let a, b, literal, literal_1, mark;
         mark = this.mark();
@@ -1196,7 +1208,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_etc() {
+    star_etc(): StarEtc | null {
         //# star_etc: '*' param_no_default param_maybe_default* kwds? | '*' ',' param_maybe_default+ kwds? | kwds | invalid_star_etc
         let a, b, c, invalid_star_etc, literal, literal_1, mark;
         mark = this.mark();
@@ -1231,7 +1243,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kwds() {
+    kwds(): arg | null {
         //# kwds: '**' param_no_default
         let a, literal, mark;
         mark = this.mark();
@@ -1244,7 +1256,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    param_no_default() {
+    param_no_default(): arg | null {
         //# param_no_default: param ',' TYPE_COMMENT? | param TYPE_COMMENT? &')'
         let a, literal, mark, tc;
         mark = this.mark();
@@ -1265,7 +1277,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    param_with_default() {
+    param_with_default(): NameDefaultPair | null {
         //# param_with_default: param default ',' TYPE_COMMENT? | param default TYPE_COMMENT? &')'
         let a, c, literal, mark, tc;
         mark = this.mark();
@@ -1292,7 +1304,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    param_maybe_default() {
+    param_maybe_default(): NameDefaultPair | null {
         //# param_maybe_default: param default? ',' TYPE_COMMENT? | param default? TYPE_COMMENT? &')'
         let a, c, literal, mark, tc;
         mark = this.mark();
@@ -1319,7 +1331,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    param() {
+    param(): arg | null {
         //# param: NAME annotation?
         let a, b, mark;
         mark = this.mark();
@@ -1332,7 +1344,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    annotation() {
+    annotation(): expr | null {
         //# annotation: ':' expression
         let a, literal, mark;
         mark = this.mark();
@@ -1345,7 +1357,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    default() {
+    default(): expr | null {
         //# default: '=' expression
         let a, literal, mark;
         mark = this.mark();
@@ -1358,7 +1370,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    decorators() {
+    decorators(): any | null {
         //# decorators: (('@' named_expression NEWLINE))+
         let a, mark;
         mark = this.mark();
@@ -1371,7 +1383,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    class_def() {
+    class_def(): stmt | null {
         //# class_def: decorators class_def_raw | class_def_raw
         let a, b, class_def_raw, mark;
         mark = this.mark();
@@ -1388,7 +1400,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    class_def_raw() {
+    class_def_raw(): stmt | null {
         //# class_def_raw: 'class' NAME ['(' arguments? ')'] ':' block
         let a, b, c, literal, literal_1, mark;
         mark = this.mark();
@@ -1407,7 +1419,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    block() {
+    block(): any | null {
         //# block: NEWLINE INDENT statements DEDENT | simple_stmt | invalid_block
         let a, dedent, indent, invalid_block, mark, newline, simple_stmt;
         mark = this.mark();
@@ -1433,7 +1445,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_expressions() {
+    star_expressions(): expr | null {
         //# star_expressions: star_expression ((',' star_expression))+ ','? | star_expression ',' | star_expression
         let a, b, literal, mark, opt, star_expression;
         mark = this.mark();
@@ -1454,7 +1466,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_expression() {
+    star_expression(): expr | null {
         //# star_expression: '*' bitwise_or | expression
         let a, expression, literal, mark;
         mark = this.mark();
@@ -1471,7 +1483,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_named_expressions() {
+    star_named_expressions(): any | null {
         //# star_named_expressions: ','.star_named_expression+ ','?
         let a, mark, opt;
         mark = this.mark();
@@ -1484,7 +1496,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_named_expression() {
+    star_named_expression(): expr | null {
         //# star_named_expression: '*' bitwise_or | named_expression
         let a, literal, mark, named_expression;
         mark = this.mark();
@@ -1501,7 +1513,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    named_expression() {
+    named_expression(): expr | null {
         //# named_expression: NAME ':=' ~ expression | expression !':=' | invalid_named_expression
         let a, b, cut, expression, invalid_named_expression, literal, mark;
         mark = this.mark();
@@ -1524,7 +1536,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    annotated_rhs() {
+    annotated_rhs(): expr | null {
         //# annotated_rhs: yield_expr | star_expressions
         let mark, star_expressions, yield_expr;
         mark = this.mark();
@@ -1541,7 +1553,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    expressions() {
+    expressions(): expr | null {
         //# expressions: expression ((',' expression))+ ','? | expression ',' | expression
         let a, b, expression, literal, mark, opt;
         mark = this.mark();
@@ -1562,7 +1574,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    expression() {
+    expression(): expr | null {
         //# expression: disjunction 'if' disjunction 'else' expression | disjunction | lambdef
         let a, b, c, disjunction, lambdef, literal, literal_1, mark;
         mark = this.mark();
@@ -1589,7 +1601,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambdef() {
+    lambdef(): expr | null {
         //# lambdef: 'lambda' lambda_params? ':' expression
         let a, b, literal, literal_1, mark;
         mark = this.mark();
@@ -1607,7 +1619,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_params() {
+    lambda_params(): arguments_ | null {
         //# lambda_params: invalid_lambda_parameters | lambda_parameters
         let invalid_lambda_parameters, lambda_parameters, mark;
         mark = this.mark();
@@ -1624,7 +1636,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_parameters() {
+    lambda_parameters(): arguments_ | null {
         //# lambda_parameters: lambda_slash_no_default lambda_param_no_default* lambda_param_with_default* lambda_star_etc? | lambda_slash_with_default lambda_param_with_default* lambda_star_etc? | lambda_param_no_default+ lambda_param_with_default* lambda_star_etc? | lambda_param_with_default+ lambda_star_etc? | lambda_star_etc
         let a, b, c, d, mark;
         mark = this.mark();
@@ -1658,7 +1670,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_slash_no_default() {
+    lambda_slash_no_default(): any | null {
         //# lambda_slash_no_default: lambda_param_no_default+ '/' ',' | lambda_param_no_default+ '/' &':'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -1675,7 +1687,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_slash_with_default() {
+    lambda_slash_with_default(): SlashWithDefault | null {
         //# lambda_slash_with_default: lambda_param_no_default* lambda_param_with_default+ '/' ',' | lambda_param_no_default* lambda_param_with_default+ '/' &':'
         let a, b, literal, literal_1, mark;
         mark = this.mark();
@@ -1702,7 +1714,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_star_etc() {
+    lambda_star_etc(): StarEtc | null {
         //# lambda_star_etc: '*' lambda_param_no_default lambda_param_maybe_default* lambda_kwds? | '*' ',' lambda_param_maybe_default+ lambda_kwds? | lambda_kwds | invalid_lambda_star_etc
         let a, b, c, invalid_lambda_star_etc, literal, literal_1, mark;
         mark = this.mark();
@@ -1737,7 +1749,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_kwds() {
+    lambda_kwds(): arg | null {
         //# lambda_kwds: '**' lambda_param_no_default
         let a, literal, mark;
         mark = this.mark();
@@ -1750,7 +1762,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_param_no_default() {
+    lambda_param_no_default(): arg | null {
         //# lambda_param_no_default: lambda_param ',' | lambda_param &':'
         let a, literal, mark;
         mark = this.mark();
@@ -1767,7 +1779,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_param_with_default() {
+    lambda_param_with_default(): NameDefaultPair | null {
         //# lambda_param_with_default: lambda_param default ',' | lambda_param default &':'
         let a, c, literal, mark;
         mark = this.mark();
@@ -1784,7 +1796,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_param_maybe_default() {
+    lambda_param_maybe_default(): NameDefaultPair | null {
         //# lambda_param_maybe_default: lambda_param default? ',' | lambda_param default? &':'
         let a, c, literal, mark;
         mark = this.mark();
@@ -1801,7 +1813,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_param() {
+    lambda_param(): arg | null {
         //# lambda_param: NAME
         let a, mark;
         mark = this.mark();
@@ -1814,7 +1826,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    disjunction() {
+    disjunction(): expr | null {
         //# disjunction: conjunction (('or' conjunction))+ | conjunction
         let a, b, conjunction, mark;
         mark = this.mark();
@@ -1831,7 +1843,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    conjunction() {
+    conjunction(): expr | null {
         //# conjunction: inversion (('and' inversion))+ | inversion
         let a, b, inversion, mark;
         mark = this.mark();
@@ -1848,7 +1860,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    inversion() {
+    inversion(): expr | null {
         //# inversion: 'not' inversion | comparison
         let a, comparison, literal, mark;
         mark = this.mark();
@@ -1865,7 +1877,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    comparison() {
+    comparison(): expr | null {
         //# comparison: bitwise_or compare_op_bitwise_or_pair+ | bitwise_or
         let a, b, bitwise_or, mark;
         mark = this.mark();
@@ -1882,7 +1894,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    compare_op_bitwise_or_pair() {
+    compare_op_bitwise_or_pair(): CmpopExprPair | null {
         //# compare_op_bitwise_or_pair: eq_bitwise_or | noteq_bitwise_or | lte_bitwise_or | lt_bitwise_or | gte_bitwise_or | gt_bitwise_or | notin_bitwise_or | in_bitwise_or | isnot_bitwise_or | is_bitwise_or
         let eq_bitwise_or,
             gt_bitwise_or,
@@ -1941,7 +1953,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    eq_bitwise_or() {
+    eq_bitwise_or(): CmpopExprPair | null {
         //# eq_bitwise_or: '==' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -1954,7 +1966,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    noteq_bitwise_or() {
+    noteq_bitwise_or(): CmpopExprPair | null {
         //# noteq_bitwise_or: ('!=') bitwise_or
         let a, mark, tok;
         mark = this.mark();
@@ -1967,7 +1979,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lte_bitwise_or() {
+    lte_bitwise_or(): CmpopExprPair | null {
         //# lte_bitwise_or: '<=' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -1980,7 +1992,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lt_bitwise_or() {
+    lt_bitwise_or(): CmpopExprPair | null {
         //# lt_bitwise_or: '<' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -1993,7 +2005,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    gte_bitwise_or() {
+    gte_bitwise_or(): CmpopExprPair | null {
         //# gte_bitwise_or: '>=' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -2006,7 +2018,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    gt_bitwise_or() {
+    gt_bitwise_or(): CmpopExprPair | null {
         //# gt_bitwise_or: '>' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -2019,7 +2031,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    notin_bitwise_or() {
+    notin_bitwise_or(): CmpopExprPair | null {
         //# notin_bitwise_or: 'not' 'in' bitwise_or
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2032,7 +2044,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    in_bitwise_or() {
+    in_bitwise_or(): CmpopExprPair | null {
         //# in_bitwise_or: 'in' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -2045,7 +2057,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    isnot_bitwise_or() {
+    isnot_bitwise_or(): CmpopExprPair | null {
         //# isnot_bitwise_or: 'is' 'not' bitwise_or
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2058,7 +2070,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    is_bitwise_or() {
+    is_bitwise_or(): CmpopExprPair | null {
         //# is_bitwise_or: 'is' bitwise_or
         let a, literal, mark;
         mark = this.mark();
@@ -2071,7 +2083,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    bitwise_or() {
+    bitwise_or(): expr | null {
         //# bitwise_or: bitwise_or '|' bitwise_xor | bitwise_xor
         let a, b, bitwise_xor, literal, mark;
         mark = this.mark();
@@ -2088,7 +2100,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    bitwise_xor() {
+    bitwise_xor(): expr | null {
         //# bitwise_xor: bitwise_xor '^' bitwise_and | bitwise_and
         let a, b, bitwise_and, literal, mark;
         mark = this.mark();
@@ -2105,7 +2117,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    bitwise_and() {
+    bitwise_and(): expr | null {
         //# bitwise_and: bitwise_and '&' shift_expr | shift_expr
         let a, b, literal, mark, shift_expr;
         mark = this.mark();
@@ -2122,7 +2134,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    shift_expr() {
+    shift_expr(): expr | null {
         //# shift_expr: shift_expr '<<' sum | shift_expr '>>' sum | sum
         let a, b, literal, mark, sum;
         mark = this.mark();
@@ -2143,7 +2155,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    sum() {
+    sum(): expr | null {
         //# sum: sum '+' term | sum '-' term | term
         let a, b, literal, mark, term;
         mark = this.mark();
@@ -2164,7 +2176,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    term() {
+    term(): expr | null {
         //# term: term '*' factor | term '/' factor | term '//' factor | term '%' factor | term '@' factor | factor
         let a, b, factor, literal, mark;
         mark = this.mark();
@@ -2197,7 +2209,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    factor() {
+    factor(): expr | null {
         //# factor: '+' factor | '-' factor | '~' factor | power
         let a, literal, mark, power;
         mark = this.mark();
@@ -2222,7 +2234,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    power() {
+    power(): expr | null {
         //# power: await_primary '**' factor | await_primary
         let a, await_primary, b, literal, mark;
         mark = this.mark();
@@ -2239,7 +2251,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    await_primary() {
+    await_primary(): expr | null {
         //# await_primary: AWAIT primary | primary
         let a, await_, mark, primary;
         mark = this.mark();
@@ -2256,7 +2268,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    primary() {
+    primary(): expr | null {
         //# primary: invalid_primary | primary '.' NAME | primary genexp | primary '(' arguments? ')' | primary '[' slices ']' | atom
         let a, atom, b, invalid_primary, literal, literal_1, mark;
         mark = this.mark();
@@ -2299,7 +2311,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    slices() {
+    slices(): expr | null {
         //# slices: slice !',' | ','.slice+ ','?
         let a, mark, opt;
         mark = this.mark();
@@ -2316,7 +2328,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    slice() {
+    slice(): expr | null {
         //# slice: expression? ':' expression? [':' expression?] | expression
         let a, b, c, literal, mark;
         mark = this.mark();
@@ -2338,7 +2350,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    atom() {
+    atom(): expr | null {
         //# atom: NAME | 'True' | 'False' | 'None' | '__peg_parser__' | &STRING strings | NUMBER | &'(' (tuple | group | genexp) | &'[' (list | listcomp) | &'{' (dict | set | dictcomp | setcomp) | '...'
         let _tmp_94, _tmp_95, _tmp_96, literal, mark, name, number, strings;
         mark = this.mark();
@@ -2391,7 +2403,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    strings() {
+    strings(): expr | null {
         //# strings: STRING+
         let a, mark;
         mark = this.mark();
@@ -2404,7 +2416,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    list() {
+    list(): expr | null {
         //# list: '[' star_named_expressions? ']'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2421,7 +2433,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    listcomp() {
+    listcomp(): expr | null {
         //# listcomp: '[' named_expression ~ for_if_clauses ']' | invalid_comprehension
         let a, b, cut, invalid_comprehension, literal, literal_1, mark;
         mark = this.mark();
@@ -2446,7 +2458,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    tuple() {
+    tuple(): expr | null {
         //# tuple: '(' [star_named_expression ',' star_named_expressions?] ')'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2459,7 +2471,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    group() {
+    group(): expr | null {
         //# group: '(' (yield_expr | named_expression) ')' | invalid_group
         let a, invalid_group, literal, literal_1, mark;
         mark = this.mark();
@@ -2476,7 +2488,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    genexp() {
+    genexp(): expr | null {
         //# genexp: '(' named_expression ~ for_if_clauses ')' | invalid_comprehension
         let a, b, cut, invalid_comprehension, literal, literal_1, mark;
         mark = this.mark();
@@ -2501,7 +2513,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    set() {
+    set(): expr | null {
         //# set: '{' star_named_expressions '}'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2514,7 +2526,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    setcomp() {
+    setcomp(): expr | null {
         //# setcomp: '{' named_expression ~ for_if_clauses '}' | invalid_comprehension
         let a, b, cut, invalid_comprehension, literal, literal_1, mark;
         mark = this.mark();
@@ -2539,7 +2551,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    dict() {
+    dict(): expr | null {
         //# dict: '{' double_starred_kvpairs? '}'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2556,7 +2568,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    dictcomp() {
+    dictcomp(): expr | null {
         //# dictcomp: '{' kvpair for_if_clauses '}' | invalid_dict_comprehension
         let a, b, invalid_dict_comprehension, literal, literal_1, mark;
         mark = this.mark();
@@ -2578,7 +2590,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    double_starred_kvpairs() {
+    double_starred_kvpairs(): any | null {
         //# double_starred_kvpairs: ','.double_starred_kvpair+ ','?
         let a, mark, opt;
         mark = this.mark();
@@ -2591,7 +2603,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    double_starred_kvpair() {
+    double_starred_kvpair(): KeyValuePair | null {
         //# double_starred_kvpair: '**' bitwise_or | kvpair
         let a, kvpair, literal, mark;
         mark = this.mark();
@@ -2608,7 +2620,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kvpair() {
+    kvpair(): KeyValuePair | null {
         //# kvpair: expression ':' expression
         let a, b, literal, mark;
         mark = this.mark();
@@ -2621,7 +2633,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    for_if_clauses() {
+    for_if_clauses(): any | null {
         //# for_if_clauses: for_if_clause+
         let _loop1_102, mark;
         mark = this.mark();
@@ -2634,7 +2646,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    for_if_clause() {
+    for_if_clause(): comprehension | null {
         //# for_if_clause: ASYNC 'for' star_targets 'in' ~ disjunction (('if' disjunction))* | 'for' star_targets 'in' ~ disjunction (('if' disjunction))* | invalid_for_target
         let a, async, b, c, cut, invalid_for_target, literal, literal_1, mark;
         mark = this.mark();
@@ -2674,7 +2686,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    yield_expr() {
+    yield_expr(): expr | null {
         //# yield_expr: 'yield' 'from' expression | 'yield' star_expressions?
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2691,7 +2703,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    arguments() {
+    arguments(): expr | null {
         //# arguments: args ','? &')' | invalid_arguments
         let a, invalid_arguments, mark, opt;
         mark = this.mark();
@@ -2708,7 +2720,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    args() {
+    args(): expr | null {
         //# args: ','.(starred_expression | named_expression !'=')+ [',' kwargs] | kwargs
         let a, b, mark;
         mark = this.mark();
@@ -2730,7 +2742,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kwargs() {
+    kwargs(): any | null {
         //# kwargs: ','.kwarg_or_starred+ ',' ','.kwarg_or_double_starred+ | ','.kwarg_or_starred+ | ','.kwarg_or_double_starred+
         let _gather_112, _gather_114, a, b, literal, mark;
         mark = this.mark();
@@ -2751,7 +2763,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    starred_expression() {
+    starred_expression(): expr | null {
         //# starred_expression: '*' expression
         let a, literal, mark;
         mark = this.mark();
@@ -2764,7 +2776,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kwarg_or_starred() {
+    kwarg_or_starred(): KeywordOrStarred | null {
         //# kwarg_or_starred: NAME '=' expression | starred_expression | invalid_kwarg
         let a, b, invalid_kwarg, literal, mark;
         mark = this.mark();
@@ -2785,7 +2797,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kwarg_or_double_starred() {
+    kwarg_or_double_starred(): KeywordOrStarred | null {
         //# kwarg_or_double_starred: NAME '=' expression | '**' expression | invalid_kwarg
         let a, b, invalid_kwarg, literal, mark;
         mark = this.mark();
@@ -2806,7 +2818,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_targets() {
+    star_targets(): expr | null {
         //# star_targets: star_target !',' | star_target ((',' star_target))* ','?
         let a, b, mark, opt;
         mark = this.mark();
@@ -2823,7 +2835,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_targets_list_seq() {
+    star_targets_list_seq(): any | null {
         //# star_targets_list_seq: ','.star_target+ ','?
         let a, mark, opt;
         mark = this.mark();
@@ -2836,7 +2848,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_targets_tuple_seq() {
+    star_targets_tuple_seq(): any | null {
         //# star_targets_tuple_seq: star_target ((',' star_target))+ ','? | star_target ','
         let a, b, literal, mark, opt;
         mark = this.mark();
@@ -2853,7 +2865,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_target() {
+    star_target(): expr | null {
         //# star_target: '*' (!'*' star_target) | target_with_star_atom
         let a, literal, mark, target_with_star_atom;
         mark = this.mark();
@@ -2874,7 +2886,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    target_with_star_atom() {
+    target_with_star_atom(): expr | null {
         //# target_with_star_atom: t_primary '.' NAME !t_lookahead | t_primary '[' slices ']' !t_lookahead | star_atom
         let a, b, literal, literal_1, mark, star_atom;
         mark = this.mark();
@@ -2906,7 +2918,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    star_atom() {
+    star_atom(): expr | null {
         //# star_atom: NAME | '(' target_with_star_atom ')' | '(' star_targets_tuple_seq? ')' | '[' star_targets_list_seq? ']'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -2939,7 +2951,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    single_target() {
+    single_target(): expr | null {
         //# single_target: single_subscript_attribute_target | NAME | '(' single_target ')'
         let a, literal, literal_1, mark, single_subscript_attribute_target;
         mark = this.mark();
@@ -2960,7 +2972,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    single_subscript_attribute_target() {
+    single_subscript_attribute_target(): expr | null {
         //# single_subscript_attribute_target: t_primary '.' NAME !t_lookahead | t_primary '[' slices ']' !t_lookahead
         let a, b, literal, literal_1, mark;
         mark = this.mark();
@@ -2988,7 +3000,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    del_targets() {
+    del_targets(): any | null {
         //# del_targets: ','.del_target+ ','?
         let a, mark, opt;
         mark = this.mark();
@@ -3001,7 +3013,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    del_target() {
+    del_target(): expr | null {
         //# del_target: t_primary '.' NAME !t_lookahead | t_primary '[' slices ']' !t_lookahead | del_t_atom
         let a, b, del_t_atom, literal, literal_1, mark;
         mark = this.mark();
@@ -3033,7 +3045,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    del_t_atom() {
+    del_t_atom(): expr | null {
         //# del_t_atom: NAME | '(' del_target ')' | '(' del_targets? ')' | '[' del_targets? ']'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -3058,7 +3070,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    targets() {
+    targets(): any | null {
         //# targets: ','.target+ ','?
         let a, mark, opt;
         mark = this.mark();
@@ -3071,7 +3083,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    target() {
+    target(): expr | null {
         //# target: t_primary '.' NAME !t_lookahead | t_primary '[' slices ']' !t_lookahead | t_atom
         let a, b, literal, literal_1, mark, t_atom;
         mark = this.mark();
@@ -3103,7 +3115,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize_left_rec
-    t_primary() {
+    t_primary(): expr | null {
         //# t_primary: t_primary '.' NAME &t_lookahead | t_primary '[' slices ']' &t_lookahead | t_primary genexp &t_lookahead | t_primary '(' arguments? ')' &t_lookahead | atom &t_lookahead
         let a, b, literal, literal_1, mark;
         mark = this.mark();
@@ -3149,7 +3161,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    t_lookahead() {
+    t_lookahead(): any | null {
         //# t_lookahead: '(' | '[' | '.'
         let literal, mark;
         mark = this.mark();
@@ -3170,7 +3182,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    t_atom() {
+    t_atom(): expr | null {
         //# t_atom: NAME | '(' target ')' | '(' targets? ')' | '[' targets? ']'
         let a, b, literal, literal_1, mark;
         mark = this.mark();
@@ -3195,7 +3207,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_arguments() {
+    invalid_arguments(): any | null {
         //# invalid_arguments: args ',' '*' | expression for_if_clauses ',' [args | expression for_if_clauses] | args for_if_clauses | args ',' expression for_if_clauses | args ',' args
         let a, args, for_if_clauses, literal, literal_1, mark, opt;
         mark = this.mark();
@@ -3234,7 +3246,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_kwarg() {
+    invalid_kwarg(): any | null {
         //# invalid_kwarg: !(NAME '=') expression '='
         let a, b, mark;
         mark = this.mark();
@@ -3250,7 +3262,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_named_expression() {
+    invalid_named_expression(): any | null {
         //# invalid_named_expression: expression ':=' expression
         let a, expression, literal, mark;
         mark = this.mark();
@@ -3267,7 +3279,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_assignment() {
+    invalid_assignment(): any | null {
         //# invalid_assignment: invalid_ann_assign_target ':' expression | star_named_expression ',' star_named_expressions* ':' expression | expression ':' expression | ((star_targets '='))* star_expressions '=' | ((star_targets '='))* yield_expr '=' | star_expressions augassign (yield_expr | star_expressions)
         let _loop0_127, _loop0_128, _loop0_129, _tmp_130, a, augassign, expression, literal, literal_1, mark;
         mark = this.mark();
@@ -3318,7 +3330,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_ann_assign_target() {
+    invalid_ann_assign_target(): expr | null {
         //# invalid_ann_assign_target: list | tuple | '(' invalid_ann_assign_target ')'
         let a, list, literal, literal_1, mark, tuple;
         mark = this.mark();
@@ -3339,7 +3351,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_del_stmt() {
+    invalid_del_stmt(): any | null {
         //# invalid_del_stmt: 'del' star_expressions
         let a, literal, mark;
         mark = this.mark();
@@ -3352,7 +3364,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_block() {
+    invalid_block(): any | null {
         //# invalid_block: NEWLINE !INDENT
         let mark, newline;
         mark = this.mark();
@@ -3365,7 +3377,7 @@ export class GeneratedParser extends Parser {
     }
 
     @logger
-    invalid_primary() {
+    invalid_primary(): any | null {
         //# invalid_primary: primary '{'
         let a, mark, primary;
         mark = this.mark();
@@ -3378,7 +3390,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_comprehension() {
+    invalid_comprehension(): any | null {
         //# invalid_comprehension: ('[' | '(' | '{') starred_expression for_if_clauses
         let _tmp_131, a, for_if_clauses, mark;
         mark = this.mark();
@@ -3395,7 +3407,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_dict_comprehension() {
+    invalid_dict_comprehension(): any | null {
         //# invalid_dict_comprehension: '{' '**' bitwise_or for_if_clauses '}'
         let a, bitwise_or, for_if_clauses, literal, literal_1, mark;
         mark = this.mark();
@@ -3414,7 +3426,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_parameters() {
+    invalid_parameters(): any | null {
         //# invalid_parameters: param_no_default* (slash_with_default | param_with_default+) param_no_default
         let _loop0_132, _tmp_133, mark, param_no_default;
         mark = this.mark();
@@ -3431,7 +3443,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_lambda_parameters() {
+    invalid_lambda_parameters(): any | null {
         //# invalid_lambda_parameters: lambda_param_no_default* (lambda_slash_with_default | lambda_param_with_default+) lambda_param_no_default
         let _loop0_134, _tmp_135, lambda_param_no_default, mark;
         mark = this.mark();
@@ -3448,7 +3460,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_star_etc() {
+    invalid_star_etc(): any | null {
         //# invalid_star_etc: '*' (')' | ',' (')' | '**')) | '*' ',' TYPE_COMMENT
         let _tmp_136, literal, literal_1, mark, type_comment;
         mark = this.mark();
@@ -3469,7 +3481,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_lambda_star_etc() {
+    invalid_lambda_star_etc(): any | null {
         //# invalid_lambda_star_etc: '*' (':' | ',' (':' | '**'))
         let _tmp_137, literal, mark;
         mark = this.mark();
@@ -3482,7 +3494,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_double_type_comments() {
+    invalid_double_type_comments(): any | null {
         //# invalid_double_type_comments: TYPE_COMMENT NEWLINE TYPE_COMMENT NEWLINE INDENT
         let indent, mark, newline, newline_1, type_comment, type_comment_1;
         mark = this.mark();
@@ -3501,7 +3513,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_with_item() {
+    invalid_with_item(): any | null {
         //# invalid_with_item: expression 'as' expression
         let a, expression, literal, mark;
         mark = this.mark();
@@ -3514,7 +3526,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_for_target() {
+    invalid_for_target(): any | null {
         //# invalid_for_target: ASYNC? 'for' star_expressions
         let a, literal, mark, opt;
         mark = this.mark();
@@ -3527,7 +3539,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_group() {
+    invalid_group(): any | null {
         //# invalid_group: '(' starred_expression ')'
         let a, literal, literal_1, mark;
         mark = this.mark();
@@ -3540,7 +3552,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    invalid_import_from_targets() {
+    invalid_import_from_targets(): any | null {
         //# invalid_import_from_targets: import_from_as_names ','
         let import_from_as_names, literal, mark;
         mark = this.mark();
@@ -3553,7 +3565,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_1() {
+    _loop0_1(): any | null {
         //# _loop0_1: NEWLINE
         let children, mark, newline;
         mark = this.mark();
@@ -3568,7 +3580,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_2() {
+    _loop0_2(): any | null {
         //# _loop0_2: NEWLINE
         let children, mark, newline;
         mark = this.mark();
@@ -3583,7 +3595,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_4() {
+    _loop0_4(): any | null {
         //# _loop0_4: ',' expression
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3598,7 +3610,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_3() {
+    _gather_3(): any | null {
         //# _gather_3: expression _loop0_4
         let elem, mark, seq;
         mark = this.mark();
@@ -3611,7 +3623,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_6() {
+    _loop0_6(): any | null {
         //# _loop0_6: ',' expression
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3626,7 +3638,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_5() {
+    _gather_5(): any | null {
         //# _gather_5: expression _loop0_6
         let elem, mark, seq;
         mark = this.mark();
@@ -3639,7 +3651,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_8() {
+    _loop0_8(): any | null {
         //# _loop0_8: ',' expression
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3654,7 +3666,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_7() {
+    _gather_7(): any | null {
         //# _gather_7: expression _loop0_8
         let elem, mark, seq;
         mark = this.mark();
@@ -3667,7 +3679,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_10() {
+    _loop0_10(): any | null {
         //# _loop0_10: ',' expression
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3682,7 +3694,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_9() {
+    _gather_9(): any | null {
         //# _gather_9: expression _loop0_10
         let elem, mark, seq;
         mark = this.mark();
@@ -3695,7 +3707,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_11() {
+    _loop1_11(): any | null {
         //# _loop1_11: statement
         let children, mark, statement;
         mark = this.mark();
@@ -3710,7 +3722,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_13() {
+    _loop0_13(): any | null {
         //# _loop0_13: ';' small_stmt
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3725,7 +3737,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_12() {
+    _gather_12(): any | null {
         //# _gather_12: small_stmt _loop0_13
         let elem, mark, seq;
         mark = this.mark();
@@ -3738,7 +3750,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_14() {
+    _tmp_14(): any | null {
         //# _tmp_14: 'import' | 'from'
         let literal, mark;
         mark = this.mark();
@@ -3755,7 +3767,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_15() {
+    _tmp_15(): any | null {
         //# _tmp_15: 'def' | '@' | ASYNC
         let async, literal, mark;
         mark = this.mark();
@@ -3776,7 +3788,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_16() {
+    _tmp_16(): any | null {
         //# _tmp_16: 'class' | '@'
         let literal, mark;
         mark = this.mark();
@@ -3793,7 +3805,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_17() {
+    _tmp_17(): any | null {
         //# _tmp_17: 'with' | ASYNC
         let async, literal, mark;
         mark = this.mark();
@@ -3810,7 +3822,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_18() {
+    _tmp_18(): any | null {
         //# _tmp_18: 'for' | ASYNC
         let async, literal, mark;
         mark = this.mark();
@@ -3827,7 +3839,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_19() {
+    _tmp_19(): any | null {
         //# _tmp_19: '=' annotated_rhs
         let d, literal, mark;
         mark = this.mark();
@@ -3840,7 +3852,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_20() {
+    _tmp_20(): any | null {
         //# _tmp_20: '(' single_target ')' | single_subscript_attribute_target
         let b, literal, literal_1, mark, single_subscript_attribute_target;
         mark = this.mark();
@@ -3857,7 +3869,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_21() {
+    _tmp_21(): any | null {
         //# _tmp_21: '=' annotated_rhs
         let d, literal, mark;
         mark = this.mark();
@@ -3870,7 +3882,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_22() {
+    _loop1_22(): any | null {
         //# _loop1_22: (star_targets '=')
         let _tmp_138, children, mark;
         mark = this.mark();
@@ -3885,7 +3897,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_23() {
+    _tmp_23(): any | null {
         //# _tmp_23: yield_expr | star_expressions
         let mark, star_expressions, yield_expr;
         mark = this.mark();
@@ -3902,7 +3914,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_24() {
+    _tmp_24(): any | null {
         //# _tmp_24: yield_expr | star_expressions
         let mark, star_expressions, yield_expr;
         mark = this.mark();
@@ -3919,7 +3931,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_26() {
+    _loop0_26(): any | null {
         //# _loop0_26: ',' NAME
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3934,7 +3946,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_25() {
+    _gather_25(): any | null {
         //# _gather_25: NAME _loop0_26
         let elem, mark, seq;
         mark = this.mark();
@@ -3947,7 +3959,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_28() {
+    _loop0_28(): any | null {
         //# _loop0_28: ',' NAME
         let children, elem, literal, mark;
         mark = this.mark();
@@ -3962,7 +3974,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_27() {
+    _gather_27(): any | null {
         //# _gather_27: NAME _loop0_28
         let elem, mark, seq;
         mark = this.mark();
@@ -3975,7 +3987,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_29() {
+    _tmp_29(): any | null {
         //# _tmp_29: ',' expression
         let literal, mark, z;
         mark = this.mark();
@@ -3988,7 +4000,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_30() {
+    _tmp_30(): any | null {
         //# _tmp_30: ';' | NEWLINE
         let literal, mark, newline;
         mark = this.mark();
@@ -4005,7 +4017,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_31() {
+    _loop0_31(): any | null {
         //# _loop0_31: ('.' | '...')
         let _tmp_139, children, mark;
         mark = this.mark();
@@ -4020,7 +4032,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_32() {
+    _loop1_32(): any | null {
         //# _loop1_32: ('.' | '...')
         let _tmp_140, children, mark;
         mark = this.mark();
@@ -4035,7 +4047,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_34() {
+    _loop0_34(): any | null {
         //# _loop0_34: ',' import_from_as_name
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4050,7 +4062,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_33() {
+    _gather_33(): any | null {
         //# _gather_33: import_from_as_name _loop0_34
         let elem, mark, seq;
         mark = this.mark();
@@ -4063,7 +4075,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_35() {
+    _tmp_35(): any | null {
         //# _tmp_35: 'as' NAME
         let literal, mark, z;
         mark = this.mark();
@@ -4076,7 +4088,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_37() {
+    _loop0_37(): any | null {
         //# _loop0_37: ',' dotted_as_name
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4091,7 +4103,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_36() {
+    _gather_36(): any | null {
         //# _gather_36: dotted_as_name _loop0_37
         let elem, mark, seq;
         mark = this.mark();
@@ -4104,7 +4116,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_38() {
+    _tmp_38(): any | null {
         //# _tmp_38: 'as' NAME
         let literal, mark, z;
         mark = this.mark();
@@ -4117,7 +4129,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_40() {
+    _loop0_40(): any | null {
         //# _loop0_40: ',' with_item
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4132,7 +4144,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_39() {
+    _gather_39(): any | null {
         //# _gather_39: with_item _loop0_40
         let elem, mark, seq;
         mark = this.mark();
@@ -4145,7 +4157,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_42() {
+    _loop0_42(): any | null {
         //# _loop0_42: ',' with_item
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4160,7 +4172,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_41() {
+    _gather_41(): any | null {
         //# _gather_41: with_item _loop0_42
         let elem, mark, seq;
         mark = this.mark();
@@ -4173,7 +4185,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_44() {
+    _loop0_44(): any | null {
         //# _loop0_44: ',' with_item
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4188,7 +4200,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_43() {
+    _gather_43(): any | null {
         //# _gather_43: with_item _loop0_44
         let elem, mark, seq;
         mark = this.mark();
@@ -4201,7 +4213,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_46() {
+    _loop0_46(): any | null {
         //# _loop0_46: ',' with_item
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4216,7 +4228,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_45() {
+    _gather_45(): any | null {
         //# _gather_45: with_item _loop0_46
         let elem, mark, seq;
         mark = this.mark();
@@ -4229,7 +4241,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_47() {
+    _tmp_47(): any | null {
         //# _tmp_47: ',' | ')' | ':'
         let literal, mark;
         mark = this.mark();
@@ -4250,7 +4262,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_48() {
+    _loop1_48(): any | null {
         //# _loop1_48: except_block
         let children, except_block, mark;
         mark = this.mark();
@@ -4265,7 +4277,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_49() {
+    _tmp_49(): any | null {
         //# _tmp_49: 'as' NAME
         let literal, mark, z;
         mark = this.mark();
@@ -4278,7 +4290,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_50() {
+    _tmp_50(): any | null {
         //# _tmp_50: 'from' expression
         let literal, mark, z;
         mark = this.mark();
@@ -4291,7 +4303,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_51() {
+    _tmp_51(): any | null {
         //# _tmp_51: '->' expression
         let literal, mark, z;
         mark = this.mark();
@@ -4304,7 +4316,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_52() {
+    _tmp_52(): any | null {
         //# _tmp_52: '->' expression
         let literal, mark, z;
         mark = this.mark();
@@ -4317,7 +4329,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_53() {
+    _tmp_53(): any | null {
         //# _tmp_53: NEWLINE INDENT
         let indent, mark, newline;
         mark = this.mark();
@@ -4330,7 +4342,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_54() {
+    _loop0_54(): any | null {
         //# _loop0_54: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -4345,7 +4357,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_55() {
+    _loop0_55(): any | null {
         //# _loop0_55: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -4360,7 +4372,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_56() {
+    _loop0_56(): any | null {
         //# _loop0_56: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -4375,7 +4387,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_57() {
+    _loop1_57(): any | null {
         //# _loop1_57: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -4390,7 +4402,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_58() {
+    _loop0_58(): any | null {
         //# _loop0_58: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -4405,7 +4417,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_59() {
+    _loop1_59(): any | null {
         //# _loop1_59: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -4420,7 +4432,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_60() {
+    _loop1_60(): any | null {
         //# _loop1_60: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -4435,7 +4447,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_61() {
+    _loop1_61(): any | null {
         //# _loop1_61: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -4450,7 +4462,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_62() {
+    _loop0_62(): any | null {
         //# _loop0_62: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -4465,7 +4477,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_63() {
+    _loop1_63(): any | null {
         //# _loop1_63: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -4480,7 +4492,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_64() {
+    _loop0_64(): any | null {
         //# _loop0_64: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -4495,7 +4507,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_65() {
+    _loop1_65(): any | null {
         //# _loop1_65: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -4510,7 +4522,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_66() {
+    _loop0_66(): any | null {
         //# _loop0_66: param_maybe_default
         let children, mark, param_maybe_default;
         mark = this.mark();
@@ -4525,7 +4537,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_67() {
+    _loop1_67(): any | null {
         //# _loop1_67: param_maybe_default
         let children, mark, param_maybe_default;
         mark = this.mark();
@@ -4540,7 +4552,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_68() {
+    _loop1_68(): any | null {
         //# _loop1_68: ('@' named_expression NEWLINE)
         let _tmp_141, children, mark;
         mark = this.mark();
@@ -4555,7 +4567,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_69() {
+    _tmp_69(): any | null {
         //# _tmp_69: '(' arguments? ')'
         let literal, literal_1, mark, z;
         mark = this.mark();
@@ -4568,7 +4580,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_70() {
+    _loop1_70(): any | null {
         //# _loop1_70: (',' star_expression)
         let _tmp_142, children, mark;
         mark = this.mark();
@@ -4583,7 +4595,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_72() {
+    _loop0_72(): any | null {
         //# _loop0_72: ',' star_named_expression
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4598,7 +4610,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_71() {
+    _gather_71(): any | null {
         //# _gather_71: star_named_expression _loop0_72
         let elem, mark, seq;
         mark = this.mark();
@@ -4611,7 +4623,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_73() {
+    _loop1_73(): any | null {
         //# _loop1_73: (',' expression)
         let _tmp_143, children, mark;
         mark = this.mark();
@@ -4626,7 +4638,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_74() {
+    _loop0_74(): any | null {
         //# _loop0_74: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -4641,7 +4653,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_75() {
+    _loop0_75(): any | null {
         //# _loop0_75: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -4656,7 +4668,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_76() {
+    _loop0_76(): any | null {
         //# _loop0_76: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -4671,7 +4683,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_77() {
+    _loop1_77(): any | null {
         //# _loop1_77: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -4686,7 +4698,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_78() {
+    _loop0_78(): any | null {
         //# _loop0_78: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -4701,7 +4713,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_79() {
+    _loop1_79(): any | null {
         //# _loop1_79: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -4716,7 +4728,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_80() {
+    _loop1_80(): any | null {
         //# _loop1_80: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -4731,7 +4743,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_81() {
+    _loop1_81(): any | null {
         //# _loop1_81: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -4746,7 +4758,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_82() {
+    _loop0_82(): any | null {
         //# _loop0_82: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -4761,7 +4773,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_83() {
+    _loop1_83(): any | null {
         //# _loop1_83: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -4776,7 +4788,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_84() {
+    _loop0_84(): any | null {
         //# _loop0_84: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -4791,7 +4803,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_85() {
+    _loop1_85(): any | null {
         //# _loop1_85: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -4806,7 +4818,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_86() {
+    _loop0_86(): any | null {
         //# _loop0_86: lambda_param_maybe_default
         let children, lambda_param_maybe_default, mark;
         mark = this.mark();
@@ -4821,7 +4833,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_87() {
+    _loop1_87(): any | null {
         //# _loop1_87: lambda_param_maybe_default
         let children, lambda_param_maybe_default, mark;
         mark = this.mark();
@@ -4836,7 +4848,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_88() {
+    _loop1_88(): any | null {
         //# _loop1_88: ('or' conjunction)
         let _tmp_144, children, mark;
         mark = this.mark();
@@ -4851,7 +4863,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_89() {
+    _loop1_89(): any | null {
         //# _loop1_89: ('and' inversion)
         let _tmp_145, children, mark;
         mark = this.mark();
@@ -4866,7 +4878,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_90() {
+    _loop1_90(): any | null {
         //# _loop1_90: compare_op_bitwise_or_pair
         let children, compare_op_bitwise_or_pair, mark;
         mark = this.mark();
@@ -4881,7 +4893,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_92() {
+    _loop0_92(): any | null {
         //# _loop0_92: ',' slice
         let children, elem, literal, mark;
         mark = this.mark();
@@ -4896,7 +4908,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_91() {
+    _gather_91(): any | null {
         //# _gather_91: slice _loop0_92
         let elem, mark, seq;
         mark = this.mark();
@@ -4909,7 +4921,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_93() {
+    _tmp_93(): any | null {
         //# _tmp_93: ':' expression?
         let d, literal, mark;
         mark = this.mark();
@@ -4922,7 +4934,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_94() {
+    _tmp_94(): any | null {
         //# _tmp_94: tuple | group | genexp
         let genexp, group, mark, tuple;
         mark = this.mark();
@@ -4943,7 +4955,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_95() {
+    _tmp_95(): any | null {
         //# _tmp_95: list | listcomp
         let list, listcomp, mark;
         mark = this.mark();
@@ -4960,7 +4972,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_96() {
+    _tmp_96(): any | null {
         //# _tmp_96: dict | set | dictcomp | setcomp
         let dict, dictcomp, mark, set, setcomp;
         mark = this.mark();
@@ -4985,7 +4997,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_97() {
+    _loop1_97(): any | null {
         //# _loop1_97: STRING
         let children, mark, string;
         mark = this.mark();
@@ -5000,7 +5012,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_98() {
+    _tmp_98(): any | null {
         //# _tmp_98: star_named_expression ',' star_named_expressions?
         let literal, mark, y, z;
         mark = this.mark();
@@ -5017,7 +5029,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_99() {
+    _tmp_99(): any | null {
         //# _tmp_99: yield_expr | named_expression
         let mark, named_expression, yield_expr;
         mark = this.mark();
@@ -5034,7 +5046,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_101() {
+    _loop0_101(): any | null {
         //# _loop0_101: ',' double_starred_kvpair
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5049,7 +5061,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_100() {
+    _gather_100(): any | null {
         //# _gather_100: double_starred_kvpair _loop0_101
         let elem, mark, seq;
         mark = this.mark();
@@ -5062,7 +5074,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_102() {
+    _loop1_102(): any | null {
         //# _loop1_102: for_if_clause
         let children, for_if_clause, mark;
         mark = this.mark();
@@ -5077,7 +5089,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_103() {
+    _loop0_103(): any | null {
         //# _loop0_103: ('if' disjunction)
         let _tmp_146, children, mark;
         mark = this.mark();
@@ -5092,7 +5104,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_104() {
+    _loop0_104(): any | null {
         //# _loop0_104: ('if' disjunction)
         let _tmp_147, children, mark;
         mark = this.mark();
@@ -5107,7 +5119,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_106() {
+    _loop0_106(): any | null {
         //# _loop0_106: ',' (starred_expression | named_expression !'=')
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5122,7 +5134,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_105() {
+    _gather_105(): any | null {
         //# _gather_105: (starred_expression | named_expression !'=') _loop0_106
         let elem, mark, seq;
         mark = this.mark();
@@ -5135,7 +5147,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_107() {
+    _tmp_107(): any | null {
         //# _tmp_107: ',' kwargs
         let k, literal, mark;
         mark = this.mark();
@@ -5148,7 +5160,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_109() {
+    _loop0_109(): any | null {
         //# _loop0_109: ',' kwarg_or_starred
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5163,7 +5175,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_108() {
+    _gather_108(): any | null {
         //# _gather_108: kwarg_or_starred _loop0_109
         let elem, mark, seq;
         mark = this.mark();
@@ -5176,7 +5188,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_111() {
+    _loop0_111(): any | null {
         //# _loop0_111: ',' kwarg_or_double_starred
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5191,7 +5203,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_110() {
+    _gather_110(): any | null {
         //# _gather_110: kwarg_or_double_starred _loop0_111
         let elem, mark, seq;
         mark = this.mark();
@@ -5204,7 +5216,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_113() {
+    _loop0_113(): any | null {
         //# _loop0_113: ',' kwarg_or_starred
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5219,7 +5231,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_112() {
+    _gather_112(): any | null {
         //# _gather_112: kwarg_or_starred _loop0_113
         let elem, mark, seq;
         mark = this.mark();
@@ -5232,7 +5244,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_115() {
+    _loop0_115(): any | null {
         //# _loop0_115: ',' kwarg_or_double_starred
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5247,7 +5259,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_114() {
+    _gather_114(): any | null {
         //# _gather_114: kwarg_or_double_starred _loop0_115
         let elem, mark, seq;
         mark = this.mark();
@@ -5260,7 +5272,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_116() {
+    _loop0_116(): any | null {
         //# _loop0_116: (',' star_target)
         let _tmp_149, children, mark;
         mark = this.mark();
@@ -5275,7 +5287,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_118() {
+    _loop0_118(): any | null {
         //# _loop0_118: ',' star_target
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5290,7 +5302,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_117() {
+    _gather_117(): any | null {
         //# _gather_117: star_target _loop0_118
         let elem, mark, seq;
         mark = this.mark();
@@ -5303,7 +5315,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_119() {
+    _loop1_119(): any | null {
         //# _loop1_119: (',' star_target)
         let _tmp_150, children, mark;
         mark = this.mark();
@@ -5318,7 +5330,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_120() {
+    _tmp_120(): any | null {
         //# _tmp_120: !'*' star_target
         let mark, star_target;
         mark = this.mark();
@@ -5331,7 +5343,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_122() {
+    _loop0_122(): any | null {
         //# _loop0_122: ',' del_target
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5346,7 +5358,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_121() {
+    _gather_121(): any | null {
         //# _gather_121: del_target _loop0_122
         let elem, mark, seq;
         mark = this.mark();
@@ -5359,7 +5371,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_124() {
+    _loop0_124(): any | null {
         //# _loop0_124: ',' target
         let children, elem, literal, mark;
         mark = this.mark();
@@ -5374,7 +5386,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_123() {
+    _gather_123(): any | null {
         //# _gather_123: target _loop0_124
         let elem, mark, seq;
         mark = this.mark();
@@ -5387,7 +5399,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_125() {
+    _tmp_125(): any | null {
         //# _tmp_125: args | expression for_if_clauses
         let args, expression, for_if_clauses, mark;
         mark = this.mark();
@@ -5404,7 +5416,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_126() {
+    _tmp_126(): any | null {
         //# _tmp_126: NAME '='
         let literal, mark, name;
         mark = this.mark();
@@ -5417,7 +5429,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_127() {
+    _loop0_127(): any | null {
         //# _loop0_127: star_named_expressions
         let children, mark, star_named_expressions;
         mark = this.mark();
@@ -5432,7 +5444,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_128() {
+    _loop0_128(): any | null {
         //# _loop0_128: (star_targets '=')
         let _tmp_151, children, mark;
         mark = this.mark();
@@ -5447,7 +5459,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_129() {
+    _loop0_129(): any | null {
         //# _loop0_129: (star_targets '=')
         let _tmp_152, children, mark;
         mark = this.mark();
@@ -5462,7 +5474,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_130() {
+    _tmp_130(): any | null {
         //# _tmp_130: yield_expr | star_expressions
         let mark, star_expressions, yield_expr;
         mark = this.mark();
@@ -5479,7 +5491,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_131() {
+    _tmp_131(): any | null {
         //# _tmp_131: '[' | '(' | '{'
         let literal, mark;
         mark = this.mark();
@@ -5500,7 +5512,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_132() {
+    _loop0_132(): any | null {
         //# _loop0_132: param_no_default
         let children, mark, param_no_default;
         mark = this.mark();
@@ -5515,7 +5527,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_133() {
+    _tmp_133(): any | null {
         //# _tmp_133: slash_with_default | param_with_default+
         let _loop1_153, mark, slash_with_default;
         mark = this.mark();
@@ -5532,7 +5544,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_134() {
+    _loop0_134(): any | null {
         //# _loop0_134: lambda_param_no_default
         let children, lambda_param_no_default, mark;
         mark = this.mark();
@@ -5547,7 +5559,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_135() {
+    _tmp_135(): any | null {
         //# _tmp_135: lambda_slash_with_default | lambda_param_with_default+
         let _loop1_154, lambda_slash_with_default, mark;
         mark = this.mark();
@@ -5564,7 +5576,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_136() {
+    _tmp_136(): any | null {
         //# _tmp_136: ')' | ',' (')' | '**')
         let _tmp_155, literal, mark;
         mark = this.mark();
@@ -5581,7 +5593,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_137() {
+    _tmp_137(): any | null {
         //# _tmp_137: ':' | ',' (':' | '**')
         let _tmp_156, literal, mark;
         mark = this.mark();
@@ -5598,7 +5610,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_138() {
+    _tmp_138(): any | null {
         //# _tmp_138: star_targets '='
         let literal, mark, z;
         mark = this.mark();
@@ -5611,7 +5623,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_139() {
+    _tmp_139(): any | null {
         //# _tmp_139: '.' | '...'
         let literal, mark;
         mark = this.mark();
@@ -5628,7 +5640,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_140() {
+    _tmp_140(): any | null {
         //# _tmp_140: '.' | '...'
         let literal, mark;
         mark = this.mark();
@@ -5645,7 +5657,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_141() {
+    _tmp_141(): any | null {
         //# _tmp_141: '@' named_expression NEWLINE
         let f, literal, mark, newline;
         mark = this.mark();
@@ -5658,7 +5670,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_142() {
+    _tmp_142(): any | null {
         //# _tmp_142: ',' star_expression
         let c, literal, mark;
         mark = this.mark();
@@ -5671,7 +5683,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_143() {
+    _tmp_143(): any | null {
         //# _tmp_143: ',' expression
         let c, literal, mark;
         mark = this.mark();
@@ -5684,7 +5696,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_144() {
+    _tmp_144(): any | null {
         //# _tmp_144: 'or' conjunction
         let c, literal, mark;
         mark = this.mark();
@@ -5697,7 +5709,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_145() {
+    _tmp_145(): any | null {
         //# _tmp_145: 'and' inversion
         let c, literal, mark;
         mark = this.mark();
@@ -5710,7 +5722,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_146() {
+    _tmp_146(): any | null {
         //# _tmp_146: 'if' disjunction
         let literal, mark, z;
         mark = this.mark();
@@ -5723,7 +5735,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_147() {
+    _tmp_147(): any | null {
         //# _tmp_147: 'if' disjunction
         let literal, mark, z;
         mark = this.mark();
@@ -5736,7 +5748,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_148() {
+    _tmp_148(): any | null {
         //# _tmp_148: starred_expression | named_expression !'='
         let mark, named_expression, starred_expression;
         mark = this.mark();
@@ -5753,7 +5765,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_149() {
+    _tmp_149(): any | null {
         //# _tmp_149: ',' star_target
         let c, literal, mark;
         mark = this.mark();
@@ -5766,7 +5778,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_150() {
+    _tmp_150(): any | null {
         //# _tmp_150: ',' star_target
         let c, literal, mark;
         mark = this.mark();
@@ -5779,7 +5791,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_151() {
+    _tmp_151(): any | null {
         //# _tmp_151: star_targets '='
         let literal, mark, star_targets;
         mark = this.mark();
@@ -5792,7 +5804,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_152() {
+    _tmp_152(): any | null {
         //# _tmp_152: star_targets '='
         let literal, mark, star_targets;
         mark = this.mark();
@@ -5805,7 +5817,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_153() {
+    _loop1_153(): any | null {
         //# _loop1_153: param_with_default
         let children, mark, param_with_default;
         mark = this.mark();
@@ -5820,7 +5832,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop1_154() {
+    _loop1_154(): any | null {
         //# _loop1_154: lambda_param_with_default
         let children, lambda_param_with_default, mark;
         mark = this.mark();
@@ -5835,7 +5847,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_155() {
+    _tmp_155(): any | null {
         //# _tmp_155: ')' | '**'
         let literal, mark;
         mark = this.mark();
@@ -5852,7 +5864,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _tmp_156() {
+    _tmp_156(): any | null {
         //# _tmp_156: ':' | '**'
         let literal, mark;
         mark = this.mark();
