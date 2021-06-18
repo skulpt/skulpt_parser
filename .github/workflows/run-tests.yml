@@ -11,9 +11,9 @@ jobs:
               with:
                   python-version: "3.9.5"
             - run: git clone https://github.com/python/cpython.git --branch 3.9
-            - run: export PATH_TO_CPYTHON="./cpython"
+            - run: echo "PATH_TO_CPYTHON=./cpython" >> $GITHUB_ENV
             - run: deno install -qAn vr https://deno.land/x/velociraptor@1.0.1/cli.ts
-            - run: export PATH="/home/runner/.deno/bin:$PATH"
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - run: vr gen_parser
             - run: git diff-index --quiet --cached HEAD --
             - run: vr test
