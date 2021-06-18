@@ -1,37 +1,7 @@
 import * as astnodes from "../src/ast/astnodes.ts";
 import { dump } from "../src/ast/ast.ts";
 import { assertEquals } from "../deps.ts";
-
-/** Simple name and function, compact form, but not configurable */
-async function getPyAstDump(content: string, indent: number | null = 4, attrs = false, js = false): Promise<string> {
-    const cmd = Deno.run({
-        cmd: [
-            "python3",
-            "tests/ast_dumper_helper.py",
-            content,
-            `--indent=${indent === null ? -1 : indent}`,
-            attrs ? "--attrs=1" : "--attrs=0",
-            js ? "--js=1" : "--js=0",
-        ],
-        stdout: "piped",
-        stderr: "piped",
-    });
-
-    const output = await cmd.output(); // "piped" must be set
-    const outStr = new TextDecoder().decode(output);
-
-    const error = await cmd.stderrOutput();
-    const errorStr = new TextDecoder().decode(error);
-    cmd.close(); // Don't forget to close it
-
-    if (errorStr) {
-        console.log(outStr);
-        console.error(errorStr);
-        throw new Error(errorStr);
-    }
-
-    return outStr;
-}
+import { getPyAstDump } from "../support/py_ast_dump.ts";
 
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
 async function convertToTs(content: string): Promise<string> {
@@ -63,7 +33,7 @@ async function convertFileToTs(fileName: string) {
 }
 
 async function doTest(source: string, mod: astnodes.Module) {
-    for (let indent of [null, /* 0, 2,*/ 4]) {
+    for (let indent of [4, null]) {
         const py_ast_dump = await getPyAstDump(source, indent);
         assertEquals(py_ast_dump, dump(mod, indent) + "\n");
     }

@@ -34,3 +34,4 @@ scripts:
         cmd: deno run src/parse.ts
         allow:
             - read
+            - run
