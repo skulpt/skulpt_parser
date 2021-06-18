@@ -411,7 +411,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    augassign(): operator | null {
+    augassign(): AugOperator | null {
         //# augassign: '+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=' | '**=' | '//='
         let literal, mark;
         mark = this.mark();

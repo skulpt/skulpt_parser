@@ -80,49 +80,6 @@ def fix_reserved(name):
     return name + "_" if name in reserved else name
 
 
-import re
-
-
-def clean_type(t):
-    t = t.replace("_ty", "").replace("*", "").replace("asdl_seq", "any")
-
-    if t == "AugOperator":
-        return "operator"
-    return t
-
-
-def clean_action(action):
-    action = re.compile(r" -> v . [\w]+ . ([\w+])").sub(r".\1", action)
-
-    action = re.compile(r"\( [\w_]+ \* \)").sub("", action)  # type check
-    # action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
-    action = re.compile(r"asdl_\w+ \*? ,").sub("", action)  # type check
-    # action = re.compile(r", p -> arena |, p | p ,").sub("", action)
-
-    action = (
-        # action.replace("_Py_", "new astnodes.")
-        action.replace("NULL", "null")
-        # .replace("_PyPegen_", "pegen.")
-        .replace("EXTRA", "...EXTRA")
-        .replace("CHECK ", "")  # CHECK is a version checker we could add this in later
-        # .replace("stmt_ty ,", "")
-        # .replace("expr_ty ,", "")
-        # .replace("( expor_ty )", "")
-        .replace(", p -> arena", "")
-        # .replace(" p ,", "")
-        .replace(", p ", "")
-        .replace(" -> ", ".")
-        # .replace("AugOperator *", "AugOperator")
-        .replace("RAISE", "pegen.RAISE")
-        .replace("NEW_TYPE_COMMENT", "pegen.NEW_TYPE_COMMENT")
-    )
-    # action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
-    action = re.compile(r"\( ([bt]) \) \? \( \( expr_ty \) [bt] \)(.\w+) : null").sub(r"\1\2", action)
-    action = re.sub(r"pegen.augoperator \( (new astnodes.\w+) \)", r"\1", action)
-    action = re.sub(r"new astnodes.Py_([None|False|True|Ellipsis])", r"py\1", action)
-    return action
-
-
 non_exact_tok = (
     "AWAIT",
     "OP",
@@ -278,7 +235,7 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
         else:
             # self.suffix += f"memoizeMethod('{node.name}');\n"
             self.print("@memoize")
-        node_type = node.type and clean_type(node.type) or "any"
+        node_type = node.type or "any"
         self.print(f"{node.name}(): {node_type} | null {{")  # -> Optional[{node_type}] {{")
         with self.indent():
             self.print(f"//# {node.name}: {rhs}")
