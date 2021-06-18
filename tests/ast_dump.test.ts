@@ -1,7 +1,8 @@
 import * as astnodes from "../src/ast/astnodes.ts";
 import { dump } from "../src/ast/ast.ts";
-import { assertEquals } from "../deps.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
+// replace with assertEquals when string comparison is better.
+import { assertEqualsString } from "../support/diff.ts";
 
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
 async function convertToTs(content: string): Promise<string> {
@@ -35,7 +36,7 @@ async function convertFileToTs(fileName: string) {
 async function doTest(source: string, mod: astnodes.Module) {
     for (let indent of [4, null]) {
         const py_ast_dump = await getPyAstDump(source, indent);
-        assertEquals(py_ast_dump, dump(mod, indent) + "\n");
+        assertEqualsString(py_ast_dump, dump(mod, indent) + "\n");
     }
 }
 
