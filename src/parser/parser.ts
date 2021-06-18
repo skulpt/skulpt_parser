@@ -245,13 +245,13 @@ export class Parser {
         }
         return null;
     }
-    positive_lookahead(func: (...args: any[]) => boolean, ...args: any[]) {
+    positive_lookahead<T = any, R = any>(func: (...args: T[]) => R, ...args: T[]): boolean {
         const mark = this.mark();
         const ok = func.call(this, ...args);
         this.reset(mark);
         return ok;
     }
-    negative_lookahead(func: (...args: any[]) => boolean, ...args: any[]) {
+    negative_lookahead<T = any, R = any>(func: (...args: T[]) => R, ...args: T[]): boolean {
         const mark = this.mark();
         const ok = func.call(this, ...args);
         this.reset(mark);
