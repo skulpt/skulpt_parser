@@ -109,6 +109,13 @@ class EmitVisitor(asdl.VisitorBase):
     def emit_tp_name(self, name):
         self.emit(f'{name}.prototype.tp$name = "{clean_name(name)}";', 0, 0)
 
+    def emit_kind_typeofs(self, name, types):
+        kinds = "export type " + name + "Kind = typeof " + name
+        for t in types:
+            kinds += " | typeof " + t.name
+        self.emit(kinds + ";", 0)
+        self.emit("", 0)
+
 
 class TypeDefVisitor(EmitVisitor):
     def visitModule(self, mod):
@@ -131,6 +138,7 @@ class TypeDefVisitor(EmitVisitor):
 
         self.emit_tp_name(name)
         emit("")
+        self.emit_kind_typeofs(name, sum.types)
         for i in range(len(sum.types)):
             type = sum.types[i]
             emit(f"export class {type.name} extends {name} {{}}")
@@ -158,6 +166,7 @@ class PrototypeVisitor(EmitVisitor):
         else:
             self.emit(f"/* ----- {name} ----- */", 0)
             self.emit_base(name, self.get_args(sum.attributes))
+            self.emit_kind_typeofs(name, sum.types)
 
             for t in sum.types:
                 self.visit(t, name, sum.attributes)

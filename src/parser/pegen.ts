@@ -6,16 +6,11 @@ import {
     Module,
     Name,
     stmt,
-    Name_kind,
-    Tuple_kind,
-    List_kind,
-    Attribute_kind,
-    Starred_kind,
-    Subscript_kind,
     exprAttrs,
     Call,
     Load,
     Constant,
+    exprKind,
 } from "../ast/astnodes.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
@@ -1630,7 +1625,6 @@ function _set_name_context(e: Name, ctx: expr_context) {
 // }
 
 /* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
-type exprKind = typeof expr | typeof Name;
 
 export function set_expr_context(e: expr, ctx: expr_context): expr {
     assert(expr !== null);
@@ -1657,30 +1651,6 @@ export function set_expr_context(e: expr, ctx: expr_context): expr {
         default:
             newExpr = e;
     }
-    /*
-    switch (e._kind) {
-        case Name_kind:
-            newExpr = _set_name_context(e as Name, ctx);
-            break;
-        // case Tuple_kind:
-        //     newExpr = _set_tuple_context(p, expr, ctx);
-        //     break;
-        // case List_kind:
-        //     newExpr = _set_list_context(p, expr, ctx);
-        //     break;
-        // case Subscript_kind:
-        //     newExpr = _set_subscript_context(p, expr, ctx);
-        //     break;
-        // case Attribute_kind:
-        //     newExpr = _set_attribute_context(p, expr, ctx);
-        //     break;
-        // case Starred_kind:
-        //     newExpr = _set_starred_context(p, expr, ctx);
-        //     break;
-        default:
-            newExpr = e;
-    }
-    */
     return newExpr;
 }
 // expr_ty
