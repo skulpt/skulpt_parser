@@ -12,8 +12,8 @@ jobs:
                   python-version: "3.9.5"
             - uses: actions/checkout@master
               with:
-                  name: python/cpython     <-- clone https://github.com/org1/repo1
-                  ref: 3.9
+                  repository: python/cpython
+                  ref: "3.9"
             - uses: actions/checkout@master
             - run: ls -laR
             # - run: git clone https://github.com/python/cpython.git --branch 3.9
