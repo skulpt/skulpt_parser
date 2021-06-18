@@ -1630,12 +1630,14 @@ function _set_name_context(e: Name, ctx: expr_context) {
 // }
 
 /* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
-export function set_expr_context(expr: expr, ctx: expr_context): expr {
+type exprKind = typeof expr | typeof Name;
+
+export function set_expr_context(e: expr, ctx: expr_context): expr {
     assert(expr !== null);
     let newExpr: expr;
-    switch (expr._kind) {
-        case Name_kind:
-            newExpr = _set_name_context(expr as Name, ctx);
+    switch (e.constructor as exprKind) {
+        case Name:
+            newExpr = _set_name_context(e as Name, ctx);
             break;
         // case Tuple_kind:
         //     newExpr = _set_tuple_context(p, expr, ctx);
@@ -1653,8 +1655,32 @@ export function set_expr_context(expr: expr, ctx: expr_context): expr {
         //     newExpr = _set_starred_context(p, expr, ctx);
         //     break;
         default:
-            newExpr = expr;
+            newExpr = e;
     }
+    /*
+    switch (e._kind) {
+        case Name_kind:
+            newExpr = _set_name_context(e as Name, ctx);
+            break;
+        // case Tuple_kind:
+        //     newExpr = _set_tuple_context(p, expr, ctx);
+        //     break;
+        // case List_kind:
+        //     newExpr = _set_list_context(p, expr, ctx);
+        //     break;
+        // case Subscript_kind:
+        //     newExpr = _set_subscript_context(p, expr, ctx);
+        //     break;
+        // case Attribute_kind:
+        //     newExpr = _set_attribute_context(p, expr, ctx);
+        //     break;
+        // case Starred_kind:
+        //     newExpr = _set_starred_context(p, expr, ctx);
+        //     break;
+        default:
+            newExpr = e;
+    }
+    */
     return newExpr;
 }
 // expr_ty
