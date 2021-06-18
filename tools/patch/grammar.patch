@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..34c9a0b6b5 100644
+index 64e205e7fd..117ebc946f 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -105,7 +105,7 @@ index 64e205e7fd..34c9a0b6b5 100644
 +        CHECK_VERSION(6, "Variable annotations syntax is", new astnodes.AnnAssign(a, b, c, 0, ...EXTRA)) }
      | a=(z=star_targets '=' { z })+ b=(yield_expr | star_expressions) !'=' tc=[TYPE_COMMENT] {
 -         _Py_Assign(a, b, NEW_TYPE_COMMENT(p, tc), EXTRA) }
-+         new astnodes.Assign(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
++         new astnodes.Assign(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
      | a=single_target b=augassign ~ c=(yield_expr | star_expressions) {
 -         _Py_AugAssign(a, b->kind, c, EXTRA) }
 +         new astnodes.AugAssign(a, b.kind, c, ...EXTRA) }
@@ -230,10 +230,10 @@ index 64e205e7fd..34c9a0b6b5 100644
 +for_stmt[stmt]:
      | 'for' t=star_targets 'in' ~ ex=star_expressions ':' tc=[TYPE_COMMENT] b=block el=[else_block] {
 -        _Py_For(t, ex, b, el, NEW_TYPE_COMMENT(p, tc), EXTRA) }
-+        new astnodes.For(t, ex, b, el, NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
++        new astnodes.For(t, ex, b, el, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
      | ASYNC 'for' t=star_targets 'in' ~ ex=star_expressions ':' tc=[TYPE_COMMENT] b=block el=[else_block] {
 -        CHECK_VERSION(5, "Async for loops are", _Py_AsyncFor(t, ex, b, el, NEW_TYPE_COMMENT(p, tc), EXTRA)) }
-+        CHECK_VERSION(5, "Async for loops are", new astnodes.AsyncFor(t, ex, b, el, NEW_TYPE_COMMENT(this, tc), ...EXTRA)) }
++        CHECK_VERSION(5, "Async for loops are", new astnodes.AsyncFor(t, ex, b, el, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)) }
      | invalid_for_target
  
 -with_stmt[stmt_ty]:
@@ -243,7 +243,7 @@ index 64e205e7fd..34c9a0b6b5 100644
 +        new astnodes.With(a, b, null, ...EXTRA) }
      | 'with' a=','.with_item+ ':' tc=[TYPE_COMMENT] b=block {
 -        _Py_With(a, b, NEW_TYPE_COMMENT(p, tc), EXTRA) }
-+        new astnodes.With(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
++        new astnodes.With(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
      | ASYNC 'with' '(' a=','.with_item+ ','? ')' ':' b=block {
 -       CHECK_VERSION(5, "Async with statements are", _Py_AsyncWith(a, b, NULL, EXTRA)) }
 +       CHECK_VERSION(5, "Async with statements are", new astnodes.AsyncWith(a, b, null, ...EXTRA)) }
@@ -251,7 +251,7 @@ index 64e205e7fd..34c9a0b6b5 100644
 -       CHECK_VERSION(5, "Async with statements are", _Py_AsyncWith(a, b, NEW_TYPE_COMMENT(p, tc), EXTRA)) }
 -with_item[withitem_ty]:
 -    | e=expression 'as' t=star_target &(',' | ')' | ':') { _Py_withitem(e, t, p->arena) }
-+       CHECK_VERSION(5, "Async with statements are", new astnodes.AsyncWith(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA)) }
++       CHECK_VERSION(5, "Async with statements are", new astnodes.AsyncWith(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)) }
 +with_item[withitem]:
 +    | e=expression 'as' t=star_target &(',' | ')' | ':') { new astnodes.withitem(e, t) }
      | invalid_with_item
@@ -299,7 +299,7 @@ index 64e205e7fd..34c9a0b6b5 100644
 -                        b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA) }
 +        new astnodes.FunctionDef(n.id,
 +                        (params) ? params : CHECK(pegen.empty_arguments(p)),
-+                        b, null, a, NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
++                        b, null, a, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
      | ASYNC 'def' n=NAME '(' params=[params] ')' a=['->' z=expression { z }] ':' tc=[func_type_comment] b=block {
          CHECK_VERSION(
              5,
@@ -309,7 +309,7 @@ index 64e205e7fd..34c9a0b6b5 100644
 -                            b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA)
 +            new astnodes.AsyncFunctionDef(n.id,
 +                            (params) ? params : CHECK(pegen.empty_arguments(p)),
-+                            b, null, a, NEW_TYPE_COMMENT(this, tc), ...EXTRA)
++                            b, null, a, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
          ) }
  func_type_comment[Token*]:
      | NEWLINE t=TYPE_COMMENT &(NEWLINE INDENT) { t }  # Must be followed by indented block

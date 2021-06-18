@@ -393,7 +393,7 @@ export class GeneratedParser extends Parser {
             this.negative_lookahead(this.expect, "=") &&
             ((tc = this.expect("TYPE_COMMENT")), 1)
         ) {
-            return new astnodes.Assign(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA);
+            return new astnodes.Assign(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.single_target()) && (b = this.augassign()) && (cut = true) && (c = this._tmp_24())) {
@@ -803,7 +803,7 @@ export class GeneratedParser extends Parser {
             (b = this.block()) &&
             ((el = this.else_block()), 1)
         ) {
-            return new astnodes.For(t, ex, b, el, NEW_TYPE_COMMENT(this, tc), ...EXTRA);
+            return new astnodes.For(t, ex, b, el, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
         }
         this.reset(mark);
         if (cut) return null;
@@ -823,7 +823,7 @@ export class GeneratedParser extends Parser {
             return CHECK_VERSION(
                 5,
                 "Async for loops are",
-                new astnodes.AsyncFor(t, ex, b, el, NEW_TYPE_COMMENT(this, tc), ...EXTRA)
+                new astnodes.AsyncFor(t, ex, b, el, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
             );
         }
         this.reset(mark);
@@ -861,7 +861,7 @@ export class GeneratedParser extends Parser {
             ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block())
         ) {
-            return new astnodes.With(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA);
+            return new astnodes.With(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -888,7 +888,7 @@ export class GeneratedParser extends Parser {
             return CHECK_VERSION(
                 5,
                 "Async with statements are",
-                new astnodes.AsyncWith(a, b, NEW_TYPE_COMMENT(this, tc), ...EXTRA)
+                new astnodes.AsyncWith(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
             );
         }
         this.reset(mark);
@@ -1056,7 +1056,7 @@ export class GeneratedParser extends Parser {
                 b,
                 null,
                 a,
-                NEW_TYPE_COMMENT(this, tc),
+                pegen.NEW_TYPE_COMMENT(this, tc),
                 ...EXTRA
             );
         }
@@ -1082,7 +1082,7 @@ export class GeneratedParser extends Parser {
                     b,
                     null,
                     a,
-                    NEW_TYPE_COMMENT(this, tc),
+                    pegen.NEW_TYPE_COMMENT(this, tc),
                     ...EXTRA
                 )
             );
