@@ -24,6 +24,12 @@ scripts:
     gen_ast:
         cmd: cd run-tests && ls -1 *.py | xargs -n1 python3 tools/dump-ast.py
 
+    apply_grammar_patch:
+        cmd: cd ../cpython/Grammar && git apply ../../skulpt_parser/tools/patch/grammar.patch
+
+    gen_grammar_patch:
+        cmd: cd ../cpython/Grammar && git diff -- python.gram -p > ../../skulpt_parser/tools/patch/grammar.patch
+
     test:
         cmd: deno test
         allow:
