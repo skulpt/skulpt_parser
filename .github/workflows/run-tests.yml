@@ -1,0 +1,17 @@
+name: run-deno-tests
+on: [push, pull_request]
+jobs:
+    check-generated-parser:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9.5"
+            - run: git clone git@github.com:python/cpython.git ../cpython --branch 3.9
+            - run: deno install -qAn vr https://deno.land/x/velociraptor@1.0.1/cli.ts
+            - run: vr gen_parser
+            - run: git diff-index --quiet --cached HEAD --
+            - run: vr test
