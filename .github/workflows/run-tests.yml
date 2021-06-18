@@ -14,7 +14,11 @@ jobs:
               with:
                   repository: python/cpython
                   ref: "3.9"
+                  path: cpython
             - uses: actions/checkout@master
+              with:
+                  path: skulpt_parser
+            - run: cd skulpt_parser
             - run: ls -laR
             # - run: git clone https://github.com/python/cpython.git --branch 3.9
             - run: deno install -qAn vr https://deno.land/x/velociraptor@1.0.1/cli.ts
