@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..0b41b3a63a 100644
+index 64e205e7fd..8936639104 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -54,7 +54,7 @@ index 64e205e7fd..0b41b3a63a 100644
      | simple_stmt
 -    | NEWLINE { _PyPegen_singleton_seq(p, CHECK(_Py_Pass(EXTRA))) }
 -    | ENDMARKER { _PyPegen_interactive_exit(p) }
-+    | NEWLINE { pegen.singleton_seq(this, CHECK(new astnodes.Pass(EXTRA))) }
++    | NEWLINE { pegen.singleton_seq(this, CHECK(new astnodes.Pass(...EXTRA))) }
 +    | ENDMARKER { pegen.interactive_exit(p) }
  simple_stmt[asdl_seq*]:
 -    | a=small_stmt !';' NEWLINE { _PyPegen_singleton_seq(p, a) } # Not needed, there for speedup
@@ -71,14 +71,14 @@ index 64e205e7fd..0b41b3a63a 100644
      | &('import' | 'from') import_stmt
      | &'raise' raise_stmt
 -    | 'pass' { _Py_Pass(EXTRA) }
-+    | 'pass' { new astnodes.Pass(EXTRA) }
++    | 'pass' { new astnodes.Pass(...EXTRA) }
      | &'del' del_stmt
      | &'yield' yield_stmt
      | &'assert' assert_stmt
 -    | 'break' { _Py_Break(EXTRA) }
 -    | 'continue' { _Py_Continue(EXTRA) }
-+    | 'break' { new astnodes.Break(EXTRA) }
-+    | 'continue' { new astnodes.Continue(EXTRA) }
++    | 'break' { new astnodes.Break(...EXTRA) }
++    | 'continue' { new astnodes.Continue(...EXTRA) }
      | &'global' global_stmt
      | &'nonlocal' nonlocal_stmt
 -compound_stmt[stmt_ty]:

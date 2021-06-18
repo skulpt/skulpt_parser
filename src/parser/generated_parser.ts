@@ -219,7 +219,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((newline = this.expect("NEWLINE"))) {
-            return pegen.singleton_seq(this, CHECK(new astnodes.Pass(EXTRA)));
+            return pegen.singleton_seq(this, CHECK(new astnodes.Pass(...EXTRA)));
         }
         this.reset(mark);
         if ((endmarker = this.expect("ENDMARKER"))) {
@@ -288,7 +288,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect("pass"))) {
-            return new astnodes.Pass(EXTRA);
+            return new astnodes.Pass(...EXTRA);
         }
         this.reset(mark);
         if (this.positive_lookahead(this.expect, "del") && (del_stmt = this.del_stmt())) {
@@ -304,11 +304,11 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect("break"))) {
-            return new astnodes.Break(EXTRA);
+            return new astnodes.Break(...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("continue"))) {
-            return new astnodes.Continue(EXTRA);
+            return new astnodes.Continue(...EXTRA);
         }
         this.reset(mark);
         if (this.positive_lookahead(this.expect, "global") && (global_stmt = this.global_stmt())) {
