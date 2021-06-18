@@ -32,7 +32,7 @@ from pegen.parser_generator import ParserGenerator
     "NameDefaultPair",
     "CmpopExprPair",
     "KeyValuePair",
-    "KeywordOrStarred",
+    "KeywordOrStarred",  # found this one @stu! :D
 ]
 
 MODULE_PREFIX = """\
@@ -54,7 +54,9 @@ const pegen = new Proxy(pegen_real, {{
     get(target, prop, receiver) {{
         if (prop in target) {{
             return (...args) => {{
-                console.log(Colors.green("Calling '" + prop + "' with " + JSON.stringify(args)))
+                const [head, ...tail] = args;
+                console.log(Colors.green("Calling '" + prop + "'"));
+                console.log(Colors.green("With"), tail);
                 return target[prop](...args);
             }};
         }}
@@ -94,28 +96,28 @@ def clean_action(action):
     action = re.compile(r" -> v . [\w]+ . ([\w+])").sub(r".\1", action)
 
     action = re.compile(r"\( [\w_]+ \* \)").sub("", action)  # type check
-    action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
+    # action = re.compile(r" ([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
     action = re.compile(r"asdl_\w+ \*? ,").sub("", action)  # type check
     # action = re.compile(r", p -> arena |, p | p ,").sub("", action)
 
     action = (
-        action.replace("_Py_", "new astnodes.")
-        .replace("NULL", "null")
-        .replace("_PyPegen_", "pegen.")
+        # action.replace("_Py_", "new astnodes.")
+        action.replace("NULL", "null")
+        # .replace("_PyPegen_", "pegen.")
         .replace("EXTRA", "...EXTRA")
         .replace("CHECK ", "")  # CHECK is a version checker we could add this in later
         # .replace("stmt_ty ,", "")
         # .replace("expr_ty ,", "")
         # .replace("( expor_ty )", "")
         .replace(", p -> arena", "")
-        .replace(" p ,", "")
+        # .replace(" p ,", "")
         .replace(", p ", "")
         .replace(" -> ", ".")
         # .replace("AugOperator *", "AugOperator")
         .replace("RAISE", "pegen.RAISE")
         .replace("NEW_TYPE_COMMENT", "pegen.NEW_TYPE_COMMENT")
     )
-    action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
+    # action = re.compile(r"^([A-Z]+[a-z]+[\w]*) ").sub(r" new astnodes.\1 ", action)  # astnode constructor
     action = re.compile(r"\( ([bt]) \) \? \( \( expr_ty \) [bt] \)(.\w+) : null").sub(r"\1\2", action)
     action = re.sub(r"pegen.augoperator \( (new astnodes.\w+) \)", r"\1", action)
     action = re.sub(r"new astnodes.Py_([None|False|True|Ellipsis])", r"py\1", action)
