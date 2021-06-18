@@ -1455,11 +1455,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, opt, star_expression;
         mark = this.mark();
         if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.star_expression()) && (literal = this.expect(","))) {
-            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((star_expression = this.star_expression())) {
@@ -1476,7 +1476,7 @@ export class GeneratedParser extends Parser {
         let a, expression, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this.bitwise_or())) {
-            return new astnodes.Starred(a, Load, ...EXTRA);
+            return new astnodes.Starred(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((expression = this.expression())) {
@@ -1506,7 +1506,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark, named_expression;
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this.bitwise_or())) {
-            return new astnodes.Starred(a, Load, ...EXTRA);
+            return new astnodes.Starred(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((named_expression = this.named_expression())) {
@@ -1563,11 +1563,11 @@ export class GeneratedParser extends Parser {
         let a, b, expression, literal, mark, opt;
         mark = this.mark();
         if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.expression()) && (literal = this.expect(","))) {
-            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), Load, ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((expression = this.expression())) {
@@ -2473,7 +2473,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("(")) && ((a = this._tmp_98()), 1) && (literal_1 = this.expect(")"))) {
-            return new astnodes.Tuple(a, Load, ...EXTRA);
+            return new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
 
@@ -2778,7 +2778,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this.expression())) {
-            return new astnodes.Starred(a, Load, ...EXTRA);
+            return new astnodes.Starred(a, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
 
@@ -3135,7 +3135,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, Load, ...EXTRA);
+            return new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3145,7 +3145,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("]")) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Subscript(a, b, Load, ...EXTRA);
+            return new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.t_primary()) && (b = this.genexp()) && this.positive_lookahead(this.t_lookahead)) {

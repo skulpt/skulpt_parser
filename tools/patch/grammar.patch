@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..8936639104 100644
+index 64e205e7fd..34c9a0b6b5 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -422,20 +422,20 @@ index 64e205e7fd..8936639104 100644
      | a=star_expression b=(',' c=star_expression { c })+ [','] {
 -        _Py_Tuple(CHECK(_PyPegen_seq_insert_in_front(p, a, b)), Load, EXTRA) }
 -    | a=star_expression ',' { _Py_Tuple(CHECK(_PyPegen_singleton_seq(p, a)), Load, EXTRA) }
-+        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), Load, ...EXTRA) }
-+    | a=star_expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), Load, ...EXTRA) }
++        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA) }
++    | a=star_expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA) }
      | star_expression
 -star_expression[expr_ty] (memo):
 -    | '*' a=bitwise_or { _Py_Starred(a, Load, EXTRA) }
 +star_expression[expr] (memo):
-+    | '*' a=bitwise_or { new astnodes.Starred(a, Load, ...EXTRA) }
++    | '*' a=bitwise_or { new astnodes.Starred(a, new astnodes.Load(), ...EXTRA) }
      | expression
  
  star_named_expressions[asdl_seq*]: a=','.star_named_expression+ [','] { a }
 -star_named_expression[expr_ty]:
 -    | '*' a=bitwise_or { _Py_Starred(a, Load, EXTRA) }
 +star_named_expression[expr]:
-+    | '*' a=bitwise_or { new astnodes.Starred(a, Load, ...EXTRA) }
++    | '*' a=bitwise_or { new astnodes.Starred(a, new astnodes.Load(), ...EXTRA) }
      | named_expression
 -named_expression[expr_ty]:
 -    | a=NAME ':=' ~ b=expression { _Py_NamedExpr(CHECK(_PyPegen_set_expr_context(p, a, Store)), b, EXTRA) }
@@ -452,8 +452,8 @@ index 64e205e7fd..8936639104 100644
      | a=expression b=(',' c=expression { c })+ [','] {
 -        _Py_Tuple(CHECK(_PyPegen_seq_insert_in_front(p, a, b)), Load, EXTRA) }
 -    | a=expression ',' { _Py_Tuple(CHECK(_PyPegen_singleton_seq(p, a)), Load, EXTRA) }
-+        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), Load, ...EXTRA) }
-+    | a=expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), Load, ...EXTRA) }
++        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA) }
++    | a=expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA) }
      | expression
 -expression[expr_ty] (memo):
 -    | a=disjunction 'if' b=disjunction 'else' c=expression { _Py_IfExp(b, a, c, EXTRA) }
@@ -717,7 +717,7 @@ index 64e205e7fd..8936639104 100644
 -group[expr_ty]:
 +tuple[expr]:
 +    | '(' a=[y=star_named_expression ',' z=[star_named_expressions] { pegen.seq_insert_in_front(this, y, z) } ] ')' {
-+        new astnodes.Tuple(a, Load, ...EXTRA) }
++        new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA) }
 +group[expr]:
      | '(' a=(yield_expr | named_expression) ')' { a }
      | invalid_group
@@ -792,7 +792,7 @@ index 64e205e7fd..8936639104 100644
 -starred_expression[expr_ty]:
 -    | '*' a=expression { _Py_Starred(a, Load, EXTRA) }
 +starred_expression[expr]:
-+    | '*' a=expression { new astnodes.Starred(a, Load, ...EXTRA) }
++    | '*' a=expression { new astnodes.Starred(a, new astnodes.Load(), ...EXTRA) }
  kwarg_or_starred[KeywordOrStarred*]:
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
@@ -894,8 +894,8 @@ index 64e205e7fd..8936639104 100644
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
 +t_primary[expr]:
-+    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, Load, ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, Load, ...EXTRA) }
++    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA) }
++    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA) }
 +    | a=t_primary b=genexp &t_lookahead { new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA) }
 +    | a=t_primary '(' b=[arguments_] ')' &t_lookahead {
 +        new astnodes.Call(a,
