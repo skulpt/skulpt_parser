@@ -1,8 +1,8 @@
 import subprocess
 import os
 
-PATH_TO_CPYTHON = "../cpython"
-PYTHON_BRANCH = "3.9"
+PATH_TO_CPYTHON = "../cpython" if "PATH_TO_CPYTHON" not in os.environ else os.environ["PATH_TO_CPYTHON"]
+PYTHON_BRANCH = "v3.9.5"
 
 
 def checkout_python_branch():

@@ -3,7 +3,8 @@ import { exact_token_types, Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError, TokenInfo } from "../tokenize/tokenize.ts";
 
-import { Name, Load, TypeIgnore } from "../ast/astnodes.ts";
+import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
+import { Colors } from "../../deps.ts";
 
 /** For non-memoized functions that we want to be logged.*/
 export function logger(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -197,22 +198,26 @@ export class Parser {
         return null;
     }
     string(): TokenInfo | null {
-        const tok = this._tokenizer.peek();
+        let tok = this._tokenizer.peek();
         if (tok.type === STRING) {
+            // this gets handled by concatenate strings which always follows this.string();
             return this._tokenizer.getnext();
         }
         return null;
     }
     @memoize
-    number(): TokenInfo | null {
-        const tok = this._tokenizer.peek();
+    number(): Constant | null {
+        let tok = this._tokenizer.peek();
         if (tok.type === NUMBER) {
-            return this._tokenizer.getnext();
+            tok = this._tokenizer.getnext();
+            /** @todo parsenumber() */
+            return new Constant(new Number(tok.string), null, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }
     @memoize
     op(): TokenInfo | null {
+        // this never gets called in the generated parser - probably only relevant for the grammar parser
         const tok = this._tokenizer.peek();
         if (tok.type === OP) {
             return this._tokenizer.getnext();
@@ -240,13 +245,13 @@ export class Parser {
         }
         return null;
     }
-    positive_lookahead(func: (...args: any[]) => boolean, ...args: any[]) {
+    positive_lookahead<T = any, R = any>(func: (...args: T[]) => R, ...args: T[]): boolean {
         const mark = this.mark();
         const ok = func.call(this, ...args);
         this.reset(mark);
         return ok;
     }
-    negative_lookahead(func: (...args: any[]) => boolean, ...args: any[]) {
+    negative_lookahead<T = any, R = any>(func: (...args: T[]) => R, ...args: T[]): boolean {
         const mark = this.mark();
         const ok = func.call(this, ...args);
         this.reset(mark);

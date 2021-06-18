@@ -13,7 +13,11 @@ export interface AST {
     tp$name: string;
 }
 
-export class AST {}
+export class AST {
+    get [Symbol.toStringTag]() {
+        return this.tp$name;
+    }
+}
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
 AST.prototype.tp$name = "AST";
@@ -26,6 +30,8 @@ AST.prototype.tp$name = "AST";
 export class expr_context extends AST {}
 expr_context.prototype.tp$name = "expr_context";
 
+export type expr_contextKind = typeof expr_context | typeof Load | typeof Store | typeof Del;
+
 export class Load extends expr_context {}
 Load.prototype.tp$name = "Load";
 export class Store extends expr_context {}
@@ -37,6 +43,8 @@ Del.prototype.tp$name = "Del";
 export class boolop extends AST {}
 boolop.prototype.tp$name = "boolop";
 
+export type boolopKind = typeof boolop | typeof And | typeof Or;
+
 export class And extends boolop {}
 And.prototype.tp$name = "And";
 export class Or extends boolop {}
@@ -45,6 +53,22 @@ Or.prototype.tp$name = "Or";
 /* ----- operator ----- */
 export class operator extends AST {}
 operator.prototype.tp$name = "operator";
+
+export type operatorKind =
+    | typeof operator
+    | typeof Add
+    | typeof Sub
+    | typeof Mult
+    | typeof MatMult
+    | typeof Div
+    | typeof Mod
+    | typeof Pow
+    | typeof LShift
+    | typeof RShift
+    | typeof BitOr
+    | typeof BitXor
+    | typeof BitAnd
+    | typeof FloorDiv;
 
 export class Add extends operator {}
 Add.prototype.tp$name = "Add";
@@ -77,6 +101,8 @@ FloorDiv.prototype.tp$name = "FloorDiv";
 export class unaryop extends AST {}
 unaryop.prototype.tp$name = "unaryop";
 
+export type unaryopKind = typeof unaryop | typeof Invert | typeof Not | typeof UAdd | typeof USub;
+
 export class Invert extends unaryop {}
 Invert.prototype.tp$name = "Invert";
 export class Not extends unaryop {}
@@ -89,6 +115,19 @@ USub.prototype.tp$name = "USub";
 /* ----- cmpop ----- */
 export class cmpop extends AST {}
 cmpop.prototype.tp$name = "cmpop";
+
+export type cmpopKind =
+    | typeof cmpop
+    | typeof Eq
+    | typeof NotEq
+    | typeof Lt
+    | typeof LtE
+    | typeof Gt
+    | typeof GtE
+    | typeof Is
+    | typeof IsNot
+    | typeof In
+    | typeof NotIn;
 
 export class Eq extends cmpop {}
 Eq.prototype.tp$name = "Eq";
@@ -114,6 +153,8 @@ NotIn.prototype.tp$name = "NotIn";
 /* ----- mod ----- */
 export class mod extends AST {}
 mod.prototype.tp$name = "mod";
+
+export type modKind = typeof mod | typeof Module | typeof Interactive | typeof Expression | typeof FunctionType;
 
 export class Module extends mod {
     body: stmt[];
@@ -176,7 +217,41 @@ export class stmt extends AST {
 stmt.prototype._attributes = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 stmt.prototype.tp$name = "stmt";
 
-type stmtAttrs = [lineno: number, col_offset: number, end_lineno?: number | null, end_col_offset?: number | null];
+export type stmtAttrs = [
+    lineno: number,
+    col_offset: number,
+    end_lineno?: number | null,
+    end_col_offset?: number | null
+];
+
+export type stmtKind =
+    | typeof stmt
+    | typeof FunctionDef
+    | typeof AsyncFunctionDef
+    | typeof ClassDef
+    | typeof Return
+    | typeof Delete
+    | typeof Assign
+    | typeof AugAssign
+    | typeof AnnAssign
+    | typeof For
+    | typeof AsyncFor
+    | typeof While
+    | typeof If
+    | typeof With
+    | typeof AsyncWith
+    | typeof Raise
+    | typeof Try
+    | typeof Assert
+    | typeof Import
+    | typeof ImportFrom
+    | typeof Global
+    | typeof Nonlocal
+    | typeof Expr
+    | typeof Pass
+    | typeof Break
+    | typeof Continue
+    | typeof Debugger;
 
 export class FunctionDef extends stmt {
     name: identifier;
@@ -572,7 +647,42 @@ export class expr extends AST {
 expr.prototype._attributes = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 expr.prototype.tp$name = "expr";
 
-type exprAttrs = [lineno: number, col_offset: number, end_lineno?: number | null, end_col_offset?: number | null];
+export type exprAttrs = [
+    lineno: number,
+    col_offset: number,
+    end_lineno?: number | null,
+    end_col_offset?: number | null
+];
+
+export type exprKind =
+    | typeof expr
+    | typeof BoolOp
+    | typeof NamedExpr
+    | typeof BinOp
+    | typeof UnaryOp
+    | typeof Lambda
+    | typeof IfExp
+    | typeof Dict
+    | typeof Set
+    | typeof ListComp
+    | typeof SetComp
+    | typeof DictComp
+    | typeof GeneratorExp
+    | typeof Await
+    | typeof Yield
+    | typeof YieldFrom
+    | typeof Compare
+    | typeof Call
+    | typeof FormattedValue
+    | typeof JoinedStr
+    | typeof Constant
+    | typeof Attribute
+    | typeof Subscript
+    | typeof Starred
+    | typeof Name
+    | typeof List
+    | typeof Tuple
+    | typeof Slice;
 
 export class BoolOp extends expr {
     op: boolop;
@@ -940,12 +1050,14 @@ export class excepthandler extends AST {
 excepthandler.prototype._attributes = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 excepthandler.prototype.tp$name = "excepthandler";
 
-type excepthandlerAttrs = [
+export type excepthandlerAttrs = [
     lineno: number,
     col_offset: number,
     end_lineno?: number | null,
     end_col_offset?: number | null
 ];
+
+export type excepthandlerKind = typeof excepthandler | typeof ExceptHandler;
 
 export class ExceptHandler extends excepthandler {
     type: expr | null;
@@ -1080,6 +1192,8 @@ withitem.prototype.tp$name = "withitem";
 /* ----- type_ignore ----- */
 export class type_ignore extends AST {}
 type_ignore.prototype.tp$name = "type_ignore";
+
+export type type_ignoreKind = typeof type_ignore | typeof TypeIgnore;
 
 export class TypeIgnore extends type_ignore {
     lineno: number;

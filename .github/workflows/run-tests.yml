@@ -1,0 +1,32 @@
+name: run-deno-tests
+on: [push, pull_request]
+jobs:
+    check-generated-parser:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9.5"
+            - uses: actions/checkout@master
+              with:
+                  repository: python/cpython
+                  ref: "v3.9.5"
+                  path: cpython
+            - uses: actions/checkout@master
+              with:
+                  path: skulpt_parser
+            - run: pip install --user pre-commit
+            - run: deno install -qAn vr https://deno.land/x/velociraptor@1.0.1/cli.ts
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
+            - name: build parser
+              run: vr gen_parser
+              working-directory: "./skulpt_parser"
+            - name: assert clean repo
+              run: git diff-index --quiet --cached HEAD --
+              working-directory: "./skulpt_parser"
+            - name: run tests
+              run: vr test
+              working-directory: "./skulpt_parser"
