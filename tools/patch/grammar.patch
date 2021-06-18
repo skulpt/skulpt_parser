@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..f988d8bb70 100644
+index 64e205e7fd..690be7c53a 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -173,7 +173,7 @@ index 64e205e7fd..f988d8bb70 100644
 +import_from[stmt]:
      | 'from' a=('.' | '...')* b=dotted_name 'import' c=import_from_targets {
 -        _Py_ImportFrom(b->v.Name.id, c, _PyPegen_seq_count_dots(a), EXTRA) }
-+        new astnodes.ImportFrom(b.v.Name.id, c, pegen.seq_count_dots(a), ...EXTRA) }
++        new astnodes.ImportFrom(b.id, c, pegen.seq_count_dots(a), ...EXTRA) }
      | 'from' a=('.' | '...')+ 'import' b=import_from_targets {
 -        _Py_ImportFrom(NULL, b, _PyPegen_seq_count_dots(a), EXTRA) }
 +        new astnodes.ImportFrom(null, b, pegen.seq_count_dots(a), ...EXTRA) }
@@ -190,8 +190,8 @@ index 64e205e7fd..f988d8bb70 100644
 -                                               (b) ? ((expr_ty) b)->v.Name.id : NULL,
 -                                               p->arena) }
 +import_from_as_name[alias]:
-+    | a=NAME b=['as' z=NAME { z }] { new astnodes.alias(a.v.Name.id,
-+                                               b ? b.v.Name.id : null) }
++    | a=NAME b=['as' z=NAME { z }] { new astnodes.alias(a.id,
++                                               b ? b.id : null) }
  dotted_as_names[asdl_seq*]:
      | a=','.dotted_as_name+ { a }
 -dotted_as_name[alias_ty]:
@@ -201,8 +201,8 @@ index 64e205e7fd..f988d8bb70 100644
 -dotted_name[expr_ty]:
 -    | a=dotted_name '.' b=NAME { _PyPegen_join_names_with_dot(p, a, b) }
 +dotted_as_name[alias]:
-+    | a=dotted_name b=['as' z=NAME { z }] { new astnodes.alias(a.v.Name.id,
-+                                                      b ? b.v.Name.id : null) }
++    | a=dotted_name b=['as' z=NAME { z }] { new astnodes.alias(a.id,
++                                                      b ? b.id : null) }
 +dotted_name[expr]:
 +    | a=dotted_name '.' b=NAME { pegen.join_names_with_dot(this, a, b) }
      | NAME
@@ -269,7 +269,7 @@ index 64e205e7fd..f988d8bb70 100644
      | 'except' e=expression t=['as' z=NAME { z }] ':' b=block {
 -        _Py_ExceptHandler(e, (t) ? ((expr_ty) t)->v.Name.id : NULL, b, EXTRA) }
 -    | 'except' ':' b=block { _Py_ExceptHandler(NULL, NULL, b, EXTRA) }
-+        new astnodes.ExceptHandler(e, t ? t.v.Name.id : null, b, ...EXTRA) }
++        new astnodes.ExceptHandler(e, t ? t.id : null, b, ...EXTRA) }
 +    | 'except' ':' b=block { new astnodes.ExceptHandler(null, null, b, ...EXTRA) }
  finally_block[asdl_seq*]: 'finally' ':' a=block { a }
  
@@ -297,7 +297,7 @@ index 64e205e7fd..f988d8bb70 100644
 -        _Py_FunctionDef(n->v.Name.id,
 -                        (params) ? params : CHECK(_PyPegen_empty_arguments(p)),
 -                        b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA) }
-+        new astnodes.FunctionDef(n.v.Name.id,
++        new astnodes.FunctionDef(n.id,
 +                        (params) ? params : CHECK(pegen.empty_arguments(p)),
 +                        b, null, a, NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
      | ASYNC 'def' n=NAME '(' params=[params] ')' a=['->' z=expression { z }] ':' tc=[func_type_comment] b=block {
@@ -307,7 +307,7 @@ index 64e205e7fd..f988d8bb70 100644
 -            _Py_AsyncFunctionDef(n->v.Name.id,
 -                            (params) ? params : CHECK(_PyPegen_empty_arguments(p)),
 -                            b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA)
-+            new astnodes.AsyncFunctionDef(n.v.Name.id,
++            new astnodes.AsyncFunctionDef(n.id,
 +                            (params) ? params : CHECK(pegen.empty_arguments(p)),
 +                            b, null, a, NEW_TYPE_COMMENT(this, tc), ...EXTRA)
          ) }
@@ -385,7 +385,7 @@ index 64e205e7fd..f988d8bb70 100644
 -param[arg_ty]: a=NAME b=annotation? { _Py_arg(a->v.Name.id, b, NULL, EXTRA) }
 +    | a=param c=default? ',' tc=TYPE_COMMENT? { pegen.name_default_pair(this, a, c, tc) }
 +    | a=param c=default? tc=TYPE_COMMENT? &')' { pegen.name_default_pair(this, a, c, tc) }
-+param[arg]: a=NAME b=annotation? { new astnodes.arg(a.v.Name.id, b, null, ...EXTRA) }
++param[arg]: a=NAME b=annotation? { new astnodes.arg(a.id, b, null, ...EXTRA) }
  
 -annotation[expr_ty]: ':' a=expression { a }
 -default[expr_ty]: '=' a=expression { a }
@@ -407,7 +407,7 @@ index 64e205e7fd..f988d8bb70 100644
 -                     c, NULL, EXTRA) }
 +class_def_raw[stmt]:
 +    | 'class' a=NAME b=['(' z=[arguments_] ')' { z }] ':' c=block {
-+        new astnodes.ClassDef(a.v.Name.id,
++        new astnodes.ClassDef(a.id,
 +                     b ? b.args : null,
 +                     b ? b.keywords : null,
 +                     c, null, ...EXTRA) }
@@ -530,7 +530,7 @@ index 64e205e7fd..f988d8bb70 100644
 -lambda_param[arg_ty]: a=NAME { _Py_arg(a->v.Name.id, NULL, NULL, EXTRA) }
 +    | a=lambda_param c=default? ',' { pegen.name_default_pair(this, a, c, null) }
 +    | a=lambda_param c=default? &':' { pegen.name_default_pair(this, a, c, null) }
-+lambda_param[arg]: a=NAME { new astnodes.arg(a.v.Name.id, null, null, ...EXTRA) }
++lambda_param[arg]: a=NAME { new astnodes.arg(a.id, null, null, ...EXTRA) }
  
 -disjunction[expr_ty] (memo):
 -    | a=conjunction b=('or' c=conjunction { c })+ { _Py_BoolOp(
@@ -661,7 +661,7 @@ index 64e205e7fd..f988d8bb70 100644
 -        _Py_Call(a,
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
-+    | a=primary '.' b=NAME { new astnodes.Attribute(a, b.v.Name.id, new astnodes.Load(), ...EXTRA) }
++    | a=primary '.' b=NAME { new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA) }
 +    | a=primary b=genexp { new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA) }
 +    | a=primary '(' b=[arguments_] ')' {
 +        new astnodes.Call(a,
@@ -797,14 +797,14 @@ index 64e205e7fd..f988d8bb70 100644
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) }
-+        pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.v.Name.id, b, ...EXTRA)), true) }
++        pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
 +    | a=starred_expression { pegen.keyword_or_starred(this, a, false) }
      | invalid_kwarg
  kwarg_or_double_starred[KeywordOrStarred*]:
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | '**' a=expression { _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(NULL, a, EXTRA)), 1) }
-+        fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.v.Name.id, b, ...EXTRA)), 1) }
++        fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1) }
 +    | '**' a=expression { pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), 1) }
      | invalid_kwarg
  
@@ -831,7 +831,7 @@ index 64e205e7fd..f988d8bb70 100644
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Store, EXTRA) }
 +target_with_star_atom[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA) }
      | star_atom
 -star_atom[expr_ty]:
@@ -855,7 +855,7 @@ index 64e205e7fd..f988d8bb70 100644
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Store, EXTRA) }
 +single_subscript_attribute_target[expr]:
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA) }
  
  del_targets[asdl_seq*]: a=','.del_target+ [','] { a }
@@ -863,7 +863,7 @@ index 64e205e7fd..f988d8bb70 100644
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Del, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Del, EXTRA) }
 +del_target[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.v.Name.id, Del, ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, Del, ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, Del, ...EXTRA) }
      | del_t_atom
 -del_t_atom[expr_ty]:
@@ -882,7 +882,7 @@ index 64e205e7fd..f988d8bb70 100644
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Store, EXTRA) }
 +target[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA) }
      | t_atom
 -t_primary[expr_ty]:
@@ -894,7 +894,7 @@ index 64e205e7fd..f988d8bb70 100644
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
 +t_primary[expr]:
-+    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.v.Name.id, Load, ...EXTRA) }
++    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, Load, ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, Load, ...EXTRA) }
 +    | a=t_primary b=genexp &t_lookahead { new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA) }
 +    | a=t_primary '(' b=[arguments_] ')' &t_lookahead {

@@ -582,7 +582,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("import")) &&
             (c = this.import_from_targets())
         ) {
-            return new astnodes.ImportFrom(b.v.Name.id, c, pegen.seq_count_dots(a), ...EXTRA);
+            return new astnodes.ImportFrom(b.id, c, pegen.seq_count_dots(a), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -647,7 +647,7 @@ export class GeneratedParser extends Parser {
         let a, b, mark;
         mark = this.mark();
         if ((a = this.name()) && ((b = this._tmp_35()), 1)) {
-            return new astnodes.alias(a.v.Name.id, b ? b.v.Name.id : null);
+            return new astnodes.alias(a.id, b ? b.id : null);
         }
         this.reset(mark);
 
@@ -673,7 +673,7 @@ export class GeneratedParser extends Parser {
         let a, b, mark;
         mark = this.mark();
         if ((a = this.dotted_name()) && ((b = this._tmp_38()), 1)) {
-            return new astnodes.alias(a.v.Name.id, b ? b.v.Name.id : null);
+            return new astnodes.alias(a.id, b ? b.id : null);
         }
         this.reset(mark);
 
@@ -963,7 +963,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (b = this.block())
         ) {
-            return new astnodes.ExceptHandler(e, t ? t.v.Name.id : null, b, ...EXTRA);
+            return new astnodes.ExceptHandler(e, t ? t.id : null, b, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("except")) && (literal_1 = this.expect(":")) && (b = this.block())) {
@@ -1051,7 +1051,7 @@ export class GeneratedParser extends Parser {
             (b = this.block())
         ) {
             return new astnodes.FunctionDef(
-                n.v.Name.id,
+                n.id,
                 params ? params : CHECK(pegen.empty_arguments(p)),
                 b,
                 null,
@@ -1077,7 +1077,7 @@ export class GeneratedParser extends Parser {
                 5,
                 "Async functions are",
                 new astnodes.AsyncFunctionDef(
-                    n.v.Name.id,
+                    n.id,
                     params ? params : CHECK(pegen.empty_arguments(p)),
                     b,
                     null,
@@ -1341,7 +1341,7 @@ export class GeneratedParser extends Parser {
         let a, b, mark;
         mark = this.mark();
         if ((a = this.name()) && ((b = this.annotation()), 1)) {
-            return new astnodes.arg(a.v.Name.id, b, null, ...EXTRA);
+            return new astnodes.arg(a.id, b, null, ...EXTRA);
         }
         this.reset(mark);
 
@@ -1416,7 +1416,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (c = this.block())
         ) {
-            return new astnodes.ClassDef(a.v.Name.id, b ? b.args : null, b ? b.keywords : null, c, null, ...EXTRA);
+            return new astnodes.ClassDef(a.id, b ? b.args : null, b ? b.keywords : null, c, null, ...EXTRA);
         }
         this.reset(mark);
 
@@ -1823,7 +1823,7 @@ export class GeneratedParser extends Parser {
         let a, mark;
         mark = this.mark();
         if ((a = this.name())) {
-            return new astnodes.arg(a.v.Name.id, null, null, ...EXTRA);
+            return new astnodes.arg(a.id, null, null, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2287,7 +2287,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.primary()) && (literal = this.expect(".")) && (b = this.name())) {
-            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.primary()) && (b = this.genexp())) {
@@ -2791,7 +2791,7 @@ export class GeneratedParser extends Parser {
         let a, b, invalid_kwarg, literal, mark;
         mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.v.Name.id, b, ...EXTRA)), true);
+            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((a = this.starred_expression())) {
@@ -2812,7 +2812,7 @@ export class GeneratedParser extends Parser {
         let a, b, invalid_kwarg, literal, mark;
         mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
-            return fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.v.Name.id, b, ...EXTRA)), 1);
+            return fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1);
         }
         this.reset(mark);
         if ((literal = this.expect("**")) && (a = this.expression())) {
@@ -2906,7 +2906,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -2992,7 +2992,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3033,7 +3033,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.v.Name.id, Del, ...EXTRA);
+            return new astnodes.Attribute(a, b.id, Del, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3103,7 +3103,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.v.Name.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3135,7 +3135,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.v.Name.id, Load, ...EXTRA);
+            return new astnodes.Attribute(a, b.id, Load, ...EXTRA);
         }
         this.reset(mark);
         if (
