@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..690be7c53a 100644
+index 64e205e7fd..0b41b3a63a 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -317,12 +317,12 @@ index 64e205e7fd..690be7c53a 100644
      | TYPE_COMMENT
  
 -params[arguments_ty]:
-+params[arguments]:
++params[arguments_]:
      | invalid_parameters
      | parameters
  
 -parameters[arguments_ty]:
-+parameters[arguments]:
++parameters[arguments_]:
      | a=slash_no_default b=param_no_default* c=param_with_default* d=[star_etc] {
 -        _PyPegen_make_arguments(p, a, NULL, b, c, d) }
 +        pegen.make_arguments(this, a, null, b, c, d) }
@@ -468,7 +468,7 @@ index 64e205e7fd..690be7c53a 100644
 +    | 'lambda' a=[lambda_params] ':' b=expression { new astnodes.Lambda((a) ? a : CHECK(pegen.empty_arguments(p)), b, ...EXTRA) }
  
 -lambda_params[arguments_ty]:
-+lambda_params[arguments]:
++lambda_params[arguments_]:
      | invalid_lambda_parameters
      | lambda_parameters
  
@@ -477,7 +477,7 @@ index 64e205e7fd..690be7c53a 100644
  # a colon, not a close parenthesis.  (For more, see parameters above.)
  #
 -lambda_parameters[arguments_ty]:
-+lambda_parameters[arguments]:
++lambda_parameters[arguments_]:
      | a=lambda_slash_no_default b=lambda_param_no_default* c=lambda_param_with_default* d=[lambda_star_etc] {
 -        _PyPegen_make_arguments(p, a, NULL, b, c, d) }
 +        pegen.make_arguments(this, a, null, b, c, d) }

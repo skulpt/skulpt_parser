@@ -1118,7 +1118,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    params(): arguments | null {
+    params(): arguments_ | null {
         //# params: invalid_parameters | parameters
         let invalid_parameters, mark, parameters;
         mark = this.mark();
@@ -1135,7 +1135,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    parameters(): arguments | null {
+    parameters(): arguments_ | null {
         //# parameters: slash_no_default param_no_default* param_with_default* star_etc? | slash_with_default param_with_default* star_etc? | param_no_default+ param_with_default* star_etc? | param_with_default+ star_etc? | star_etc
         let a, b, c, d, mark;
         mark = this.mark();
@@ -1624,7 +1624,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_params(): arguments | null {
+    lambda_params(): arguments_ | null {
         //# lambda_params: invalid_lambda_parameters | lambda_parameters
         let invalid_lambda_parameters, lambda_parameters, mark;
         mark = this.mark();
@@ -1641,7 +1641,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    lambda_parameters(): arguments | null {
+    lambda_parameters(): arguments_ | null {
         //# lambda_parameters: lambda_slash_no_default lambda_param_no_default* lambda_param_with_default* lambda_star_etc? | lambda_slash_with_default lambda_param_with_default* lambda_star_etc? | lambda_param_no_default+ lambda_param_with_default* lambda_star_etc? | lambda_param_with_default+ lambda_star_etc? | lambda_star_etc
         let a, b, c, d, mark;
         mark = this.mark();
