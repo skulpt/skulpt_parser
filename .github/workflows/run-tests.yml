@@ -18,9 +18,7 @@ jobs:
             - uses: actions/checkout@master
               with:
                   path: skulpt_parser
-            - run: cd skulpt_parser
-            - run: ls -laR
-            # - run: git clone https://github.com/python/cpython.git --branch 3.9
+            - run: pip install --user pre-commit
             - run: deno install -qAn vr https://deno.land/x/velociraptor@1.0.1/cli.ts
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: build parser
