@@ -13,7 +13,7 @@ jobs:
             - uses: actions/checkout@master
               with:
                   repository: python/cpython
-                  ref: "3.9"
+                  ref: "v3.9.5"
                   path: cpython
             - uses: actions/checkout@master
               with:
