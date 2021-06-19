@@ -17,20 +17,20 @@ function _format(node: nodeType | nodeType[], level = 0, indent: string | null =
     if (node instanceof AST) {
         const args = [];
         let allsimple = true;
-        for (const _name of node._fields) {
-            let value = node[_name as keyof typeof node];
+        for (const field of node._fields) {
+            let value = node[field as keyof typeof node] as nodeType;
             let simple: boolean;
             if (value === null) {
                 continue;
             }
             [value, simple] = _format(value, level, indent);
             allsimple = allsimple && simple;
-            args.push(`${_name}=${value}`);
+            args.push(`${field}=${value}`);
         }
         if (allsimple && args.length <= 3) {
-            return [`${node.tp$name}(${args.join(", ")})`, !args.length];
+            return [`${node[Symbol.toStringTag]}(${args.join(", ")})`, !args.length];
         }
-        return [`${node.tp$name}(${prefix}${args.join(sep)})`, false];
+        return [`${node[Symbol.toStringTag]}(${prefix}${args.join(sep)})`, false];
     } else if (Array.isArray(node)) {
         if (node.length === 0) {
             return ["[]", true];
