@@ -32,7 +32,7 @@ export function assert(expr: unknown, msg = ""): asserts expr {
 }
 
 /** see pegen.h for implementation */
-export function NEW_TYPE_COMMENT(tc: TokenInfo | null): string | null {
+export function NEW_TYPE_COMMENT(p: Parser, tc: TokenInfo | null): string | null {
     if (tc === null) {
         return null;
     }
@@ -1639,7 +1639,7 @@ function _set_name_context(e: Name, ctx: expr_context) {
 
 /* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
 
-export function set_expr_context(e: expr, ctx: expr_context): expr {
+export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
     assert(expr !== null);
     let newExpr: expr;
     switch (e.constructor as exprKind) {
