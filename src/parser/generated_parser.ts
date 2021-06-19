@@ -373,7 +373,7 @@ export class GeneratedParser extends Parser {
             return CHECK_VERSION(
                 6,
                 "Variable annotation syntax is",
-                new astnodes.AnnAssign(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), b, c, 1, ...EXTRA)
+                new astnodes.AnnAssign(CHECK(pegen.set_expr_context(this, a, astnodes.Store)), b, c, 1, ...EXTRA)
             );
         }
         this.reset(mark);
@@ -410,60 +410,60 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    augassign(): AugOperator | null {
+    augassign(): operator | null {
         //# augassign: '+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=' | '**=' | '//='
         let literal, mark;
         mark = this.mark();
         if ((literal = this.expect("+="))) {
-            return pegen.augoperator(this, new astnodes.Add());
+            return pegen.augoperator(this, astnodes.Add);
         }
         this.reset(mark);
         if ((literal = this.expect("-="))) {
-            return pegen.augoperator(this, new astnodes.Sub());
+            return pegen.augoperator(this, astnodes.Sub);
         }
         this.reset(mark);
         if ((literal = this.expect("*="))) {
-            return pegen.augoperator(this, new astnodes.Mult());
+            return pegen.augoperator(this, astnodes.Mult);
         }
         this.reset(mark);
         if ((literal = this.expect("@="))) {
-            return CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, new astnodes.MatMult()));
+            return CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, astnodes.MatMult));
         }
         this.reset(mark);
         if ((literal = this.expect("/="))) {
-            return pegen.augoperator(this, new astnodes.Div());
+            return pegen.augoperator(this, astnodes.Div);
         }
         this.reset(mark);
         if ((literal = this.expect("%="))) {
-            return pegen.augoperator(this, new astnodes.Mod());
+            return pegen.augoperator(this, astnodes.Mod);
         }
         this.reset(mark);
         if ((literal = this.expect("&="))) {
-            return pegen.augoperator(this, new astnodes.BitAnd());
+            return pegen.augoperator(this, astnodes.BitAnd);
         }
         this.reset(mark);
         if ((literal = this.expect("|="))) {
-            return pegen.augoperator(this, new astnodes.BitOr());
+            return pegen.augoperator(this, astnodes.BitOr);
         }
         this.reset(mark);
         if ((literal = this.expect("^="))) {
-            return pegen.augoperator(this, new astnodes.BitXor());
+            return pegen.augoperator(this, astnodes.BitXor);
         }
         this.reset(mark);
         if ((literal = this.expect("<<="))) {
-            return pegen.augoperator(this, new astnodes.LShift());
+            return pegen.augoperator(this, astnodes.LShift);
         }
         this.reset(mark);
         if ((literal = this.expect(">>="))) {
-            return pegen.augoperator(this, new astnodes.RShift());
+            return pegen.augoperator(this, astnodes.RShift);
         }
         this.reset(mark);
         if ((literal = this.expect("**="))) {
-            return pegen.augoperator(this, new astnodes.Pow());
+            return pegen.augoperator(this, astnodes.Pow);
         }
         this.reset(mark);
         if ((literal = this.expect("//="))) {
-            return pegen.augoperator(this, new astnodes.FloorDiv());
+            return pegen.augoperator(this, astnodes.FloorDiv);
         }
         this.reset(mark);
 
@@ -1454,11 +1454,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, opt, star_expression;
         mark = this.mark();
         if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.star_expression()) && (literal = this.expect(","))) {
-            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((star_expression = this.star_expression())) {
@@ -1475,7 +1475,7 @@ export class GeneratedParser extends Parser {
         let a, expression, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this.bitwise_or())) {
-            return new astnodes.Starred(a, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Starred(a, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((expression = this.expression())) {
@@ -1505,7 +1505,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark, named_expression;
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this.bitwise_or())) {
-            return new astnodes.Starred(a, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Starred(a, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((named_expression = this.named_expression())) {
@@ -1522,7 +1522,7 @@ export class GeneratedParser extends Parser {
         let a, b, cut, expression, invalid_named_expression, literal, mark;
         mark = this.mark();
         if ((a = this.name()) && (literal = this.expect(":=")) && (cut = true) && (b = this.expression())) {
-            return new astnodes.NamedExpr(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), b, ...EXTRA);
+            return new astnodes.NamedExpr(CHECK(pegen.set_expr_context(this, a, astnodes.Store)), b, ...EXTRA);
         }
         this.reset(mark);
         if (cut) return null;
@@ -1562,11 +1562,11 @@ export class GeneratedParser extends Parser {
         let a, b, expression, literal, mark, opt;
         mark = this.mark();
         if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.expression()) && (literal = this.expect(","))) {
-            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((expression = this.expression())) {
@@ -1967,7 +1967,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("==")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.Eq(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.Eq, a);
         }
         this.reset(mark);
 
@@ -1980,7 +1980,7 @@ export class GeneratedParser extends Parser {
         let a, mark, tok;
         mark = this.mark();
         if ((tok = this.expect("!=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.NotEq(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.NotEq, a);
         }
         this.reset(mark);
 
@@ -1993,7 +1993,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("<=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.LtE(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.LtE, a);
         }
         this.reset(mark);
 
@@ -2006,7 +2006,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("<")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.Lt(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.Lt, a);
         }
         this.reset(mark);
 
@@ -2019,7 +2019,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect(">=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.GtE(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.GtE, a);
         }
         this.reset(mark);
 
@@ -2032,7 +2032,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect(">")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.Gt(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.Gt, a);
         }
         this.reset(mark);
 
@@ -2045,7 +2045,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("not")) && (literal_1 = this.expect("in")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.NotIn(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.NotIn, a);
         }
         this.reset(mark);
 
@@ -2058,7 +2058,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("in")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.In(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.In, a);
         }
         this.reset(mark);
 
@@ -2071,7 +2071,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("is")) && (literal_1 = this.expect("not")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.IsNot(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.IsNot, a);
         }
         this.reset(mark);
 
@@ -2084,7 +2084,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("is")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, new astnodes.Is(), a);
+            return pegen.cmpop_expr_pair(this, astnodes.Is, a);
         }
         this.reset(mark);
 
@@ -2097,7 +2097,7 @@ export class GeneratedParser extends Parser {
         let a, b, bitwise_xor, literal, mark;
         mark = this.mark();
         if ((a = this.bitwise_or()) && (literal = this.expect("|")) && (b = this.bitwise_xor())) {
-            return new astnodes.BinOp(a, new astnodes.BitOr(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.BitOr, b, ...EXTRA);
         }
         this.reset(mark);
         if ((bitwise_xor = this.bitwise_xor())) {
@@ -2114,7 +2114,7 @@ export class GeneratedParser extends Parser {
         let a, b, bitwise_and, literal, mark;
         mark = this.mark();
         if ((a = this.bitwise_xor()) && (literal = this.expect("^")) && (b = this.bitwise_and())) {
-            return new astnodes.BinOp(a, new astnodes.BitXor(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.BitXor, b, ...EXTRA);
         }
         this.reset(mark);
         if ((bitwise_and = this.bitwise_and())) {
@@ -2131,7 +2131,7 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, shift_expr;
         mark = this.mark();
         if ((a = this.bitwise_and()) && (literal = this.expect("&")) && (b = this.shift_expr())) {
-            return new astnodes.BinOp(a, new astnodes.BitAnd(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.BitAnd, b, ...EXTRA);
         }
         this.reset(mark);
         if ((shift_expr = this.shift_expr())) {
@@ -2148,11 +2148,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, sum;
         mark = this.mark();
         if ((a = this.shift_expr()) && (literal = this.expect("<<")) && (b = this.sum())) {
-            return new astnodes.BinOp(a, new astnodes.LShift(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.LShift, b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.shift_expr()) && (literal = this.expect(">>")) && (b = this.sum())) {
-            return new astnodes.BinOp(a, new astnodes.RShift(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.RShift, b, ...EXTRA);
         }
         this.reset(mark);
         if ((sum = this.sum())) {
@@ -2169,11 +2169,11 @@ export class GeneratedParser extends Parser {
         let a, b, literal, mark, term;
         mark = this.mark();
         if ((a = this.sum()) && (literal = this.expect("+")) && (b = this.term())) {
-            return new astnodes.BinOp(a, new astnodes.Add(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.Add, b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.sum()) && (literal = this.expect("-")) && (b = this.term())) {
-            return new astnodes.BinOp(a, new astnodes.Sub(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.Sub, b, ...EXTRA);
         }
         this.reset(mark);
         if ((term = this.term())) {
@@ -2190,19 +2190,19 @@ export class GeneratedParser extends Parser {
         let a, b, factor, literal, mark;
         mark = this.mark();
         if ((a = this.term()) && (literal = this.expect("*")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, new astnodes.Mult(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.Mult, b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("/")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, new astnodes.Div(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.Div, b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("//")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, new astnodes.FloorDiv(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.FloorDiv, b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("%")) && (b = this.factor())) {
-            return new astnodes.BinOp(a, new astnodes.Mod(), b, ...EXTRA);
+            return new astnodes.BinOp(a, astnodes.Mod, b, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.term()) && (literal = this.expect("@")) && (b = this.factor())) {
@@ -2223,15 +2223,15 @@ export class GeneratedParser extends Parser {
         let a, literal, mark, power;
         mark = this.mark();
         if ((literal = this.expect("+")) && (a = this.factor())) {
-            return new astnodes.UnaryOp(new astnodes.UAdd(), a, ...EXTRA);
+            return new astnodes.UnaryOp(astnodes.UAdd, a, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("-")) && (a = this.factor())) {
-            return new astnodes.UnaryOp(new astnodes.USub(), a, ...EXTRA);
+            return new astnodes.UnaryOp(astnodes.USub, a, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("~")) && (a = this.factor())) {
-            return new astnodes.UnaryOp(new astnodes.Invert(), a, ...EXTRA);
+            return new astnodes.UnaryOp(astnodes.Invert, a, ...EXTRA);
         }
         this.reset(mark);
         if ((power = this.power())) {
@@ -2286,7 +2286,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.primary()) && (literal = this.expect(".")) && (b = this.name())) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.primary()) && (b = this.genexp())) {
@@ -2308,7 +2308,7 @@ export class GeneratedParser extends Parser {
             (b = this.slices()) &&
             (literal_1 = this.expect("]"))
         ) {
-            return new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((atom = this.atom())) {
@@ -2329,7 +2329,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this._gather_91()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Tuple(a, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2434,7 +2434,7 @@ export class GeneratedParser extends Parser {
             ((a = this.star_named_expressions()), 1) &&
             (literal_1 = this.expect("]"))
         ) {
-            return new astnodes.List(a, new astnodes.Load(), ...EXTRA);
+            return new astnodes.List(a, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2472,7 +2472,7 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((literal = this.expect("(")) && ((a = this._tmp_98()), 1) && (literal_1 = this.expect(")"))) {
-            return new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Tuple(a, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2777,7 +2777,7 @@ export class GeneratedParser extends Parser {
         let a, literal, mark;
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this.expression())) {
-            return new astnodes.Starred(a, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Starred(a, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2836,7 +2836,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.star_target()) && (b = this._loop0_116()) && ((opt = this.expect(",")), 1)) {
-            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Store(), ...EXTRA);
+            return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2880,8 +2880,8 @@ export class GeneratedParser extends Parser {
         mark = this.mark();
         if ((literal = this.expect("*")) && (a = this._tmp_120())) {
             return new astnodes.Starred(
-                CHECK(pegen.set_expr_context(this, a, new astnodes.Store())),
-                new astnodes.Store(),
+                CHECK(pegen.set_expr_context(this, a, astnodes.Store)),
+                astnodes.Store,
                 ...EXTRA
             );
         }
@@ -2905,7 +2905,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -2915,7 +2915,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("]")) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if ((star_atom = this.star_atom())) {
@@ -2932,11 +2932,11 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1, mark;
         mark = this.mark();
         if ((a = this.name())) {
-            return pegen.set_expr_context(this, a, new astnodes.Store());
+            return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this.reset(mark);
         if ((literal = this.expect("(")) && (a = this.target_with_star_atom()) && (literal_1 = this.expect(")"))) {
-            return pegen.set_expr_context(this, a, new astnodes.Store());
+            return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this.reset(mark);
         if (
@@ -2944,7 +2944,7 @@ export class GeneratedParser extends Parser {
             ((a = this.star_targets_tuple_seq()), 1) &&
             (literal_1 = this.expect(")"))
         ) {
-            return new astnodes.Tuple(a, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Tuple(a, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -2952,7 +2952,7 @@ export class GeneratedParser extends Parser {
             ((a = this.star_targets_list_seq()), 1) &&
             (literal_1 = this.expect("]"))
         ) {
-            return new astnodes.List(a, new astnodes.Store(), ...EXTRA);
+            return new astnodes.List(a, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
 
@@ -2969,7 +2969,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((a = this.name())) {
-            return pegen.set_expr_context(this, a, new astnodes.Store());
+            return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this.reset(mark);
         if ((literal = this.expect("(")) && (a = this.single_target()) && (literal_1 = this.expect(")"))) {
@@ -2991,7 +2991,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3001,7 +3001,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("]")) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
 
@@ -3102,7 +3102,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3112,7 +3112,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("]")) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if ((t_atom = this.t_atom())) {
@@ -3134,7 +3134,7 @@ export class GeneratedParser extends Parser {
             (b = this.name()) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if (
@@ -3144,7 +3144,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect("]")) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
-            return new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA);
+            return new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA);
         }
         this.reset(mark);
         if ((a = this.t_primary()) && (b = this.genexp()) && this.positive_lookahead(this.t_lookahead)) {
@@ -3196,19 +3196,19 @@ export class GeneratedParser extends Parser {
         let a, b, literal, literal_1, mark;
         mark = this.mark();
         if ((a = this.name())) {
-            return pegen.set_expr_context(this, a, new astnodes.Store());
+            return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this.reset(mark);
         if ((literal = this.expect("(")) && (a = this.target()) && (literal_1 = this.expect(")"))) {
-            return pegen.set_expr_context(this, a, new astnodes.Store());
+            return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this.reset(mark);
         if ((literal = this.expect("(")) && ((b = this.targets()), 1) && (literal_1 = this.expect(")"))) {
-            return new astnodes.Tuple(b, new astnodes.Store(), ...EXTRA);
+            return new astnodes.Tuple(b, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
         if ((literal = this.expect("[")) && ((b = this.targets()), 1) && (literal_1 = this.expect("]"))) {
-            return new astnodes.List(b, new astnodes.Store(), ...EXTRA);
+            return new astnodes.List(b, astnodes.Store, ...EXTRA);
         }
         this.reset(mark);
 

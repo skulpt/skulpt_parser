@@ -107,7 +107,7 @@ class EmitVisitor(asdl.VisitorBase):
             self.file.write(line)
 
     def emit_tp_name(self, name):
-        self.emit(f'{name}.prototype.tp$name = "{clean_name(name)}";', 0, 0)
+        self.emit(f'static _name = "{clean_name(name)}";', 1, 0)
 
     def emit_kind_typeofs(self, name, types):
         kinds = "export type " + name + "Kind = typeof " + name
@@ -134,16 +134,23 @@ class TypeDefVisitor(EmitVisitor):
             self.emit(s, depth)
 
         emit(f"/* ----- {name} ----- */")
-        emit(f"export class {name} extends AST {{}}")
-
+        emit(f"export class {name} extends AST {{")
         self.emit_tp_name(name)
+        emit("}")
         emit("")
-        self.emit_kind_typeofs(name, sum.types)
-        for i in range(len(sum.types)):
-            type = sum.types[i]
-            emit(f"export class {type.name} extends {name} {{}}")
+        emit(f"{name}.prototype._enum = true;")
 
+        class T:
+            def __init__(self, name):
+                self.name = name
+
+        self.emit_kind_typeofs(name, map(lambda t: T(t.name + "Type"), sum.types))
+        for type in sum.types:
+            emit(f"export class {type.name + 'Type'} extends {name} {{")
             self.emit_tp_name(type.name)
+            emit("}")
+        for type in sum.types:
+            emit(f"export const {type.name} = new {type.name + 'Type'}()")
         emit("")
 
     def visitProduct(self, product, name, depth):
@@ -237,6 +244,7 @@ class FunctionVisitor(PrototypeVisitor):
         arg_names = "[" + ", ".join(map(lambda arg: f'"{arg[1]}"', args)) + "]"
 
         emit(f"export class {name} extends {ts_type if union else 'AST'} {{")
+        self.emit_tp_name(name)
 
         self.emit_instance_types(_args)
         _args = ", ".join(_args)
@@ -270,7 +278,6 @@ class FunctionVisitor(PrototypeVisitor):
         # could instead use
         # get _fields () {return ['arg0', 'arg1'];}
         emit(f"{name}.prototype._fields = {arg_names};")
-        self.emit_tp_name(name)
         emit("")
 
     def emit_body_union(self, name, args, attrs):
@@ -293,12 +300,14 @@ class FunctionVisitor(PrototypeVisitor):
         _attrs = self.args_to_ts(attrs, True)
 
         if not attrs:
-            emit(f"export class {name} extends AST {{}}")
+            emit(f"export class {name} extends AST {{")
             self.emit_tp_name(name)
+            emit("}")
             emit("")
             return
 
         emit(f"export class {name} extends AST {{")
+        self.emit_tp_name(name)
 
         self.emit_instance_types(_attrs)
         _attrs = ", ".join(_attrs)
@@ -310,7 +319,6 @@ class FunctionVisitor(PrototypeVisitor):
         emit("}")
         attr_names = ", ".join(map(lambda arg: f'"{arg[1]}"', attrs))
         emit(f"{name}.prototype._attributes = [{attr_names}];")
-        self.emit_tp_name(name)
         emit("")
         emit(f"export type {name}Attrs = [{_attrs}];")
         emit("")
@@ -361,17 +369,18 @@ export type constant = any;
 export interface AST {
     _fields: string[];
     _attributes: string[];
-    tp$name: string;
+    _enum: boolean;
 }
 
 export class AST {
+    static _name = "AST";
     get [Symbol.toStringTag]() {
-        return this.tp$name;
+        return (this.constructor as typeof AST)._name;
     }
 }
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
-AST.prototype.tp$name = "AST";
+AST.prototype._enum = false;
 
 """
     )

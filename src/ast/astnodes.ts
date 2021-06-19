@@ -10,153 +10,230 @@ export type constant = any;
 export interface AST {
     _fields: string[];
     _attributes: string[];
-    tp$name: string;
+    _enum: boolean;
 }
 
 export class AST {
+    static _name = "AST";
     get [Symbol.toStringTag]() {
-        return this.tp$name;
+        return (this.constructor as typeof AST)._name;
     }
 }
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
-AST.prototype.tp$name = "AST";
+AST.prototype._enum = false;
 
 /* ---------------------- */
 /* constructors for nodes */
 /* ---------------------- */
 
 /* ----- expr_context ----- */
-export class expr_context extends AST {}
-expr_context.prototype.tp$name = "expr_context";
+export class expr_context extends AST {
+    static _name = "expr_context";
+}
 
-export type expr_contextKind = typeof expr_context | typeof Load | typeof Store | typeof Del;
+expr_context.prototype._enum = true;
+export type expr_contextKind = typeof expr_context | typeof LoadType | typeof StoreType | typeof DelType;
 
-export class Load extends expr_context {}
-Load.prototype.tp$name = "Load";
-export class Store extends expr_context {}
-Store.prototype.tp$name = "Store";
-export class Del extends expr_context {}
-Del.prototype.tp$name = "Del";
+export class LoadType extends expr_context {
+    static _name = "Load";
+}
+export class StoreType extends expr_context {
+    static _name = "Store";
+}
+export class DelType extends expr_context {
+    static _name = "Del";
+}
+export const Load = new LoadType();
+export const Store = new StoreType();
+export const Del = new DelType();
 
 /* ----- boolop ----- */
-export class boolop extends AST {}
-boolop.prototype.tp$name = "boolop";
+export class boolop extends AST {
+    static _name = "boolop";
+}
 
-export type boolopKind = typeof boolop | typeof And | typeof Or;
+boolop.prototype._enum = true;
+export type boolopKind = typeof boolop | typeof AndType | typeof OrType;
 
-export class And extends boolop {}
-And.prototype.tp$name = "And";
-export class Or extends boolop {}
-Or.prototype.tp$name = "Or";
+export class AndType extends boolop {
+    static _name = "And";
+}
+export class OrType extends boolop {
+    static _name = "Or";
+}
+export const And = new AndType();
+export const Or = new OrType();
 
 /* ----- operator ----- */
-export class operator extends AST {}
-operator.prototype.tp$name = "operator";
+export class operator extends AST {
+    static _name = "operator";
+}
 
+operator.prototype._enum = true;
 export type operatorKind =
     | typeof operator
-    | typeof Add
-    | typeof Sub
-    | typeof Mult
-    | typeof MatMult
-    | typeof Div
-    | typeof Mod
-    | typeof Pow
-    | typeof LShift
-    | typeof RShift
-    | typeof BitOr
-    | typeof BitXor
-    | typeof BitAnd
-    | typeof FloorDiv;
+    | typeof AddType
+    | typeof SubType
+    | typeof MultType
+    | typeof MatMultType
+    | typeof DivType
+    | typeof ModType
+    | typeof PowType
+    | typeof LShiftType
+    | typeof RShiftType
+    | typeof BitOrType
+    | typeof BitXorType
+    | typeof BitAndType
+    | typeof FloorDivType;
 
-export class Add extends operator {}
-Add.prototype.tp$name = "Add";
-export class Sub extends operator {}
-Sub.prototype.tp$name = "Sub";
-export class Mult extends operator {}
-Mult.prototype.tp$name = "Mult";
-export class MatMult extends operator {}
-MatMult.prototype.tp$name = "MatMult";
-export class Div extends operator {}
-Div.prototype.tp$name = "Div";
-export class Mod extends operator {}
-Mod.prototype.tp$name = "Mod";
-export class Pow extends operator {}
-Pow.prototype.tp$name = "Pow";
-export class LShift extends operator {}
-LShift.prototype.tp$name = "LShift";
-export class RShift extends operator {}
-RShift.prototype.tp$name = "RShift";
-export class BitOr extends operator {}
-BitOr.prototype.tp$name = "BitOr";
-export class BitXor extends operator {}
-BitXor.prototype.tp$name = "BitXor";
-export class BitAnd extends operator {}
-BitAnd.prototype.tp$name = "BitAnd";
-export class FloorDiv extends operator {}
-FloorDiv.prototype.tp$name = "FloorDiv";
+export class AddType extends operator {
+    static _name = "Add";
+}
+export class SubType extends operator {
+    static _name = "Sub";
+}
+export class MultType extends operator {
+    static _name = "Mult";
+}
+export class MatMultType extends operator {
+    static _name = "MatMult";
+}
+export class DivType extends operator {
+    static _name = "Div";
+}
+export class ModType extends operator {
+    static _name = "Mod";
+}
+export class PowType extends operator {
+    static _name = "Pow";
+}
+export class LShiftType extends operator {
+    static _name = "LShift";
+}
+export class RShiftType extends operator {
+    static _name = "RShift";
+}
+export class BitOrType extends operator {
+    static _name = "BitOr";
+}
+export class BitXorType extends operator {
+    static _name = "BitXor";
+}
+export class BitAndType extends operator {
+    static _name = "BitAnd";
+}
+export class FloorDivType extends operator {
+    static _name = "FloorDiv";
+}
+export const Add = new AddType();
+export const Sub = new SubType();
+export const Mult = new MultType();
+export const MatMult = new MatMultType();
+export const Div = new DivType();
+export const Mod = new ModType();
+export const Pow = new PowType();
+export const LShift = new LShiftType();
+export const RShift = new RShiftType();
+export const BitOr = new BitOrType();
+export const BitXor = new BitXorType();
+export const BitAnd = new BitAndType();
+export const FloorDiv = new FloorDivType();
 
 /* ----- unaryop ----- */
-export class unaryop extends AST {}
-unaryop.prototype.tp$name = "unaryop";
+export class unaryop extends AST {
+    static _name = "unaryop";
+}
 
-export type unaryopKind = typeof unaryop | typeof Invert | typeof Not | typeof UAdd | typeof USub;
+unaryop.prototype._enum = true;
+export type unaryopKind = typeof unaryop | typeof InvertType | typeof NotType | typeof UAddType | typeof USubType;
 
-export class Invert extends unaryop {}
-Invert.prototype.tp$name = "Invert";
-export class Not extends unaryop {}
-Not.prototype.tp$name = "Not";
-export class UAdd extends unaryop {}
-UAdd.prototype.tp$name = "UAdd";
-export class USub extends unaryop {}
-USub.prototype.tp$name = "USub";
+export class InvertType extends unaryop {
+    static _name = "Invert";
+}
+export class NotType extends unaryop {
+    static _name = "Not";
+}
+export class UAddType extends unaryop {
+    static _name = "UAdd";
+}
+export class USubType extends unaryop {
+    static _name = "USub";
+}
+export const Invert = new InvertType();
+export const Not = new NotType();
+export const UAdd = new UAddType();
+export const USub = new USubType();
 
 /* ----- cmpop ----- */
-export class cmpop extends AST {}
-cmpop.prototype.tp$name = "cmpop";
+export class cmpop extends AST {
+    static _name = "cmpop";
+}
 
+cmpop.prototype._enum = true;
 export type cmpopKind =
     | typeof cmpop
-    | typeof Eq
-    | typeof NotEq
-    | typeof Lt
-    | typeof LtE
-    | typeof Gt
-    | typeof GtE
-    | typeof Is
-    | typeof IsNot
-    | typeof In
-    | typeof NotIn;
+    | typeof EqType
+    | typeof NotEqType
+    | typeof LtType
+    | typeof LtEType
+    | typeof GtType
+    | typeof GtEType
+    | typeof IsType
+    | typeof IsNotType
+    | typeof InType
+    | typeof NotInType;
 
-export class Eq extends cmpop {}
-Eq.prototype.tp$name = "Eq";
-export class NotEq extends cmpop {}
-NotEq.prototype.tp$name = "NotEq";
-export class Lt extends cmpop {}
-Lt.prototype.tp$name = "Lt";
-export class LtE extends cmpop {}
-LtE.prototype.tp$name = "LtE";
-export class Gt extends cmpop {}
-Gt.prototype.tp$name = "Gt";
-export class GtE extends cmpop {}
-GtE.prototype.tp$name = "GtE";
-export class Is extends cmpop {}
-Is.prototype.tp$name = "Is";
-export class IsNot extends cmpop {}
-IsNot.prototype.tp$name = "IsNot";
-export class In extends cmpop {}
-In.prototype.tp$name = "In";
-export class NotIn extends cmpop {}
-NotIn.prototype.tp$name = "NotIn";
+export class EqType extends cmpop {
+    static _name = "Eq";
+}
+export class NotEqType extends cmpop {
+    static _name = "NotEq";
+}
+export class LtType extends cmpop {
+    static _name = "Lt";
+}
+export class LtEType extends cmpop {
+    static _name = "LtE";
+}
+export class GtType extends cmpop {
+    static _name = "Gt";
+}
+export class GtEType extends cmpop {
+    static _name = "GtE";
+}
+export class IsType extends cmpop {
+    static _name = "Is";
+}
+export class IsNotType extends cmpop {
+    static _name = "IsNot";
+}
+export class InType extends cmpop {
+    static _name = "In";
+}
+export class NotInType extends cmpop {
+    static _name = "NotIn";
+}
+export const Eq = new EqType();
+export const NotEq = new NotEqType();
+export const Lt = new LtType();
+export const LtE = new LtEType();
+export const Gt = new GtType();
+export const GtE = new GtEType();
+export const Is = new IsType();
+export const IsNot = new IsNotType();
+export const In = new InType();
+export const NotIn = new NotInType();
 
 /* ----- mod ----- */
-export class mod extends AST {}
-mod.prototype.tp$name = "mod";
+export class mod extends AST {
+    static _name = "mod";
+}
 
 export type modKind = typeof mod | typeof Module | typeof Interactive | typeof Expression | typeof FunctionType;
 
 export class Module extends mod {
+    static _name = "Module";
     body: stmt[];
     type_ignores: type_ignore[];
     constructor(body: stmt[], type_ignores: type_ignore[]) {
@@ -166,9 +243,9 @@ export class Module extends mod {
     }
 }
 Module.prototype._fields = ["body", "type_ignores"];
-Module.prototype.tp$name = "Module";
 
 export class Interactive extends mod {
+    static _name = "Interactive";
     body: stmt[];
     constructor(body: stmt[]) {
         super();
@@ -176,9 +253,9 @@ export class Interactive extends mod {
     }
 }
 Interactive.prototype._fields = ["body"];
-Interactive.prototype.tp$name = "Interactive";
 
 export class Expression extends mod {
+    static _name = "Expression";
     body: expr;
     constructor(body: expr) {
         super();
@@ -186,9 +263,9 @@ export class Expression extends mod {
     }
 }
 Expression.prototype._fields = ["body"];
-Expression.prototype.tp$name = "Expression";
 
 export class FunctionType extends mod {
+    static _name = "FunctionType";
     argtypes: expr[];
     returns: expr;
     constructor(argtypes: expr[], returns: expr) {
@@ -198,10 +275,10 @@ export class FunctionType extends mod {
     }
 }
 FunctionType.prototype._fields = ["argtypes", "returns"];
-FunctionType.prototype.tp$name = "FunctionType";
 
 /* ----- stmt ----- */
 export class stmt extends AST {
+    static _name = "stmt";
     lineno: number;
     col_offset: number;
     end_lineno?: number | null;
@@ -215,7 +292,6 @@ export class stmt extends AST {
     }
 }
 stmt.prototype._attributes = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
-stmt.prototype.tp$name = "stmt";
 
 export type stmtAttrs = [
     lineno: number,
@@ -254,6 +330,7 @@ export type stmtKind =
     | typeof Debugger;
 
 export class FunctionDef extends stmt {
+    static _name = "FunctionDef";
     name: identifier;
     args: arguments_;
     body: stmt[];
@@ -279,9 +356,9 @@ export class FunctionDef extends stmt {
     }
 }
 FunctionDef.prototype._fields = ["name", "args", "body", "decorator_list", "returns", "type_comment"];
-FunctionDef.prototype.tp$name = "FunctionDef";
 
 export class AsyncFunctionDef extends stmt {
+    static _name = "AsyncFunctionDef";
     name: identifier;
     args: arguments_;
     body: stmt[];
@@ -307,9 +384,9 @@ export class AsyncFunctionDef extends stmt {
     }
 }
 AsyncFunctionDef.prototype._fields = ["name", "args", "body", "decorator_list", "returns", "type_comment"];
-AsyncFunctionDef.prototype.tp$name = "AsyncFunctionDef";
 
 export class ClassDef extends stmt {
+    static _name = "ClassDef";
     name: identifier;
     bases: expr[];
     keywords: keyword[];
@@ -332,9 +409,9 @@ export class ClassDef extends stmt {
     }
 }
 ClassDef.prototype._fields = ["name", "bases", "keywords", "body", "decorator_list"];
-ClassDef.prototype.tp$name = "ClassDef";
 
 export class Return extends stmt {
+    static _name = "Return";
     value: expr | null;
     constructor(value: expr | null, ...attrs: stmtAttrs) {
         super(...attrs);
@@ -342,9 +419,9 @@ export class Return extends stmt {
     }
 }
 Return.prototype._fields = ["value"];
-Return.prototype.tp$name = "Return";
 
 export class Delete extends stmt {
+    static _name = "Delete";
     targets: expr[];
     constructor(targets: expr[], ...attrs: stmtAttrs) {
         super(...attrs);
@@ -352,9 +429,9 @@ export class Delete extends stmt {
     }
 }
 Delete.prototype._fields = ["targets"];
-Delete.prototype.tp$name = "Delete";
 
 export class Assign extends stmt {
+    static _name = "Assign";
     targets: expr[];
     value: expr;
     type_comment: string | null;
@@ -366,9 +443,9 @@ export class Assign extends stmt {
     }
 }
 Assign.prototype._fields = ["targets", "value", "type_comment"];
-Assign.prototype.tp$name = "Assign";
 
 export class AugAssign extends stmt {
+    static _name = "AugAssign";
     target: expr;
     op: operator;
     value: expr;
@@ -380,9 +457,9 @@ export class AugAssign extends stmt {
     }
 }
 AugAssign.prototype._fields = ["target", "op", "value"];
-AugAssign.prototype.tp$name = "AugAssign";
 
 export class AnnAssign extends stmt {
+    static _name = "AnnAssign";
     target: expr;
     annotation: expr;
     value: expr | null;
@@ -396,9 +473,9 @@ export class AnnAssign extends stmt {
     }
 }
 AnnAssign.prototype._fields = ["target", "annotation", "value", "simple"];
-AnnAssign.prototype.tp$name = "AnnAssign";
 
 export class For extends stmt {
+    static _name = "For";
     target: expr;
     iter: expr;
     body: stmt[];
@@ -421,9 +498,9 @@ export class For extends stmt {
     }
 }
 For.prototype._fields = ["target", "iter", "body", "orelse", "type_comment"];
-For.prototype.tp$name = "For";
 
 export class AsyncFor extends stmt {
+    static _name = "AsyncFor";
     target: expr;
     iter: expr;
     body: stmt[];
@@ -446,9 +523,9 @@ export class AsyncFor extends stmt {
     }
 }
 AsyncFor.prototype._fields = ["target", "iter", "body", "orelse", "type_comment"];
-AsyncFor.prototype.tp$name = "AsyncFor";
 
 export class While extends stmt {
+    static _name = "While";
     test: expr;
     body: stmt[];
     orelse: stmt[];
@@ -460,9 +537,9 @@ export class While extends stmt {
     }
 }
 While.prototype._fields = ["test", "body", "orelse"];
-While.prototype.tp$name = "While";
 
 export class If extends stmt {
+    static _name = "If";
     test: expr;
     body: stmt[];
     orelse: stmt[];
@@ -474,9 +551,9 @@ export class If extends stmt {
     }
 }
 If.prototype._fields = ["test", "body", "orelse"];
-If.prototype.tp$name = "If";
 
 export class With extends stmt {
+    static _name = "With";
     items: withitem[];
     body: stmt[];
     type_comment: string | null;
@@ -488,9 +565,9 @@ export class With extends stmt {
     }
 }
 With.prototype._fields = ["items", "body", "type_comment"];
-With.prototype.tp$name = "With";
 
 export class AsyncWith extends stmt {
+    static _name = "AsyncWith";
     items: withitem[];
     body: stmt[];
     type_comment: string | null;
@@ -502,9 +579,9 @@ export class AsyncWith extends stmt {
     }
 }
 AsyncWith.prototype._fields = ["items", "body", "type_comment"];
-AsyncWith.prototype.tp$name = "AsyncWith";
 
 export class Raise extends stmt {
+    static _name = "Raise";
     exc: expr | null;
     cause: expr | null;
     constructor(exc: expr | null, cause: expr | null, ...attrs: stmtAttrs) {
@@ -514,9 +591,9 @@ export class Raise extends stmt {
     }
 }
 Raise.prototype._fields = ["exc", "cause"];
-Raise.prototype.tp$name = "Raise";
 
 export class Try extends stmt {
+    static _name = "Try";
     body: stmt[];
     handlers: excepthandler[];
     orelse: stmt[];
@@ -530,9 +607,9 @@ export class Try extends stmt {
     }
 }
 Try.prototype._fields = ["body", "handlers", "orelse", "finalbody"];
-Try.prototype.tp$name = "Try";
 
 export class Assert extends stmt {
+    static _name = "Assert";
     test: expr;
     msg: expr | null;
     constructor(test: expr, msg: expr | null, ...attrs: stmtAttrs) {
@@ -542,9 +619,9 @@ export class Assert extends stmt {
     }
 }
 Assert.prototype._fields = ["test", "msg"];
-Assert.prototype.tp$name = "Assert";
 
 export class Import extends stmt {
+    static _name = "Import";
     names: alias[];
     constructor(names: alias[], ...attrs: stmtAttrs) {
         super(...attrs);
@@ -552,9 +629,9 @@ export class Import extends stmt {
     }
 }
 Import.prototype._fields = ["names"];
-Import.prototype.tp$name = "Import";
 
 export class ImportFrom extends stmt {
+    static _name = "ImportFrom";
     module: identifier | null;
     names: alias[];
     level: number | null;
@@ -566,9 +643,9 @@ export class ImportFrom extends stmt {
     }
 }
 ImportFrom.prototype._fields = ["module", "names", "level"];
-ImportFrom.prototype.tp$name = "ImportFrom";
 
 export class Global extends stmt {
+    static _name = "Global";
     names: identifier[];
     constructor(names: identifier[], ...attrs: stmtAttrs) {
         super(...attrs);
@@ -576,9 +653,9 @@ export class Global extends stmt {
     }
 }
 Global.prototype._fields = ["names"];
-Global.prototype.tp$name = "Global";
 
 export class Nonlocal extends stmt {
+    static _name = "Nonlocal";
     names: identifier[];
     constructor(names: identifier[], ...attrs: stmtAttrs) {
         super(...attrs);
@@ -586,9 +663,9 @@ export class Nonlocal extends stmt {
     }
 }
 Nonlocal.prototype._fields = ["names"];
-Nonlocal.prototype.tp$name = "Nonlocal";
 
 export class Expr extends stmt {
+    static _name = "Expr";
     value: expr;
     constructor(value: expr, ...attrs: stmtAttrs) {
         super(...attrs);
@@ -596,42 +673,42 @@ export class Expr extends stmt {
     }
 }
 Expr.prototype._fields = ["value"];
-Expr.prototype.tp$name = "Expr";
 
 export class Pass extends stmt {
+    static _name = "Pass";
     constructor(...attrs: stmtAttrs) {
         super(...attrs);
     }
 }
 Pass.prototype._fields = [];
-Pass.prototype.tp$name = "Pass";
 
 export class Break extends stmt {
+    static _name = "Break";
     constructor(...attrs: stmtAttrs) {
         super(...attrs);
     }
 }
 Break.prototype._fields = [];
-Break.prototype.tp$name = "Break";
 
 export class Continue extends stmt {
+    static _name = "Continue";
     constructor(...attrs: stmtAttrs) {
         super(...attrs);
     }
 }
 Continue.prototype._fields = [];
-Continue.prototype.tp$name = "Continue";
 
 export class Debugger extends stmt {
+    static _name = "Debugger";
     constructor(...attrs: stmtAttrs) {
         super(...attrs);
     }
 }
 Debugger.prototype._fields = [];
-Debugger.prototype.tp$name = "Debugger";
 
 /* ----- expr ----- */
 export class expr extends AST {
+    static _name = "expr";
     lineno: number;
     col_offset: number;
     end_lineno?: number | null;
@@ -645,7 +722,6 @@ export class expr extends AST {
     }
 }
 expr.prototype._attributes = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
-expr.prototype.tp$name = "expr";
 
 export type exprAttrs = [
     lineno: number,
@@ -685,6 +761,7 @@ export type exprKind =
     | typeof Slice;
 
 export class BoolOp extends expr {
+    static _name = "BoolOp";
     op: boolop;
     values: expr[];
     constructor(op: boolop, values: expr[], ...attrs: exprAttrs) {
@@ -694,9 +771,9 @@ export class BoolOp extends expr {
     }
 }
 BoolOp.prototype._fields = ["op", "values"];
-BoolOp.prototype.tp$name = "BoolOp";
 
 export class NamedExpr extends expr {
+    static _name = "NamedExpr";
     target: expr;
     value: expr;
     constructor(target: expr, value: expr, ...attrs: exprAttrs) {
@@ -706,9 +783,9 @@ export class NamedExpr extends expr {
     }
 }
 NamedExpr.prototype._fields = ["target", "value"];
-NamedExpr.prototype.tp$name = "NamedExpr";
 
 export class BinOp extends expr {
+    static _name = "BinOp";
     left: expr;
     op: operator;
     right: expr;
@@ -720,9 +797,9 @@ export class BinOp extends expr {
     }
 }
 BinOp.prototype._fields = ["left", "op", "right"];
-BinOp.prototype.tp$name = "BinOp";
 
 export class UnaryOp extends expr {
+    static _name = "UnaryOp";
     op: unaryop;
     operand: expr;
     constructor(op: unaryop, operand: expr, ...attrs: exprAttrs) {
@@ -732,9 +809,9 @@ export class UnaryOp extends expr {
     }
 }
 UnaryOp.prototype._fields = ["op", "operand"];
-UnaryOp.prototype.tp$name = "UnaryOp";
 
 export class Lambda extends expr {
+    static _name = "Lambda";
     args: arguments_;
     body: expr;
     constructor(args: arguments_, body: expr, ...attrs: exprAttrs) {
@@ -744,9 +821,9 @@ export class Lambda extends expr {
     }
 }
 Lambda.prototype._fields = ["args", "body"];
-Lambda.prototype.tp$name = "Lambda";
 
 export class IfExp extends expr {
+    static _name = "IfExp";
     test: expr;
     body: expr;
     orelse: expr;
@@ -758,9 +835,9 @@ export class IfExp extends expr {
     }
 }
 IfExp.prototype._fields = ["test", "body", "orelse"];
-IfExp.prototype.tp$name = "IfExp";
 
 export class Dict extends expr {
+    static _name = "Dict";
     keys: expr[];
     values: expr[];
     constructor(keys: expr[], values: expr[], ...attrs: exprAttrs) {
@@ -770,9 +847,9 @@ export class Dict extends expr {
     }
 }
 Dict.prototype._fields = ["keys", "values"];
-Dict.prototype.tp$name = "Dict";
 
 export class Set extends expr {
+    static _name = "Set";
     elts: expr[];
     constructor(elts: expr[], ...attrs: exprAttrs) {
         super(...attrs);
@@ -780,9 +857,9 @@ export class Set extends expr {
     }
 }
 Set.prototype._fields = ["elts"];
-Set.prototype.tp$name = "Set";
 
 export class ListComp extends expr {
+    static _name = "ListComp";
     elt: expr;
     generators: comprehension[];
     constructor(elt: expr, generators: comprehension[], ...attrs: exprAttrs) {
@@ -792,9 +869,9 @@ export class ListComp extends expr {
     }
 }
 ListComp.prototype._fields = ["elt", "generators"];
-ListComp.prototype.tp$name = "ListComp";
 
 export class SetComp extends expr {
+    static _name = "SetComp";
     elt: expr;
     generators: comprehension[];
     constructor(elt: expr, generators: comprehension[], ...attrs: exprAttrs) {
@@ -804,9 +881,9 @@ export class SetComp extends expr {
     }
 }
 SetComp.prototype._fields = ["elt", "generators"];
-SetComp.prototype.tp$name = "SetComp";
 
 export class DictComp extends expr {
+    static _name = "DictComp";
     key: expr;
     value: expr;
     generators: comprehension[];
@@ -818,9 +895,9 @@ export class DictComp extends expr {
     }
 }
 DictComp.prototype._fields = ["key", "value", "generators"];
-DictComp.prototype.tp$name = "DictComp";
 
 export class GeneratorExp extends expr {
+    static _name = "GeneratorExp";
     elt: expr;
     generators: comprehension[];
     constructor(elt: expr, generators: comprehension[], ...attrs: exprAttrs) {
@@ -830,9 +907,9 @@ export class GeneratorExp extends expr {
     }
 }
 GeneratorExp.prototype._fields = ["elt", "generators"];
-GeneratorExp.prototype.tp$name = "GeneratorExp";
 
 export class Await extends expr {
+    static _name = "Await";
     value: expr;
     constructor(value: expr, ...attrs: exprAttrs) {
         super(...attrs);
@@ -840,9 +917,9 @@ export class Await extends expr {
     }
 }
 Await.prototype._fields = ["value"];
-Await.prototype.tp$name = "Await";
 
 export class Yield extends expr {
+    static _name = "Yield";
     value: expr | null;
     constructor(value: expr | null, ...attrs: exprAttrs) {
         super(...attrs);
@@ -850,9 +927,9 @@ export class Yield extends expr {
     }
 }
 Yield.prototype._fields = ["value"];
-Yield.prototype.tp$name = "Yield";
 
 export class YieldFrom extends expr {
+    static _name = "YieldFrom";
     value: expr;
     constructor(value: expr, ...attrs: exprAttrs) {
         super(...attrs);
@@ -860,9 +937,9 @@ export class YieldFrom extends expr {
     }
 }
 YieldFrom.prototype._fields = ["value"];
-YieldFrom.prototype.tp$name = "YieldFrom";
 
 export class Compare extends expr {
+    static _name = "Compare";
     left: expr;
     ops: cmpop[];
     comparators: expr[];
@@ -874,9 +951,9 @@ export class Compare extends expr {
     }
 }
 Compare.prototype._fields = ["left", "ops", "comparators"];
-Compare.prototype.tp$name = "Compare";
 
 export class Call extends expr {
+    static _name = "Call";
     func: expr;
     args: expr[];
     keywords: keyword[];
@@ -888,9 +965,9 @@ export class Call extends expr {
     }
 }
 Call.prototype._fields = ["func", "args", "keywords"];
-Call.prototype.tp$name = "Call";
 
 export class FormattedValue extends expr {
+    static _name = "FormattedValue";
     value: expr;
     conversion: number | null;
     format_spec: expr | null;
@@ -902,9 +979,9 @@ export class FormattedValue extends expr {
     }
 }
 FormattedValue.prototype._fields = ["value", "conversion", "format_spec"];
-FormattedValue.prototype.tp$name = "FormattedValue";
 
 export class JoinedStr extends expr {
+    static _name = "JoinedStr";
     values: expr[];
     constructor(values: expr[], ...attrs: exprAttrs) {
         super(...attrs);
@@ -912,9 +989,9 @@ export class JoinedStr extends expr {
     }
 }
 JoinedStr.prototype._fields = ["values"];
-JoinedStr.prototype.tp$name = "JoinedStr";
 
 export class Constant extends expr {
+    static _name = "Constant";
     value: constant;
     kind: string | null;
     constructor(value: constant, kind: string | null, ...attrs: exprAttrs) {
@@ -924,9 +1001,9 @@ export class Constant extends expr {
     }
 }
 Constant.prototype._fields = ["value", "kind"];
-Constant.prototype.tp$name = "Constant";
 
 export class Attribute extends expr {
+    static _name = "Attribute";
     value: expr;
     attr: identifier;
     ctx: expr_context;
@@ -938,9 +1015,9 @@ export class Attribute extends expr {
     }
 }
 Attribute.prototype._fields = ["value", "attr", "ctx"];
-Attribute.prototype.tp$name = "Attribute";
 
 export class Subscript extends expr {
+    static _name = "Subscript";
     value: expr;
     slice: expr;
     ctx: expr_context;
@@ -952,9 +1029,9 @@ export class Subscript extends expr {
     }
 }
 Subscript.prototype._fields = ["value", "slice", "ctx"];
-Subscript.prototype.tp$name = "Subscript";
 
 export class Starred extends expr {
+    static _name = "Starred";
     value: expr;
     ctx: expr_context;
     constructor(value: expr, ctx: expr_context, ...attrs: exprAttrs) {
@@ -964,9 +1041,9 @@ export class Starred extends expr {
     }
 }
 Starred.prototype._fields = ["value", "ctx"];
-Starred.prototype.tp$name = "Starred";
 
 export class Name extends expr {
+    static _name = "Name";
     id: identifier;
     ctx: expr_context;
     constructor(id: identifier, ctx: expr_context, ...attrs: exprAttrs) {
@@ -976,9 +1053,9 @@ export class Name extends expr {
     }
 }
 Name.prototype._fields = ["id", "ctx"];
-Name.prototype.tp$name = "Name";
 
 export class List extends expr {
+    static _name = "List";
     elts: expr[];
     ctx: expr_context;
     constructor(elts: expr[], ctx: expr_context, ...attrs: exprAttrs) {
@@ -988,9 +1065,9 @@ export class List extends expr {
     }
 }
 List.prototype._fields = ["elts", "ctx"];
-List.prototype.tp$name = "List";
 
 export class Tuple extends expr {
+    static _name = "Tuple";
     elts: expr[];
     ctx: expr_context;
     constructor(elts: expr[], ctx: expr_context, ...attrs: exprAttrs) {
@@ -1000,9 +1077,9 @@ export class Tuple extends expr {
     }
 }
 Tuple.prototype._fields = ["elts", "ctx"];
-Tuple.prototype.tp$name = "Tuple";
 
 export class Slice extends expr {
+    static _name = "Slice";
     lower: expr | null;
     upper: expr | null;
     step: expr | null;
@@ -1014,10 +1091,10 @@ export class Slice extends expr {
     }
 }
 Slice.prototype._fields = ["lower", "upper", "step"];
-Slice.prototype.tp$name = "Slice";
 
 /* ----- comprehension ----- */
 export class comprehension extends AST {
+    static _name = "comprehension";
     target: expr;
     iter: expr;
     ifs: expr[];
@@ -1031,10 +1108,10 @@ export class comprehension extends AST {
     }
 }
 comprehension.prototype._fields = ["target", "iter", "ifs", "is_async"];
-comprehension.prototype.tp$name = "comprehension";
 
 /* ----- excepthandler ----- */
 export class excepthandler extends AST {
+    static _name = "excepthandler";
     lineno: number;
     col_offset: number;
     end_lineno?: number | null;
@@ -1048,7 +1125,6 @@ export class excepthandler extends AST {
     }
 }
 excepthandler.prototype._attributes = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
-excepthandler.prototype.tp$name = "excepthandler";
 
 export type excepthandlerAttrs = [
     lineno: number,
@@ -1060,6 +1136,7 @@ export type excepthandlerAttrs = [
 export type excepthandlerKind = typeof excepthandler | typeof ExceptHandler;
 
 export class ExceptHandler extends excepthandler {
+    static _name = "ExceptHandler";
     type: expr | null;
     name: identifier | null;
     body: stmt[];
@@ -1071,10 +1148,10 @@ export class ExceptHandler extends excepthandler {
     }
 }
 ExceptHandler.prototype._fields = ["type", "name", "body"];
-ExceptHandler.prototype.tp$name = "ExceptHandler";
 
 /* ----- arguments_ ----- */
 export class arguments_ extends AST {
+    static _name = "arguments";
     posonlyargs: arg[];
     args: arg[];
     vararg: arg | null;
@@ -1102,10 +1179,10 @@ export class arguments_ extends AST {
     }
 }
 arguments_.prototype._fields = ["posonlyargs", "args", "vararg", "kwonlyargs", "kw_defaults", "kwarg", "defaults"];
-arguments_.prototype.tp$name = "arguments";
 
 /* ----- arg ----- */
 export class arg extends AST {
+    static _name = "arg";
     arg: identifier;
     annotation: expr | null;
     type_comment: string | null;
@@ -1133,10 +1210,10 @@ export class arg extends AST {
     }
 }
 arg.prototype._fields = ["arg", "annotation", "type_comment"];
-arg.prototype.tp$name = "arg";
 
 /* ----- keyword ----- */
 export class keyword extends AST {
+    static _name = "keyword";
     arg: identifier | null;
     value: expr;
     lineno: number;
@@ -1161,10 +1238,10 @@ export class keyword extends AST {
     }
 }
 keyword.prototype._fields = ["arg", "value"];
-keyword.prototype.tp$name = "keyword";
 
 /* ----- alias ----- */
 export class alias extends AST {
+    static _name = "alias";
     name: identifier;
     asname: identifier | null;
     constructor(name: identifier, asname: identifier | null) {
@@ -1174,10 +1251,10 @@ export class alias extends AST {
     }
 }
 alias.prototype._fields = ["name", "asname"];
-alias.prototype.tp$name = "alias";
 
 /* ----- withitem ----- */
 export class withitem extends AST {
+    static _name = "withitem";
     context_expr: expr;
     optional_vars: expr | null;
     constructor(context_expr: expr, optional_vars: expr | null) {
@@ -1187,15 +1264,16 @@ export class withitem extends AST {
     }
 }
 withitem.prototype._fields = ["context_expr", "optional_vars"];
-withitem.prototype.tp$name = "withitem";
 
 /* ----- type_ignore ----- */
-export class type_ignore extends AST {}
-type_ignore.prototype.tp$name = "type_ignore";
+export class type_ignore extends AST {
+    static _name = "type_ignore";
+}
 
 export type type_ignoreKind = typeof type_ignore | typeof TypeIgnore;
 
 export class TypeIgnore extends type_ignore {
+    static _name = "TypeIgnore";
     lineno: number;
     tag: string;
     constructor(lineno: number, tag: string) {
@@ -1205,4 +1283,3 @@ export class TypeIgnore extends type_ignore {
     }
 }
 TypeIgnore.prototype._fields = ["lineno", "tag"];
-TypeIgnore.prototype.tp$name = "TypeIgnore";

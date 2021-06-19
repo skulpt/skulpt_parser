@@ -19,7 +19,7 @@ async function convertToTs(content: string): Promise<string> {
             if (m2 === "arguments") {
                 m2 += "_";
             }
-            return m1 + "new astnodes." + m2;
+            return `${m1} astnodes.${m2}._enum ? astnodes.${m2} : new astnodes.${m2}`;
         })
         .replace(
             /new astnodes.Constant\(\n(\s+\-?[0-9](?:e[\-0-9]+))/g,

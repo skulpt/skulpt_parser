@@ -554,7 +554,7 @@ export function _create_dummy_identifier(p: Parser) {
 export function dummy_name(p: Parser): Name {
     // we don't care about caching yet, but it's a smart move when we're
     // creating big ol python string objects for this dummy thing everytime
-    return new Name(_create_dummy_identifier(p), new Load(), 1, 0, 1, 0);
+    return new Name(_create_dummy_identifier(p), Load, 1, 0, 1, 0);
 }
 
 // // Return dummy NAME.
