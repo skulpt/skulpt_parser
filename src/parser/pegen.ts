@@ -177,7 +177,7 @@ export function new_identifier(/*p: Parser, */ n: string) {
 //     return NULL;
 // }
 
-export function _create_dummy_identifier(/*p: Parser*/) {
+export function _create_dummy_identifier(p: Parser) {
     return new_identifier("");
 }
 
@@ -551,10 +551,10 @@ export function _create_dummy_identifier(/*p: Parser*/) {
 //     return _PyPegen_insert_memo(p, mark, type, node);
 // }
 
-export function dummy_name(/* p: Parser */): Name {
+export function dummy_name(p: Parser): Name {
     // we don't care about caching yet, but it's a smart move when we're
     // creating big ol python string objects for this dummy thing everytime
-    return new Name(_create_dummy_identifier(), new Load(), 1, 0, 1, 0);
+    return new Name(_create_dummy_identifier(p), new Load(), 1, 0, 1, 0);
 }
 
 // // Return dummy NAME.
@@ -1321,7 +1321,7 @@ export function dummy_name(/* p: Parser */): Name {
 // }
 
 /* Creates a single-element asdl_seq* that contains a */
-export function singleton_seq(a: AST): AST[] {
+export function singleton_seq(p: Parser, a: AST): AST[] {
     return [a];
 }
 // asdl_seq *
@@ -1390,7 +1390,7 @@ export function singleton_seq(a: AST): AST[] {
 // }
 
 /* Flattens an asdl_seq* of asdl_seq*s */
-export function seq_flatten(seqs: AST[][]): AST[] {
+export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
     return seqs?.flat();
 }
 // asdl_seq *
@@ -2140,7 +2140,7 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 // }
 
 /** concatenate strings from python like `'foo' 'bar'` */
-export function concatenate_strings(a: TokenInfo[]): Constant {
+export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
     const [lineno, col_offset] = a[0].start;
     const [end_lineno, end_col_offset] = a[a.length - 1].end;
     /** @todo parse_string.c */
@@ -2236,7 +2236,7 @@ export function concatenate_strings(a: TokenInfo[]): Constant {
 //     return NULL;
 // }
 
-export function make_module(a: stmt[]) {
+export function make_module(p: Parser, a: stmt[]) {
     // Ingoring the #type: ignore comment mangling here
     return new Module(a, []);
 }
@@ -2366,13 +2366,13 @@ export function make_module(a: stmt[]) {
 // }
 
 // @stu why does our parser not call these functions with the parser?
-export function collect_call_seqs(a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: stmtAttrs) {
+export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: stmtAttrs) {
     const args_len = a.length;
     const total_len = args_len;
 
     if (b === null) {
         // because that's actually what happens
-        return new Call(dummy_name(), a, [], ...attrs);
+        return new Call(dummy_name(p), a, [], ...attrs);
     }
 
     // const starreds = seq_extract_starred_exprs(p, b);
