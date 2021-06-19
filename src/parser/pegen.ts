@@ -1732,6 +1732,19 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
+class KeyValuePair {
+    key: expr;
+    value: expr;
+    constructor(key: expr, value: expr) {
+        this.key = key;
+        this.value = value;
+    }
+}
+
+export function key_value_pair(p: Parser, key: expr, value: expr) {
+    return new KeyValuePair(key, value);
+}
+
 // /* Extracts all keys from an asdl_seq* of KeyValuePair*'s */
 // asdl_seq *
 // _PyPegen_get_keys(Parser *p, asdl_seq *seq)
@@ -1748,6 +1761,14 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return new_seq;
 // }
 
+export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+    if (seq === null) {
+        return [];
+    }
+
+    return seq.map((kv) => kv.key);
+}
+
 // /* Extracts all values from an asdl_seq* of KeyValuePair*'s */
 // asdl_seq *
 // _PyPegen_get_values(Parser *p, asdl_seq *seq)
@@ -1763,6 +1784,14 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     }
 //     return new_seq;
 // }
+
+export function get_values(p: Parser, seq: KeyValuePair[] | null) {
+    if (seq === null) {
+        return [];
+    }
+
+    return seq.map((kv) => kv.key);
+}
 
 // /* Constructs a NameDefaultPair */
 // NameDefaultPair *
