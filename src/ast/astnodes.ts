@@ -10,7 +10,7 @@ export type constant = any;
 export interface AST {
     _fields: string[];
     _attributes: string[];
-    tp$name: string;
+    _enum: boolean;
 }
 
 export class AST {
@@ -21,7 +21,7 @@ export class AST {
 }
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
-AST.prototype.tp$name = "AST";
+AST.prototype._enum = false;
 
 /* ---------------------- */
 /* constructors for nodes */
@@ -32,6 +32,7 @@ export class expr_context extends AST {
     static _name = "expr_context";
 }
 
+expr_context.prototype._enum = true;
 export type expr_contextKind = typeof expr_context | typeof LoadType | typeof StoreType | typeof DelType;
 
 export class LoadType extends expr_context {
@@ -43,12 +44,16 @@ export class StoreType extends expr_context {
 export class DelType extends expr_context {
     static _name = "Del";
 }
+export const Load = new LoadType();
+export const Store = new StoreType();
+export const Del = new DelType();
 
 /* ----- boolop ----- */
 export class boolop extends AST {
     static _name = "boolop";
 }
 
+boolop.prototype._enum = true;
 export type boolopKind = typeof boolop | typeof AndType | typeof OrType;
 
 export class AndType extends boolop {
@@ -57,12 +62,15 @@ export class AndType extends boolop {
 export class OrType extends boolop {
     static _name = "Or";
 }
+export const And = new AndType();
+export const Or = new OrType();
 
 /* ----- operator ----- */
 export class operator extends AST {
     static _name = "operator";
 }
 
+operator.prototype._enum = true;
 export type operatorKind =
     | typeof operator
     | typeof AddType
@@ -118,12 +126,26 @@ export class BitAndType extends operator {
 export class FloorDivType extends operator {
     static _name = "FloorDiv";
 }
+export const Add = new AddType();
+export const Sub = new SubType();
+export const Mult = new MultType();
+export const MatMult = new MatMultType();
+export const Div = new DivType();
+export const Mod = new ModType();
+export const Pow = new PowType();
+export const LShift = new LShiftType();
+export const RShift = new RShiftType();
+export const BitOr = new BitOrType();
+export const BitXor = new BitXorType();
+export const BitAnd = new BitAndType();
+export const FloorDiv = new FloorDivType();
 
 /* ----- unaryop ----- */
 export class unaryop extends AST {
     static _name = "unaryop";
 }
 
+unaryop.prototype._enum = true;
 export type unaryopKind = typeof unaryop | typeof InvertType | typeof NotType | typeof UAddType | typeof USubType;
 
 export class InvertType extends unaryop {
@@ -138,12 +160,17 @@ export class UAddType extends unaryop {
 export class USubType extends unaryop {
     static _name = "USub";
 }
+export const Invert = new InvertType();
+export const Not = new NotType();
+export const UAdd = new UAddType();
+export const USub = new USubType();
 
 /* ----- cmpop ----- */
 export class cmpop extends AST {
     static _name = "cmpop";
 }
 
+cmpop.prototype._enum = true;
 export type cmpopKind =
     | typeof cmpop
     | typeof EqType
@@ -187,6 +214,16 @@ export class InType extends cmpop {
 export class NotInType extends cmpop {
     static _name = "NotIn";
 }
+export const Eq = new EqType();
+export const NotEq = new NotEqType();
+export const Lt = new LtType();
+export const LtE = new LtEType();
+export const Gt = new GtType();
+export const GtE = new GtEType();
+export const Is = new IsType();
+export const IsNot = new IsNotType();
+export const In = new InType();
+export const NotIn = new NotInType();
 
 /* ----- mod ----- */
 export class mod extends AST {

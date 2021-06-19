@@ -100,7 +100,7 @@ index 64e205e7fd..5760af0c6e 100644
              6,
              "Variable annotation syntax is",
 -            _Py_AnnAssign(CHECK(_PyPegen_set_expr_context(p, a, Store)), b, c, 1, EXTRA)
-+            new astnodes.AnnAssign(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), b, c, 1, ...EXTRA)
++            new astnodes.AnnAssign(CHECK(pegen.set_expr_context(this, a, astnodes.Store)), b, c, 1, ...EXTRA)
          ) }
      | a=('(' b=single_target ')' { b }
           | single_subscript_attribute_target) ':' b=expression c=['=' d=annotated_rhs { d }] {
@@ -140,20 +140,20 @@ index 64e205e7fd..5760af0c6e 100644
 -
 -del_stmt[stmt_ty]:
 -    | 'del' a=del_targets &(';' | NEWLINE) { _Py_Delete(a, EXTRA) }
-+augassign[AugOperator]:
-+    | '+=' { pegen.augoperator(this, new astnodes.Add()) }
-+    | '-=' { pegen.augoperator(this, new astnodes.Sub()) }
-+    | '*=' { pegen.augoperator(this, new astnodes.Mult()) }
-+    | '@=' { CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, new astnodes.MatMult())) }
-+    | '/=' { pegen.augoperator(this, new astnodes.Div()) }
-+    | '%=' { pegen.augoperator(this, new astnodes.Mod()) }
-+    | '&=' { pegen.augoperator(this, new astnodes.BitAnd()) }
-+    | '|=' { pegen.augoperator(this, new astnodes.BitOr()) }
-+    | '^=' { pegen.augoperator(this, new astnodes.BitXor()) }
-+    | '<<=' { pegen.augoperator(this, new astnodes.LShift()) }
-+    | '>>=' { pegen.augoperator(this, new astnodes.RShift()) }
-+    | '**=' { pegen.augoperator(this, new astnodes.Pow()) }
-+    | '//=' { pegen.augoperator(this, new astnodes.FloorDiv()) }
++augassign[operator]:
++    | '+=' { pegen.augoperator(this, astnodes.Add) }
++    | '-=' { pegen.augoperator(this, astnodes.Sub) }
++    | '*=' { pegen.augoperator(this, astnodes.Mult) }
++    | '@=' { CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, astnodes.MatMult)) }
++    | '/=' { pegen.augoperator(this, astnodes.Div) }
++    | '%=' { pegen.augoperator(this, astnodes.Mod) }
++    | '&=' { pegen.augoperator(this, astnodes.BitAnd) }
++    | '|=' { pegen.augoperator(this, astnodes.BitOr) }
++    | '^=' { pegen.augoperator(this, astnodes.BitXor) }
++    | '<<=' { pegen.augoperator(this, astnodes.LShift) }
++    | '>>=' { pegen.augoperator(this, astnodes.RShift) }
++    | '**=' { pegen.augoperator(this, astnodes.Pow) }
++    | '//=' { pegen.augoperator(this, astnodes.FloorDiv) }
 +
 +global_stmt[stmt]: 'global' a=','.NAME+ {
 +    new astnodes.Global(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA) }
@@ -444,13 +444,13 @@ index 64e205e7fd..5760af0c6e 100644
      | a=star_expression b=(',' c=star_expression { c })+ [','] {
 -        _Py_Tuple(CHECK(_PyPegen_seq_insert_in_front(p, a, b)), Load, EXTRA) }
 -    | a=star_expression ',' { _Py_Tuple(CHECK(_PyPegen_singleton_seq(p, a)), Load, EXTRA) }
-+        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA) }
-+    | a=star_expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA) }
++        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA) }
++    | a=star_expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), astnodes.Load, ...EXTRA) }
      | star_expression
 -star_expression[expr_ty] (memo):
 -    | '*' a=bitwise_or { _Py_Starred(a, Load, EXTRA) }
 +star_expression[expr] (memo):
-+    | '*' a=bitwise_or { new astnodes.Starred(a, new astnodes.Load(), ...EXTRA) }
++    | '*' a=bitwise_or { new astnodes.Starred(a, astnodes.Load, ...EXTRA) }
      | expression
  
 -star_named_expressions[asdl_seq*]: a=','.star_named_expression+ [','] { a }
@@ -458,12 +458,12 @@ index 64e205e7fd..5760af0c6e 100644
 -    | '*' a=bitwise_or { _Py_Starred(a, Load, EXTRA) }
 +star_named_expressions[any]: a=','.star_named_expression+ [','] { a }
 +star_named_expression[expr]:
-+    | '*' a=bitwise_or { new astnodes.Starred(a, new astnodes.Load(), ...EXTRA) }
++    | '*' a=bitwise_or { new astnodes.Starred(a, astnodes.Load, ...EXTRA) }
      | named_expression
 -named_expression[expr_ty]:
 -    | a=NAME ':=' ~ b=expression { _Py_NamedExpr(CHECK(_PyPegen_set_expr_context(p, a, Store)), b, EXTRA) }
 +named_expression[expr]:
-+    | a=NAME ':=' ~ b=expression { new astnodes.NamedExpr(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), b, ...EXTRA) }
++    | a=NAME ':=' ~ b=expression { new astnodes.NamedExpr(CHECK(pegen.set_expr_context(this, a, astnodes.Store)), b, ...EXTRA) }
      | expression !':='
      | invalid_named_expression
  
@@ -475,8 +475,8 @@ index 64e205e7fd..5760af0c6e 100644
      | a=expression b=(',' c=expression { c })+ [','] {
 -        _Py_Tuple(CHECK(_PyPegen_seq_insert_in_front(p, a, b)), Load, EXTRA) }
 -    | a=expression ',' { _Py_Tuple(CHECK(_PyPegen_singleton_seq(p, a)), Load, EXTRA) }
-+        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Load(), ...EXTRA) }
-+    | a=expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), new astnodes.Load(), ...EXTRA) }
++        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA) }
++    | a=expression ',' { new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), astnodes.Load, ...EXTRA) }
      | expression
 -expression[expr_ty] (memo):
 -    | a=disjunction 'if' b=disjunction 'else' c=expression { _Py_IfExp(b, a, c, EXTRA) }
@@ -613,45 +613,45 @@ index 64e205e7fd..5760af0c6e 100644
 -
 -bitwise_or[expr_ty]:
 -    | a=bitwise_or '|' b=bitwise_xor { _Py_BinOp(a, BitOr, b, EXTRA) }
-+eq_bitwise_or[CmpopExprPair]: '==' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.Eq(), a) }
++eq_bitwise_or[CmpopExprPair]: '==' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Eq, a) }
 +noteq_bitwise_or[CmpopExprPair]:
-+    | (tok='!=' { pegen.check_barry_as_flufl(this, tok) ? null : tok}) a=bitwise_or {pegen.cmpop_expr_pair(this, new astnodes.NotEq(), a) }
-+lte_bitwise_or[CmpopExprPair]: '<=' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.LtE(), a) }
-+lt_bitwise_or[CmpopExprPair]: '<' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.Lt(), a) }
-+gte_bitwise_or[CmpopExprPair]: '>=' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.GtE(), a) }
-+gt_bitwise_or[CmpopExprPair]: '>' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.Gt(), a) }
-+notin_bitwise_or[CmpopExprPair]: 'not' 'in' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.NotIn(), a) }
-+in_bitwise_or[CmpopExprPair]: 'in' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.In(), a) }
-+isnot_bitwise_or[CmpopExprPair]: 'is' 'not' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.IsNot(), a) }
-+is_bitwise_or[CmpopExprPair]: 'is' a=bitwise_or { pegen.cmpop_expr_pair(this, new astnodes.Is(), a) }
++    | (tok='!=' { pegen.check_barry_as_flufl(this, tok) ? null : tok}) a=bitwise_or {pegen.cmpop_expr_pair(this, astnodes.NotEq, a) }
++lte_bitwise_or[CmpopExprPair]: '<=' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.LtE, a) }
++lt_bitwise_or[CmpopExprPair]: '<' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Lt, a) }
++gte_bitwise_or[CmpopExprPair]: '>=' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.GtE, a) }
++gt_bitwise_or[CmpopExprPair]: '>' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Gt, a) }
++notin_bitwise_or[CmpopExprPair]: 'not' 'in' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.NotIn, a) }
++in_bitwise_or[CmpopExprPair]: 'in' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.In, a) }
++isnot_bitwise_or[CmpopExprPair]: 'is' 'not' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.IsNot, a) }
++is_bitwise_or[CmpopExprPair]: 'is' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Is, a) }
 +
 +bitwise_or[expr]:
-+    | a=bitwise_or '|' b=bitwise_xor { new astnodes.BinOp(a, new astnodes.BitOr(), b, ...EXTRA) }
++    | a=bitwise_or '|' b=bitwise_xor { new astnodes.BinOp(a, astnodes.BitOr, b, ...EXTRA) }
      | bitwise_xor
 -bitwise_xor[expr_ty]:
 -    | a=bitwise_xor '^' b=bitwise_and { _Py_BinOp(a, BitXor, b, EXTRA) }
 +bitwise_xor[expr]:
-+    | a=bitwise_xor '^' b=bitwise_and { new astnodes.BinOp(a, new astnodes.BitXor(), b, ...EXTRA) }
++    | a=bitwise_xor '^' b=bitwise_and { new astnodes.BinOp(a, astnodes.BitXor, b, ...EXTRA) }
      | bitwise_and
 -bitwise_and[expr_ty]:
 -    | a=bitwise_and '&' b=shift_expr { _Py_BinOp(a, BitAnd, b, EXTRA) }
 +bitwise_and[expr]:
-+    | a=bitwise_and '&' b=shift_expr { new astnodes.BinOp(a, new astnodes.BitAnd(), b, ...EXTRA) }
++    | a=bitwise_and '&' b=shift_expr { new astnodes.BinOp(a, astnodes.BitAnd, b, ...EXTRA) }
      | shift_expr
 -shift_expr[expr_ty]:
 -    | a=shift_expr '<<' b=sum { _Py_BinOp(a, LShift, b, EXTRA) }
 -    | a=shift_expr '>>' b=sum { _Py_BinOp(a, RShift, b, EXTRA) }
 +shift_expr[expr]:
-+    | a=shift_expr '<<' b=sum { new astnodes.BinOp(a, new astnodes.LShift(), b, ...EXTRA) }
-+    | a=shift_expr '>>' b=sum { new astnodes.BinOp(a, new astnodes.RShift(), b, ...EXTRA) }
++    | a=shift_expr '<<' b=sum { new astnodes.BinOp(a, astnodes.LShift, b, ...EXTRA) }
++    | a=shift_expr '>>' b=sum { new astnodes.BinOp(a, astnodes.RShift, b, ...EXTRA) }
      | sum
  
 -sum[expr_ty]:
 -    | a=sum '+' b=term { _Py_BinOp(a, Add, b, EXTRA) }
 -    | a=sum '-' b=term { _Py_BinOp(a, Sub, b, EXTRA) }
 +sum[expr]:
-+    | a=sum '+' b=term { new astnodes.BinOp(a, new astnodes.Add(), b, ...EXTRA) }
-+    | a=sum '-' b=term { new astnodes.BinOp(a, new astnodes.Sub(), b, ...EXTRA) }
++    | a=sum '+' b=term { new astnodes.BinOp(a, astnodes.Add, b, ...EXTRA) }
++    | a=sum '-' b=term { new astnodes.BinOp(a, astnodes.Sub, b, ...EXTRA) }
      | term
 -term[expr_ty]:
 -    | a=term '*' b=factor { _Py_BinOp(a, Mult, b, EXTRA) }
@@ -660,10 +660,10 @@ index 64e205e7fd..5760af0c6e 100644
 -    | a=term '%' b=factor { _Py_BinOp(a, Mod, b, EXTRA) }
 -    | a=term '@' b=factor { CHECK_VERSION(5, "The '@' operator is", _Py_BinOp(a, MatMult, b, EXTRA)) }
 +term[expr]:
-+    | a=term '*' b=factor { new astnodes.BinOp(a, new astnodes.Mult(), b, ...EXTRA) }
-+    | a=term '/' b=factor { new astnodes.BinOp(a, new astnodes.Div(), b, ...EXTRA) }
-+    | a=term '//' b=factor { new astnodes.BinOp(a, new astnodes.FloorDiv(), b, ...EXTRA) }
-+    | a=term '%' b=factor { new astnodes.BinOp(a, new astnodes.Mod(), b, ...EXTRA) }
++    | a=term '*' b=factor { new astnodes.BinOp(a, astnodes.Mult, b, ...EXTRA) }
++    | a=term '/' b=factor { new astnodes.BinOp(a, astnodes.Div, b, ...EXTRA) }
++    | a=term '//' b=factor { new astnodes.BinOp(a, astnodes.FloorDiv, b, ...EXTRA) }
++    | a=term '%' b=factor { new astnodes.BinOp(a, astnodes.Mod, b, ...EXTRA) }
 +    | a=term '@' b=factor { CHECK_VERSION(5, "The '@' operator is", new astnodes.BinOp(a, MatMult, b, ...EXTRA)) }
      | factor
 -factor[expr_ty] (memo):
@@ -671,9 +671,9 @@ index 64e205e7fd..5760af0c6e 100644
 -    | '-' a=factor { _Py_UnaryOp(USub, a, EXTRA) }
 -    | '~' a=factor { _Py_UnaryOp(Invert, a, EXTRA) }
 +factor[expr] (memo):
-+    | '+' a=factor { new astnodes.UnaryOp(new astnodes.UAdd(), a, ...EXTRA) }
-+    | '-' a=factor { new astnodes.UnaryOp(new astnodes.USub(), a, ...EXTRA) }
-+    | '~' a=factor { new astnodes.UnaryOp(new astnodes.Invert(), a, ...EXTRA) }
++    | '+' a=factor { new astnodes.UnaryOp(astnodes.UAdd, a, ...EXTRA) }
++    | '-' a=factor { new astnodes.UnaryOp(astnodes.USub, a, ...EXTRA) }
++    | '~' a=factor { new astnodes.UnaryOp(astnodes.Invert, a, ...EXTRA) }
      | power
 -power[expr_ty]:
 -    | a=await_primary '**' b=factor { _Py_BinOp(a, Pow, b, EXTRA) }
@@ -694,7 +694,7 @@ index 64e205e7fd..5760af0c6e 100644
 -        _Py_Call(a,
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
-+    | a=primary '.' b=NAME { new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA) }
++    | a=primary '.' b=NAME { new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA) }
 +    | a=primary b=genexp { new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA) }
 +    | a=primary '(' b=[arguments_] ')' {
 +        new astnodes.Call(a,
@@ -702,7 +702,7 @@ index 64e205e7fd..5760af0c6e 100644
 +                 b ? b.keywords : null,
                   EXTRA) }
 -    | a=primary '[' b=slices ']' { _Py_Subscript(a, b, Load, EXTRA) }
-+    | a=primary '[' b=slices ']' { new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA) }
++    | a=primary '[' b=slices ']' { new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA) }
      | atom
  
 -slices[expr_ty]:
@@ -711,7 +711,7 @@ index 64e205e7fd..5760af0c6e 100644
 -    | a=','.slice+ [','] { _Py_Tuple(a, Load, EXTRA) }
 -slice[expr_ty]:
 -    | a=[expression] ':' b=[expression] c=[':' d=[expression] { d }] { _Py_Slice(a, b, c, EXTRA) }
-+    | a=','.slice+ [','] { new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA) }
++    | a=','.slice+ [','] { new astnodes.Tuple(a, astnodes.Load, ...EXTRA) }
 +slice[expr]:
 +    | a=[expression] ':' b=[expression] c=[':' d=[expression] { d }] { new astnodes.Slice(a, b, c, ...EXTRA) }
      | a=expression { a }
@@ -740,7 +740,7 @@ index 64e205e7fd..5760af0c6e 100644
 -    | '[' a=named_expression ~ b=for_if_clauses ']' { _Py_ListComp(a, b, EXTRA) }
 +strings[expr] (memo): a=STRING+ { pegen.concatenate_strings(this, a) }
 +list[expr]:
-+    | '[' a=[star_named_expressions] ']' { new astnodes.List(a, new astnodes.Load(), ...EXTRA) }
++    | '[' a=[star_named_expressions] ']' { new astnodes.List(a, astnodes.Load, ...EXTRA) }
 +listcomp[expr]:
 +    | '[' a=named_expression ~ b=for_if_clauses ']' { new astnodes.ListComp(a, b, ...EXTRA) }
      | invalid_comprehension
@@ -750,7 +750,7 @@ index 64e205e7fd..5760af0c6e 100644
 -group[expr_ty]:
 +tuple[expr]:
 +    | '(' a=[y=star_named_expression ',' z=[star_named_expressions] { pegen.seq_insert_in_front(this, y, z) } ] ')' {
-+        new astnodes.Tuple(a, new astnodes.Load(), ...EXTRA) }
++        new astnodes.Tuple(a, astnodes.Load, ...EXTRA) }
 +group[expr]:
      | '(' a=(yield_expr | named_expression) ')' { a }
      | invalid_group
@@ -830,7 +830,7 @@ index 64e205e7fd..5760af0c6e 100644
 -    | '*' a=expression { _Py_Starred(a, Load, EXTRA) }
 -kwarg_or_starred[KeywordOrStarred*]:
 +starred_expression[expr]:
-+    | '*' a=expression { new astnodes.Starred(a, new astnodes.Load(), ...EXTRA) }
++    | '*' a=expression { new astnodes.Starred(a, astnodes.Load, ...EXTRA) }
 +kwarg_or_starred[KeywordOrStarred]:
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
@@ -858,7 +858,7 @@ index 64e205e7fd..5760af0c6e 100644
 -    | a=star_target b=(',' c=star_target { c })+ [','] { _PyPegen_seq_insert_in_front(p, a, b) }
 -    | a=star_target ',' { _PyPegen_singleton_seq(p, a) }
 -star_target[expr_ty] (memo):
-+        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), new astnodes.Store(), ...EXTRA) }
++        new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Store, ...EXTRA) }
 +star_targets_list_seq[any]: a=','.star_target+ [','] { a }
 +star_targets_tuple_seq[any]:
 +    | a=star_target b=(',' c=star_target { c })+ [','] { pegen.seq_insert_in_front(this, a, b) }
@@ -866,14 +866,14 @@ index 64e205e7fd..5760af0c6e 100644
 +star_target[expr] (memo):
      | '*' a=(!'*' star_target) {
 -        _Py_Starred(CHECK(_PyPegen_set_expr_context(p, a, Store)), Store, EXTRA) }
-+        new astnodes.Starred(CHECK(pegen.set_expr_context(this, a, new astnodes.Store())), new astnodes.Store(), ...EXTRA) }
++        new astnodes.Starred(CHECK(pegen.set_expr_context(this, a, astnodes.Store)), astnodes.Store, ...EXTRA) }
      | target_with_star_atom
 -target_with_star_atom[expr_ty] (memo):
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Store, EXTRA) }
 +target_with_star_atom[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA) }
++    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA) }
      | star_atom
 -star_atom[expr_ty]:
 -    | a=NAME { _PyPegen_set_expr_context(p, a, Store) }
@@ -881,16 +881,16 @@ index 64e205e7fd..5760af0c6e 100644
 -    | '(' a=[star_targets_tuple_seq] ')' { _Py_Tuple(a, Store, EXTRA) }
 -    | '[' a=[star_targets_list_seq] ']' { _Py_List(a, Store, EXTRA) }
 +star_atom[expr]:
-+    | a=NAME { pegen.set_expr_context(this, a, new astnodes.Store()) }
-+    | '(' a=target_with_star_atom ')' { pegen.set_expr_context(this, a, new astnodes.Store()) }
-+    | '(' a=[star_targets_tuple_seq] ')' { new astnodes.Tuple(a, new astnodes.Store(), ...EXTRA) }
-+    | '[' a=[star_targets_list_seq] ']' { new astnodes.List(a, new astnodes.Store(), ...EXTRA) }
++    | a=NAME { pegen.set_expr_context(this, a, astnodes.Store) }
++    | '(' a=target_with_star_atom ')' { pegen.set_expr_context(this, a, astnodes.Store) }
++    | '(' a=[star_targets_tuple_seq] ')' { new astnodes.Tuple(a, astnodes.Store, ...EXTRA) }
++    | '[' a=[star_targets_list_seq] ']' { new astnodes.List(a, astnodes.Store, ...EXTRA) }
  
 -single_target[expr_ty]:
 +single_target[expr]:
      | single_subscript_attribute_target
 -    | a=NAME { _PyPegen_set_expr_context(p, a, Store) }
-+    | a=NAME { pegen.set_expr_context(this, a, new astnodes.Store()) }
++    | a=NAME { pegen.set_expr_context(this, a, astnodes.Store) }
      | '(' a=single_target ')' { a }
 -single_subscript_attribute_target[expr_ty]:
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
@@ -901,8 +901,8 @@ index 64e205e7fd..5760af0c6e 100644
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Del, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Del, EXTRA) }
 +single_subscript_attribute_target[expr]:
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA) }
++    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA) }
 +
 +del_targets[any]: a=','.del_target+ [','] { a }
 +del_target[expr] (memo):
@@ -927,8 +927,8 @@ index 64e205e7fd..5760af0c6e 100644
 +
 +targets[any]: a=','.target+ [','] { a }
 +target[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Store(), ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, new astnodes.Store(), ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA) }
++    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA) }
      | t_atom
 -t_primary[expr_ty]:
 -    | a=t_primary '.' b=NAME &t_lookahead { _Py_Attribute(a, b->v.Name.id, Load, EXTRA) }
@@ -939,8 +939,8 @@ index 64e205e7fd..5760af0c6e 100644
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
 +t_primary[expr]:
-+    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, new astnodes.Load(), ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, new astnodes.Load(), ...EXTRA) }
++    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA) }
++    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA) }
 +    | a=t_primary b=genexp &t_lookahead { new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA) }
 +    | a=t_primary '(' b=[arguments_] ')' &t_lookahead {
 +        new astnodes.Call(a,
@@ -955,10 +955,10 @@ index 64e205e7fd..5760af0c6e 100644
 -    | '(' b=[targets] ')' { _Py_Tuple(b, Store, EXTRA) }
 -    | '[' b=[targets] ']' { _Py_List(b, Store, EXTRA) }
 +t_atom[expr]:
-+    | a=NAME { pegen.set_expr_context(this, a, new astnodes.Store()) }
-+    | '(' a=target ')' { pegen.set_expr_context(this, a, new astnodes.Store()) }
-+    | '(' b=[targets] ')' { new astnodes.Tuple(b, new astnodes.Store(), ...EXTRA) }
-+    | '[' b=[targets] ']' { new astnodes.List(b, new astnodes.Store(), ...EXTRA) }
++    | a=NAME { pegen.set_expr_context(this, a, astnodes.Store) }
++    | '(' a=target ')' { pegen.set_expr_context(this, a, astnodes.Store) }
++    | '(' b=[targets] ')' { new astnodes.Tuple(b, astnodes.Store, ...EXTRA) }
++    | '[' b=[targets] ']' { new astnodes.List(b, astnodes.Store, ...EXTRA) }
  
  
  # From here on, there are rules for invalid syntax with specialised error messages

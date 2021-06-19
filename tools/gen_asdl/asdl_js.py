@@ -138,6 +138,7 @@ class TypeDefVisitor(EmitVisitor):
         self.emit_tp_name(name)
         emit("}")
         emit("")
+        emit(f"{name}.prototype._enum = true;")
 
         class T:
             def __init__(self, name):
@@ -148,6 +149,8 @@ class TypeDefVisitor(EmitVisitor):
             emit(f"export class {type.name + 'Type'} extends {name} {{")
             self.emit_tp_name(type.name)
             emit("}")
+        for type in sum.types:
+            emit(f"export const {type.name} = new {type.name + 'Type'}()")
         emit("")
 
     def visitProduct(self, product, name, depth):
@@ -366,7 +369,7 @@ export type constant = any;
 export interface AST {
     _fields: string[];
     _attributes: string[];
-    tp$name: string;
+    _enum: boolean;
 }
 
 export class AST {
@@ -377,7 +380,7 @@ export class AST {
 }
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
-AST.prototype.tp$name = "AST";
+AST.prototype._enum = false;
 
 """
     )
