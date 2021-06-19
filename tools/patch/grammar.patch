@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..2f20f2655b 100644
+index 64e205e7fd..5760af0c6e 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -721,9 +721,9 @@ index 64e205e7fd..2f20f2655b 100644
 -    | 'True' { _Py_Constant(Py_True, NULL, EXTRA) }
 -    | 'False' { _Py_Constant(Py_False, NULL, EXTRA) }
 -    | 'None' { _Py_Constant(Py_None, NULL, EXTRA) }
-+    | 'True' { new astnodes.Constant(Py_True, null, ...EXTRA) }
-+    | 'False' { new astnodes.Constant(Py_False, null, ...EXTRA) }
-+    | 'None' { new astnodes.Constant(Py_None, null, ...EXTRA) }
++    | 'True' { new astnodes.Constant(pyTrue, null, ...EXTRA) }
++    | 'False' { new astnodes.Constant(pyFalse, null, ...EXTRA) }
++    | 'None' { new astnodes.Constant(pyNone, null, ...EXTRA) }
      | '__peg_parser__' { RAISE_SYNTAX_ERROR("You found it!") }
      | &STRING strings
      | NUMBER
@@ -731,7 +731,7 @@ index 64e205e7fd..2f20f2655b 100644
      | &'[' (list | listcomp)
      | &'{' (dict | set | dictcomp | setcomp)
 -    | '...' { _Py_Constant(Py_Ellipsis, NULL, EXTRA) }
-+    | '...' { new astnodes.Constant(Py_Ellipsis, null, ...EXTRA) }
++    | '...' { new astnodes.Constant(pyEllipsis, null, ...EXTRA) }
  
 -strings[expr_ty] (memo): a=STRING+ { _PyPegen_concatenate_strings(p, a) }
 -list[expr_ty]:
