@@ -33,6 +33,15 @@ scripts:
     gen_grammar_patch:
         cmd: cd ../cpython/Grammar && git diff -- python.gram -p > ../../skulpt_parser/tools/patch/grammar.patch
 
+    gen_grammar_helper:
+        desc: generate a temporary grammar file using some regex helpers to help build the grammar patch
+        cmd:
+            - cmd: deno run tools/patch/gen_grammar_helper.ts
+              allow:
+                  - read
+                  - write
+            - (pre-commit run trailing-whitespace --all-files || true)
+
     test:
         cmd: deno test
         allow:
