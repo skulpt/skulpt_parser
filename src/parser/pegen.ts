@@ -1336,6 +1336,16 @@ export function singleton_seq(p: Parser, a: AST): AST[] {
 //     return seq;
 // }
 
+export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null) {
+    console.assert(a !== null);
+
+    if (!seq) {
+        return singleton_seq(p, a);
+    }
+
+    return [a].concat(...seq);
+}
+
 // /* Creates a copy of seq and prepends a to it */
 // asdl_seq *
 // _PyPegen_seq_insert_in_front(Parser *p, void *a, asdl_seq *seq)
