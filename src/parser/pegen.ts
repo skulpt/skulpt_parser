@@ -1,4 +1,3 @@
-import { Colors } from "../../deps.ts";
 import {
     AST,
     expr_context,
@@ -1392,7 +1391,9 @@ export function singleton_seq(p: Parser, a: AST): AST[] {
 
 /* Flattens an asdl_seq* of asdl_seq*s */
 export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
-    return seqs?.flat(Infinity) as AST[];
+    // We might need a depth of more than 1. Remove this comment if we find we don't need it
+    // return seqs?.flat(Infinity) as AST[];
+    return seqs?.flat();
 }
 // asdl_seq *
 // _PyPegen_seq_flatten(Parser *p, asdl_seq *seqs)
