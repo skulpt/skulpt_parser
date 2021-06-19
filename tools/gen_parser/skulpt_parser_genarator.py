@@ -163,6 +163,8 @@ class PythonCallMakerVisitor(GrammarVisitor):
             return self.cache[node]
         name = self.gen.name_loop(node.node, False)
         self.cache[node] = name, f"this.{name}()"  # Also a trailing comma!
+        # in python they end with a comma like in visit_Opt
+        # But I don't think skulpt needs one since arrays are truthy
         return self.cache[node]
 
     def visit_Repeat1(self, node: Repeat1) -> Tuple[str, str]:
@@ -312,8 +314,12 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
                     if is_gather:
                         assert len(self.local_variable_names) == 2
                         action = f"[{self.local_variable_names[0]}, ...{self.local_variable_names[1]}]"
+                    elif len(self.local_variable_names) == 1:
+                        # @TODO is this correct?
+                        action = self.local_variable_names[0]
                     else:
-                        action = f"{', '.join(self.local_variable_names)}"
+                        # @TODO is it ok to return an array here
+                        action = f"[{', '.join(self.local_variable_names)}]"
                 # action = clean_action(action)
                 if is_loop:
                     self.print(f"children.push({action});")

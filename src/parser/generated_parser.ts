@@ -4344,7 +4344,7 @@ export class GeneratedParser extends Parser {
         let indent, mark, newline;
         mark = this.mark();
         if ((newline = this.expect("NEWLINE")) && (indent = this.expect("INDENT"))) {
-            return newline, indent;
+            return [newline, indent];
         }
         this.reset(mark);
 
@@ -5418,7 +5418,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((expression = this.expression()) && (for_if_clauses = this.for_if_clauses())) {
-            return expression, for_if_clauses;
+            return [expression, for_if_clauses];
         }
         this.reset(mark);
 
@@ -5582,7 +5582,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect(",")) && (_tmp_154 = this._tmp_154())) {
-            return literal, _tmp_154;
+            return [literal, _tmp_154];
         }
         this.reset(mark);
 
@@ -5599,7 +5599,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((literal = this.expect(",")) && (_tmp_155 = this._tmp_155())) {
-            return literal, _tmp_155;
+            return [literal, _tmp_155];
         }
         this.reset(mark);
 
@@ -5793,7 +5793,7 @@ export class GeneratedParser extends Parser {
         let literal, mark, star_targets;
         mark = this.mark();
         if ((star_targets = this.star_targets()) && (literal = this.expect("="))) {
-            return star_targets, literal;
+            return [star_targets, literal];
         }
         this.reset(mark);
 
@@ -5806,7 +5806,7 @@ export class GeneratedParser extends Parser {
         let literal, mark, star_targets;
         mark = this.mark();
         if ((star_targets = this.star_targets()) && (literal = this.expect("="))) {
-            return star_targets, literal;
+            return [star_targets, literal];
         }
         this.reset(mark);
 
