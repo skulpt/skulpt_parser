@@ -2,64 +2,71 @@ import { NAME, NUMBER, OP, STRING, tok_name } from "../tokenize/token.ts";
 import { exact_token_types, Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError, TokenInfo } from "../tokenize/tokenize.ts";
-
 import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
-import { Colors } from "../../deps.ts";
+
+/** If we have a memoized parser method that has a different call signature we'd need to adapt this */
+type NoArgs = (this: Parser) => any | null;
+type Expect = (this: Parser, arg: string) => TokenInfo | null;
+type ParserMethod = NoArgs | Expect;
+
+/** logging adapted from cpython/Tools/peg_generator/pegen/parser.py */
+const trim = (s: any) => String(s).slice(0, 200);
+const log = (s: string) => console.log(`${s.replace("\n/", "\\n")}`);
+const argstr = (arg?: string) => (arg === undefined ? "" : `'${arg}'`);
 
 /** For non-memoized functions that we want to be logged.*/
 export function logger(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
-    const method: (...args: any[]) => any = descriptor.value;
+    const method: NoArgs = descriptor.value;
     const method_name = propertyKey;
-    function logger_wrapper(this: Parser, ...args: any[]) {
+    function logger_wrapper(this: Parser) {
         if (!this._verbose) {
-            return method.call(this, ...args);
+            return method.call(this);
         }
-        const fill = "  ".repeat(this._level);
-        console.log(`${fill}${method_name}(${args}) .... (looking at ${this.showpeek().toString().slice(0, 200)})`);
+        const fill = this._fill();
+        log(`${fill}${method_name}() ... (looking at ${this.showpeek()})`);
         this._level++;
-        const tree = method.call(this, ...args);
+        const tree = method.call(this);
         this._level--;
-        console.log(`${fill}... ${method_name}(${args}) --> ${String(tree).slice(0, 200)}`);
+        log(`${fill}... ${method_name}() --> ${trim(tree)}`);
         return tree;
     }
     descriptor.value = logger_wrapper;
 }
 
+/** memoize the return value from the parser method. All parser methods take no args except expect which takes a token string */
 export function memoize(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
-    const method: (...args: any[]) => any = descriptor.value;
+    const method: ParserMethod = descriptor.value;
     const method_name = propertyKey;
-    function memoize_wrapper(this: Parser, ...args: any[]) {
-        let mark = this.mark();
-        let key = [mark, method_name, args].toString();
+    function memoize_wrapper<R = any | null>(this: Parser, arg?: string): R {
+        const mark = this.mark();
+        const key = `${mark},${method_name},${arg ?? ""}`;
+        const inCache = key in this._cache;
+        const verbose = this._verbose;
         // fast path: cache hit and not verbose
-        if (key in this._cache && !this._verbose) {
-            // work out how to _cache
+        if (inCache && !verbose) {
             const [tree, endmark] = this._cache[key];
             this.reset(endmark);
             return tree;
         }
         // slow path verbose or cache not hit
-        const verbose = this._verbose;
-        const fill = "  ".repeat(this._level);
         let tree, endmark;
-        if (!(key in this._cache)) {
+        if (!inCache) {
             if (verbose) {
-                console.log(
-                    `${fill}${method_name}(${args}) ... (looking at ${this.showpeek().toString().slice(0, 200)})`
-                );
+                log(`${this._fill()}${method_name}(${argstr(arg)}) ... (looking at ${this.showpeek()})`);
             }
             this._level++;
-            tree = method.call(this, ...args);
+            // mostly to keep ts-lint happy
+            tree = arg === undefined ? (method as NoArgs).call(this) : (method as Expect).call(this, arg);
             this._level--;
             if (verbose) {
-                console.log(`${fill}... ${method_name}(${args}) -> ${String(tree).slice(0, 200)}`);
+                log(`${this._fill()}... ${method_name}(${argstr(arg)}) -> ${trim(tree)} [cached]`);
             }
             endmark = this.mark();
             this._cache[key] = [tree, endmark];
         } else {
             [tree, endmark] = this._cache[key];
             if (verbose) {
-                console.log(`${fill}${method_name}(${args}) -> ${String(tree).slice(200)}`);
+                log(`${this._fill()}${method_name}(${argstr(arg)}) -> ${trim(tree)} [fresh]`);
             }
             this.reset(endmark);
         }
@@ -69,24 +76,24 @@ export function memoize(target: Parser, propertyKey: string, descriptor: Propert
 }
 
 export function memoize_left_rec(target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
-    const method: (...args: any[]) => any = descriptor.value;
+    const method: NoArgs = descriptor.value;
     const method_name = propertyKey;
     function memoize_left_rec_wrapper(this: Parser) {
         const mark = this.mark();
-        const key = [mark, method_name, []].toString();
-        let endmark, tree;
+        const key = `${mark},${method_name},`;
+        const inCache = key in this._cache;
+        const verbose = this._verbose;
         // fastpath cache hit and not verbose
-        if (key in this._cache && !this._verbose) {
-            [tree, endmark] = this._cache[key];
+        if (inCache && !verbose) {
+            const [tree, endmark] = this._cache[key];
             this.reset(endmark);
             return tree;
         }
         // # Slow path: no cache hit, or verbose.
-        const verbose = this._verbose;
-        const fill = "  ".repeat(this._level);
-        if (!(key in this._cache)) {
+        let endmark, tree;
+        if (!inCache) {
             if (verbose) {
-                console.log(`${fill}${method_name} ... (looking at ${this.showpeek()})`);
+                log(`${this._fill()}${method_name}() ... (looking at ${this.showpeek()})`);
             }
             this._level++;
             /*
@@ -103,7 +110,7 @@ export function memoize_left_rec(target: Parser, propertyKey: string, descriptor
             let [lastresult, lastmark] = (this._cache[key] = [null, mark]);
             let depth = 0;
             if (verbose) {
-                console.log(`${fill}Recursive ${method_name} at ${mark} depth ${depth}`);
+                log(`${this._fill()}Recursive ${method_name} at ${mark} depth ${depth}`);
             }
             while (true) {
                 this.reset(mark);
@@ -111,22 +118,21 @@ export function memoize_left_rec(target: Parser, propertyKey: string, descriptor
                 endmark = this.mark();
                 depth++;
                 if (verbose) {
-                    console.log(
-                        `${fill}Recursive ${method_name} at ${mark} depth ${depth}: ${String(result).slice(
-                            0,
-                            200
+                    log(
+                        `${this._fill()}Recursive ${method_name} at ${mark} depth ${depth}: ${trim(
+                            result
                         )} to ${endmark}`
                     );
                 }
                 if (!result) {
                     if (verbose) {
-                        console.log(`${fill}Fail with ${String(lastresult).slice(0, 200)} to ${lastmark}`);
+                        log(`${this._fill()}Fail with ${trim(lastresult)} to ${lastmark}`);
                     }
                     break;
                 }
                 if (endmark <= lastmark) {
                     if (verbose) {
-                        console.log(`${fill}Bailing with ${String(lastresult).slice(0, 200)} to ${lastmark}`);
+                        log(`${this._fill()}Bailing with ${trim(lastresult)} to ${lastmark}`);
                     }
                     break;
                 }
@@ -137,7 +143,7 @@ export function memoize_left_rec(target: Parser, propertyKey: string, descriptor
             this._level--;
 
             if (verbose) {
-                console.log(`${fill}${method_name}() -> ${String(tree).slice(0, 200)} [cached]`);
+                log(`${this._fill()}${method_name}() -> ${trim(tree)} [cached]`);
             }
             if (tree) {
                 endmark = this.mark();
@@ -149,7 +155,7 @@ export function memoize_left_rec(target: Parser, propertyKey: string, descriptor
         } else {
             [tree, endmark] = this._cache[key];
             if (verbose) {
-                console.log(`${fill}${method_name}() -> ${String(tree).slice(0, 200)} [fresh]`);
+                log(`${this._fill()}${method_name}() -> ${trim(tree)} [fresh]`);
             }
             if (tree) {
                 this.reset(endmark);
@@ -160,11 +166,18 @@ export function memoize_left_rec(target: Parser, propertyKey: string, descriptor
     descriptor.value = memoize_left_rec_wrapper;
 }
 
+// overloads for the expect method
+export interface Parser {
+    negative_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): boolean;
+    positive_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): R;
+}
+
+/** The base class for the generated Parser. Largely based on cpython/Tools/peg_generator/pegen/parser.py */
 export class Parser {
     _tokenizer: Tokenizer;
     _verbose: boolean;
     _level: number;
-    _cache: { [key: string]: [any, any] };
+    _cache: { [key: string]: [any, number] };
     mark: () => number;
     reset: (number: number) => null | void;
     _tokens: TokenInfo[];
@@ -187,6 +200,9 @@ export class Parser {
         const tok = this._tokenizer.peek();
         return `${tok.start[0]}.${tok.start[1]}: ${tok_name[tok.type]}:'${tok.string}'`;
     }
+    _fill() {
+        return "  ".repeat(this._level);
+    }
 
     @memoize
     name(): Name | null {
@@ -197,6 +213,7 @@ export class Parser {
         }
         return null;
     }
+    @memoize
     string(): TokenInfo | null {
         let tok = this._tokenizer.peek();
         if (tok.type === STRING) {
@@ -245,15 +262,15 @@ export class Parser {
         }
         return null;
     }
-    positive_lookahead<T = any, R = any>(func: (...args: T[]) => R, ...args: T[]): boolean {
+    positive_lookahead<T = never, R = any | null>(func: (arg?: T) => R, arg?: T): R {
         const mark = this.mark();
-        const ok = func.call(this, ...args);
+        const ok = func.call(this, arg);
         this.reset(mark);
         return ok;
     }
-    negative_lookahead<T = any, R = any>(func: (...args: T[]) => R, ...args: T[]): boolean {
+    negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg: T): boolean {
         const mark = this.mark();
-        const ok = func.call(this, ...args);
+        const ok = func.call(this, arg);
         this.reset(mark);
         return !ok;
     }

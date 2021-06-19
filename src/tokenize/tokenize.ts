@@ -44,6 +44,9 @@ export class TokenInfo {
             return this.type;
         }
     }
+    get [Symbol.toStringTag]() {
+        return "TokenInfo";
+    }
 }
 
 const reRegExpChar = /[\\^$.*+?()[\]{}|]/g,

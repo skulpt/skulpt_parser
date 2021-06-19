@@ -11,7 +11,14 @@ const args = parse(Deno.args);
 
 console.assert(args._.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
 
-const filename = args._[0] as string;
+const filearg = args._[0];
+
+let filename: string;
+if (typeof filearg === "number") {
+    filename = `run-tests/t${filearg.toString().padStart(3, "0")}.py`;
+} else {
+    filename = filearg;
+}
 
 const tokens = tokenize(readFile(filename));
 
