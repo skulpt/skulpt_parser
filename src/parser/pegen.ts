@@ -10,6 +10,7 @@ import {
     Load,
     Constant,
     exprKind,
+    cmpop,
 } from "../ast/astnodes.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
@@ -1527,6 +1528,20 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return new_seq;
 // }
 
+class CmpopExprPair {
+    cmpop: cmpop;
+    expr: expr;
+
+    constructor(cmpop: cmpop, expr: expr) {
+        this.cmpop = cmpop;
+        this.expr = expr;
+    }
+}
+
+export function cmpop_expr_pair(p: Parser, cmpop: cmpop, expr: expr) {
+    return new CmpopExprPair(cmpop, expr);
+}
+
 // /* Constructs a CmpopExprPair */
 // CmpopExprPair *
 // _PyPegen_cmpop_expr_pair(Parser *p, cmpop_ty cmpop, expr_ty expr)
@@ -1540,6 +1555,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     a->expr = expr;
 //     return a;
 // }
+
+export function get_cmpops(p: Parser, seq: CmpopExprPair[]) {
+    return seq.map((pair) => pair.cmpop);
+}
 
 // asdl_int_seq *
 // _PyPegen_get_cmpops(Parser *p, asdl_seq *seq)
@@ -1557,6 +1576,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     }
 //     return new_seq;
 // }
+
+export function get_exprs(p: Parser, seq: CmpopExprPair[]) {
+    return seq.map((pair) => pair.expr);
+}
 
 // asdl_seq *
 // _PyPegen_get_exprs(Parser *p, asdl_seq *seq)

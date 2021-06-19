@@ -39,6 +39,10 @@ const pegen = new Proxy(pegen_real, {
     },
 });
 
+function CHECK(...args) {
+    return args[0];
+}
+
 export class GeneratedParser extends Parser {
     @memoize
     file(): mod | null {
