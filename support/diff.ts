@@ -6,7 +6,13 @@ export function getDiff(A: string, B: string): string {
     } catch (e) {
         return e.message as string;
     }
-    return Colors.green("Success - we have a match ");
+    return Colors.bold(
+        Colors.green(`
+*********************************
+    Success - we have a match
+*********************************
+`)
+    );
 }
 
 export function assertEqualsString(A: string, B: string): void {

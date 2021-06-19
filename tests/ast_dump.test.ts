@@ -1,5 +1,6 @@
 import * as astnodes from "../src/ast/astnodes.ts";
-import { dump } from "../src/ast/ast.ts";
+import { pyFloat, pyInt, pyTrue, pyFalse, pyNone, pyStr } from "../src/ast/constants.ts";
+import { dump } from "../src/ast/dump.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 // replace with assertEquals when string comparison is better.
 import { assertEqualsString } from "../support/diff.ts";
@@ -10,17 +11,28 @@ async function convertToTs(content: string): Promise<string> {
     py_ast_dump = py_ast_dump
         .replace(/^(\s+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
         .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => {
-            if (m2 === "null" || m2 === "True" || m2 === "False") {
-                return m1 + m2.toLowerCase();
+            if (m2 === "null") {
+                return m1 + m2;
+            } else if (m2 === "None" || m2 === "True" || m2 === "False") {
+                return m1 + "py" + m2;
             }
             if (m2 === "arguments") {
                 m2 += "_";
             }
             return m1 + "new astnodes." + m2;
         })
-        .replace(/^(\s+\-?[0-9]+\.[0-9]+(?:e[\-0-9]+)?)/gm, (m, m1) => "new Number(" + m1 + ")")
-        .replace(/^(\s+\-?[0-9]{16,})/gm, (m, m1) => m1 + "n");
-    // use bigint
+        .replace(
+            /new astnodes.Constant\(\n(\s+\-?[0-9](?:e[\-0-9]+))/g,
+            (m, m1) => `new astnodes.Constant(\nnew pyFloat(${m1})`
+        )
+        .replace(
+            /new astnodes.Constant\(\n(\s+\-?[0-9]+\.[0-9]+(?:e[\-0-9]+)?)/g,
+            (m, m1) => `new astnodes.Constant(\nnew pyFloat(${m1})`
+        )
+        // use bigint for dumping
+        .replace(/new astnodes.Constant\(\n(\s+\-?[0-9]+)/g, (m, m1) => `new astnodes.Constant(\nnew pyInt(${m1}n)`)
+        .replace(/new astnodes.Constant\(\n(\s+['"].*['"])/g, (m, m1) => `new astnodes.Constant(\nnew pyStr(${m1})`);
+    // we might also need to make id a string constant or maybe just make pyStr a js string
     return py_ast_dump;
 }
 
@@ -40,6 +52,10 @@ async function doTest(source: string, mod: astnodes.Module) {
     }
 }
 
+// const tmp = "t000.py"
+// console.log(dump(await convertFileToTs(tmp), 2));
+// const files = [tmp];
+
 const files = [];
 for await (const dirEntry of Deno.readDir("run-tests/")) {
     if (!dirEntry.name.endsWith(".py")) {
@@ -58,6 +74,12 @@ for (const test of files) {
         name: test,
         fn: async () => {
             new astnodes.Module([], []); // fails without this
+            pyFloat;
+            pyInt;
+            pyStr;
+            pyTrue;
+            pyFalse;
+            pyNone;
             try {
                 const text = await Deno.readTextFile("run-tests/" + test);
                 const converted = await convertToTs(text);

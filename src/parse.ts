@@ -2,7 +2,7 @@ import { GeneratedParser } from "./parser/generated_parser.ts";
 import { Tokenizer } from "./tokenize/Tokenizer.ts";
 import { tokenize } from "./tokenize/tokenize.ts";
 import { readFile } from "./tokenize/readline.ts";
-import { dump } from "./ast/ast.ts";
+import { dump } from "./ast/dump.ts";
 import { Colors, parse } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";

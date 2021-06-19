@@ -44,7 +44,7 @@ class jsVisitor(ast.NodeTransformer):
             if old_value is None and getattr(cls, field, ...) is None:
                 fields.append(null)
             elif old_value is None:
-                fields.append("None")
+                fields.append(None)
             elif isinstance(old_value, ast.AST):
                 fields.append(self.visit(old_value))
             elif isinstance(old_value, list):
