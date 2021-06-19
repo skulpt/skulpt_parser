@@ -53,17 +53,16 @@ const EXTRA = []; // todo
 const pegen = new Proxy(pegen_real, {{
     get(target, prop, receiver) {{
         if (prop in target) {{
-            return (...args) => {{
-                const [head, ...tail] = args;
+            return (p: Parser, ...args) => {{
                 console.log(Colors.green("Calling '" + prop + "'"));
-                console.log(Colors.green("With"), tail);
-                return target[prop](...args);
+                console.log(Colors.green("With"), args);
+                return target[prop](p, ...args);
             }};
         }}
 
         console.log(Colors.yellow("Missing pegen func!: " + prop));
 
-        return (...args) => args
+        return (p: Parser, ...args) => args
     }}
 }});
 """
