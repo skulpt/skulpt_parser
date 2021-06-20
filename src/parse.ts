@@ -30,14 +30,16 @@ const ast = parser.file();
 
 console.log();
 
+const options = { indent: 2, include_attributes: true };
+
 console.log(Colors.bold(Colors.magenta("##### py #####")));
-const pyDump = await getPyAstDump(Deno.readTextFileSync(filename), 2);
+const pyDump = await getPyAstDump(Deno.readTextFileSync(filename), options);
 console.log(Colors.magenta(pyDump));
 
 let jsDump = "";
 if (ast !== null) {
     try {
-        jsDump = dump(ast, 2) + "\n";
+        jsDump = dump(ast, options) + "\n";
         console.log(Colors.bold(Colors.green("/**** js ****/")));
         console.log(Colors.green(jsDump));
     } catch {
