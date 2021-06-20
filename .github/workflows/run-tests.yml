@@ -69,7 +69,9 @@ jobs:
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
               id: run-tests
-              run: echo "::set-output name=results::$(vr test parse)"
+              run: |
+                  vr test parse > results
+                  echo "::set-output name=results::$(cat results)"
             - name: log last 10 lines
               run: |
                   echo "${{steps.run-tests.outputs.results}}" | tail -n 10
