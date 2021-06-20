@@ -30,6 +30,7 @@ jobs:
             - uses: actions/checkout@master
               with:
                   path: skulpt_parser
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - run: pip install --user pre-commit
             - name: build parser
               run: vr gen_parser
@@ -44,6 +45,8 @@ jobs:
               with:
                   deno-version: v1.x
             - uses: jurassiscripts/setup-velociraptor@v1
+            - uses: actions/checkout@master
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
               run: vr test
               working-directory: "./skulpt_parser"
@@ -54,6 +57,8 @@ jobs:
               with:
                   deno-version: v1.x
             - uses: jurassiscripts/setup-velociraptor@v1
+            - uses: actions/checkout@master
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
               run: vr test parse
               working-directory: "./skulpt_parser"
