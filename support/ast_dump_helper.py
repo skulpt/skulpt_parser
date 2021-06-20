@@ -69,4 +69,4 @@ class jsVisitor(ast.NodeTransformer):
 if args.js:
     parsed = jsVisitor().generic_visit(parsed)
 
-print(ast.dump(parsed, annotate_fields=not args.js, include_attributes=args.attrs, indent=indent))
+print(ast.dump(parsed, annotate_fields=not args.js, include_attributes=args.attrs, indent=indent), end="")

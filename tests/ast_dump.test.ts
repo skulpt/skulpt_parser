@@ -49,7 +49,7 @@ async function doTest(source: string, mod: astnodes.Module) {
     const indent = [0, 2, 4, null][Math.floor(Math.random() * 4)];
     const include_attributes = true;
     const pyDump = await getPyAstDump(source, { indent, include_attributes });
-    const jsDump = dump(mod, { indent, include_attributes }) + "\n";
+    const jsDump = dump(mod, { indent, include_attributes });
     assertEqualsString(jsDump, pyDump);
 }
 

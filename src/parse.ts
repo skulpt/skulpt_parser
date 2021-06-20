@@ -24,7 +24,7 @@ const tokens = tokenize(readFile(filename));
 
 const tokenizer = new Tokenizer(tokens);
 
-const parser = new GeneratedParser(tokenizer, args.verbose || false);
+const parser = new GeneratedParser(tokenizer, args.v || args.verbose || false);
 
 const ast = parser.file();
 
@@ -35,11 +35,12 @@ const options = { indent: 2, include_attributes: true };
 console.log(Colors.bold(Colors.magenta("##### py #####")));
 const pyDump = await getPyAstDump(Deno.readTextFileSync(filename), options);
 console.log(Colors.magenta(pyDump));
+console.log();
 
 let jsDump = "";
 if (ast !== null) {
     try {
-        jsDump = dump(ast, options) + "\n";
+        jsDump = dump(ast, options);
         console.log(Colors.bold(Colors.green("/**** js ****/")));
         console.log(Colors.green(jsDump));
     } catch {
@@ -50,4 +51,5 @@ if (ast !== null) {
     console.error("parser returned null");
 }
 
+console.log();
 console.log(getDiff(jsDump, pyDump));
