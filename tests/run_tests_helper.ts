@@ -11,11 +11,11 @@ async function populateFiles(files: string[]) {
 interface runTestsOptions {
     files?: string[];
     skip?: Set<string>;
-    exitEarly?: boolean;
+    failFast?: boolean;
 }
 
 export async function runTests(doTest: (text: string) => void, options: runTestsOptions = {}) {
-    const { files = [], skip = new Set(), exitEarly = false } = options;
+    const { files = [], skip = new Set(), failFast = false } = options;
     if (files.length === 0) {
         await populateFiles(files);
     }
@@ -31,7 +31,7 @@ export async function runTests(doTest: (text: string) => void, options: runTests
                     const text = await Deno.readTextFile("run-tests/" + test);
                     await doTest(text);
                 } catch (e) {
-                    if (exitEarly) {
+                    if (failFast) {
                         console.error(e);
                         Deno.exit(0);
                     } else {

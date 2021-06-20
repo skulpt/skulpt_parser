@@ -69,4 +69,4 @@ async function doTest(source: string) {
 
 const files: string[] = [];
 
-await runTests(doTest, { files, skip: new Set(), exitEarly: false });
+await runTests(doTest, { files, skip: new Set(), failFast: false });
