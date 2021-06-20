@@ -45,6 +45,9 @@ jobs:
               with:
                   deno-version: v1.x
             - uses: jurassiscripts/setup-velociraptor@v1
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9.5"
             - uses: actions/checkout@master
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
