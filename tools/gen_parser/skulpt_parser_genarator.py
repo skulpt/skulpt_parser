@@ -45,10 +45,11 @@ import {{ mod, expr, stmt, operator, alias, withitem, excepthandler, arguments_,
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
 import * as pegen_real from "./pegen.ts";
 import {{ Colors }} from "../../deps.ts";
+import type {{StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred}} from "./pegen_types.ts";
+import type {{ Tokenizer }} from "../tokenize/Tokenizer.ts";
+import {{FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
 
-import {{memoize, memoize_left_rec, logger, Parser}} from "./parser.ts";
-
-const EXTRA = []; // todo
+import {{memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
 
 const pegen = new Proxy(pegen_real, {{
     get(target: {{ [index:string] : any }}, prop: string, receiver) {{
@@ -212,8 +213,38 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
         subheader = self.grammar.metas.get("subheader", "")
         if subheader:
             self.print(subheader.format(filename=filename))
-        self.print("\n")
-        self.print("export class GeneratedParser extends Parser {")
+        self.print(
+            """
+export class GeneratedParser extends Parser {
+    start_rule: StartRule;
+    flags: number;
+
+    constructor(T: Tokenizer, start_rule: StartRule=FILE_INPUT, flags=0) {
+        super(T);
+        this.start_rule=start_rule;
+        this.flags=flags; // unused
+    }
+
+    parse(): mod | expr | null {
+        switch (this.start_rule) {
+            case FILE_INPUT:
+                return this.file();
+            case SINGLE_INPUT:
+                return this.interactive();
+            case EVAL_INPUT:
+                return this.eval();
+            case FUNC_TYPE_INPUT:
+                return this.func_type();
+            case FSTRING_INPUT:
+                return this.fstring();
+            default:
+                return null;
+        }
+    }
+
+"""
+        )
+
         while self.todo:
             for rulename, rule in list(self.todo.items()):
                 del self.todo[rulename]
@@ -236,7 +267,7 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
         if node.left_recursive:
             if node.leader:
                 # self.suffix += f"memoizeLeftRecMethod('{node.name}')\n"
-                self.print("@memoize_left_rec")
+                self.print("@memoizeLeftRec")
             else:
                 # Non-leader rules in a cycle are not memoized,
                 # but they must still be logged.
