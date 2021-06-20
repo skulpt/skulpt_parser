@@ -1,2 +1,2 @@
 export { tokenize } from "./tokenize/tokenize.ts";
-export { readline, Tokenizer } from "./tokenize/Tokenizer.ts";
+export { Tokenizer } from "./tokenize/Tokenizer.ts";
