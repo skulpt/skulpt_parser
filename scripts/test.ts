@@ -1,7 +1,7 @@
 import { parse } from "../deps.ts";
 
 const args = parse(Deno.args);
-const test = args._?.[0];
+const test = args._[0];
 
 const extra = [];
 
@@ -16,8 +16,18 @@ switch (test) {
         break;
 }
 
+if (args["fail-fast"]) {
+    extra.push("--fail-fast");
+}
+
+/** set this in Deno env which other test files can retrieve
+ * example use: `vr test parse 1`
+ */
+const files = args._.filter((x) => typeof x === "number").map((x) => `t${x.toString().padStart(3, "0")}.py`);
+Deno.env.set("_TESTFILES", JSON.stringify(files));
+
 const cmd = Deno.run({
-    cmd: ["deno", "test", "--allow-read", "--allow-run", ...extra],
+    cmd: ["deno", "test", "--allow-read", "--allow-run", "--allow-env", ...extra],
 });
 
 await cmd.status();

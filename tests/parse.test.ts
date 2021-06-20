@@ -14,10 +14,6 @@ async function doTest(source: string) {
     assertEqualsString(jsDump, pyDump);
 }
 
-/* for debugging */
-// const tmp = "t004.py";
-// const files = [tmp];
-
-const files: string[] = [];
+const files: string[] = JSON.parse(Deno.env.get("_TESTFILES") || "[]");
 
 await runTests(doTest, { files, skip: new Set(), failFast: false });

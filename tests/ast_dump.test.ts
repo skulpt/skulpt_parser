@@ -63,10 +63,6 @@ async function doTest(source: string) {
     assertEqualsString(jsDump, pyDump);
 }
 
-// const tmp = "t023.py"
-// console.log(dump(await convertFileToTs(tmp), {indent: 2, include_attributes: true}));
-// const files = [tmp];
-
-const files: string[] = [];
+const files: string[] = JSON.parse(Deno.env.get("_TESTFILES") || "[]");
 
 await runTests(doTest, { files, skip: new Set(), failFast: false });
