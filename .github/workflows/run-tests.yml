@@ -49,7 +49,7 @@ jobs:
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
               run: vr test
-              working-directory: "./skulpt_parser"
+              # working-directory: "./skulpt_parser"
     run-parse-tests:
         runs-on: ubuntu-latest
         steps:
@@ -61,4 +61,4 @@ jobs:
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
               run: vr test parse
-              working-directory: "./skulpt_parser"
+              # working-directory: "./skulpt_parser"
