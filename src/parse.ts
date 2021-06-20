@@ -1,13 +1,11 @@
-import { GeneratedParser } from "./parser/generated_parser.ts";
-import { Tokenizer } from "./tokenize/Tokenizer.ts";
-import { tokenize } from "./tokenize/tokenize.ts";
-import { readFile } from "./tokenize/readline.ts";
 import { dump } from "./ast/dump.ts";
 import { Colors, parse } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
+import { runParserFromFile } from "./parser/parse.ts";
 
 const args = parse(Deno.args);
+const options = { indent: 2, include_attributes: true };
 
 console.assert(args._.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
 
@@ -20,24 +18,14 @@ if (typeof filearg === "number") {
     filename = filearg;
 }
 
-const tokens = tokenize(readFile(filename));
-
-const tokenizer = new Tokenizer(tokens);
-
-const parser = new GeneratedParser(tokenizer, args.v || args.verbose || false);
-
-const ast = parser.file();
-
 console.log();
-
-const options = { indent: 2, include_attributes: true };
-
 console.log(Colors.bold(Colors.magenta("##### py #####")));
 const pyDump = await getPyAstDump(Deno.readTextFileSync(filename), options);
 console.log(Colors.magenta(pyDump));
 console.log();
 
 let jsDump = "";
+const ast = runParserFromFile(filename, null, args);
 if (ast !== null) {
     try {
         jsDump = dump(ast, options);
