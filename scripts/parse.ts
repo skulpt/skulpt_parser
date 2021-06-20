@@ -1,8 +1,8 @@
-import { dump } from "./ast/dump.ts";
+import { dump } from "../src/ast/dump.ts";
 import { Colors, parse } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
-import { runParserFromFile } from "./parser/parse.ts";
+import { runParserFromFile } from "../src/parser/parse.ts";
 
 const args = parse(Deno.args);
 const options = { indent: 2, include_attributes: true };

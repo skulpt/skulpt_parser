@@ -50,7 +50,7 @@ scripts:
 
     parse:
         desc: takes in a filename or number as the first argument. Optional --verbose (-v) flag
-        cmd: deno run src/parse.ts
+        cmd: deno run scripts/parse.ts
         allow:
             - read
             - run
