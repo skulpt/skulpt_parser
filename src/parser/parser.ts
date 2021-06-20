@@ -1,7 +1,9 @@
 import { NAME, NUMBER, OP, STRING, tok_name } from "../tokenize/token.ts";
-import { exact_token_types, Tokenizer } from "../tokenize/Tokenizer.ts";
+import { exact_token_types } from "../tokenize/Tokenizer.ts";
+import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
-import { pySyntaxError, TokenInfo } from "../tokenize/tokenize.ts";
+import { pySyntaxError } from "../tokenize/tokenize.ts";
+import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */

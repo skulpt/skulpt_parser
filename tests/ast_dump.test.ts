@@ -4,6 +4,7 @@ import { dump } from "../src/ast/dump.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 // replace with assertEquals when string comparison is better.
 import { assertEqualsString } from "../support/diff.ts";
+import { runTests } from "./run_tests_helper.ts";
 
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
 async function convertToTs(content: string): Promise<string> {
@@ -45,11 +46,20 @@ async function convertFileToTs(fileName: string) {
     return jsAST;
 }
 
-async function doTest(source: string, mod: astnodes.Module) {
+async function doTest(source: string) {
+    astnodes;
+    pyFloat;
+    pyInt;
+    pyStr;
+    pyTrue;
+    pyFalse;
+    pyNone;
+
+    const converted = await convertToTs(source);
+    const jsAST = eval(converted) as astnodes.mod;
     const indent = [0, 2, 4, null][Math.floor(Math.random() * 4)];
-    const include_attributes = true;
-    const pyDump = await getPyAstDump(source, { indent, include_attributes });
-    const jsDump = dump(mod, { indent, include_attributes });
+    const pyDump = await getPyAstDump(source, { indent, include_attributes: true });
+    const jsDump = dump(jsAST, { indent, include_attributes: true });
     assertEqualsString(jsDump, pyDump);
 }
 
@@ -57,43 +67,6 @@ async function doTest(source: string, mod: astnodes.Module) {
 // console.log(dump(await convertFileToTs(tmp), {indent: 2, include_attributes: true}));
 // const files = [tmp];
 
-const files = [];
-for await (const dirEntry of Deno.readDir("run-tests/")) {
-    if (!dirEntry.name.endsWith(".py")) {
-        continue;
-    }
-    files.push(dirEntry.name);
-}
-files.sort();
-const skip = new Set();
+const files: string[] = [];
 
-for (const test of files) {
-    if (skip.has(test)) {
-        continue;
-    }
-    Deno.test({
-        name: test,
-        fn: async () => {
-            new astnodes.Module([], []); // fails without this
-            pyFloat;
-            pyInt;
-            pyStr;
-            pyTrue;
-            pyFalse;
-            pyNone;
-            try {
-                const text = await Deno.readTextFile("run-tests/" + test);
-                const converted = await convertToTs(text);
-                const jsAST = eval(converted);
-                await doTest(text, jsAST);
-            } catch (e) {
-                // // uncomment these to exit at the first fail
-                // console.error(e);
-                // Deno.exit(0);
-                throw e;
-            }
-        },
-        sanitizeExit: false,
-        // allow us to exit early with Deno.exit
-    });
-}
+await runTests(doTest, { files, skip: new Set(), failFast: false });

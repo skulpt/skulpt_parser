@@ -42,14 +42,15 @@ scripts:
         cmd: cd ../cpython/Grammar && git diff -- python.gram -p > ../../skulpt_parser/tools/patch/grammar.patch
 
     test:
-        cmd: deno test
+        desc: run all tests or include a short name <dump|parse>
+        cmd: deno run scripts/test.ts
         allow:
             - read
             - run
 
     parse:
         desc: takes in a filename or number as the first argument. Optional --verbose (-v) flag
-        cmd: deno run src/parse.ts
+        cmd: deno run scripts/parse.ts
         allow:
             - read
             - run

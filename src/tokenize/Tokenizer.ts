@@ -1,6 +1,6 @@
 import { isSpace } from "../util/str_helpers.ts";
 import { COMMENT, ERRORTOKEN, EXACT_TOKEN_TYPES, NL } from "./token.ts";
-import { TokenInfo } from "./tokenize.ts";
+import type { TokenInfo } from "./tokenize.ts";
 
 export const exact_token_types = EXACT_TOKEN_TYPES;
 
