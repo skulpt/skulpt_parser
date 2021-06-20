@@ -12,7 +12,7 @@ import {
     exprKind,
     cmpop,
 } from "../ast/astnodes.ts";
-import { TokenInfo } from "../tokenize/tokenize.ts";
+import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
 
