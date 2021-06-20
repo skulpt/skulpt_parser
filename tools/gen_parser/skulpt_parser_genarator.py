@@ -51,9 +51,9 @@ import {{memoize, memoize_left_rec, logger, Parser}} from "./parser.ts";
 const EXTRA = []; // todo
 
 const pegen = new Proxy(pegen_real, {{
-    get(target, prop, receiver) {{
+    get(target: {{ [index:string] : any }}, prop: string, receiver) {{
         if (prop in target) {{
-            return (p: Parser, ...args) => {{
+            return (p: Parser, ...args: any[]) => {{
                 console.log(Colors.green("Calling '" + prop + "'"));
                 console.log(Colors.green("With"), args);
                 return target[prop](p, ...args);
@@ -62,7 +62,7 @@ const pegen = new Proxy(pegen_real, {{
 
         console.log(Colors.yellow("Missing pegen func!: " + prop));
 
-        return (p: Parser, ...args) => args
+        return (p: Parser, ...args: any[]) => args
     }}
 }});
 """
@@ -221,6 +221,9 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
         # if trailer is not None:
         #     self.print(trailer.rstrip("\n"))
 
+    def _set_up_token_metadata_extraction(self) -> None:
+        self.print("const EXTRA = this.extra(mark)")
+
     def visit_Rule(self, node: Rule) -> None:
         is_loop = node.is_loop()
         is_gather = node.is_gather()
@@ -242,14 +245,16 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.print(f"//# {node.name}: {rhs}")
             if node.nullable:
                 self.print(f"// # nullable={node.nullable}")
-            self.args = {"mark"}
+            self.args = set()  # {"mark"}
             self.has_cut = False
             orig_file, tmp_file = (
                 self.file,
                 StringIO(),
             )  # a bit of a hack to get state the args at the top of the file
             self.file = tmp_file
-            self.print("mark = this.mark();")
+            self.print(f"{'let' if is_loop else 'const'} mark = this.mark();")
+            # if any(alt.action and "EXTRA" in alt.action for alt in rhs.alts):
+            #     self._set_up_token_start_metadata_extraction()
             if is_loop:
                 self.args.add("children")
                 self.print("children = [];")
@@ -309,6 +314,8 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.print(") {")
             with self.indent():
                 action = node.action
+                if action and "EXTRA" in action:
+                    self._set_up_token_metadata_extraction()
                 if not action:
                     if is_gather:
                         assert len(self.local_variable_names) == 2
