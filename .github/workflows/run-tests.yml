@@ -72,9 +72,6 @@ jobs:
               run: |
                   vr test parse > results
                   echo "::set-output name=results::$(cat results | grep "test result" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?(;[0-9]{1,2})?)?[mGK]//g")"
-            - name: log last 10 lines
-              run: |
-                  echo "${{steps.run-tests.outputs.results}}"
             - uses: actions/github-script@v4
               with:
                   script: |
