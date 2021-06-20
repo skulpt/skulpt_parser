@@ -251,7 +251,7 @@ class FunctionVisitor(PrototypeVisitor):
         sep = ", " if args else ""
 
         if union and attrs:
-            constructorArgs = f"constructor({_args}{sep}...attrs: {ts_type}Attrs) {{"
+            constructorArgs = f"constructor({_args}{sep}...attrs: Attrs) {{"
             emit(constructorArgs, 1)
             emit("super(...attrs);", 2)
         else:
@@ -278,6 +278,8 @@ class FunctionVisitor(PrototypeVisitor):
         # could instead use
         # get _fields () {return ['arg0', 'arg1'];}
         emit(f"{name}.prototype._fields = {arg_names};")
+        if not union and attrs:
+            emit(f"{name}.prototype._attributes = _attrs;")
         emit("")
 
     def emit_body_union(self, name, args, attrs):
@@ -317,10 +319,7 @@ class FunctionVisitor(PrototypeVisitor):
         self.emit_body_attrs(attrs)
         emit("}", 1)
         emit("}")
-        attr_names = ", ".join(map(lambda arg: f'"{arg[1]}"', attrs))
-        emit(f"{name}.prototype._attributes = [{attr_names}];")
-        emit("")
-        emit(f"export type {name}Attrs = [{_attrs}];")
+        emit(f"{name}.prototype._attributes = _attrs;")
         emit("")
 
 
@@ -381,6 +380,9 @@ export class AST {
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
 AST.prototype._enum = false;
+
+export type Attrs = [number, number, number | null | undefined, number | null | undefined];
+const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 
 """
     )

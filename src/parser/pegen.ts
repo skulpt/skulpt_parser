@@ -1,12 +1,11 @@
 import {
     AST,
+    Attrs,
     expr_context,
-    stmtAttrs,
     expr,
     Module,
     Name,
     stmt,
-    exprAttrs,
     Call,
     Load,
     Constant,
@@ -1595,7 +1594,7 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     }
 //     return new_seq;
 // }
-function EXTRA_EXPR(e: expr): exprAttrs {
+function EXTRA_EXPR(e: expr): Attrs {
     return [e.lineno, e.col_offset, e.end_lineno, e.end_col_offset];
 }
 // static expr_ty
@@ -2368,7 +2367,7 @@ export function make_module(p: Parser, a: stmt[]) {
 // }
 
 // @stu why does our parser not call these functions with the parser?
-export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: stmtAttrs) {
+export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: Attrs) {
     const args_len = a.length;
     const total_len = args_len;
 
