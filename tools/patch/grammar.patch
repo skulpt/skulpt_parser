@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..5760af0c6e 100644
+index 64e205e7fd..9c7268c557 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -59,7 +59,7 @@ index 64e205e7fd..5760af0c6e 100644
 -simple_stmt[asdl_seq*]:
 -    | a=small_stmt !';' NEWLINE { _PyPegen_singleton_seq(p, a) } # Not needed, there for speedup
 +    | NEWLINE { pegen.singleton_seq(this, CHECK(new astnodes.Pass(...EXTRA))) }
-+    | ENDMARKER { pegen.interactive_exit(p) }
++    | ENDMARKER { pegen.interactive_exit(this) }
 +simple_stmt[any]:
 +    | a=small_stmt !';' NEWLINE { pegen.singleton_seq(this, a) } # Not needed, there for speedup
      | a=';'.small_stmt+ [';'] NEWLINE { a }
@@ -186,7 +186,7 @@ index 64e205e7fd..5760af0c6e 100644
      | '(' a=import_from_as_names [','] ')' { a }
      | import_from_as_names !','
 -    | '*' { _PyPegen_singleton_seq(p, CHECK(_PyPegen_alias_for_star(p))) }
-+    | '*' { pegen.singleton_seq(this, CHECK(pegen.alias_for_star(p))) }
++    | '*' { pegen.singleton_seq(this, CHECK(pegen.alias_for_star(this))) }
      | invalid_import_from_targets
 -import_from_as_names[asdl_seq*]:
 +import_from_as_names[any]:
@@ -307,7 +307,7 @@ index 64e205e7fd..5760af0c6e 100644
 -                        (params) ? params : CHECK(_PyPegen_empty_arguments(p)),
 -                        b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA) }
 +        new astnodes.FunctionDef(n.id,
-+                        (params) ? params : CHECK(pegen.empty_arguments(p)),
++                        (params) ? params : CHECK(pegen.empty_arguments(this)),
 +                        b, null, a, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA) }
      | ASYNC 'def' n=NAME '(' params=[params] ')' a=['->' z=expression { z }] ':' tc=[func_type_comment] b=block {
          CHECK_VERSION(
@@ -317,7 +317,7 @@ index 64e205e7fd..5760af0c6e 100644
 -                            (params) ? params : CHECK(_PyPegen_empty_arguments(p)),
 -                            b, NULL, a, NEW_TYPE_COMMENT(p, tc), EXTRA)
 +            new astnodes.AsyncFunctionDef(n.id,
-+                            (params) ? params : CHECK(pegen.empty_arguments(p)),
++                            (params) ? params : CHECK(pegen.empty_arguments(this)),
 +                            b, null, a, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
          ) }
 -func_type_comment[Token*]:
@@ -488,7 +488,7 @@ index 64e205e7fd..5760af0c6e 100644
 -lambdef[expr_ty]:
 -    | 'lambda' a=[lambda_params] ':' b=expression { _Py_Lambda((a) ? a : CHECK(_PyPegen_empty_arguments(p)), b, EXTRA) }
 +lambdef[expr]:
-+    | 'lambda' a=[lambda_params] ':' b=expression { new astnodes.Lambda((a) ? a : CHECK(pegen.empty_arguments(p)), b, ...EXTRA) }
++    | 'lambda' a=[lambda_params] ':' b=expression { new astnodes.Lambda((a) ? a : CHECK(pegen.empty_arguments(this)), b, ...EXTRA) }
  
 -lambda_params[arguments_ty]:
 +lambda_params[arguments_]:
@@ -567,8 +567,9 @@ index 64e205e7fd..5760af0c6e 100644
 +    | a=conjunction b=('or' c=conjunction { c })+ { new astnodes.BoolOp(
          Or,
 -        CHECK(_PyPegen_seq_insert_in_front(p, a, b)),
+-        EXTRA) }
 +        CHECK(pegen.seq_insert_in_front(this, a, b)),
-         EXTRA) }
++        ...EXTRA) }
      | conjunction
 -conjunction[expr_ty] (memo):
 -    | a=inversion b=('and' c=inversion { c })+ { _Py_BoolOp(
@@ -576,8 +577,9 @@ index 64e205e7fd..5760af0c6e 100644
 +    | a=inversion b=('and' c=inversion { c })+ { new astnodes.BoolOp(
          And,
 -        CHECK(_PyPegen_seq_insert_in_front(p, a, b)),
+-        EXTRA) }
 +        CHECK(pegen.seq_insert_in_front(this, a, b)),
-         EXTRA) }
++        ...EXTRA) }
      | inversion
 -inversion[expr_ty] (memo):
 -    | 'not' a=inversion { _Py_UnaryOp(Not, a, EXTRA) }
@@ -694,14 +696,15 @@ index 64e205e7fd..5760af0c6e 100644
 -        _Py_Call(a,
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
+-                 EXTRA) }
+-    | a=primary '[' b=slices ']' { _Py_Subscript(a, b, Load, EXTRA) }
 +    | a=primary '.' b=NAME { new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA) }
 +    | a=primary b=genexp { new astnodes.Call(a, CHECK(pegen.singleton_seq(this, b)), null, ...EXTRA) }
 +    | a=primary '(' b=[arguments_] ')' {
 +        new astnodes.Call(a,
 +                 b ? b.args : null,
 +                 b ? b.keywords : null,
-                  EXTRA) }
--    | a=primary '[' b=slices ']' { _Py_Subscript(a, b, Load, EXTRA) }
++                 ...EXTRA) }
 +    | a=primary '[' b=slices ']' { new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA) }
      | atom
  
@@ -814,14 +817,15 @@ index 64e205e7fd..5760af0c6e 100644
 -    | a=kwargs { _Py_Call(_PyPegen_dummy_name(p),
 -                          CHECK_NULL_ALLOWED(_PyPegen_seq_extract_starred_exprs(p, a)),
 -                          CHECK_NULL_ALLOWED(_PyPegen_seq_delete_starred_exprs(p, a)),
-+args[expr]:
-+    | a=','.(starred_expression | named_expression !'=')+ b=[',' k=kwargs {k}] { pegen.collect_call_seqs(this, a, b, ...EXTRA) }
-+    | a=kwargs { new astnodes.Call(pegen.dummy_name(p),
-+                          CHECK_NULL_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
-+                          CHECK_NULL_ALLOWED(pegen.seq_delete_starred_exprs(this, a)),
-                           EXTRA) }
+-                          EXTRA) }
 -kwargs[asdl_seq*]:
 -    | a=','.kwarg_or_starred+ ',' b=','.kwarg_or_double_starred+ { _PyPegen_join_sequences(p, a, b) }
++args[expr]:
++    | a=','.(starred_expression | named_expression !'=')+ b=[',' k=kwargs {k}] { pegen.collect_call_seqs(this, a, b, ...EXTRA) }
++    | a=kwargs { new astnodes.Call(pegen.dummy_name(this),
++                          CHECK_NULL_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
++                          CHECK_NULL_ALLOWED(pegen.seq_delete_starred_exprs(this, a)),
++                          ...EXTRA) }
 +kwargs[any]:
 +    | a=','.kwarg_or_starred+ ',' b=','.kwarg_or_double_starred+ { pegen.join_sequences(this, a, b) }
      | ','.kwarg_or_starred+
@@ -938,6 +942,7 @@ index 64e205e7fd..5760af0c6e 100644
 -        _Py_Call(a,
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
+-                 EXTRA) }
 +t_primary[expr]:
 +    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA) }
@@ -946,7 +951,7 @@ index 64e205e7fd..5760af0c6e 100644
 +        new astnodes.Call(a,
 +                 b ? b.args : null,
 +                 b ? b.keywords : null,
-                  EXTRA) }
++                 ...EXTRA) }
      | a=atom &t_lookahead { a }
  t_lookahead: '(' | '[' | '.'
 -t_atom[expr_ty]:
