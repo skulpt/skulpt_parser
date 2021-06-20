@@ -55,6 +55,8 @@ jobs:
               # working-directory: "./skulpt_parser"
     run-parse-tests:
         runs-on: ubuntu-latest
+        outputs:
+            tests: ${{ steps.run-tests.outputs.test }}
         steps:
             - uses: denoland/setup-deno@v1
               with:
@@ -66,5 +68,8 @@ jobs:
             - uses: actions/checkout@master
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
-              run: vr test parse
-              # working-directory: "./skulpt_parser"
+              id: run-tests
+              run: echo "::set-output name=results::$(vr test parse)"
+            - name: log last 10 lines
+              run: |
+                  echo "${{steps.run_tests.outputs.results}}" | tail -n 10
