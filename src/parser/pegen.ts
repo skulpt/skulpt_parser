@@ -10,9 +10,11 @@ import {
     Load,
     Constant,
     exprKind,
+    cmpop,
 } from "../ast/astnodes.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
+import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
 
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
 
@@ -1335,6 +1337,16 @@ export function singleton_seq(p: Parser, a: AST): AST[] {
 //     return seq;
 // }
 
+export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null) {
+    assert(a !== null);
+
+    if (seq === null) {
+        return singleton_seq(p, a);
+    }
+
+    return [a].concat(...seq);
+}
+
 // /* Creates a copy of seq and prepends a to it */
 // asdl_seq *
 // _PyPegen_seq_insert_in_front(Parser *p, void *a, asdl_seq *seq)
@@ -1527,6 +1539,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return new_seq;
 // }
 
+export function cmpop_expr_pair(p: Parser, cmpop: cmpop, expr: expr) {
+    return new CmpopExprPair(cmpop, expr);
+}
+
 // /* Constructs a CmpopExprPair */
 // CmpopExprPair *
 // _PyPegen_cmpop_expr_pair(Parser *p, cmpop_ty cmpop, expr_ty expr)
@@ -1540,6 +1556,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     a->expr = expr;
 //     return a;
 // }
+
+export function get_cmpops(p: Parser, seq: CmpopExprPair[]) {
+    return seq.map((pair) => pair.cmpop);
+}
 
 // asdl_int_seq *
 // _PyPegen_get_cmpops(Parser *p, asdl_seq *seq)
@@ -1557,6 +1577,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     }
 //     return new_seq;
 // }
+
+export function get_exprs(p: Parser, seq: CmpopExprPair[]) {
+    return seq.map((pair) => pair.expr);
+}
 
 // asdl_seq *
 // _PyPegen_get_exprs(Parser *p, asdl_seq *seq)
@@ -1709,6 +1733,10 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
+export function key_value_pair(p: Parser, key: expr, value: expr) {
+    return new KeyValuePair(key, value);
+}
+
 // /* Extracts all keys from an asdl_seq* of KeyValuePair*'s */
 // asdl_seq *
 // _PyPegen_get_keys(Parser *p, asdl_seq *seq)
@@ -1725,6 +1753,14 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return new_seq;
 // }
 
+export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+    if (seq === null) {
+        return [];
+    }
+
+    return seq.map((kv) => kv.key);
+}
+
 // /* Extracts all values from an asdl_seq* of KeyValuePair*'s */
 // asdl_seq *
 // _PyPegen_get_values(Parser *p, asdl_seq *seq)
@@ -1740,6 +1776,14 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     }
 //     return new_seq;
 // }
+
+export function get_values(p: Parser, seq: KeyValuePair[] | null) {
+    if (seq === null) {
+        return [];
+    }
+
+    return seq.map((kv) => kv.key);
+}
 
 // /* Constructs a NameDefaultPair */
 // NameDefaultPair *
@@ -2039,16 +2083,6 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //                         class_def->end_col_offset, p->arena);
 // }
 
-class KeywordOrStarred {
-    element: any;
-    is_keyword: boolean;
-
-    constructor(element: any, is_keyword: boolean) {
-        this.element = element;
-        this.is_keyword = is_keyword;
-    }
-}
-
 // @stu help me out here a void pointer!? aaaahhhhh
 // @stu for this to be a boolean we need to change the grammar aaaahhhhh
 /*
@@ -2058,7 +2092,7 @@ kwarg_or_starred[KeywordOrStarred*]:
     | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
     | invalid_kwarg
 */
-export function keyword_or_starred(p: Parser, element: null, is_keyword: boolean) {
+export function keyword_or_starred(p: Parser, element: any, is_keyword: boolean) {
     return new KeywordOrStarred(element, is_keyword);
 }
 

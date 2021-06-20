@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..9c7268c557 100644
+index 64e205e7fd..54011cc8af 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -555,6 +555,9 @@ index 64e205e7fd..9c7268c557 100644
 -
 -disjunction[expr_ty] (memo):
 -    | a=conjunction b=('or' c=conjunction { c })+ { _Py_BoolOp(
+-        Or,
+-        CHECK(_PyPegen_seq_insert_in_front(p, a, b)),
+-        EXTRA) }
 +lambda_param_with_default[NameDefaultPair]:
 +    | a=lambda_param c=default ',' { pegen.name_default_pair(this, a, c, null) }
 +    | a=lambda_param c=default &':' { pegen.name_default_pair(this, a, c, null) }
@@ -565,19 +568,18 @@ index 64e205e7fd..9c7268c557 100644
 +
 +disjunction[expr] (memo):
 +    | a=conjunction b=('or' c=conjunction { c })+ { new astnodes.BoolOp(
-         Or,
--        CHECK(_PyPegen_seq_insert_in_front(p, a, b)),
--        EXTRA) }
++        astnodes.Or,
 +        CHECK(pegen.seq_insert_in_front(this, a, b)),
 +        ...EXTRA) }
      | conjunction
 -conjunction[expr_ty] (memo):
 -    | a=inversion b=('and' c=inversion { c })+ { _Py_BoolOp(
-+conjunction[expr] (memo):
-+    | a=inversion b=('and' c=inversion { c })+ { new astnodes.BoolOp(
-         And,
+-        And,
 -        CHECK(_PyPegen_seq_insert_in_front(p, a, b)),
 -        EXTRA) }
++conjunction[expr] (memo):
++    | a=inversion b=('and' c=inversion { c })+ { new astnodes.BoolOp(
++        astnodes.And,
 +        CHECK(pegen.seq_insert_in_front(this, a, b)),
 +        ...EXTRA) }
      | inversion

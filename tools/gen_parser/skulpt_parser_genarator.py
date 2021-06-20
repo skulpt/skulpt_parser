@@ -65,6 +65,11 @@ const pegen = new Proxy(pegen_real, {{
         return (p: Parser, ...args: any[]) => args
     }}
 }});
+
+function CHECK(...args) {{
+    return args[0];
+}}
+
 """
 
 MODULE_SUFFIX = """

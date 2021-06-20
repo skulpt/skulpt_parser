@@ -39,6 +39,10 @@ const pegen = new Proxy(pegen_real, {
     },
 });
 
+function CHECK(...args) {
+    return args[0];
+}
+
 export class GeneratedParser extends Parser {
     @memoize
     file(): mod | null {
@@ -1884,7 +1888,7 @@ export class GeneratedParser extends Parser {
         const mark = this.mark();
         if ((a = this.conjunction()) && (b = this._loop1_88())) {
             const EXTRA = this.extra(mark);
-            return new astnodes.BoolOp(Or, CHECK(pegen.seq_insert_in_front(this, a, b)), ...EXTRA);
+            return new astnodes.BoolOp(astnodes.Or, CHECK(pegen.seq_insert_in_front(this, a, b)), ...EXTRA);
         }
         this.reset(mark);
         if ((conjunction = this.conjunction())) {
@@ -1902,7 +1906,7 @@ export class GeneratedParser extends Parser {
         const mark = this.mark();
         if ((a = this.inversion()) && (b = this._loop1_89())) {
             const EXTRA = this.extra(mark);
-            return new astnodes.BoolOp(And, CHECK(pegen.seq_insert_in_front(this, a, b)), ...EXTRA);
+            return new astnodes.BoolOp(astnodes.And, CHECK(pegen.seq_insert_in_front(this, a, b)), ...EXTRA);
         }
         this.reset(mark);
         if ((inversion = this.inversion())) {
