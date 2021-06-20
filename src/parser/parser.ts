@@ -193,6 +193,11 @@ export class Parser {
         this.reset = this._tokenizer.reset.bind(this._tokenizer);
         this._tokens = this._tokenizer._tokens;
     }
+    extra(start: number): [number, number, number, number] {
+        const START = this._tokens[start].start;
+        const END = this._tokens[this.mark() - 1].end;
+        return [START[0], START[1], END[0], END[1]];
+    }
     start() {
         return null;
     }
@@ -209,7 +214,7 @@ export class Parser {
         let tok = this._tokenizer.peek();
         if (tok.type === NAME) {
             tok = this._tokenizer.getnext();
-            return new Name(tok.string, new Load(), tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
+            return new Name(tok.string, Load, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }

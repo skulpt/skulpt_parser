@@ -13,24 +13,32 @@ scripts:
         cmd: deno bundle src/mod.ts dist/bundle.js
 
     gen_parser:
-        - vr apply_grammar_patch
-        - python -m tools.gen_parser
-        - (pre-commit run prettier --files src/parser/generated_parser.ts || true)
+        desc: applies the grammar patch and generate the parser
+        cmd:
+            - vr apply_grammar_patch
+            - python -m tools.gen_parser
+            - (pre-commit run prettier --files src/parser/generated_parser.ts || true)
 
     gen_asdl:
+        desc: generate the ast nodes
         cmd: python -m tools.gen_asdl
 
     format:
+        desc: run the pre-commit hooks on all files
         cmd: pre-commit run --all-files
 
     gen_ast:
+        desc: generate ast dumps for run-tests
         cmd: cd run-tests && ls -1 *.py | xargs -n1 python3 tools/dump-ast.py
 
     apply_grammar_patch:
-        - cd ../cpython/Grammar && git checkout -- python.gram
-        - cd ../cpython/Grammar && git apply ../../skulpt_parser/tools/patch/grammar.patch
+        desc: apply the grammar.patch file to the python.gram file
+        cmd:
+            - cd ../cpython/Grammar && git checkout -- python.gram
+            - cd ../cpython/Grammar && git apply ../../skulpt_parser/tools/patch/grammar.patch
 
     gen_grammar_patch:
+        desc: generate a grammar.patch file from the python.gram file
         cmd: cd ../cpython/Grammar && git diff -- python.gram -p > ../../skulpt_parser/tools/patch/grammar.patch
 
     test:
@@ -40,6 +48,7 @@ scripts:
             - run
 
     parse:
+        desc: takes in a filename or number as the first argument. Optional --verbose (-v) flag
         cmd: deno run src/parse.ts
         allow:
             - read

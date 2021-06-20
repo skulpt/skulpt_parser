@@ -7,7 +7,7 @@ import { assertEqualsString } from "../support/diff.ts";
 
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
 async function convertToTs(content: string): Promise<string> {
-    let py_ast_dump = await getPyAstDump(content, 4, true, true);
+    let py_ast_dump = await getPyAstDump(content, { indent: 4, include_attributes: true, js: true });
     py_ast_dump = py_ast_dump
         .replace(/^(\s+)([a-z_]+=)/gm, (m, m1, m2) => m1 + " ".repeat(m2.length))
         .replace(/^(\s*)([A-Za-z_]+)/gm, (m, m1, m2) => {
@@ -46,14 +46,15 @@ async function convertFileToTs(fileName: string) {
 }
 
 async function doTest(source: string, mod: astnodes.Module) {
-    for (let indent of [4, null]) {
-        const py_ast_dump = await getPyAstDump(source, indent);
-        assertEqualsString(py_ast_dump, dump(mod, indent) + "\n");
-    }
+    const indent = [0, 2, 4, null][Math.floor(Math.random() * 4)];
+    const include_attributes = true;
+    const pyDump = await getPyAstDump(source, { indent, include_attributes });
+    const jsDump = dump(mod, { indent, include_attributes });
+    assertEqualsString(jsDump, pyDump);
 }
 
-// const tmp = "t000.py"
-// console.log(dump(await convertFileToTs(tmp), 2));
+// const tmp = "t023.py"
+// console.log(dump(await convertFileToTs(tmp), {indent: 2, include_attributes: true}));
 // const files = [tmp];
 
 const files = [];
