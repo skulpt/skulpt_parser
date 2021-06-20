@@ -14,6 +14,7 @@ import {
 } from "../ast/astnodes.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
+import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
 
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
 
@@ -1337,9 +1338,9 @@ export function singleton_seq(p: Parser, a: AST): AST[] {
 // }
 
 export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null) {
-    console.assert(a !== null);
+    assert(a !== null);
 
-    if (!seq) {
+    if (seq === null) {
         return singleton_seq(p, a);
     }
 
@@ -1538,16 +1539,6 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return new_seq;
 // }
 
-class CmpopExprPair {
-    cmpop: cmpop;
-    expr: expr;
-
-    constructor(cmpop: cmpop, expr: expr) {
-        this.cmpop = cmpop;
-        this.expr = expr;
-    }
-}
-
 export function cmpop_expr_pair(p: Parser, cmpop: cmpop, expr: expr) {
     return new CmpopExprPair(cmpop, expr);
 }
@@ -1741,15 +1732,6 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     a->value = value;
 //     return a;
 // }
-
-class KeyValuePair {
-    key: expr;
-    value: expr;
-    constructor(key: expr, value: expr) {
-        this.key = key;
-        this.value = value;
-    }
-}
 
 export function key_value_pair(p: Parser, key: expr, value: expr) {
     return new KeyValuePair(key, value);
@@ -2101,16 +2083,6 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //                         class_def->end_col_offset, p->arena);
 // }
 
-class KeywordOrStarred {
-    element: any;
-    is_keyword: boolean;
-
-    constructor(element: any, is_keyword: boolean) {
-        this.element = element;
-        this.is_keyword = is_keyword;
-    }
-}
-
 // @stu help me out here a void pointer!? aaaahhhhh
 // @stu for this to be a boolean we need to change the grammar aaaahhhhh
 /*
@@ -2120,7 +2092,7 @@ kwarg_or_starred[KeywordOrStarred*]:
     | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
     | invalid_kwarg
 */
-export function keyword_or_starred(p: Parser, element: null, is_keyword: boolean) {
+export function keyword_or_starred(p: Parser, element: any, is_keyword: boolean) {
     return new KeywordOrStarred(element, is_keyword);
 }
 
