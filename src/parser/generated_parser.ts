@@ -16,29 +16,13 @@ import {
     comprehension,
 } from "../ast/astnodes.ts";
 import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
-import * as pegen_real from "./pegen.ts";
+import { pegen } from "./pegen_proxy.ts";
 import { Colors } from "../../deps.ts";
 import type { StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
 import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
-
-const pegen = new Proxy(pegen_real, {
-    get(target: { [index: string]: any }, prop: string, receiver) {
-        if (prop in target) {
-            return (p: Parser, ...args: any[]) => {
-                console.log(Colors.green("Calling '" + prop + "'"));
-                console.log(Colors.green("With"), args);
-                return target[prop](p, ...args);
-            };
-        }
-
-        console.log(Colors.yellow("Missing pegen func!: " + prop));
-
-        return (p: Parser, ...args: any[]) => args;
-    },
-});
 
 function CHECK(...args) {
     return args[0];
