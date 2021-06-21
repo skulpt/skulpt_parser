@@ -13,11 +13,9 @@ scripts:
         cmd: deno bundle src/mod.ts dist/bundle.js
 
     gen_parser:
-        desc: applies the grammar patch and generate the parser
+        desc: applies the grammar patch and generates the parser. Optional [-v --verbosity](=1|2) to create a verbose parser
         cmd:
-            - vr apply_grammar_patch
             - python -m tools.gen_parser
-            - (pre-commit run prettier --files src/parser/generated_parser.ts || true)
 
     gen_asdl:
         desc: generate the ast nodes
@@ -50,7 +48,7 @@ scripts:
             - env
 
     parse:
-        desc: takes in a filename or number as the first argument. Optional --verbose (-v) flag
+        desc: takes in a filename or number as the first argument. To add logging generate a verbose parser.
         cmd: deno run scripts/parse.ts
         allow:
             - read
