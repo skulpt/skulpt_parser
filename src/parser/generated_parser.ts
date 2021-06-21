@@ -381,7 +381,8 @@ export class GeneratedParser extends Parser {
     @memoize
     assignment(): stmt | null {
         //# assignment: NAME ':' expression ['=' annotated_rhs] | ('(' single_target ')' | single_subscript_attribute_target) ':' expression ['=' annotated_rhs] | ((star_targets '='))+ (yield_expr | star_expressions) !'=' TYPE_COMMENT? | single_target augassign ~ (yield_expr | star_expressions) | invalid_assignment
-        let a, b, c, cut, invalid_assignment, literal, tc;
+        let a, b, c, invalid_assignment, literal, tc;
+        let cut = false;
         const mark = this.mark();
         if (
             (a = this.name()) &&
@@ -423,7 +424,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((invalid_assignment = this.invalid_assignment())) {
             return invalid_assignment;
         }
@@ -825,7 +825,8 @@ export class GeneratedParser extends Parser {
     @memoize
     for_stmt(): stmt | null {
         //# for_stmt: 'for' star_targets 'in' ~ star_expressions ':' TYPE_COMMENT? block else_block? | ASYNC 'for' star_targets 'in' ~ star_expressions ':' TYPE_COMMENT? block else_block? | invalid_for_target
-        let async, b, cut, el, ex, invalid_for_target, literal, literal_1, literal_2, t, tc;
+        let async, b, el, ex, invalid_for_target, literal, literal_1, literal_2, t, tc;
+        let cut = false;
         const mark = this.mark();
         if (
             (literal = this.expect("for")) &&
@@ -843,7 +844,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if (
             (async = this.expect("ASYNC")) &&
             (literal = this.expect("for")) &&
@@ -865,7 +865,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((invalid_for_target = this.invalid_for_target())) {
             return invalid_for_target;
         }
@@ -1576,7 +1575,8 @@ export class GeneratedParser extends Parser {
     @memoize
     named_expression(): expr | null {
         //# named_expression: NAME ':=' ~ expression | expression !':=' | invalid_named_expression
-        let a, b, cut, expression, invalid_named_expression, literal;
+        let a, b, expression, invalid_named_expression, literal;
+        let cut = false;
         const mark = this.mark();
         if ((a = this.name()) && (literal = this.expect(":=")) && (cut = true) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
@@ -1584,7 +1584,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((expression = this.expression()) && this.negative_lookahead(this.expect, ":=")) {
             return expression;
         }
@@ -2538,7 +2537,8 @@ export class GeneratedParser extends Parser {
     @memoize
     listcomp(): expr | null {
         //# listcomp: '[' named_expression ~ for_if_clauses ']' | invalid_comprehension
-        let a, b, cut, invalid_comprehension, literal, literal_1;
+        let a, b, invalid_comprehension, literal, literal_1;
+        let cut = false;
         const mark = this.mark();
         if (
             (literal = this.expect("[")) &&
@@ -2552,7 +2552,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((invalid_comprehension = this.invalid_comprehension())) {
             return invalid_comprehension;
         }
@@ -2595,7 +2594,8 @@ export class GeneratedParser extends Parser {
     @memoize
     genexp(): expr | null {
         //# genexp: '(' named_expression ~ for_if_clauses ')' | invalid_comprehension
-        let a, b, cut, invalid_comprehension, literal, literal_1;
+        let a, b, invalid_comprehension, literal, literal_1;
+        let cut = false;
         const mark = this.mark();
         if (
             (literal = this.expect("(")) &&
@@ -2609,7 +2609,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((invalid_comprehension = this.invalid_comprehension())) {
             return invalid_comprehension;
         }
@@ -2635,7 +2634,8 @@ export class GeneratedParser extends Parser {
     @memoize
     setcomp(): expr | null {
         //# setcomp: '{' named_expression ~ for_if_clauses '}' | invalid_comprehension
-        let a, b, cut, invalid_comprehension, literal, literal_1;
+        let a, b, invalid_comprehension, literal, literal_1;
+        let cut = false;
         const mark = this.mark();
         if (
             (literal = this.expect("{")) &&
@@ -2649,7 +2649,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((invalid_comprehension = this.invalid_comprehension())) {
             return invalid_comprehension;
         }
@@ -2758,7 +2757,8 @@ export class GeneratedParser extends Parser {
     @memoize
     for_if_clause(): comprehension | null {
         //# for_if_clause: ASYNC 'for' star_targets 'in' ~ disjunction (('if' disjunction))* | 'for' star_targets 'in' ~ disjunction (('if' disjunction))* | invalid_for_target
-        let a, async, b, c, cut, invalid_for_target, literal, literal_1;
+        let a, async, b, c, invalid_for_target, literal, literal_1;
+        let cut = false;
         const mark = this.mark();
         if (
             (async = this.expect("ASYNC")) &&
@@ -2773,7 +2773,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if (
             (literal = this.expect("for")) &&
             (a = this.star_targets()) &&
@@ -2786,7 +2785,6 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (cut) return null;
-        cut = false;
         if ((invalid_for_target = this.invalid_for_target())) {
             return invalid_for_target;
         }
@@ -3705,9 +3703,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_1(): any | null {
         //# _loop0_1: NEWLINE
-        let children, newline;
+        let newline;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((newline = this.expect("NEWLINE"))) {
             children.push(newline);
             mark = this.mark();
@@ -3720,9 +3718,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_2(): any | null {
         //# _loop0_2: NEWLINE
-        let children, newline;
+        let newline;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((newline = this.expect("NEWLINE"))) {
             children.push(newline);
             mark = this.mark();
@@ -3735,9 +3733,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_4(): any | null {
         //# _loop0_4: ',' expression
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.expression())) {
             children.push(elem);
             mark = this.mark();
@@ -3763,9 +3761,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_6(): any | null {
         //# _loop0_6: ',' expression
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.expression())) {
             children.push(elem);
             mark = this.mark();
@@ -3791,9 +3789,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_8(): any | null {
         //# _loop0_8: ',' expression
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.expression())) {
             children.push(elem);
             mark = this.mark();
@@ -3819,9 +3817,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_10(): any | null {
         //# _loop0_10: ',' expression
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.expression())) {
             children.push(elem);
             mark = this.mark();
@@ -3847,9 +3845,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_11(): any | null {
         //# _loop1_11: statement
-        let children, statement;
+        let statement;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((statement = this.statement())) {
             children.push(statement);
             mark = this.mark();
@@ -3862,9 +3860,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_13(): any | null {
         //# _loop0_13: ';' small_stmt
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(";")) && (elem = this.small_stmt())) {
             children.push(elem);
             mark = this.mark();
@@ -4022,9 +4020,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_22(): any | null {
         //# _loop1_22: (star_targets '=')
-        let _tmp_137, children;
+        let _tmp_137;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_137 = this._tmp_137())) {
             children.push(_tmp_137);
             mark = this.mark();
@@ -4071,9 +4069,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_26(): any | null {
         //# _loop0_26: ',' NAME
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.name())) {
             children.push(elem);
             mark = this.mark();
@@ -4099,9 +4097,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_28(): any | null {
         //# _loop0_28: ',' NAME
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.name())) {
             children.push(elem);
             mark = this.mark();
@@ -4157,9 +4155,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_31(): any | null {
         //# _loop0_31: ('.' | '...')
-        let _tmp_138, children;
+        let _tmp_138;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_138 = this._tmp_138())) {
             children.push(_tmp_138);
             mark = this.mark();
@@ -4172,9 +4170,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_32(): any | null {
         //# _loop1_32: ('.' | '...')
-        let _tmp_139, children;
+        let _tmp_139;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_139 = this._tmp_139())) {
             children.push(_tmp_139);
             mark = this.mark();
@@ -4187,9 +4185,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_34(): any | null {
         //# _loop0_34: ',' import_from_as_name
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.import_from_as_name())) {
             children.push(elem);
             mark = this.mark();
@@ -4228,9 +4226,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_37(): any | null {
         //# _loop0_37: ',' dotted_as_name
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.dotted_as_name())) {
             children.push(elem);
             mark = this.mark();
@@ -4269,9 +4267,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_40(): any | null {
         //# _loop0_40: ',' with_item
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.with_item())) {
             children.push(elem);
             mark = this.mark();
@@ -4297,9 +4295,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_42(): any | null {
         //# _loop0_42: ',' with_item
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.with_item())) {
             children.push(elem);
             mark = this.mark();
@@ -4325,9 +4323,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_44(): any | null {
         //# _loop0_44: ',' with_item
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.with_item())) {
             children.push(elem);
             mark = this.mark();
@@ -4353,9 +4351,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_46(): any | null {
         //# _loop0_46: ',' with_item
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.with_item())) {
             children.push(elem);
             mark = this.mark();
@@ -4402,9 +4400,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_48(): any | null {
         //# _loop1_48: except_block
-        let children, except_block;
+        let except_block;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((except_block = this.except_block())) {
             children.push(except_block);
             mark = this.mark();
@@ -4482,9 +4480,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_54(): any | null {
         //# _loop0_54: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -4497,9 +4495,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_55(): any | null {
         //# _loop0_55: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -4512,9 +4510,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_56(): any | null {
         //# _loop0_56: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -4527,9 +4525,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_57(): any | null {
         //# _loop1_57: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -4542,9 +4540,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_58(): any | null {
         //# _loop0_58: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -4557,9 +4555,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_59(): any | null {
         //# _loop1_59: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -4572,9 +4570,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_60(): any | null {
         //# _loop1_60: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -4587,9 +4585,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_61(): any | null {
         //# _loop1_61: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -4602,9 +4600,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_62(): any | null {
         //# _loop0_62: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -4617,9 +4615,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_63(): any | null {
         //# _loop1_63: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -4632,9 +4630,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_64(): any | null {
         //# _loop0_64: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -4647,9 +4645,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_65(): any | null {
         //# _loop1_65: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -4662,9 +4660,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_66(): any | null {
         //# _loop0_66: param_maybe_default
-        let children, param_maybe_default;
+        let param_maybe_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_maybe_default = this.param_maybe_default())) {
             children.push(param_maybe_default);
             mark = this.mark();
@@ -4677,9 +4675,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_67(): any | null {
         //# _loop1_67: param_maybe_default
-        let children, param_maybe_default;
+        let param_maybe_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_maybe_default = this.param_maybe_default())) {
             children.push(param_maybe_default);
             mark = this.mark();
@@ -4692,9 +4690,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_68(): any | null {
         //# _loop1_68: ('@' named_expression NEWLINE)
-        let _tmp_140, children;
+        let _tmp_140;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_140 = this._tmp_140())) {
             children.push(_tmp_140);
             mark = this.mark();
@@ -4720,9 +4718,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_70(): any | null {
         //# _loop1_70: (',' star_expression)
-        let _tmp_141, children;
+        let _tmp_141;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_141 = this._tmp_141())) {
             children.push(_tmp_141);
             mark = this.mark();
@@ -4735,9 +4733,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_72(): any | null {
         //# _loop0_72: ',' star_named_expression
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.star_named_expression())) {
             children.push(elem);
             mark = this.mark();
@@ -4763,9 +4761,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_73(): any | null {
         //# _loop1_73: (',' expression)
-        let _tmp_142, children;
+        let _tmp_142;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_142 = this._tmp_142())) {
             children.push(_tmp_142);
             mark = this.mark();
@@ -4778,9 +4776,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_74(): any | null {
         //# _loop0_74: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -4793,9 +4791,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_75(): any | null {
         //# _loop0_75: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();
@@ -4808,9 +4806,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_76(): any | null {
         //# _loop0_76: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();
@@ -4823,9 +4821,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_77(): any | null {
         //# _loop1_77: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -4838,9 +4836,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_78(): any | null {
         //# _loop0_78: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();
@@ -4853,9 +4851,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_79(): any | null {
         //# _loop1_79: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();
@@ -4868,9 +4866,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_80(): any | null {
         //# _loop1_80: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -4883,9 +4881,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_81(): any | null {
         //# _loop1_81: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -4898,9 +4896,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_82(): any | null {
         //# _loop0_82: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -4913,9 +4911,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_83(): any | null {
         //# _loop1_83: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();
@@ -4928,9 +4926,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_84(): any | null {
         //# _loop0_84: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -4943,9 +4941,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_85(): any | null {
         //# _loop1_85: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();
@@ -4958,9 +4956,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_86(): any | null {
         //# _loop0_86: lambda_param_maybe_default
-        let children, lambda_param_maybe_default;
+        let lambda_param_maybe_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_maybe_default = this.lambda_param_maybe_default())) {
             children.push(lambda_param_maybe_default);
             mark = this.mark();
@@ -4973,9 +4971,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_87(): any | null {
         //# _loop1_87: lambda_param_maybe_default
-        let children, lambda_param_maybe_default;
+        let lambda_param_maybe_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_maybe_default = this.lambda_param_maybe_default())) {
             children.push(lambda_param_maybe_default);
             mark = this.mark();
@@ -4988,9 +4986,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_88(): any | null {
         //# _loop1_88: ('or' conjunction)
-        let _tmp_143, children;
+        let _tmp_143;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_143 = this._tmp_143())) {
             children.push(_tmp_143);
             mark = this.mark();
@@ -5003,9 +5001,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_89(): any | null {
         //# _loop1_89: ('and' inversion)
-        let _tmp_144, children;
+        let _tmp_144;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_144 = this._tmp_144())) {
             children.push(_tmp_144);
             mark = this.mark();
@@ -5018,9 +5016,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_90(): any | null {
         //# _loop1_90: compare_op_bitwise_or_pair
-        let children, compare_op_bitwise_or_pair;
+        let compare_op_bitwise_or_pair;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((compare_op_bitwise_or_pair = this.compare_op_bitwise_or_pair())) {
             children.push(compare_op_bitwise_or_pair);
             mark = this.mark();
@@ -5033,9 +5031,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_92(): any | null {
         //# _loop0_92: ',' slice
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.slice())) {
             children.push(elem);
             mark = this.mark();
@@ -5137,9 +5135,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_97(): any | null {
         //# _loop1_97: STRING
-        let children, string;
+        let string;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((string = this.string())) {
             children.push(string);
             mark = this.mark();
@@ -5186,9 +5184,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_101(): any | null {
         //# _loop0_101: ',' double_starred_kvpair
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.double_starred_kvpair())) {
             children.push(elem);
             mark = this.mark();
@@ -5214,9 +5212,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_102(): any | null {
         //# _loop1_102: for_if_clause
-        let children, for_if_clause;
+        let for_if_clause;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((for_if_clause = this.for_if_clause())) {
             children.push(for_if_clause);
             mark = this.mark();
@@ -5229,9 +5227,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_103(): any | null {
         //# _loop0_103: ('if' disjunction)
-        let _tmp_145, children;
+        let _tmp_145;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_145 = this._tmp_145())) {
             children.push(_tmp_145);
             mark = this.mark();
@@ -5244,9 +5242,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_104(): any | null {
         //# _loop0_104: ('if' disjunction)
-        let _tmp_146, children;
+        let _tmp_146;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_146 = this._tmp_146())) {
             children.push(_tmp_146);
             mark = this.mark();
@@ -5259,9 +5257,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_106(): any | null {
         //# _loop0_106: ',' (starred_expression | named_expression !'=')
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this._tmp_147())) {
             children.push(elem);
             mark = this.mark();
@@ -5300,9 +5298,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_109(): any | null {
         //# _loop0_109: ',' kwarg_or_starred
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.kwarg_or_starred())) {
             children.push(elem);
             mark = this.mark();
@@ -5328,9 +5326,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_111(): any | null {
         //# _loop0_111: ',' kwarg_or_double_starred
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.kwarg_or_double_starred())) {
             children.push(elem);
             mark = this.mark();
@@ -5356,9 +5354,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_113(): any | null {
         //# _loop0_113: ',' kwarg_or_starred
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.kwarg_or_starred())) {
             children.push(elem);
             mark = this.mark();
@@ -5384,9 +5382,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_115(): any | null {
         //# _loop0_115: ',' kwarg_or_double_starred
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.kwarg_or_double_starred())) {
             children.push(elem);
             mark = this.mark();
@@ -5412,9 +5410,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_116(): any | null {
         //# _loop0_116: (',' star_target)
-        let _tmp_148, children;
+        let _tmp_148;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_148 = this._tmp_148())) {
             children.push(_tmp_148);
             mark = this.mark();
@@ -5427,9 +5425,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_118(): any | null {
         //# _loop0_118: ',' star_target
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.star_target())) {
             children.push(elem);
             mark = this.mark();
@@ -5455,9 +5453,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_119(): any | null {
         //# _loop1_119: (',' star_target)
-        let _tmp_149, children;
+        let _tmp_149;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_149 = this._tmp_149())) {
             children.push(_tmp_149);
             mark = this.mark();
@@ -5483,9 +5481,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_122(): any | null {
         //# _loop0_122: ',' del_target
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.del_target())) {
             children.push(elem);
             mark = this.mark();
@@ -5511,9 +5509,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_124(): any | null {
         //# _loop0_124: ',' target
-        let children, elem, literal;
+        let elem, literal;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((literal = this.expect(",")) && (elem = this.target())) {
             children.push(elem);
             mark = this.mark();
@@ -5556,9 +5554,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_126(): any | null {
         //# _loop0_126: star_named_expressions
-        let children, star_named_expressions;
+        let star_named_expressions;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((star_named_expressions = this.star_named_expressions())) {
             children.push(star_named_expressions);
             mark = this.mark();
@@ -5571,9 +5569,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_127(): any | null {
         //# _loop0_127: (star_targets '=')
-        let _tmp_150, children;
+        let _tmp_150;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_150 = this._tmp_150())) {
             children.push(_tmp_150);
             mark = this.mark();
@@ -5586,9 +5584,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_128(): any | null {
         //# _loop0_128: (star_targets '=')
-        let _tmp_151, children;
+        let _tmp_151;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((_tmp_151 = this._tmp_151())) {
             children.push(_tmp_151);
             mark = this.mark();
@@ -5639,9 +5637,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_131(): any | null {
         //# _loop0_131: param_no_default
-        let children, param_no_default;
+        let param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_no_default = this.param_no_default())) {
             children.push(param_no_default);
             mark = this.mark();
@@ -5671,9 +5669,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop0_133(): any | null {
         //# _loop0_133: lambda_param_no_default
-        let children, lambda_param_no_default;
+        let lambda_param_no_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_no_default = this.lambda_param_no_default())) {
             children.push(lambda_param_no_default);
             mark = this.mark();
@@ -5944,9 +5942,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_152(): any | null {
         //# _loop1_152: param_with_default
-        let children, param_with_default;
+        let param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
             mark = this.mark();
@@ -5959,9 +5957,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _loop1_153(): any | null {
         //# _loop1_153: lambda_param_with_default
-        let children, lambda_param_with_default;
+        let lambda_param_with_default;
+        const children = [];
         let mark = this.mark();
-        children = [];
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
             mark = this.mark();

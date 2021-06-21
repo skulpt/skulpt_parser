@@ -175,7 +175,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
 
     def visit_Cut(self, node: Cut) -> Tuple[str, str]:
         self.gen.has_cut = True
-        self.gen.args.add("cut")
+        self.gen.has_local_cut = True
         return "cut", "true"
 
 
@@ -250,14 +250,12 @@ export class GeneratedParser extends Parser {
         rhs = node.flatten()
         if node.left_recursive:
             if node.leader:
-                # self.suffix += f"memoizeLeftRecMethod('{node.name}')\n"
                 self.print("@memoizeLeftRec")
             else:
                 # Non-leader rules in a cycle are not memoized,
                 # but they must still be logged.
                 self.print("@logger")
         else:
-            # self.suffix += f"memoizeMethod('{node.name}');\n"
             self.print("@memoize")
         node_type = node.type or "any"
         self.print(f"{node.name}(): {node_type} | null {{")  # -> Optional[{node_type}] {{")
@@ -267,20 +265,23 @@ export class GeneratedParser extends Parser {
                 self.print(f"// # nullable={node.nullable}")
             self.args = set()  # {"mark"}
             self.has_cut = False
+            self.has_local_cut = False
             orig_file, tmp_file = (
                 self.file,
                 StringIO(),
             )  # a bit of a hack to get state the args at the top of the file
             self.file = tmp_file
-            self.print(f"{'let' if is_loop else 'const'} mark = this.mark();")
-            # if any(alt.action and "EXTRA" in alt.action for alt in rhs.alts):
-            #     self._set_up_token_start_metadata_extraction()
-            if is_loop:
-                self.args.add("children")
-                self.print("children = [];")
+
             self.visit(rhs, is_loop=is_loop, is_gather=is_gather)
             self.file = orig_file
+
             self.print(f"let {', '.join(sorted(self.args))};")
+            if self.has_cut:
+                self.print("let cut = false;")
+            if is_loop:
+                self.print("const children = [];")
+            self.print(f"{'let' if is_loop else 'const'} mark = this.mark();")
+
             self.print(tmp_file.getvalue())
             tmp_file.close()
             if is_loop:
@@ -301,8 +302,8 @@ export class GeneratedParser extends Parser {
         else:
             if name != "cut":
                 name = self.dedupe(name)
-            name = fix_reserved(name)
-            self.args.add(name)
+                name = fix_reserved(name)
+                self.args.add(name)
             self.print(f"({name} = {call})")
 
     def visit_Rhs(self, node: Rhs, is_loop: bool = False, is_gather: bool = False) -> None:
@@ -313,9 +314,6 @@ export class GeneratedParser extends Parser {
 
     def visit_Alt(self, node: Alt, is_loop: bool, is_gather: bool) -> None:
         with self.local_variable_context():
-            if self.has_cut:
-                self.print("cut = false;")  # TODO: Only if needed.
-                self.has_cut = False
             if is_loop:
                 self.print("while (")
             else:
@@ -355,5 +353,6 @@ export class GeneratedParser extends Parser {
             self.print("}")
             self.print("this.reset(mark);")
             # Skip remaining alternatives if a cut was reached.
-            if self.has_cut:
-                self.print("if (cut) return null;")  # TODO: Only if needed.
+            if self.has_local_cut:
+                self.print("if (cut) return null;")
+                self.has_local_cut = False
