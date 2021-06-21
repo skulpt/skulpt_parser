@@ -16,34 +16,45 @@ import {
     comprehension,
 } from "../ast/astnodes.ts";
 import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
-import * as pegen_real from "./pegen.ts";
+import { pegen } from "./pegen_proxy.ts";
 import { Colors } from "../../deps.ts";
+import type { StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
+import type { Tokenizer } from "../tokenize/Tokenizer.ts";
+import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
-import { memoize, memoize_left_rec, logger, Parser } from "./parser.ts";
-
-const EXTRA = []; // todo
-
-const pegen = new Proxy(pegen_real, {
-    get(target: { [index: string]: any }, prop: string, receiver) {
-        if (prop in target) {
-            return (p: Parser, ...args: any[]) => {
-                console.log(Colors.green("Calling '" + prop + "'"));
-                console.log(Colors.green("With"), args);
-                return target[prop](p, ...args);
-            };
-        }
-
-        console.log(Colors.yellow("Missing pegen func!: " + prop));
-
-        return (p: Parser, ...args: any[]) => args;
-    },
-});
+import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
 
 function CHECK(...args) {
     return args[0];
 }
 
 export class GeneratedParser extends Parser {
+    start_rule: StartRule;
+    flags: number;
+
+    constructor(T: Tokenizer, start_rule: StartRule = FILE_INPUT, flags = 0) {
+        super(T);
+        this.start_rule = start_rule;
+        this.flags = flags; // unused
+    }
+
+    parse(): mod | expr | null {
+        switch (this.start_rule) {
+            case FILE_INPUT:
+                return this.file();
+            case SINGLE_INPUT:
+                return this.interactive();
+            case EVAL_INPUT:
+                return this.eval();
+            case FUNC_TYPE_INPUT:
+                return this.func_type();
+            case FSTRING_INPUT:
+                return this.fstring();
+            default:
+                return null;
+        }
+    }
+
     @memoize
     file(): mod | null {
         //# file: statements? $
@@ -699,7 +710,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     dotted_name(): expr | null {
         //# dotted_name: dotted_name '.' NAME | NAME
         let a, b, literal, name;
@@ -2146,7 +2157,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     bitwise_or(): expr | null {
         //# bitwise_or: bitwise_or '|' bitwise_xor | bitwise_xor
         let a, b, bitwise_xor, literal;
@@ -2164,7 +2175,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     bitwise_xor(): expr | null {
         //# bitwise_xor: bitwise_xor '^' bitwise_and | bitwise_and
         let a, b, bitwise_and, literal;
@@ -2182,7 +2193,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     bitwise_and(): expr | null {
         //# bitwise_and: bitwise_and '&' shift_expr | shift_expr
         let a, b, literal, shift_expr;
@@ -2200,7 +2211,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     shift_expr(): expr | null {
         //# shift_expr: shift_expr '<<' sum | shift_expr '>>' sum | sum
         let a, b, literal, sum;
@@ -2223,7 +2234,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     sum(): expr | null {
         //# sum: sum '+' term | sum '-' term | term
         let a, b, literal, term;
@@ -2246,7 +2257,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     term(): expr | null {
         //# term: term '*' factor | term '/' factor | term '//' factor | term '%' factor | term '@' factor | factor
         let a, b, factor, literal;
@@ -2348,7 +2359,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     primary(): expr | null {
         //# primary: invalid_primary | primary '.' NAME | primary genexp | primary '(' arguments_? ')' | primary '[' slices ']' | atom
         let a, atom, b, invalid_primary, literal, literal_1;
@@ -3235,7 +3246,7 @@ export class GeneratedParser extends Parser {
         return null;
     }
 
-    @memoize_left_rec
+    @memoizeLeftRec
     t_primary(): expr | null {
         //# t_primary: t_primary '.' NAME &t_lookahead | t_primary '[' slices ']' &t_lookahead | t_primary genexp &t_lookahead | t_primary '(' arguments_? ')' &t_lookahead | atom &t_lookahead
         let a, b, literal, literal_1;

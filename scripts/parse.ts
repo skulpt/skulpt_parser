@@ -25,7 +25,7 @@ console.log(Colors.magenta(pyDump));
 console.log();
 
 let jsDump = "";
-const ast = runParserFromFile(filename, null, args);
+const ast = runParserFromFile(filename);
 if (ast !== null) {
     try {
         jsDump = dump(ast, options);
