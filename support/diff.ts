@@ -15,6 +15,11 @@ export function getDiff(A: string, B: string): string {
     );
 }
 
+// [32m[1m
+const colorPrefix = "(?:\\[\\d{1,2}m){1,}";
+const prePostBracket = new RegExp("^(" + colorPrefix + "\\s+)[\\[\\]]", "gm");
+const line = new RegExp("^(" + colorPrefix + '[+-]?\\s+)["`](.*)["`],', "gm");
+
 export function assertEqualsString(A: string, B: string): void {
     if (A === B) {
         return;
@@ -24,8 +29,6 @@ export function assertEqualsString(A: string, B: string): void {
     } catch (e) {
         // this is temporary until https://github.com/denoland/deno_std/issues/929
         // is resolved by https://github.com/denoland/deno_std/pull/948
-        throw new AssertionError(
-            (e.message as string).replaceAll(/\s+(\[|\])/gm, "").replaceAll(/(\s+)\"(.*)\"\,/g, (m, m1, m2) => m1 + m2)
-        );
+        throw new AssertionError((e.message as string).replaceAll(prePostBracket, "$1").replaceAll(line, "$1$2"));
     }
 }
