@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..54011cc8af 100644
+index 64e205e7fd..9a7318c2f0 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -140,7 +140,7 @@ index 64e205e7fd..54011cc8af 100644
 -
 -del_stmt[stmt_ty]:
 -    | 'del' a=del_targets &(';' | NEWLINE) { _Py_Delete(a, EXTRA) }
-+augassign[operator]:
++augassign[AugOperator]:
 +    | '+=' { pegen.augoperator(this, astnodes.Add) }
 +    | '-=' { pegen.augoperator(this, astnodes.Sub) }
 +    | '*=' { pegen.augoperator(this, astnodes.Mult) }
@@ -210,7 +210,7 @@ index 64e205e7fd..54011cc8af 100644
 +dotted_as_name[alias]:
 +    | a=dotted_name b=['as' z=NAME { z }] { new astnodes.alias(a.id,
 +                                                      b ? b.id : null) }
-+dotted_name[expr]:
++dotted_name[Name]:
 +    | a=dotted_name '.' b=NAME { pegen.join_names_with_dot(this, a, b) }
      | NAME
  
@@ -321,7 +321,7 @@ index 64e205e7fd..54011cc8af 100644
 +                            b, null, a, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA)
          ) }
 -func_type_comment[Token*]:
-+func_type_comment[Token]:
++func_type_comment[TokenInfo]:
      | NEWLINE t=TYPE_COMMENT &(NEWLINE INDENT) { t }  # Must be followed by indented block
      | invalid_double_type_comments
      | TYPE_COMMENT
@@ -586,7 +586,7 @@ index 64e205e7fd..54011cc8af 100644
 -inversion[expr_ty] (memo):
 -    | 'not' a=inversion { _Py_UnaryOp(Not, a, EXTRA) }
 +inversion[expr] (memo):
-+    | 'not' a=inversion { new astnodes.UnaryOp(Not, a, ...EXTRA) }
++    | 'not' a=inversion { new astnodes.UnaryOp(astnodes.Not, a, ...EXTRA) }
      | comparison
 -comparison[expr_ty]:
 +comparison[expr]:
@@ -668,7 +668,7 @@ index 64e205e7fd..54011cc8af 100644
 +    | a=term '/' b=factor { new astnodes.BinOp(a, astnodes.Div, b, ...EXTRA) }
 +    | a=term '//' b=factor { new astnodes.BinOp(a, astnodes.FloorDiv, b, ...EXTRA) }
 +    | a=term '%' b=factor { new astnodes.BinOp(a, astnodes.Mod, b, ...EXTRA) }
-+    | a=term '@' b=factor { CHECK_VERSION(5, "The '@' operator is", new astnodes.BinOp(a, MatMult, b, ...EXTRA)) }
++    | a=term '@' b=factor { CHECK_VERSION(5, "The '@' operator is", new astnodes.BinOp(a, astnodes.MatMult, b, ...EXTRA)) }
      | factor
 -factor[expr_ty] (memo):
 -    | '+' a=factor { _Py_UnaryOp(UAdd, a, EXTRA) }
@@ -682,7 +682,7 @@ index 64e205e7fd..54011cc8af 100644
 -power[expr_ty]:
 -    | a=await_primary '**' b=factor { _Py_BinOp(a, Pow, b, EXTRA) }
 +power[expr]:
-+    | a=await_primary '**' b=factor { new astnodes.BinOp(a, Pow, b, ...EXTRA) }
++    | a=await_primary '**' b=factor { new astnodes.BinOp(a, astnodes.Pow, b, ...EXTRA) }
      | await_primary
 -await_primary[expr_ty] (memo):
 -    | AWAIT a=primary { CHECK_VERSION(5, "Await expressions are", _Py_Await(a, EXTRA)) }
@@ -811,7 +811,7 @@ index 64e205e7fd..54011cc8af 100644
 +    | 'yield' a=[star_expressions] { new astnodes.Yield(a, ...EXTRA) }
  
 -arguments[expr_ty] (memo):
-+arguments_[expr] (memo):
++arguments_[Call] (memo):
      | a=args [','] &')' { a }
      | invalid_arguments
 -args[expr_ty]:
@@ -822,7 +822,7 @@ index 64e205e7fd..54011cc8af 100644
 -                          EXTRA) }
 -kwargs[asdl_seq*]:
 -    | a=','.kwarg_or_starred+ ',' b=','.kwarg_or_double_starred+ { _PyPegen_join_sequences(p, a, b) }
-+args[expr]:
++args[Call]:
 +    | a=','.(starred_expression | named_expression !'=')+ b=[',' k=kwargs {k}] { pegen.collect_call_seqs(this, a, b, ...EXTRA) }
 +    | a=kwargs { new astnodes.Call(pegen.dummy_name(this),
 +                          CHECK_NULL_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
@@ -849,7 +849,7 @@ index 64e205e7fd..54011cc8af 100644
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | '**' a=expression { _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(NULL, a, EXTRA)), 1) }
-+        fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1) }
++        pegen.fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1) }
 +    | '**' a=expression { pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), 1) }
      | invalid_kwarg
  
@@ -912,8 +912,8 @@ index 64e205e7fd..54011cc8af 100644
 +
 +del_targets[any]: a=','.del_target+ [','] { a }
 +del_target[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, Del, ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, Del, ...EXTRA) }
++    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Del, ...EXTRA) }
++    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, astnodes.Del, ...EXTRA) }
      | del_t_atom
 -del_t_atom[expr_ty]:
 -    | a=NAME { _PyPegen_set_expr_context(p, a, Del) }
@@ -926,10 +926,10 @@ index 64e205e7fd..54011cc8af 100644
 -    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
 -    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Store, EXTRA) }
 +del_t_atom[expr]:
-+    | a=NAME { pegen.set_expr_context(this, a, Del) }
-+    | '(' a=del_target ')' { pegen.set_expr_context(this, a, Del) }
-+    | '(' a=[del_targets] ')' { new astnodes.Tuple(a, Del, ...EXTRA) }
-+    | '[' a=[del_targets] ']' { new astnodes.List(a, Del, ...EXTRA) }
++    | a=NAME { pegen.set_expr_context(this, a, astnodes.Del) }
++    | '(' a=del_target ')' { pegen.set_expr_context(this, a, astnodes.Del) }
++    | '(' a=[del_targets] ')' { new astnodes.Tuple(a, astnodes.Del, ...EXTRA) }
++    | '[' a=[del_targets] ']' { new astnodes.List(a, astnodes.Del, ...EXTRA) }
 +
 +targets[any]: a=','.target+ [','] { a }
 +target[expr] (memo):

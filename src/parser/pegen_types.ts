@@ -1,4 +1,4 @@
-import { cmpop, expr } from "../ast/astnodes.ts";
+import { arg, cmpop, expr, operator } from "../ast/astnodes.ts";
 
 export class CmpopExprPair {
     cmpop: cmpop;
@@ -16,6 +16,41 @@ export class KeyValuePair {
     constructor(key: expr, value: expr) {
         this.key = key;
         this.value = value;
+    }
+}
+
+export class AugOperator {
+    kind: operator;
+    constructor(kind: operator) {
+        this.kind = kind;
+    }
+}
+
+export class NameDefaultPair {
+    arg: arg;
+    value: expr;
+    constructor(arg: arg, value: expr) {
+        this.arg = arg;
+        this.value = value;
+    }
+}
+
+export class SlashWithDefault {
+    plain_names: any[]; /**@todo */
+    names_with_defaults: NameDefaultPair[]; // asdl_seq* of NameDefaultsPair's
+    constructor(plain_names: any[], names_with_defaults: NameDefaultPair[]) {
+        this.plain_names = plain_names;
+        this.names_with_defaults = names_with_defaults;
+    }
+}
+export class StarEtc {
+    vararg: arg;
+    kwonlyargs: NameDefaultPair[]; // asdl_seq* of NameDefaultsPair's
+    kwarg: arg;
+    constructor(vararg: arg, kwonlyargs: NameDefaultPair[], kwarg: arg) {
+        this.vararg = vararg;
+        this.kwonlyargs = kwonlyargs;
+        this.kwarg = kwarg;
     }
 }
 
