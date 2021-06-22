@@ -4,13 +4,13 @@ import { getDiff } from "../support/diff.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 import { runParserFromFile } from "../src/parser/parse.ts";
 
-const args = parse(Deno.args);
-const mode = args.mode || "exec";
+const { _: args, mode, no_compare } = parse(Deno.args, { default: { mode: "exec" }, boolean: ["no_compare"] });
+const compare = !no_compare;
 const options = { indent: 2, include_attributes: true };
 
-console.assert(args._.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
+console.assert(args.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
 
-const filearg = args._[0];
+const filearg = args[0];
 
 let filename: string;
 if (typeof filearg === "number") {
@@ -18,8 +18,6 @@ if (typeof filearg === "number") {
 } else {
     filename = filearg;
 }
-
-const compare = !args["no_compare"];
 
 let pyDump = "";
 
