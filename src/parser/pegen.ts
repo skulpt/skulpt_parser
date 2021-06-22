@@ -576,7 +576,14 @@ export function dummy_name(p: Parser): Name {
 // }
 
 export function get_keyword_or_name_type(p: Parser, name: string): number {
-    return p.keywords[name]?.type ?? NAME;
+    assert(p.keywords);
+
+    if (p.keywords.has(name)) {
+        // @ts-ignore: typescript doesn't understand that if Map has get is safe
+        return p.keywords.get(name).type;
+    }
+
+    return NAME;
 }
 
 // static int
