@@ -11,11 +11,12 @@ import {
     Constant,
     exprKind,
     cmpop,
+    operator,
 } from "../ast/astnodes.ts";
 import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
-import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
+import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
     constructor(message: string) {
@@ -2047,6 +2048,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return _Py_arguments(posonlyargs, posargs, NULL, kwonlyargs, kwdefaults, NULL, kwdefaults,
 //                          p->arena);
 // }
+
+export function augoperator(p: Parser, kind: operator) {
+    return new AugOperator(kind);
+}
 
 // /* Encapsulates the value of an operator_ty into an AugOperator struct */
 // AugOperator *
