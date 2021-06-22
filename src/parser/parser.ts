@@ -124,7 +124,7 @@ export class Parser {
     @memoize
     name(): Name | null {
         let tok = this.peek();
-        let type = get_keyword_or_name_type(this, tok.string);
+        let type = get_keyword_or_name_type(this, tok);
         if (type === NAME) {
             tok = this.getnext();
             return new Name(tok.string, Load, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);

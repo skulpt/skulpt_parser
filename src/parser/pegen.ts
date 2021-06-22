@@ -575,15 +575,15 @@ export function dummy_name(p: Parser): Name {
 //     return cache;
 // }
 
-export function get_keyword_or_name_type(p: Parser, name: string): number {
+export function get_keyword_or_name_type(p: Parser, token: TokenInfo): number {
     assert(p.keywords);
 
-    if (p.keywords.has(name)) {
+    if (p.keywords.has(token.string)) {
         // @ts-ignore: typescript doesn't understand that if Map has get is safe
-        return p.keywords.get(name).type;
+        return p.keywords.get(token.string).type;
     }
 
-    return NAME;
+    return token.type;
 }
 
 // static int
