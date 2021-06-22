@@ -12,6 +12,7 @@ import {
     exprKind,
     cmpop,
 } from "../ast/astnodes.ts";
+import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
@@ -575,6 +576,18 @@ export function dummy_name(p: Parser): Name {
 //     cache = Name(id, Load, 1, 0, 1, 0, p->arena);
 //     return cache;
 // }
+
+export function get_keyword_or_name_type(p: Parser, name: string): number {
+    assert(p.keywords !== null);
+
+    if (p.keywords.has(name)) {
+        // typescript doesn't seem to know about Map's :D sorry about the ts-ignore
+        // @ts-ignore
+        return p.keywords.get(name).type;
+    }
+
+    return NAME;
+}
 
 // static int
 // _get_keyword_or_name_type(Parser *p, const char *name, int name_len)

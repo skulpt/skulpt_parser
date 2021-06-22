@@ -5,6 +5,8 @@ import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError } from "../tokenize/tokenize.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
+import { KeywordToken } from "./pegen_types.ts";
+import { get_keyword_or_name_type } from "./pegen.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type NoArgs = (this: Parser) => any | null;
@@ -99,6 +101,7 @@ export class Parser {
     getnext: () => TokenInfo;
     diagnose: () => TokenInfo;
     _tokens: TokenInfo[];
+    keywords: Map<string, KeywordToken> | null = null;
 
     type_ignore_comments: TypeIgnore[] = [];
 
@@ -121,7 +124,8 @@ export class Parser {
     @memoize
     name(): Name | null {
         let tok = this.peek();
-        if (tok.type === NAME) {
+        let type = get_keyword_or_name_type(this, tok.string);
+        if (type === NAME) {
             tok = this.getnext();
             return new Name(tok.string, Load, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }

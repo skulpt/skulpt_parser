@@ -21,6 +21,8 @@ from pegen.grammar import (
 )
 from pegen import grammar
 from pegen.parser_generator import ParserGenerator
+import ast
+import re
 
 # @TODO here are the missing types returned from the methods
 # we should include these in the import somehow
@@ -99,6 +101,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
     def __init__(self, parser_generator: ParserGenerator):
         self.gen = parser_generator
         self.cache: Dict[Any, Any] = {}
+        self.keyword_cache: Dict[Any, Any] = {}
 
     def visit_NameLeaf(self, node: NameLeaf) -> Tuple[Optional[str], str]:
         name = node.value
@@ -109,8 +112,40 @@ class PythonCallMakerVisitor(GrammarVisitor):
             return name.lower(), f"this.expect({name!r})"
         return name, f"this.{name}()"
 
+    def keyword_helper(self, keyword):
+        if keyword not in self.keyword_cache.keys():
+            self.keyword_cache[keyword] = self.gen.keyword_type()
+
+        return "keyword", f"this.expect({keyword!r})"
+        # FunctionCall(
+        #     assigned_variable="_keyword",
+        #     function="_PyPegen_expect_token",
+        #     arguments=["p", self.keyword_cache[keyword]],
+        #     return_type="Token *",
+        #     nodetype=NodeTypes.KEYWORD,
+        #     comment=f"token='{keyword}'",
+        # )
+
     def visit_StringLeaf(self, node: StringLeaf) -> Tuple[str, str]:
-        return "literal", f"this.expect({node.value})"
+        val = ast.literal_eval(node.value)
+        if re.match(r"[a-zA-Z_]\w*\Z", val):  # This is a keyword
+            if node.value.endswith("'"):
+                return self.keyword_helper(val)
+            else:
+                return self.soft_keyword_helper(node.value)
+        else:
+            # todo: figure out what exact_tokesn is
+            # assert val in self.exact_tokens, f"{node.value} is not a known literal"
+            # type = self.exact_tokens[val]
+            # return FunctionCall(
+            #     assigned_variable="_literal",
+            #     function=f"_PyPegen_expect_token",
+            #     arguments=["p", type],
+            #     nodetype=NodeTypes.GENERIC_TOKEN,
+            #     return_type="Token *",
+            #     comment=f"token='{val}'",
+            # )
+            return "literal", f"this.expect({node.value})"
 
     def visit_Rhs(self, node: Rhs) -> Tuple[Optional[str], str]:
         if node in self.cache:
@@ -241,8 +276,18 @@ export class GeneratedParser extends Parser {
                 self.print()
                 with self.indent():
                     self.visit(rule)
-        self.print("}")
-        self.print(self.suffix)
+
+        self.print()
+        with self.indent():
+            self.print("keywords: Map<string, KeywordToken> = new Map([")
+            with self.indent():
+                for name, token_type in self.callmakervisitor.keyword_cache.items():
+                    self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
+            self.print("]);")
+
+            self.print("}")
+            self.print(self.suffix)
+
         # trailer = self.grammar.metas.get("trailer", "")
         # if trailer is not None:
         #     self.print(trailer.rstrip("\n"))
