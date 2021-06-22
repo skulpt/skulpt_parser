@@ -239,10 +239,10 @@ export class Module extends mod {
     static _name = "Module";
     body: stmt[];
     type_ignores: type_ignore[];
-    constructor(body: stmt[], type_ignores: type_ignore[]) {
+    constructor(body: stmt[] | null, type_ignores: type_ignore[] | null) {
         super();
-        this.body = body;
-        this.type_ignores = type_ignores;
+        this.body = body || [];
+        this.type_ignores = type_ignores || [];
     }
 }
 Module.prototype._fields = ["body", "type_ignores"];
@@ -250,9 +250,9 @@ Module.prototype._fields = ["body", "type_ignores"];
 export class Interactive extends mod {
     static _name = "Interactive";
     body: stmt[];
-    constructor(body: stmt[]) {
+    constructor(body: stmt[] | null) {
         super();
-        this.body = body;
+        this.body = body || [];
     }
 }
 Interactive.prototype._fields = ["body"];
@@ -271,9 +271,9 @@ export class FunctionType extends mod {
     static _name = "FunctionType";
     argtypes: expr[];
     returns: expr;
-    constructor(argtypes: expr[], returns: expr) {
+    constructor(argtypes: expr[] | null, returns: expr) {
         super();
-        this.argtypes = argtypes;
+        this.argtypes = argtypes || [];
         this.returns = returns;
     }
 }
@@ -336,8 +336,8 @@ export class FunctionDef extends stmt {
     constructor(
         name: identifier,
         args: arguments_,
-        body: stmt[],
-        decorator_list: expr[],
+        body: stmt[] | null,
+        decorator_list: expr[] | null,
         returns: expr | null,
         type_comment: string | null,
         ...attrs: Attrs
@@ -345,8 +345,8 @@ export class FunctionDef extends stmt {
         super(...attrs);
         this.name = name;
         this.args = args;
-        this.body = body;
-        this.decorator_list = decorator_list;
+        this.body = body || [];
+        this.decorator_list = decorator_list || [];
         this.returns = returns;
         this.type_comment = type_comment;
     }
@@ -364,8 +364,8 @@ export class AsyncFunctionDef extends stmt {
     constructor(
         name: identifier,
         args: arguments_,
-        body: stmt[],
-        decorator_list: expr[],
+        body: stmt[] | null,
+        decorator_list: expr[] | null,
         returns: expr | null,
         type_comment: string | null,
         ...attrs: Attrs
@@ -373,8 +373,8 @@ export class AsyncFunctionDef extends stmt {
         super(...attrs);
         this.name = name;
         this.args = args;
-        this.body = body;
-        this.decorator_list = decorator_list;
+        this.body = body || [];
+        this.decorator_list = decorator_list || [];
         this.returns = returns;
         this.type_comment = type_comment;
     }
@@ -390,18 +390,18 @@ export class ClassDef extends stmt {
     decorator_list: expr[];
     constructor(
         name: identifier,
-        bases: expr[],
-        keywords: keyword[],
-        body: stmt[],
-        decorator_list: expr[],
+        bases: expr[] | null,
+        keywords: keyword[] | null,
+        body: stmt[] | null,
+        decorator_list: expr[] | null,
         ...attrs: Attrs
     ) {
         super(...attrs);
         this.name = name;
-        this.bases = bases;
-        this.keywords = keywords;
-        this.body = body;
-        this.decorator_list = decorator_list;
+        this.bases = bases || [];
+        this.keywords = keywords || [];
+        this.body = body || [];
+        this.decorator_list = decorator_list || [];
     }
 }
 ClassDef.prototype._fields = ["name", "bases", "keywords", "body", "decorator_list"];
@@ -419,9 +419,9 @@ Return.prototype._fields = ["value"];
 export class Delete extends stmt {
     static _name = "Delete";
     targets: expr[];
-    constructor(targets: expr[], ...attrs: Attrs) {
+    constructor(targets: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.targets = targets;
+        this.targets = targets || [];
     }
 }
 Delete.prototype._fields = ["targets"];
@@ -431,9 +431,9 @@ export class Assign extends stmt {
     targets: expr[];
     value: expr;
     type_comment: string | null;
-    constructor(targets: expr[], value: expr, type_comment: string | null, ...attrs: Attrs) {
+    constructor(targets: expr[] | null, value: expr, type_comment: string | null, ...attrs: Attrs) {
         super(...attrs);
-        this.targets = targets;
+        this.targets = targets || [];
         this.value = value;
         this.type_comment = type_comment;
     }
@@ -477,12 +477,19 @@ export class For extends stmt {
     body: stmt[];
     orelse: stmt[];
     type_comment: string | null;
-    constructor(target: expr, iter: expr, body: stmt[], orelse: stmt[], type_comment: string | null, ...attrs: Attrs) {
+    constructor(
+        target: expr,
+        iter: expr,
+        body: stmt[] | null,
+        orelse: stmt[] | null,
+        type_comment: string | null,
+        ...attrs: Attrs
+    ) {
         super(...attrs);
         this.target = target;
         this.iter = iter;
-        this.body = body;
-        this.orelse = orelse;
+        this.body = body || [];
+        this.orelse = orelse || [];
         this.type_comment = type_comment;
     }
 }
@@ -495,12 +502,19 @@ export class AsyncFor extends stmt {
     body: stmt[];
     orelse: stmt[];
     type_comment: string | null;
-    constructor(target: expr, iter: expr, body: stmt[], orelse: stmt[], type_comment: string | null, ...attrs: Attrs) {
+    constructor(
+        target: expr,
+        iter: expr,
+        body: stmt[] | null,
+        orelse: stmt[] | null,
+        type_comment: string | null,
+        ...attrs: Attrs
+    ) {
         super(...attrs);
         this.target = target;
         this.iter = iter;
-        this.body = body;
-        this.orelse = orelse;
+        this.body = body || [];
+        this.orelse = orelse || [];
         this.type_comment = type_comment;
     }
 }
@@ -511,11 +525,11 @@ export class While extends stmt {
     test: expr;
     body: stmt[];
     orelse: stmt[];
-    constructor(test: expr, body: stmt[], orelse: stmt[], ...attrs: Attrs) {
+    constructor(test: expr, body: stmt[] | null, orelse: stmt[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.test = test;
-        this.body = body;
-        this.orelse = orelse;
+        this.body = body || [];
+        this.orelse = orelse || [];
     }
 }
 While.prototype._fields = ["test", "body", "orelse"];
@@ -525,11 +539,11 @@ export class If extends stmt {
     test: expr;
     body: stmt[];
     orelse: stmt[];
-    constructor(test: expr, body: stmt[], orelse: stmt[], ...attrs: Attrs) {
+    constructor(test: expr, body: stmt[] | null, orelse: stmt[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.test = test;
-        this.body = body;
-        this.orelse = orelse;
+        this.body = body || [];
+        this.orelse = orelse || [];
     }
 }
 If.prototype._fields = ["test", "body", "orelse"];
@@ -539,10 +553,10 @@ export class With extends stmt {
     items: withitem[];
     body: stmt[];
     type_comment: string | null;
-    constructor(items: withitem[], body: stmt[], type_comment: string | null, ...attrs: Attrs) {
+    constructor(items: withitem[] | null, body: stmt[] | null, type_comment: string | null, ...attrs: Attrs) {
         super(...attrs);
-        this.items = items;
-        this.body = body;
+        this.items = items || [];
+        this.body = body || [];
         this.type_comment = type_comment;
     }
 }
@@ -553,10 +567,10 @@ export class AsyncWith extends stmt {
     items: withitem[];
     body: stmt[];
     type_comment: string | null;
-    constructor(items: withitem[], body: stmt[], type_comment: string | null, ...attrs: Attrs) {
+    constructor(items: withitem[] | null, body: stmt[] | null, type_comment: string | null, ...attrs: Attrs) {
         super(...attrs);
-        this.items = items;
-        this.body = body;
+        this.items = items || [];
+        this.body = body || [];
         this.type_comment = type_comment;
     }
 }
@@ -580,12 +594,18 @@ export class Try extends stmt {
     handlers: excepthandler[];
     orelse: stmt[];
     finalbody: stmt[];
-    constructor(body: stmt[], handlers: excepthandler[], orelse: stmt[], finalbody: stmt[], ...attrs: Attrs) {
+    constructor(
+        body: stmt[] | null,
+        handlers: excepthandler[] | null,
+        orelse: stmt[] | null,
+        finalbody: stmt[] | null,
+        ...attrs: Attrs
+    ) {
         super(...attrs);
-        this.body = body;
-        this.handlers = handlers;
-        this.orelse = orelse;
-        this.finalbody = finalbody;
+        this.body = body || [];
+        this.handlers = handlers || [];
+        this.orelse = orelse || [];
+        this.finalbody = finalbody || [];
     }
 }
 Try.prototype._fields = ["body", "handlers", "orelse", "finalbody"];
@@ -605,9 +625,9 @@ Assert.prototype._fields = ["test", "msg"];
 export class Import extends stmt {
     static _name = "Import";
     names: alias[];
-    constructor(names: alias[], ...attrs: Attrs) {
+    constructor(names: alias[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.names = names;
+        this.names = names || [];
     }
 }
 Import.prototype._fields = ["names"];
@@ -617,10 +637,10 @@ export class ImportFrom extends stmt {
     module: identifier | null;
     names: alias[];
     level: number | null;
-    constructor(module: identifier | null, names: alias[], level: number | null, ...attrs: Attrs) {
+    constructor(module: identifier | null, names: alias[] | null, level: number | null, ...attrs: Attrs) {
         super(...attrs);
         this.module = module;
-        this.names = names;
+        this.names = names || [];
         this.level = level;
     }
 }
@@ -629,9 +649,9 @@ ImportFrom.prototype._fields = ["module", "names", "level"];
 export class Global extends stmt {
     static _name = "Global";
     names: identifier[];
-    constructor(names: identifier[], ...attrs: Attrs) {
+    constructor(names: identifier[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.names = names;
+        this.names = names || [];
     }
 }
 Global.prototype._fields = ["names"];
@@ -639,9 +659,9 @@ Global.prototype._fields = ["names"];
 export class Nonlocal extends stmt {
     static _name = "Nonlocal";
     names: identifier[];
-    constructor(names: identifier[], ...attrs: Attrs) {
+    constructor(names: identifier[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.names = names;
+        this.names = names || [];
     }
 }
 Nonlocal.prototype._fields = ["names"];
@@ -739,10 +759,10 @@ export class BoolOp extends expr {
     static _name = "BoolOp";
     op: boolop;
     values: expr[];
-    constructor(op: boolop, values: expr[], ...attrs: Attrs) {
+    constructor(op: boolop, values: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.op = op;
-        this.values = values;
+        this.values = values || [];
     }
 }
 BoolOp.prototype._fields = ["op", "values"];
@@ -815,10 +835,10 @@ export class Dict extends expr {
     static _name = "Dict";
     keys: expr[];
     values: expr[];
-    constructor(keys: expr[], values: expr[], ...attrs: Attrs) {
+    constructor(keys: expr[] | null, values: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.keys = keys;
-        this.values = values;
+        this.keys = keys || [];
+        this.values = values || [];
     }
 }
 Dict.prototype._fields = ["keys", "values"];
@@ -826,9 +846,9 @@ Dict.prototype._fields = ["keys", "values"];
 export class Set extends expr {
     static _name = "Set";
     elts: expr[];
-    constructor(elts: expr[], ...attrs: Attrs) {
+    constructor(elts: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.elts = elts;
+        this.elts = elts || [];
     }
 }
 Set.prototype._fields = ["elts"];
@@ -837,10 +857,10 @@ export class ListComp extends expr {
     static _name = "ListComp";
     elt: expr;
     generators: comprehension[];
-    constructor(elt: expr, generators: comprehension[], ...attrs: Attrs) {
+    constructor(elt: expr, generators: comprehension[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.elt = elt;
-        this.generators = generators;
+        this.generators = generators || [];
     }
 }
 ListComp.prototype._fields = ["elt", "generators"];
@@ -849,10 +869,10 @@ export class SetComp extends expr {
     static _name = "SetComp";
     elt: expr;
     generators: comprehension[];
-    constructor(elt: expr, generators: comprehension[], ...attrs: Attrs) {
+    constructor(elt: expr, generators: comprehension[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.elt = elt;
-        this.generators = generators;
+        this.generators = generators || [];
     }
 }
 SetComp.prototype._fields = ["elt", "generators"];
@@ -862,11 +882,11 @@ export class DictComp extends expr {
     key: expr;
     value: expr;
     generators: comprehension[];
-    constructor(key: expr, value: expr, generators: comprehension[], ...attrs: Attrs) {
+    constructor(key: expr, value: expr, generators: comprehension[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.key = key;
         this.value = value;
-        this.generators = generators;
+        this.generators = generators || [];
     }
 }
 DictComp.prototype._fields = ["key", "value", "generators"];
@@ -875,10 +895,10 @@ export class GeneratorExp extends expr {
     static _name = "GeneratorExp";
     elt: expr;
     generators: comprehension[];
-    constructor(elt: expr, generators: comprehension[], ...attrs: Attrs) {
+    constructor(elt: expr, generators: comprehension[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.elt = elt;
-        this.generators = generators;
+        this.generators = generators || [];
     }
 }
 GeneratorExp.prototype._fields = ["elt", "generators"];
@@ -918,11 +938,11 @@ export class Compare extends expr {
     left: expr;
     ops: cmpop[];
     comparators: expr[];
-    constructor(left: expr, ops: cmpop[], comparators: expr[], ...attrs: Attrs) {
+    constructor(left: expr, ops: cmpop[] | null, comparators: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.left = left;
-        this.ops = ops;
-        this.comparators = comparators;
+        this.ops = ops || [];
+        this.comparators = comparators || [];
     }
 }
 Compare.prototype._fields = ["left", "ops", "comparators"];
@@ -932,11 +952,11 @@ export class Call extends expr {
     func: expr;
     args: expr[];
     keywords: keyword[];
-    constructor(func: expr, args: expr[], keywords: keyword[], ...attrs: Attrs) {
+    constructor(func: expr, args: expr[] | null, keywords: keyword[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.func = func;
-        this.args = args;
-        this.keywords = keywords;
+        this.args = args || [];
+        this.keywords = keywords || [];
     }
 }
 Call.prototype._fields = ["func", "args", "keywords"];
@@ -958,9 +978,9 @@ FormattedValue.prototype._fields = ["value", "conversion", "format_spec"];
 export class JoinedStr extends expr {
     static _name = "JoinedStr";
     values: expr[];
-    constructor(values: expr[], ...attrs: Attrs) {
+    constructor(values: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
-        this.values = values;
+        this.values = values || [];
     }
 }
 JoinedStr.prototype._fields = ["values"];
@@ -1033,9 +1053,9 @@ export class List extends expr {
     static _name = "List";
     elts: expr[];
     ctx: expr_context;
-    constructor(elts: expr[], ctx: expr_context, ...attrs: Attrs) {
+    constructor(elts: expr[] | null, ctx: expr_context, ...attrs: Attrs) {
         super(...attrs);
-        this.elts = elts;
+        this.elts = elts || [];
         this.ctx = ctx;
     }
 }
@@ -1045,9 +1065,9 @@ export class Tuple extends expr {
     static _name = "Tuple";
     elts: expr[];
     ctx: expr_context;
-    constructor(elts: expr[], ctx: expr_context, ...attrs: Attrs) {
+    constructor(elts: expr[] | null, ctx: expr_context, ...attrs: Attrs) {
         super(...attrs);
-        this.elts = elts;
+        this.elts = elts || [];
         this.ctx = ctx;
     }
 }
@@ -1074,11 +1094,11 @@ export class comprehension extends AST {
     iter: expr;
     ifs: expr[];
     is_async: number;
-    constructor(target: expr, iter: expr, ifs: expr[], is_async: number) {
+    constructor(target: expr, iter: expr, ifs: expr[] | null, is_async: number) {
         super();
         this.target = target;
         this.iter = iter;
-        this.ifs = ifs;
+        this.ifs = ifs || [];
         this.is_async = is_async;
     }
 }
@@ -1108,11 +1128,11 @@ export class ExceptHandler extends excepthandler {
     type: expr | null;
     name: identifier | null;
     body: stmt[];
-    constructor(type: expr | null, name: identifier | null, body: stmt[], ...attrs: Attrs) {
+    constructor(type: expr | null, name: identifier | null, body: stmt[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.type = type;
         this.name = name;
-        this.body = body;
+        this.body = body || [];
     }
 }
 ExceptHandler.prototype._fields = ["type", "name", "body"];
@@ -1128,22 +1148,22 @@ export class arguments_ extends AST {
     kwarg: arg | null;
     defaults: expr[];
     constructor(
-        posonlyargs: arg[],
-        args: arg[],
+        posonlyargs: arg[] | null,
+        args: arg[] | null,
         vararg: arg | null,
-        kwonlyargs: arg[],
-        kw_defaults: expr[],
+        kwonlyargs: arg[] | null,
+        kw_defaults: expr[] | null,
         kwarg: arg | null,
-        defaults: expr[]
+        defaults: expr[] | null
     ) {
         super();
-        this.posonlyargs = posonlyargs;
-        this.args = args;
+        this.posonlyargs = posonlyargs || [];
+        this.args = args || [];
         this.vararg = vararg;
-        this.kwonlyargs = kwonlyargs;
-        this.kw_defaults = kw_defaults;
+        this.kwonlyargs = kwonlyargs || [];
+        this.kw_defaults = kw_defaults || [];
         this.kwarg = kwarg;
-        this.defaults = defaults;
+        this.defaults = defaults || [];
     }
 }
 arguments_.prototype._fields = ["posonlyargs", "args", "vararg", "kwonlyargs", "kw_defaults", "kwarg", "defaults"];
@@ -1156,16 +1176,16 @@ export class arg extends AST {
     type_comment: string | null;
     lineno: number;
     col_offset: number;
-    end_lineno: number | null;
-    end_col_offset: number | null;
+    end_lineno?: number | null;
+    end_col_offset?: number | null;
     constructor(
         arg: identifier,
         annotation: expr | null,
         type_comment: string | null,
         lineno: number,
         col_offset: number,
-        end_lineno: number | null,
-        end_col_offset: number | null
+        end_lineno?: number | null,
+        end_col_offset?: number | null
     ) {
         super();
         this.arg = arg;
@@ -1187,15 +1207,15 @@ export class keyword extends AST {
     value: expr;
     lineno: number;
     col_offset: number;
-    end_lineno: number | null;
-    end_col_offset: number | null;
+    end_lineno?: number | null;
+    end_col_offset?: number | null;
     constructor(
         arg: identifier | null,
         value: expr,
         lineno: number,
         col_offset: number,
-        end_lineno: number | null,
-        end_col_offset: number | null
+        end_lineno?: number | null,
+        end_col_offset?: number | null
     ) {
         super();
         this.arg = arg;

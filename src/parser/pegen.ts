@@ -2406,7 +2406,6 @@ export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | 
     const total_len = args_len;
 
     if (b === null) {
-        // because that's actually what happens
         return new Call(dummy_name(p), a, [], ...attrs);
     }
 
