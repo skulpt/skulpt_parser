@@ -576,11 +576,7 @@ export function dummy_name(p: Parser): Name {
 // }
 
 export function get_keyword_or_name_type(p: Parser, name: string): number {
-    const keyword = p.keywords.get(name);
-    if (keyword !== undefined) {
-        return keyword.type;
-    }
-    return NAME;
+    return p.keywords[name]?.type ?? NAME;
 }
 
 // static int

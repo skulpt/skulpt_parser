@@ -279,11 +279,11 @@ export class GeneratedParser extends Parser {
                     self.visit(rule)
         self.print("}")
         self.print()
-        self.print("GeneratedParser.prototype.keywords = new Map<string, KeywordToken>([")
+        self.print("GeneratedParser.prototype.keywords = {")
         with self.indent():
             for name, token_type in self.callmakervisitor.keyword_cache.items():
-                self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
-        self.print("]);")
+                self.print(f'{name}: new KeywordToken("{name}", {token_type}),')
+        self.print("};")
         self.print()
 
         self.print(self.suffix)
