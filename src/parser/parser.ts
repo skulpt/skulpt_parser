@@ -85,8 +85,8 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
 
 // overloads for the expect method
 export interface Parser {
+    keywords: Map<string, KeywordToken>;
     negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): boolean;
-    negative_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): boolean;
     positive_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): R;
     positive_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): R;
 }
@@ -101,7 +101,6 @@ export class Parser {
     getnext: () => TokenInfo;
     diagnose: () => TokenInfo;
     _tokens: TokenInfo[];
-    keywords: Map<string, KeywordToken> | null = null;
 
     type_ignore_comments: TypeIgnore[] = [];
 

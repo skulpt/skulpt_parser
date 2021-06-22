@@ -17,8 +17,6 @@ import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
 
-// Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
-
 export class InternalAssertionError extends Error {
     constructor(message: string) {
         super(message);
@@ -578,14 +576,10 @@ export function dummy_name(p: Parser): Name {
 // }
 
 export function get_keyword_or_name_type(p: Parser, name: string): number {
-    assert(p.keywords !== null);
-
-    if (p.keywords.has(name)) {
-        // typescript doesn't seem to know about Map's :D sorry about the ts-ignore
-        // @ts-ignore
-        return p.keywords.get(name).type;
+    const keyword = p.keywords.get(name);
+    if (keyword !== undefined) {
+        return keyword.type;
     }
-
     return NAME;
 }
 

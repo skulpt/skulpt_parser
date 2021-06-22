@@ -49,6 +49,7 @@ import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
 import {{ pegen }} from "./pegen_proxy.ts";
+import {{ KeywordToken }} from "./pegen_types.ts";
 import {{FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
 
 import {{memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
@@ -276,19 +277,15 @@ export class GeneratedParser extends Parser {
                 self.print()
                 with self.indent():
                     self.visit(rule)
-
-        self.print()
-        with self.indent():
-            self.print("get keywords(): Map<string, KeywordToken> {")
-            with self.indent():
-                self.print("return new Map([")
-                with self.indent():
-                    for name, token_type in self.callmakervisitor.keyword_cache.items():
-                        self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
-                self.print("]);")
-            self.print("}")
-
         self.print("}")
+        self.print()
+        self.print("GeneratedParser.prototype.keywords = new Map<string, KeywordToken>([")
+        with self.indent():
+            for name, token_type in self.callmakervisitor.keyword_cache.items():
+                self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
+        self.print("]);")
+        self.print()
+
         self.print(self.suffix)
 
         # trailer = self.grammar.metas.get("trailer", "")
