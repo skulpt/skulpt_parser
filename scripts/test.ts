@@ -1,6 +1,6 @@
 import { parse } from "../deps.ts";
 
-const args = parse(Deno.args);
+const args = parse(Deno.args, { boolean: ["f"], alias: { f: "fail-fast" } });
 const test = args._[0];
 
 const extra = [];
@@ -16,7 +16,7 @@ switch (test) {
         break;
 }
 
-if (args["fail-fast"]) {
+if (args["f"]) {
     extra.push("--fail-fast");
 }
 
