@@ -1,6 +1,6 @@
 import { parse } from "../deps.ts";
 
-const args = parse(Deno.args);
+const args = parse(Deno.args, { boolean: ["f"], alias: { f: "fail-fast" } });
 const test = args._[0];
 
 const extra = [];
@@ -9,6 +9,10 @@ switch (test) {
     case "parse":
         extra.push("tests/parse.test.ts");
         break;
+    case "pypeg":
+        await Deno.run({ cmd: ["python", "-m", "unittest", "tests/test_peg_parser.py", ...Deno.args] }).status();
+        Deno.exit();
+        break; // just to keep ts happy
     /** @todo the default should be to do nothing here and run all the tests */
     case "dump":
     default:
@@ -16,7 +20,7 @@ switch (test) {
         break;
 }
 
-if (args["fail-fast"]) {
+if (args["f"]) {
     extra.push("--fail-fast");
 }
 
