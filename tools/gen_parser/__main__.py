@@ -48,6 +48,6 @@ with open(out_file, "r") as f:
 with open(out_file, "w") as f:
     verbosity = 1 if verbosity == 1 else 2
     content = content.replace("{ pegen }", f"{{ pegenV{verbosity} as pegen }}")
-    if verbosity == 1:
+    if verbosity == 2:
         content = content.replace("./parser", "./verbose_parser")
     f.write(content)
