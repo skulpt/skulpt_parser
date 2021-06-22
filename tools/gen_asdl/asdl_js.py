@@ -199,19 +199,19 @@ class PrototypeVisitor(EmitVisitor):
                 ts_type = f"{f.type}[]"
             else:
                 ts_type = get_ts_type(f.type)
-            args.append((ts_type, name, f.opt))
+            args.append((ts_type, name, f.opt, f.seq))
         return args
 
     @staticmethod
-    def args_to_ts(args, attrs=False):
+    def _constructor_args(args, attrs=False):
         ts_args = []
-        for atype, aname, opt in args:
+        for atype, aname, opt, seq in args:
             atype = atype
-            if opt:
+            if opt or seq:
                 # optional types really means can be null rather than optional
-                atype = atype if not opt else atype + " | null"
+                atype = atype if not opt and not seq else atype + " | null"
             ts_args.append(f"{aname}{'?' if opt and attrs else ''}: {atype}")
-        return ts_args
+        return ", ".join(ts_args)
 
     def visitConstructor(self, cons, type, attrs):
         args = self.get_args(cons.fields)
@@ -232,22 +232,24 @@ class FunctionVisitor(PrototypeVisitor):
     def emit(self, s, depth=0, reflow=1):
         super().emit(s, depth, reflow)
 
-    def emit_instance_types(self, args):
-        for arg in args:
-            self.emit(arg + ";", 1)
+    def emit_instance_types(self, args, attrs=False):
+        for atype, aname, opt, seq in args:
+            atype = atype
+            if opt:
+                # optional types really means can be null rather than optional
+                atype = atype if not opt else atype + " | null"
+            self.emit(f"{aname}{'?' if opt and attrs else ''}: {atype};", 1)
 
     def emit_function(self, name, ts_type, args, attrs, union=1):
         emit = self.emit
-
-        _args = self.args_to_ts(args)
 
         arg_names = "[" + ", ".join(map(lambda arg: f'"{arg[1]}"', args)) + "]"
 
         emit(f"export class {name} extends {ts_type if union else 'AST'} {{")
         self.emit_tp_name(name)
 
-        self.emit_instance_types(_args)
-        _args = ", ".join(_args)
+        self.emit_instance_types(args)
+        _args = self._constructor_args(args)
         sep = ", " if args else ""
 
         if union and attrs:
@@ -255,9 +257,8 @@ class FunctionVisitor(PrototypeVisitor):
             emit(constructorArgs, 1)
             emit("super(...attrs);", 2)
         else:
-            _attrs = self.args_to_ts(attrs)
-            self.emit_instance_types(_attrs)
-            _attrs = ", ".join(_attrs)
+            self.emit_instance_types(attrs, True)
+            _attrs = self._constructor_args(attrs, True)
             emit(f"constructor({_args}{sep}{_attrs}) {{", 1)
             emit("super();", 2)
 
@@ -294,12 +295,11 @@ class FunctionVisitor(PrototypeVisitor):
 
     def emit_body_attrs(self, attrs):
         emit = self.emit
-        for _, argname, _ in attrs:
-            emit(f"this.{argname} = {argname};", 2)
+        for _, argname, _, seq in attrs:
+            emit(f"this.{argname} = {argname}{' || []' if seq else ''};", 2)
 
     def emit_base(self, name, attrs):
         emit = self.emit
-        _attrs = self.args_to_ts(attrs, True)
 
         if not attrs:
             emit(f"export class {name} extends AST {{")
@@ -311,8 +311,8 @@ class FunctionVisitor(PrototypeVisitor):
         emit(f"export class {name} extends AST {{")
         self.emit_tp_name(name)
 
-        self.emit_instance_types(_attrs)
-        _attrs = ", ".join(_attrs)
+        self.emit_instance_types(attrs, True)
+        _attrs = self._constructor_args(attrs, True)
 
         emit(f"constructor({_attrs}) {{", 1)
         emit("super();", 2)
