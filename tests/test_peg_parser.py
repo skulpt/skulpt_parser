@@ -67,13 +67,17 @@ class PegenTestResult(TextTestResult):
 
     def addSuccess(self, test):
         super(TextTestResult, self).addSuccess(test)
-        if self.showAll:
-            desc = self.getDescription(test)
-            self.stream.writeln(colors.green("ok:   " + desc))
+        # if self.showAll:
+        desc = self.getDescription(test)
+        self.stream.writeln(colors.green("ok:   " + desc))
 
     def addSubFailure(self, test, err):
+        flavour = "FAIL" if test.failureException is type(err) else "ERROR"
         if self.showAll:
-            self.printFail(test, err, "FAIL" if test.failureException is type(err) else "ERROR")
+            self.printFail(test, err, flavour)
+        else:
+            desc = self.getDescription(test)
+            self.stream.writeln(colors.red(flavour + ": " + desc))
 
     def printFail(self, test, err, flavour):
         self.stream.writeln(self.separator1)
