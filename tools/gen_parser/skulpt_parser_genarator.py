@@ -279,14 +279,17 @@ export class GeneratedParser extends Parser {
 
         self.print()
         with self.indent():
-            self.print("keywords: Map<string, KeywordToken> = new Map([")
+            self.print("get keywords(): Map<string, KeywordToken> {")
             with self.indent():
-                for name, token_type in self.callmakervisitor.keyword_cache.items():
-                    self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
-            self.print("]);")
-
+                self.print("return new Map([")
+                with self.indent():
+                    for name, token_type in self.callmakervisitor.keyword_cache.items():
+                        self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
+                self.print("]);")
             self.print("}")
-            self.print(self.suffix)
+
+        self.print("}")
+        self.print(self.suffix)
 
         # trailer = self.grammar.metas.get("trailer", "")
         # if trailer is not None:
