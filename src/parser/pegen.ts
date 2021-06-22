@@ -12,6 +12,7 @@ import {
     exprKind,
     cmpop,
     operator,
+    arguments_,
 } from "../ast/astnodes.ts";
 import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -2018,6 +2019,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return _Py_arguments(posonlyargs, posargs, vararg, kwonlyargs, kwdefaults, kwarg,
 //                          posdefaults, p->arena);
 // }
+
+export function empty_arguments(p: Parser) {
+    return new arguments_([], [], null, [], [], null, []);
+}
 
 // /* Constructs an empty arguments_ty object, that gets used when a function accepts no
 //  * arguments. */
