@@ -1,6 +1,7 @@
 import {
     AST,
     Attrs,
+    ClassDef,
     expr_context,
     expr,
     Module,
@@ -13,12 +14,23 @@ import {
     cmpop,
     operator,
     arguments_,
+    arg,
+    keyword,
 } from "../ast/astnodes.ts";
-import { NAME } from "../tokenize/token.ts";
+import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { parseString } from "./parse_string.ts";
-import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred, KeywordToken } from "./pegen_types.ts";
+import {
+    AugOperator,
+    CmpopExprPair,
+    KeyValuePair,
+    KeywordOrStarred,
+    KeywordToken,
+    NameDefaultPair,
+    SlashWithDefault,
+    StarEtc,
+} from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
     constructor(message: string) {
@@ -59,6 +71,14 @@ export function new_type_comment(s: string | null): string | null {
     //     }
     //     return res;
     // }
+}
+
+export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
+    if (tc === null) {
+        return a;
+    }
+
+    return new arg(a.arg, a.annotation, tc.string, a.lineno, a.col_offset, a.end_lineno, a.end_col_offset);
 }
 
 // arg_ty
@@ -1502,6 +1522,38 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return _Py_Name(uni, Load, EXTRA_EXPR(first_name, second_name));
 // }
 
+class UnreachableException extends Error {}
+
+// export function seq_count_dots(seq: TokenInfo[]) {
+//     return seq
+//         .map((current_expr) => {
+//             switch (current_expr.type) {
+//                 case ELLIPSIS:
+//                     return 3;
+//                 case DOT:
+//                     return 1;
+//                 default:
+//                     throw new UnreachableException();
+//             }
+//         })
+//         .reduce((a, b) => a + b, 0);
+// }
+
+function getNumDots(e: TokenInfo) {
+    switch (e.type) {
+        case ELLIPSIS:
+            return 3;
+        case DOT:
+            return 1;
+        default:
+            throw new UnreachableException();
+    }
+}
+
+export function seq_count_dots(seq: TokenInfo[]) {
+    return seq.reduce((a, b) => a + getNumDots(b), 0);
+}
+
 // /* Counts the total number of dots in seq's tokens */
 // int
 // _PyPegen_seq_count_dots(asdl_seq *seq)
@@ -1538,6 +1590,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     }
 //     return alias(str, NULL, p->arena);
 // }
+
+export function map_names_to_ids(p: Parser, seq: Name[]) {
+    return seq.map((e) => e.id);
+}
 
 // /* Creates a new asdl_seq* with the identifiers of all the names in seq */
 // asdl_seq *
@@ -1738,6 +1794,10 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return new;
 // }
 
+export function key_value_pair(p: Parser, key: expr, value: expr) {
+    return new KeyValuePair(key, value);
+}
+
 // /* Constructs a KeyValuePair that is used when parsing a dict's key value pairs */
 // KeyValuePair *
 // _PyPegen_key_value_pair(Parser *p, expr_ty key, expr_ty value)
@@ -1751,8 +1811,12 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
-export function key_value_pair(p: Parser, key: expr, value: expr) {
-    return new KeyValuePair(key, value);
+export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+    if (seq === null) {
+        return [];
+    }
+
+    return seq.map((kv) => kv.key);
 }
 
 // /* Extracts all keys from an asdl_seq* of KeyValuePair*'s */
@@ -1771,12 +1835,12 @@ export function key_value_pair(p: Parser, key: expr, value: expr) {
 //     return new_seq;
 // }
 
-export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+export function get_values(p: Parser, seq: KeyValuePair[] | null) {
     if (seq === null) {
         return [];
     }
 
-    return seq.map((kv) => kv.key);
+    return seq.map((kv) => kv.value);
 }
 
 // /* Extracts all values from an asdl_seq* of KeyValuePair*'s */
@@ -1795,12 +1859,9 @@ export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
 //     return new_seq;
 // }
 
-export function get_values(p: Parser, seq: KeyValuePair[] | null) {
-    if (seq === null) {
-        return [];
-    }
-
-    return seq.map((kv) => kv.key);
+export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInfo) {
+    const a = add_type_comment_to_arg(p, arg, tc);
+    return new NameDefaultPair(a, value);
 }
 
 // /* Constructs a NameDefaultPair */
@@ -1828,6 +1889,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     a->names_with_defaults = names_with_defaults;
 //     return a;
 // }
+
+export function star_etc(p: Parser, vararg: arg, kwonlyargs: NameDefaultPair[], kwarg: arg) {
+    return new StarEtc(vararg, kwonlyargs, kwarg);
+}
 
 // /* Constructs a StarEtc */
 // StarEtc *
@@ -1864,6 +1929,14 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return new_seq;
 // }
 
+export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | null): arg[] {
+    if (names_with_defaults === null) {
+        return [];
+    }
+
+    return names_with_defaults.map((pair) => pair.arg);
+}
+
 // static asdl_seq *
 // _get_names(Parser *p, asdl_seq *names_with_defaults)
 // {
@@ -1879,6 +1952,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return seq;
 // }
 
+export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]): expr[] {
+    return names_with_defaults.map((pair) => pair.value);
+}
+
 // static asdl_seq *
 // _get_defaults(Parser *p, asdl_seq *names_with_defaults)
 // {
@@ -1893,6 +1970,66 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     }
 //     return seq;
 // }
+
+export function make_arguments(
+    p: Parser,
+    slash_without_default: arg[] | null,
+    slash_with_default: SlashWithDefault,
+    plain_names: any[],
+    names_with_default: any[],
+    star_etc: StarEtc
+): arguments_ {
+    let posonlyargs: arg[] = [];
+    if (slash_without_default !== null) {
+        posonlyargs = slash_without_default;
+    } else if (slash_with_default) {
+        const slash_with_default_names = get_names(p, slash_with_default.names_with_defaults);
+        posonlyargs = slash_with_default.plain_names.concat(slash_with_default_names);
+    }
+
+    let posargs: arg[] = [];
+    if (plain_names !== null && names_with_default !== null) {
+        const names_with_default_names = get_names(p, names_with_default);
+        posargs = plain_names.concat(names_with_default_names);
+    } else if (plain_names === null && names_with_default !== null) {
+        posargs = get_names(p, names_with_default);
+    } else if (plain_names !== null && names_with_default === null) {
+        posargs = plain_names;
+    }
+
+    let posdefaults: expr[] = [];
+    if (slash_with_default !== null && names_with_default !== null) {
+        const slash_with_default_values = get_defaults(p, slash_with_default.names_with_defaults);
+        const names_with_default_values = get_defaults(p, names_with_default);
+        posdefaults = slash_with_default_values.concat(names_with_default_values);
+    } else if (slash_with_default === null && names_with_default !== null) {
+        posdefaults = get_defaults(p, names_with_default);
+    } else if (slash_with_default !== null && names_with_default === null) {
+        posdefaults = get_defaults(p, slash_with_default.names_with_defaults);
+    }
+
+    let vararg: arg | null = null;
+    if (star_etc !== null && star_etc.vararg !== null) {
+        vararg = star_etc.vararg;
+    }
+
+    let kwonlyargs: arg[] = [];
+    if (star_etc !== null && star_etc.kwonlyargs !== null) {
+        kwonlyargs = get_names(p, star_etc.kwonlyargs);
+    }
+
+    let kwdefaults: expr[] = [];
+    if (star_etc !== null && star_etc.kwonlyargs !== null) {
+        kwdefaults = get_defaults(p, star_etc.kwonlyargs);
+    }
+
+    let kwarg: arg | null = null;
+    if (star_etc !== null && star_etc.kwarg !== null) {
+        kwarg = star_etc.kwarg;
+    }
+
+    return new arguments_(posonlyargs, posargs, vararg, kwonlyargs, kwdefaults, kwarg, posdefaults);
+}
 
 // /* Constructs an arguments_ty object out of all the parsed constructs in the parameters rule */
 // arguments_ty
@@ -2098,7 +2235,22 @@ export function augoperator(p: Parser, kind: operator) {
 //                            function_def->end_col_offset, p->arena);
 // }
 
-// /* Construct a ClassDef equivalent to class_def, but with decorators */
+/* Construct a ClassDef equivalent to class_def, but with decorators */
+export function class_def_decorators(p: Parser, decorators: expr[], class_def: ClassDef) {
+    assert(class_def !== null);
+    return new ClassDef(
+        class_def.name,
+        class_def.bases,
+        class_def.keywords,
+        class_def.body,
+        decorators,
+        class_def.lineno,
+        class_def.col_offset,
+        class_def.end_lineno,
+        class_def.end_col_offset
+    );
+}
+
 // stmt_ty
 // _PyPegen_class_def_decorators(Parser *p, asdl_seq *decorators, stmt_ty class_def)
 // {
@@ -2118,7 +2270,7 @@ kwarg_or_starred[KeywordOrStarred*]:
     | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
     | invalid_kwarg
 */
-export function keyword_or_starred(p: Parser, element: any, is_keyword: boolean) {
+export function keyword_or_starred(p: Parser, element: keyword, is_keyword: boolean) {
     return new KeywordOrStarred(element, is_keyword);
 }
 
@@ -2149,8 +2301,12 @@ export function keyword_or_starred(p: Parser, element: any, is_keyword: boolean)
 //     return n;
 // }
 
-export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]) {
-    return kwargs.filter((k) => k.is_keyword);
+function isKeyword(kw: expr | keyword): kw is keyword {
+    return kw instanceof keyword;
+}
+
+export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): expr[] {
+    return kwargs.map((kw) => kw.element).filter((kw) => !isKeyword(kw));
 }
 
 // /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
@@ -2175,6 +2331,10 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 //     }
 //     return new_seq;
 // }
+
+export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
+    return kwargs.map((kw) => kw.element).filter(isKeyword);
+}
 
 // /* Return a new asdl_seq* with only the keywords in kwargs */
 // asdl_seq *
@@ -2428,18 +2588,16 @@ export function make_module(p: Parser, a: stmt[]) {
 // }
 
 // @stu why does our parser not call these functions with the parser?
-export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: Attrs) {
-    const args_len = a.length;
-    const total_len = args_len;
-
+export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null, ...attrs: Attrs) {
     if (b === null) {
         return new Call(dummy_name(p), a, [], ...attrs);
     }
 
-    // const starreds = seq_extract_starred_exprs(p, b);
-    // keywords: KeywordOrStarred[] = seq_extract_delete_starred_exprs(p, b);
+    const starreds = seq_extract_starred_exprs(p, b);
+    const keywords = seq_delete_starred_exprs(p, b);
+    const args = a.concat(starreds);
 
-    throw new Error("we don't deal with kwargs stargs etc yet, but I've done some of the functions");
+    return new Call(dummy_name(p), args, keywords, ...attrs);
 }
 
 // expr_ty _PyPegen_collect_call_seqs(Parser *p, asdl_seq *a, asdl_seq *b,

@@ -50,9 +50,9 @@ import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
 import {{ pegen }} from "./pegen_proxy.ts";
 import {{ KeywordToken }} from "./pegen_types.ts";
-import {{FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
+import {{ FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
 
-import {{memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
+import {{ memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
 
 /** @todo */
 function CHECK(...args: any[]) {{
@@ -62,6 +62,11 @@ function CHECK(...args: any[]) {{
 /** @todo */
 function CHECK_VERSION(i: number, msg: string, ret: any) {{
     return ret;
+}}
+
+/** @todo */
+function CHECK_NULL_ALLOWED(p: Parser, result: any) {{
+    return result;
 }}
 
 """
