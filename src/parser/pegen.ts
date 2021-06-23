@@ -13,6 +13,7 @@ import {
     cmpop,
     operator,
     arguments_,
+    arg,
 } from "../ast/astnodes.ts";
 import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -59,6 +60,14 @@ export function new_type_comment(s: string | null): string | null {
     //     }
     //     return res;
     // }
+}
+
+export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
+    if (tc === null) {
+        return a;
+    }
+
+    return new arg(a.arg, a.annotation, tc.string, a.lineno, a.col_offset, a.end_lineno, a.end_col_offset);
 }
 
 // arg_ty
