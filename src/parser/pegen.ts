@@ -1802,7 +1802,7 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
         return [];
     }
 
-    return seq.map((kv) => kv.key);
+    return seq.map((kv) => kv.value);
 }
 
 // /* Extracts all values from an asdl_seq* of KeyValuePair*'s */
