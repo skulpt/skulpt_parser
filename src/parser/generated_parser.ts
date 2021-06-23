@@ -46,6 +46,10 @@ function CHECK_VERSION(i: number, msg: string, ret: any) {
     return ret;
 }
 
+function CHECK_CALL_NULL_ALLOWED(p: Parser, result: any) {
+    return result;
+}
+
 export class GeneratedParser extends Parser {
     start_rule: StartRule;
     flags: number;
@@ -2935,7 +2939,7 @@ export class GeneratedParser extends Parser {
         const mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1);
+            return pegen.fkeyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1);
         }
         this.reset(mark);
         if ((literal = this.expect("**")) && (a = this.expression())) {
