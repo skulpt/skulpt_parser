@@ -1,4 +1,4 @@
-import { NAME, NUMBER, OP, STRING, tok_name } from "../tokenize/token.ts";
+import { DEDENT, ENDMARKER, NAME, NEWLINE, NUMBER, OP, STRING, tok_name } from "../tokenize/token.ts";
 import { exact_token_types } from "../tokenize/Tokenizer.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
@@ -118,7 +118,16 @@ export class Parser {
     }
     extra(start: number): [number, number, number, number] {
         const START = this._tokens[start].start;
-        const END = this._tokens[this.mark() - 1].end;
+        let m = this.mark() - 1;
+        let END_TOKEN = this._tokens[m];
+        while (m >= 0) {
+            const type = END_TOKEN.type;
+            if (type !== ENDMARKER && (type < NEWLINE || type > DEDENT)) {
+                break;
+            }
+            END_TOKEN = this._tokens[m--];
+        }
+        const END = END_TOKEN.end;
         return [START[0], START[1], END[0], END[1]];
     }
 
