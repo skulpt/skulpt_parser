@@ -15,7 +15,7 @@ import {
     arguments_,
     arg,
 } from "../ast/astnodes.ts";
-import { NAME } from "../tokenize/token.ts";
+import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { parseString } from "./parse_string.ts";
@@ -1519,6 +1519,23 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 
 //     return _Py_Name(uni, Load, EXTRA_EXPR(first_name, second_name));
 // }
+
+class UnreachableException extends Error {}
+
+export function seq_count_dots(seq: TokenInfo[]) {
+    return seq
+        .map((current_expr) => {
+            switch (current_expr.type) {
+                case ELLIPSIS:
+                    return 3;
+                case DOT:
+                    return 1;
+                default:
+                    throw new UnreachableException();
+            }
+        })
+        .reduce((a, b) => a + b, 0);
+}
 
 // /* Counts the total number of dots in seq's tokens */
 // int
