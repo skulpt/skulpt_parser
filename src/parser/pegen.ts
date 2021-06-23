@@ -14,6 +14,7 @@ import {
     operator,
     arguments_,
     arg,
+    keyword,
 } from "../ast/astnodes.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -1873,6 +1874,10 @@ export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInf
 //     return a;
 // }
 
+export function star_etc(p: Parser, vararg: arg, kwonlyargs: NameDefaultPair[], kwarg: arg) {
+    return new StarEtc(vararg, kwonlyargs, kwarg);
+}
+
 // /* Constructs a StarEtc */
 // StarEtc *
 // _PyPegen_star_etc(Parser *p, arg_ty vararg, asdl_seq *kwonlyargs, arg_ty kwarg)
@@ -1908,7 +1913,11 @@ export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInf
 //     return new_seq;
 // }
 
-export function get_names(p: Parser, names_with_defaults: NameDefaultPair[]): arg[] {
+export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | null): arg[] {
+    if (names_with_defaults === null) {
+        return [];
+    }
+
     return names_with_defaults.map((pair) => pair.arg);
 }
 
@@ -2230,7 +2239,7 @@ kwarg_or_starred[KeywordOrStarred*]:
     | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
     | invalid_kwarg
 */
-export function keyword_or_starred(p: Parser, element: any, is_keyword: boolean) {
+export function keyword_or_starred(p: Parser, element: keyword, is_keyword: boolean) {
     return new KeywordOrStarred(element, is_keyword);
 }
 
@@ -2261,8 +2270,12 @@ export function keyword_or_starred(p: Parser, element: any, is_keyword: boolean)
 //     return n;
 // }
 
-export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]) {
-    return kwargs.filter((k) => k.is_keyword);
+function isKeyword(kw: expr | keyword): kw is keyword {
+    return kw instanceof keyword;
+}
+
+export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): expr[] {
+    return kwargs.map((kw) => kw.element).filter((kw) => !isKeyword(kw));
 }
 
 // /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
@@ -2287,6 +2300,10 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 //     }
 //     return new_seq;
 // }
+
+export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
+    return kwargs.map((kw) => kw.element).filter(isKeyword);
+}
 
 // /* Return a new asdl_seq* with only the keywords in kwargs */
 // asdl_seq *
@@ -2540,18 +2557,16 @@ export function make_module(p: Parser, a: stmt[]) {
 // }
 
 // @stu why does our parser not call these functions with the parser?
-export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null | 1, ...attrs: Attrs) {
-    const args_len = a.length;
-    const total_len = args_len;
-
+export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null, ...attrs: Attrs) {
     if (b === null) {
         return new Call(dummy_name(p), a, [], ...attrs);
     }
 
-    // const starreds = seq_extract_starred_exprs(p, b);
-    // keywords: KeywordOrStarred[] = seq_extract_delete_starred_exprs(p, b);
+    const starreds = seq_extract_starred_exprs(p, b);
+    const keywords = seq_delete_starred_exprs(p, b);
+    const args = a.concat(starreds);
 
-    throw new Error("we don't deal with kwargs stargs etc yet, but I've done some of the functions");
+    return new Call(dummy_name(p), args, keywords, ...attrs);
 }
 
 // expr_ty _PyPegen_collect_call_seqs(Parser *p, asdl_seq *a, asdl_seq *b,
