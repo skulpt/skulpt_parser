@@ -1,6 +1,7 @@
 import {
     AST,
     Attrs,
+    ClassDef,
     expr_context,
     expr,
     Module,
@@ -2219,7 +2220,22 @@ export function augoperator(p: Parser, kind: operator) {
 //                            function_def->end_col_offset, p->arena);
 // }
 
-// /* Construct a ClassDef equivalent to class_def, but with decorators */
+/* Construct a ClassDef equivalent to class_def, but with decorators */
+export function class_def_decorators(p: Parser, decorators: expr[], class_def: ClassDef) {
+    assert(class_def !== null);
+    return new ClassDef(
+        class_def.name,
+        class_def.bases,
+        class_def.keywords,
+        class_def.body,
+        decorators,
+        class_def.lineno,
+        class_def.col_offset,
+        class_def.end_lineno,
+        class_def.end_col_offset
+    );
+}
+
 // stmt_ty
 // _PyPegen_class_def_decorators(Parser *p, asdl_seq *decorators, stmt_ty class_def)
 // {
