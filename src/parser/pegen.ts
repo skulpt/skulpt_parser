@@ -19,7 +19,16 @@ import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { parseString } from "./parse_string.ts";
-import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred, KeywordToken } from "./pegen_types.ts";
+import {
+    AugOperator,
+    CmpopExprPair,
+    KeyValuePair,
+    KeywordOrStarred,
+    KeywordToken,
+    NameDefaultPair,
+    SlashWithDefault,
+    StarEtc,
+} from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
     constructor(message: string) {
@@ -1873,6 +1882,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return new_seq;
 // }
 
+export function get_names(p: Parser, names_with_defaults: NameDefaultPair[]): arg[] {
+    return names_with_defaults.map((pair) => pair.arg);
+}
+
 // static asdl_seq *
 // _get_names(Parser *p, asdl_seq *names_with_defaults)
 // {
@@ -1888,6 +1901,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return seq;
 // }
 
+export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]): expr[] {
+    return names_with_defaults.map((pair) => pair.value);
+}
+
 // static asdl_seq *
 // _get_defaults(Parser *p, asdl_seq *names_with_defaults)
 // {
@@ -1902,6 +1919,66 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     }
 //     return seq;
 // }
+
+export function make_arguments(
+    p: Parser,
+    slash_without_default: arg[] | null,
+    slash_with_default: SlashWithDefault,
+    plain_names: any[],
+    names_with_default: any[],
+    star_etc: StarEtc
+): arguments_ {
+    let posonlyargs: arg[] = [];
+    if (slash_without_default !== null) {
+        posonlyargs = slash_without_default;
+    } else if (slash_with_default) {
+        const slash_with_default_names = get_names(p, slash_with_default.names_with_defaults);
+        posonlyargs = slash_with_default.plain_names.concat(slash_with_default_names);
+    }
+
+    let posargs: arg[] = [];
+    if (plain_names !== null && names_with_default !== null) {
+        const names_with_default_names = get_names(p, names_with_default);
+        posargs = plain_names.concat(names_with_default_names);
+    } else if (plain_names === null && names_with_default !== null) {
+        posargs = get_names(p, names_with_default);
+    } else if (plain_names !== null && names_with_default === null) {
+        posargs = plain_names;
+    }
+
+    let posdefaults: expr[] = [];
+    if (slash_with_default !== null && names_with_default !== null) {
+        const slash_with_default_values = get_defaults(p, slash_with_default.names_with_defaults);
+        const names_with_default_values = get_defaults(p, names_with_default);
+        posdefaults = slash_with_default_values.concat(names_with_default_values);
+    } else if (slash_with_default === null && names_with_default !== null) {
+        posdefaults = get_defaults(p, names_with_default);
+    } else if (slash_with_default !== null && names_with_default === null) {
+        posdefaults = get_defaults(p, slash_with_default.names_with_defaults);
+    }
+
+    let vararg: arg | null = null;
+    if (star_etc !== null && star_etc.vararg !== null) {
+        vararg = star_etc.vararg;
+    }
+
+    let kwonlyargs: arg[] = [];
+    if (star_etc !== null && star_etc.kwonlyargs !== null) {
+        kwonlyargs = get_names(p, star_etc.kwonlyargs);
+    }
+
+    let kwdefaults: expr[] = [];
+    if (star_etc !== null && star_etc.kwonlyargs !== null) {
+        kwdefaults = get_defaults(p, star_etc.kwonlyargs);
+    }
+
+    let kwarg: arg | null = null;
+    if (star_etc !== null && star_etc.kwarg !== null) {
+        kwarg = star_etc.kwarg;
+    }
+
+    return new arguments_(posonlyargs, posargs, vararg, kwonlyargs, kwdefaults, kwarg, posdefaults);
+}
 
 // /* Constructs an arguments_ty object out of all the parsed constructs in the parameters rule */
 // arguments_ty
