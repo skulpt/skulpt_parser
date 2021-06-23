@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..5bf44d6e71 100644
+index 64e205e7fd..ddc442a97b 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -828,7 +828,7 @@ index 64e205e7fd..5bf44d6e71 100644
 +                          CHECK_NULL_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
 +                          CHECK_NULL_ALLOWED(pegen.seq_delete_starred_exprs(this, a)),
 +                          ...EXTRA) }
-+kwargs[any]:
++kwargs[KeywordOrStarredArray]:
 +    | a=','.kwarg_or_starred+ ',' b=','.kwarg_or_double_starred+ { pegen.join_sequences(this, a, b) }
      | ','.kwarg_or_starred+
      | ','.kwarg_or_double_starred+

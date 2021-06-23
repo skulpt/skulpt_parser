@@ -51,6 +51,8 @@ function CHECK_NULL_ALLOWED(p: Parser, result: any) {
     return result;
 }
 
+type KeywordOrStarredArray = KeywordOrStarred[];
+
 export class GeneratedParser extends Parser {
     start_rule: StartRule;
     flags: number;
@@ -2877,7 +2879,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kwargs(): any | null {
+    kwargs(): KeywordOrStarredArray | null {
         // kwargs: ','.kwarg_or_starred+ ',' ','.kwarg_or_double_starred+ | ','.kwarg_or_starred+ | ','.kwarg_or_double_starred+
         let _gather_112, _gather_114, a, b, literal;
         const mark = this.mark();

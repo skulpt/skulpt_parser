@@ -1908,7 +1908,7 @@ export function star_etc(p: Parser, vararg: arg, kwonlyargs: NameDefaultPair[], 
 //     return a;
 // }
 
-export function join_sequences(p: Parser, a: arg[], b: arg[]) {
+export function join_sequences(p: Parser, a: KeywordOrStarred[], b: KeywordOrStarred[]): KeywordOrStarred[] {
     return a.concat(b);
 }
 
