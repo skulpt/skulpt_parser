@@ -64,6 +64,14 @@ function CHECK_VERSION(i: number, msg: string, ret: any) {{
     return ret;
 }}
 
+function  CHECK_CALL_NULL_ALLOWED(p: Parser, result: any) {{
+    # if (result === null /* && PyErr_Occurred() */) {
+        // TODO: what is error_indicator
+        // p->error_indicator = 1;
+    }
+    return result;
+}}
+
 """
 
 MODULE_SUFFIX = """
