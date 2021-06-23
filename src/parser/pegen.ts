@@ -1524,19 +1524,34 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 
 class UnreachableException extends Error {}
 
+// export function seq_count_dots(seq: TokenInfo[]) {
+//     return seq
+//         .map((current_expr) => {
+//             switch (current_expr.type) {
+//                 case ELLIPSIS:
+//                     return 3;
+//                 case DOT:
+//                     return 1;
+//                 default:
+//                     throw new UnreachableException();
+//             }
+//         })
+//         .reduce((a, b) => a + b, 0);
+// }
+
+function getNumDots(e: TokenInfo) {
+    switch (e.type) {
+        case ELLIPSIS:
+            return 3;
+        case DOT:
+            return 1;
+        default:
+            throw new UnreachableException();
+    }
+}
+
 export function seq_count_dots(seq: TokenInfo[]) {
-    return seq
-        .map((current_expr) => {
-            switch (current_expr.type) {
-                case ELLIPSIS:
-                    return 3;
-                case DOT:
-                    return 1;
-                default:
-                    throw new UnreachableException();
-            }
-        })
-        .reduce((a, b) => a + b, 0);
+    return seq.reduce((a, b) => a + getNumDots(b), 0);
 }
 
 // /* Counts the total number of dots in seq's tokens */
