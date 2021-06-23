@@ -46,6 +46,7 @@ function CHECK_VERSION(i: number, msg: string, ret: any) {
     return ret;
 }
 
+/** @todo */
 function CHECK_CALL_NULL_ALLOWED(p: Parser, result: any) {
     return result;
 }
