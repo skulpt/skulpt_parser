@@ -17,7 +17,7 @@ import {
 import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
-import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
+import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred, KeywordToken } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
     constructor(message: string) {
@@ -577,15 +577,20 @@ export function dummy_name(p: Parser): Name {
 //     return cache;
 // }
 
-export function get_keyword_or_name_type(p: Parser, token: TokenInfo): number {
-    assert(p.keywords);
+export interface NameTokenInfo extends TokenInfo {
+    type: 1;
+}
 
-    if (p.keywords.has(token.string)) {
-        // @ts-ignore: typescript doesn't understand that if Map has get is safe
-        return p.keywords.get(token.string).type;
+/** Expects a NAME token. Check if we're a a keyword before returning the token type. If we are a keyword change the type */
+export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): number {
+    const string = token.string;
+    if (p.keywords.has(string)) {
+        const type = (p.keywords.get(string) as KeywordToken).type;
+        // change the token type to what it should be - in cpython this happens in _PyPegen_fill_token
+        (token as TokenInfo).type = type;
+        return type;
     }
-
-    return token.type;
+    return NAME;
 }
 
 // static int

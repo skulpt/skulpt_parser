@@ -30,7 +30,7 @@ import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
-import { pegenV1 as pegen } from "./pegen_proxy.ts";
+import { pegen } from "./pegen_proxy.ts";
 import { KeywordToken } from "./pegen_types.ts";
 import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
