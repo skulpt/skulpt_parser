@@ -1756,6 +1756,10 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return new;
 // }
 
+export function key_value_pair(p: Parser, key: expr, value: expr) {
+    return new KeyValuePair(key, value);
+}
+
 // /* Constructs a KeyValuePair that is used when parsing a dict's key value pairs */
 // KeyValuePair *
 // _PyPegen_key_value_pair(Parser *p, expr_ty key, expr_ty value)
@@ -1769,8 +1773,12 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
-export function key_value_pair(p: Parser, key: expr, value: expr) {
-    return new KeyValuePair(key, value);
+export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+    if (seq === null) {
+        return [];
+    }
+
+    return seq.map((kv) => kv.key);
 }
 
 // /* Extracts all keys from an asdl_seq* of KeyValuePair*'s */
@@ -1789,7 +1797,7 @@ export function key_value_pair(p: Parser, key: expr, value: expr) {
 //     return new_seq;
 // }
 
-export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+export function get_values(p: Parser, seq: KeyValuePair[] | null) {
     if (seq === null) {
         return [];
     }
@@ -1813,12 +1821,9 @@ export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
 //     return new_seq;
 // }
 
-export function get_values(p: Parser, seq: KeyValuePair[] | null) {
-    if (seq === null) {
-        return [];
-    }
-
-    return seq.map((kv) => kv.key);
+export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInfo) {
+    const a = add_type_comment_to_arg(p, arg, tc);
+    return new NameDefaultPair(a, value);
 }
 
 // /* Constructs a NameDefaultPair */
