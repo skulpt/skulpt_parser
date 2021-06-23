@@ -70,8 +70,57 @@ MODULE_SUFFIX = """
 
 """
 
-# todo mangle names like await
-reserved = {"await"}
+# todo mangle names like await - taken from https://www.w3schools.com/js/js_reserved.asp
+reserved = {
+    "arguments",
+    "await",
+    "break",
+    "case",
+    "catch",
+    "class",
+    "const",
+    "continue",
+    "debugger",
+    "default",
+    "delete",
+    "do",
+    "else",
+    "enum",
+    "eval",
+    "export",
+    "extends",
+    "false",
+    "finally",
+    "for",
+    "function",
+    "if",
+    "implements",
+    "import",
+    "in",
+    "instanceof",
+    "interface",
+    "let",
+    "new",
+    "null",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "return",
+    "static",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "typeof",
+    "var",
+    "void",
+    "while",
+    "with",
+    "yield",
+}
 
 
 def fix_reserved(name):
@@ -114,18 +163,10 @@ class PythonCallMakerVisitor(GrammarVisitor):
         return name, f"this.{name}()"
 
     def keyword_helper(self, keyword):
-        if keyword not in self.keyword_cache.keys():
+        if keyword not in self.keyword_cache:
             self.keyword_cache[keyword] = self.gen.keyword_type()
 
         return "keyword", f"this.expect({keyword!r})"
-        # FunctionCall(
-        #     assigned_variable="_keyword",
-        #     function="_PyPegen_expect_token",
-        #     arguments=["p", self.keyword_cache[keyword]],
-        #     return_type="Token *",
-        #     nodetype=NodeTypes.KEYWORD,
-        #     comment=f"token='{keyword}'",
-        # )
 
     def visit_StringLeaf(self, node: StringLeaf) -> Tuple[str, str]:
         val = ast.literal_eval(node.value)
@@ -135,7 +176,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
             else:
                 return self.soft_keyword_helper(node.value)
         else:
-            # todo: figure out what exact_tokesn is
+            # @TODO: figure out what exact_tokens is
             # assert val in self.exact_tokens, f"{node.value} is not a known literal"
             # type = self.exact_tokens[val]
             # return FunctionCall(
