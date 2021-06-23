@@ -30,11 +30,11 @@ import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
-import { pegenV2 as pegen } from "./pegen_proxy.ts";
+import { pegen } from "./pegen_proxy.ts";
 import { KeywordToken } from "./pegen_types.ts";
 import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
-import { memoize, memoizeLeftRec, logger, Parser } from "./verbose_parser.ts";
+import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
 
 /** @todo */
 function CHECK(...args: any[]) {
@@ -4085,7 +4085,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_26(): Name[] | null {
+    _loop0_26(): any | null {
         // _loop0_26: ',' NAME
         let elem, literal;
         const children = [];
@@ -4100,7 +4100,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_25(): Name[] | null {
+    _gather_25(): any | null {
         // _gather_25: NAME _loop0_26
         let elem, seq;
         const mark = this.mark();
