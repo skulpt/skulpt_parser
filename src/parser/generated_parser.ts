@@ -4085,7 +4085,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _loop0_26(): any | null {
+    _loop0_26(): Name[] | null {
         // _loop0_26: ',' NAME
         let elem, literal;
         const children = [];
@@ -4100,7 +4100,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    _gather_25(): any | null {
+    _gather_25(): Name[] | null {
         // _gather_25: NAME _loop0_26
         let elem, seq;
         const mark = this.mark();

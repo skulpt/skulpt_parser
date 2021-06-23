@@ -1557,6 +1557,10 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return alias(str, NULL, p->arena);
 // }
 
+export function map_names_to_ids(p: Parser, seq: Name[]) {
+    return seq.map((e) => e.id);
+}
+
 // /* Creates a new asdl_seq* with the identifiers of all the names in seq */
 // asdl_seq *
 // _PyPegen_map_names_to_ids(Parser *p, asdl_seq *seq)
