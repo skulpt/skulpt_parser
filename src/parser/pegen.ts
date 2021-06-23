@@ -17,6 +17,7 @@ import {
 import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
+import { parseString } from "./parse_string.ts";
 import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred, KeywordToken } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
@@ -2203,8 +2204,9 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
     const [lineno, col_offset] = a[0].start;
     const [end_lineno, end_col_offset] = a[a.length - 1].end;
-    /** @todo parse_string.c */
-    return new Constant(a.map((t) => t.string).join(), null, lineno, col_offset, end_lineno, end_col_offset);
+    /** @todo Implement this properly - see parse_string.c */
+    const s = a.map((t) => parseString(t.string)).join();
+    return new Constant(s, null, lineno, col_offset, end_lineno, end_col_offset);
 }
 
 // expr_ty
