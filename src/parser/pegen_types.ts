@@ -64,6 +64,16 @@ export class KeywordOrStarred {
     }
 }
 
+export class KeywordToken {
+    name: string;
+    type: number;
+
+    constructor(name: string, type: number) {
+        this.name = name;
+        this.type = type;
+    }
+}
+
 /* These definitions must match corresponding definitions in graminit.h. */
 export const SINGLE_INPUT = 256;
 export const FILE_INPUT = 257;

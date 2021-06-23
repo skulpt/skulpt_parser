@@ -96,11 +96,13 @@ class PegenTestResult(TextTestResult):
         self.stream.writeln("%s" % err)
 
     def printErrorList(self, flavour, errors):
-        if self.showAll:
-            # don't print these again
-            return
-        for test, err in errors:
-            self.printFail(test, err, flavour)
+        # don't print the errors
+        return
+        # if self.showAll or True:
+        #     # don't print these again
+        #     return
+        # for test, err in errors:
+        #     self.printFail(test, err, flavour)
 
 
 class PegenTestRunner(TextTestRunner):

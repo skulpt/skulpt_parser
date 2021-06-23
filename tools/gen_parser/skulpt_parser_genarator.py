@@ -21,6 +21,8 @@ from pegen.grammar import (
 )
 from pegen import grammar
 from pegen.parser_generator import ParserGenerator
+import ast
+import re
 
 # @TODO here are the missing types returned from the methods
 # we should include these in the import somehow
@@ -47,6 +49,7 @@ import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
 import {{ pegen }} from "./pegen_proxy.ts";
+import {{ KeywordToken }} from "./pegen_types.ts";
 import {{FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
 
 import {{memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
@@ -67,8 +70,57 @@ MODULE_SUFFIX = """
 
 """
 
-# todo mangle names like await
-reserved = {"await"}
+# todo mangle names like await - taken from https://www.w3schools.com/js/js_reserved.asp
+reserved = {
+    "arguments",
+    "await",
+    "break",
+    "case",
+    "catch",
+    "class",
+    "const",
+    "continue",
+    "debugger",
+    "default",
+    "delete",
+    "do",
+    "else",
+    "enum",
+    "eval",
+    "export",
+    "extends",
+    "false",
+    "finally",
+    "for",
+    "function",
+    "if",
+    "implements",
+    "import",
+    "in",
+    "instanceof",
+    "interface",
+    "let",
+    "new",
+    "null",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "return",
+    "static",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "typeof",
+    "var",
+    "void",
+    "while",
+    "with",
+    "yield",
+}
 
 
 def fix_reserved(name):
@@ -99,6 +151,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
     def __init__(self, parser_generator: ParserGenerator):
         self.gen = parser_generator
         self.cache: Dict[Any, Any] = {}
+        self.keyword_cache: Dict[Any, Any] = {}
 
     def visit_NameLeaf(self, node: NameLeaf) -> Tuple[Optional[str], str]:
         name = node.value
@@ -109,8 +162,32 @@ class PythonCallMakerVisitor(GrammarVisitor):
             return name.lower(), f"this.expect({name!r})"
         return name, f"this.{name}()"
 
+    def keyword_helper(self, keyword):
+        if keyword not in self.keyword_cache:
+            self.keyword_cache[keyword] = self.gen.keyword_type()
+
+        return "keyword", f"this.expect({keyword!r})"
+
     def visit_StringLeaf(self, node: StringLeaf) -> Tuple[str, str]:
-        return "literal", f"this.expect({node.value})"
+        val = ast.literal_eval(node.value)
+        if re.match(r"[a-zA-Z_]\w*\Z", val):  # This is a keyword
+            if node.value.endswith("'"):
+                return self.keyword_helper(val)
+            else:
+                return self.soft_keyword_helper(node.value)
+        else:
+            # @TODO: figure out what exact_tokens is
+            # assert val in self.exact_tokens, f"{node.value} is not a known literal"
+            # type = self.exact_tokens[val]
+            # return FunctionCall(
+            #     assigned_variable="_literal",
+            #     function=f"_PyPegen_expect_token",
+            #     arguments=["p", type],
+            #     nodetype=NodeTypes.GENERIC_TOKEN,
+            #     return_type="Token *",
+            #     comment=f"token='{val}'",
+            # )
+            return "literal", f"this.expect({node.value})"
 
     def visit_Rhs(self, node: Rhs) -> Tuple[Optional[str], str]:
         if node in self.cache:
@@ -242,7 +319,16 @@ export class GeneratedParser extends Parser {
                 with self.indent():
                     self.visit(rule)
         self.print("}")
+        self.print()
+        self.print("GeneratedParser.prototype.keywords = new Map([")
+        with self.indent():
+            for name, token_type in self.callmakervisitor.keyword_cache.items():
+                self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
+        self.print("]);")
+        self.print()
+
         self.print(self.suffix)
+
         # trailer = self.grammar.metas.get("trailer", "")
         # if trailer is not None:
         #     self.print(trailer.rstrip("\n"))

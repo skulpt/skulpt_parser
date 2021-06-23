@@ -31,6 +31,7 @@ import type { TokenInfo } from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
 import { pegen } from "./pegen_proxy.ts";
+import { KeywordToken } from "./pegen_types.ts";
 import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
 import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
@@ -292,7 +293,7 @@ export class GeneratedParser extends Parser {
             e,
             global_stmt,
             import_stmt,
-            literal,
+            keyword,
             nonlocal_stmt,
             raise_stmt,
             return_stmt,
@@ -319,7 +320,7 @@ export class GeneratedParser extends Parser {
             return raise_stmt;
         }
         this.reset(mark);
-        if ((literal = this.expect("pass"))) {
+        if ((keyword = this.expect("pass"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Pass(...EXTRA);
         }
@@ -336,12 +337,12 @@ export class GeneratedParser extends Parser {
             return assert_stmt;
         }
         this.reset(mark);
-        if ((literal = this.expect("break"))) {
+        if ((keyword = this.expect("break"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Break(...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("continue"))) {
+        if ((keyword = this.expect("continue"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Continue(...EXTRA);
         }
@@ -513,9 +514,9 @@ export class GeneratedParser extends Parser {
     @memoize
     global_stmt(): stmt | null {
         // global_stmt: 'global' ','.NAME+
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("global")) && (a = this._gather_25())) {
+        if ((keyword = this.expect("global")) && (a = this._gather_25())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Global(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA);
         }
@@ -527,9 +528,9 @@ export class GeneratedParser extends Parser {
     @memoize
     nonlocal_stmt(): stmt | null {
         // nonlocal_stmt: 'nonlocal' ','.NAME+
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("nonlocal")) && (a = this._gather_27())) {
+        if ((keyword = this.expect("nonlocal")) && (a = this._gather_27())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Nonlocal(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA);
         }
@@ -555,9 +556,9 @@ export class GeneratedParser extends Parser {
     @memoize
     assert_stmt(): stmt | null {
         // assert_stmt: 'assert' expression [',' expression]
-        let a, b, literal;
+        let a, b, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("assert")) && (a = this.expression()) && ((b = this._tmp_29()), 1)) {
+        if ((keyword = this.expect("assert")) && (a = this.expression()) && ((b = this._tmp_29()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Assert(a, b, ...EXTRA);
         }
@@ -569,9 +570,9 @@ export class GeneratedParser extends Parser {
     @memoize
     del_stmt(): stmt | null {
         // del_stmt: 'del' del_targets &(';' | NEWLINE) | invalid_del_stmt
-        let a, invalid_del_stmt, literal;
+        let a, invalid_del_stmt, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("del")) && (a = this.del_targets()) && this.positive_lookahead(this._tmp_30)) {
+        if ((keyword = this.expect("del")) && (a = this.del_targets()) && this.positive_lookahead(this._tmp_30)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Delete(a, ...EXTRA);
         }
@@ -604,9 +605,9 @@ export class GeneratedParser extends Parser {
     @memoize
     import_name(): stmt | null {
         // import_name: 'import' dotted_as_names
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("import")) && (a = this.dotted_as_names())) {
+        if ((keyword = this.expect("import")) && (a = this.dotted_as_names())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Import(a, ...EXTRA);
         }
@@ -618,13 +619,13 @@ export class GeneratedParser extends Parser {
     @memoize
     import_from(): stmt | null {
         // import_from: 'from' (('.' | '...'))* dotted_name 'import' import_from_targets | 'from' (('.' | '...'))+ 'import' import_from_targets
-        let a, b, c, literal, literal_1;
+        let a, b, c, keyword, keyword_1;
         const mark = this.mark();
         if (
-            (literal = this.expect("from")) &&
+            (keyword = this.expect("from")) &&
             (a = this._loop0_31()) &&
             (b = this.dotted_name()) &&
-            (literal_1 = this.expect("import")) &&
+            (keyword_1 = this.expect("import")) &&
             (c = this.import_from_targets())
         ) {
             const EXTRA = this.extra(mark);
@@ -632,9 +633,9 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (
-            (literal = this.expect("from")) &&
+            (keyword = this.expect("from")) &&
             (a = this._loop1_32()) &&
-            (literal_1 = this.expect("import")) &&
+            (keyword_1 = this.expect("import")) &&
             (b = this.import_from_targets())
         ) {
             const EXTRA = this.extra(mark);
@@ -747,12 +748,12 @@ export class GeneratedParser extends Parser {
     @memoize
     if_stmt(): stmt | null {
         // if_stmt: 'if' named_expression ':' block elif_stmt | 'if' named_expression ':' block else_block?
-        let a, b, c, literal, literal_1;
+        let a, b, c, keyword, literal;
         const mark = this.mark();
         if (
-            (literal = this.expect("if")) &&
+            (keyword = this.expect("if")) &&
             (a = this.named_expression()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             (c = this.elif_stmt())
         ) {
@@ -761,9 +762,9 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (
-            (literal = this.expect("if")) &&
+            (keyword = this.expect("if")) &&
             (a = this.named_expression()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             ((c = this.else_block()), 1)
         ) {
@@ -778,12 +779,12 @@ export class GeneratedParser extends Parser {
     @memoize
     elif_stmt(): stmt | null {
         // elif_stmt: 'elif' named_expression ':' block elif_stmt | 'elif' named_expression ':' block else_block?
-        let a, b, c, literal, literal_1;
+        let a, b, c, keyword, literal;
         const mark = this.mark();
         if (
-            (literal = this.expect("elif")) &&
+            (keyword = this.expect("elif")) &&
             (a = this.named_expression()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             (c = this.elif_stmt())
         ) {
@@ -792,9 +793,9 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (
-            (literal = this.expect("elif")) &&
+            (keyword = this.expect("elif")) &&
             (a = this.named_expression()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             ((c = this.else_block()), 1)
         ) {
@@ -809,9 +810,9 @@ export class GeneratedParser extends Parser {
     @memoize
     else_block(): any | null {
         // else_block: 'else' ':' block
-        let b, literal, literal_1;
+        let b, keyword, literal;
         const mark = this.mark();
-        if ((literal = this.expect("else")) && (literal_1 = this.expect(":")) && (b = this.block())) {
+        if ((keyword = this.expect("else")) && (literal = this.expect(":")) && (b = this.block())) {
             return b;
         }
         this.reset(mark);
@@ -822,12 +823,12 @@ export class GeneratedParser extends Parser {
     @memoize
     while_stmt(): stmt | null {
         // while_stmt: 'while' named_expression ':' block else_block?
-        let a, b, c, literal, literal_1;
+        let a, b, c, keyword, literal;
         const mark = this.mark();
         if (
-            (literal = this.expect("while")) &&
+            (keyword = this.expect("while")) &&
             (a = this.named_expression()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             ((c = this.else_block()), 1)
         ) {
@@ -842,16 +843,16 @@ export class GeneratedParser extends Parser {
     @memoize
     for_stmt(): stmt | null {
         // for_stmt: 'for' star_targets 'in' ~ star_expressions ':' TYPE_COMMENT? block else_block? | ASYNC 'for' star_targets 'in' ~ star_expressions ':' TYPE_COMMENT? block else_block? | invalid_for_target
-        let async, b, el, ex, invalid_for_target, literal, literal_1, literal_2, t, tc;
+        let async, b, el, ex, invalid_for_target, keyword, keyword_1, literal, t, tc;
         let cut = false;
         const mark = this.mark();
         if (
-            (literal = this.expect("for")) &&
+            (keyword = this.expect("for")) &&
             (t = this.star_targets()) &&
-            (literal_1 = this.expect("in")) &&
+            (keyword_1 = this.expect("in")) &&
             (cut = true) &&
             (ex = this.star_expressions()) &&
-            (literal_2 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block()) &&
             ((el = this.else_block()), 1)
@@ -863,12 +864,12 @@ export class GeneratedParser extends Parser {
         if (cut) return null;
         if (
             (async = this.expect("ASYNC")) &&
-            (literal = this.expect("for")) &&
+            (keyword = this.expect("for")) &&
             (t = this.star_targets()) &&
-            (literal_1 = this.expect("in")) &&
+            (keyword_1 = this.expect("in")) &&
             (cut = true) &&
             (ex = this.star_expressions()) &&
-            (literal_2 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block()) &&
             ((el = this.else_block()), 1)
@@ -893,15 +894,15 @@ export class GeneratedParser extends Parser {
     @memoize
     with_stmt(): stmt | null {
         // with_stmt: 'with' '(' ','.with_item+ ','? ')' ':' block | 'with' ','.with_item+ ':' TYPE_COMMENT? block | ASYNC 'with' '(' ','.with_item+ ','? ')' ':' block | ASYNC 'with' ','.with_item+ ':' TYPE_COMMENT? block
-        let a, async, b, literal, literal_1, literal_2, literal_3, opt, tc;
+        let a, async, b, keyword, literal, literal_1, literal_2, opt, tc;
         const mark = this.mark();
         if (
-            (literal = this.expect("with")) &&
-            (literal_1 = this.expect("(")) &&
+            (keyword = this.expect("with")) &&
+            (literal = this.expect("(")) &&
             (a = this._gather_39()) &&
             ((opt = this.expect(",")), 1) &&
-            (literal_2 = this.expect(")")) &&
-            (literal_3 = this.expect(":")) &&
+            (literal_1 = this.expect(")")) &&
+            (literal_2 = this.expect(":")) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -909,9 +910,9 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (
-            (literal = this.expect("with")) &&
+            (keyword = this.expect("with")) &&
             (a = this._gather_41()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block())
         ) {
@@ -921,12 +922,12 @@ export class GeneratedParser extends Parser {
         this.reset(mark);
         if (
             (async = this.expect("ASYNC")) &&
-            (literal = this.expect("with")) &&
-            (literal_1 = this.expect("(")) &&
+            (keyword = this.expect("with")) &&
+            (literal = this.expect("(")) &&
             (a = this._gather_43()) &&
             ((opt = this.expect(",")), 1) &&
-            (literal_2 = this.expect(")")) &&
-            (literal_3 = this.expect(":")) &&
+            (literal_1 = this.expect(")")) &&
+            (literal_2 = this.expect(":")) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -935,9 +936,9 @@ export class GeneratedParser extends Parser {
         this.reset(mark);
         if (
             (async = this.expect("ASYNC")) &&
-            (literal = this.expect("with")) &&
+            (keyword = this.expect("with")) &&
             (a = this._gather_45()) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             ((tc = this.expect("TYPE_COMMENT")), 1) &&
             (b = this.block())
         ) {
@@ -956,11 +957,11 @@ export class GeneratedParser extends Parser {
     @memoize
     with_item(): withitem | null {
         // with_item: expression 'as' star_target &(',' | ')' | ':') | invalid_with_item | expression
-        let e, invalid_with_item, literal, t;
+        let e, invalid_with_item, keyword, t;
         const mark = this.mark();
         if (
             (e = this.expression()) &&
-            (literal = this.expect("as")) &&
+            (keyword = this.expect("as")) &&
             (t = this.star_target()) &&
             this.positive_lookahead(this._tmp_47)
         ) {
@@ -982,11 +983,11 @@ export class GeneratedParser extends Parser {
     @memoize
     try_stmt(): stmt | null {
         // try_stmt: 'try' ':' block finally_block | 'try' ':' block except_block+ else_block? finally_block?
-        let b, el, ex, f, literal, literal_1;
+        let b, el, ex, f, keyword, literal;
         const mark = this.mark();
         if (
-            (literal = this.expect("try")) &&
-            (literal_1 = this.expect(":")) &&
+            (keyword = this.expect("try")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             (f = this.finally_block())
         ) {
@@ -995,8 +996,8 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if (
-            (literal = this.expect("try")) &&
-            (literal_1 = this.expect(":")) &&
+            (keyword = this.expect("try")) &&
+            (literal = this.expect(":")) &&
             (b = this.block()) &&
             (ex = this._loop1_48()) &&
             ((el = this.else_block()), 1) &&
@@ -1013,20 +1014,20 @@ export class GeneratedParser extends Parser {
     @memoize
     except_block(): excepthandler | null {
         // except_block: 'except' expression ['as' NAME] ':' block | 'except' ':' block
-        let b, e, literal, literal_1, t;
+        let b, e, keyword, literal, t;
         const mark = this.mark();
         if (
-            (literal = this.expect("except")) &&
+            (keyword = this.expect("except")) &&
             (e = this.expression()) &&
             ((t = this._tmp_49()), 1) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.ExceptHandler(e, t ? t.id : null, b, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("except")) && (literal_1 = this.expect(":")) && (b = this.block())) {
+        if ((keyword = this.expect("except")) && (literal = this.expect(":")) && (b = this.block())) {
             const EXTRA = this.extra(mark);
             return new astnodes.ExceptHandler(null, null, b, ...EXTRA);
         }
@@ -1038,9 +1039,9 @@ export class GeneratedParser extends Parser {
     @memoize
     finally_block(): any | null {
         // finally_block: 'finally' ':' block
-        let a, literal, literal_1;
+        let a, keyword, literal;
         const mark = this.mark();
-        if ((literal = this.expect("finally")) && (literal_1 = this.expect(":")) && (a = this.block())) {
+        if ((keyword = this.expect("finally")) && (literal = this.expect(":")) && (a = this.block())) {
             return a;
         }
         this.reset(mark);
@@ -1051,9 +1052,9 @@ export class GeneratedParser extends Parser {
     @memoize
     return_stmt(): stmt | null {
         // return_stmt: 'return' star_expressions?
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("return")) && ((a = this.star_expressions()), 1)) {
+        if ((keyword = this.expect("return")) && ((a = this.star_expressions()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Return(a, ...EXTRA);
         }
@@ -1065,14 +1066,14 @@ export class GeneratedParser extends Parser {
     @memoize
     raise_stmt(): stmt | null {
         // raise_stmt: 'raise' expression ['from' expression] | 'raise'
-        let a, b, literal;
+        let a, b, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("raise")) && (a = this.expression()) && ((b = this._tmp_50()), 1)) {
+        if ((keyword = this.expect("raise")) && (a = this.expression()) && ((b = this._tmp_50()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Raise(a, b, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("raise"))) {
+        if ((keyword = this.expect("raise"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Raise(null, null, ...EXTRA);
         }
@@ -1101,16 +1102,16 @@ export class GeneratedParser extends Parser {
     @memoize
     function_def_raw(): stmt | null {
         // function_def_raw: 'def' NAME '(' params? ')' ['->' expression] ':' func_type_comment? block | ASYNC 'def' NAME '(' params? ')' ['->' expression] ':' func_type_comment? block
-        let a, async, b, literal, literal_1, literal_2, literal_3, n, params, tc;
+        let a, async, b, keyword, literal, literal_1, literal_2, n, params, tc;
         const mark = this.mark();
         if (
-            (literal = this.expect("def")) &&
+            (keyword = this.expect("def")) &&
             (n = this.name()) &&
-            (literal_1 = this.expect("(")) &&
+            (literal = this.expect("(")) &&
             ((params = this.params()), 1) &&
-            (literal_2 = this.expect(")")) &&
+            (literal_1 = this.expect(")")) &&
             ((a = this._tmp_51()), 1) &&
-            (literal_3 = this.expect(":")) &&
+            (literal_2 = this.expect(":")) &&
             ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
         ) {
@@ -1128,13 +1129,13 @@ export class GeneratedParser extends Parser {
         this.reset(mark);
         if (
             (async = this.expect("ASYNC")) &&
-            (literal = this.expect("def")) &&
+            (keyword = this.expect("def")) &&
             (n = this.name()) &&
-            (literal_1 = this.expect("(")) &&
+            (literal = this.expect("(")) &&
             ((params = this.params()), 1) &&
-            (literal_2 = this.expect(")")) &&
+            (literal_1 = this.expect(")")) &&
             ((a = this._tmp_52()), 1) &&
-            (literal_3 = this.expect(":")) &&
+            (literal_2 = this.expect(":")) &&
             ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
         ) {
@@ -1474,13 +1475,13 @@ export class GeneratedParser extends Parser {
     @memoize
     class_def_raw(): stmt | null {
         // class_def_raw: 'class' NAME ['(' arguments_? ')'] ':' block
-        let a, b, c, literal, literal_1;
+        let a, b, c, keyword, literal;
         const mark = this.mark();
         if (
-            (literal = this.expect("class")) &&
+            (keyword = this.expect("class")) &&
             (a = this.name()) &&
             ((b = this._tmp_69()), 1) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (c = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -1656,13 +1657,13 @@ export class GeneratedParser extends Parser {
     @memoize
     expression(): expr | null {
         // expression: disjunction 'if' disjunction 'else' expression | disjunction | lambdef
-        let a, b, c, disjunction, lambdef, literal, literal_1;
+        let a, b, c, disjunction, keyword, keyword_1, lambdef;
         const mark = this.mark();
         if (
             (a = this.disjunction()) &&
-            (literal = this.expect("if")) &&
+            (keyword = this.expect("if")) &&
             (b = this.disjunction()) &&
-            (literal_1 = this.expect("else")) &&
+            (keyword_1 = this.expect("else")) &&
             (c = this.expression())
         ) {
             const EXTRA = this.extra(mark);
@@ -1684,12 +1685,12 @@ export class GeneratedParser extends Parser {
     @memoize
     lambdef(): expr | null {
         // lambdef: 'lambda' lambda_params? ':' expression
-        let a, b, literal, literal_1;
+        let a, b, keyword, literal;
         const mark = this.mark();
         if (
-            (literal = this.expect("lambda")) &&
+            (keyword = this.expect("lambda")) &&
             ((a = this.lambda_params()), 1) &&
-            (literal_1 = this.expect(":")) &&
+            (literal = this.expect(":")) &&
             (b = this.expression())
         ) {
             const EXTRA = this.extra(mark);
@@ -1947,9 +1948,9 @@ export class GeneratedParser extends Parser {
     @memoize
     inversion(): expr | null {
         // inversion: 'not' inversion | comparison
-        let a, comparison, literal;
+        let a, comparison, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("not")) && (a = this.inversion())) {
+        if ((keyword = this.expect("not")) && (a = this.inversion())) {
             const EXTRA = this.extra(mark);
             return new astnodes.UnaryOp(astnodes.Not, a, ...EXTRA);
         }
@@ -2124,9 +2125,9 @@ export class GeneratedParser extends Parser {
     @memoize
     notin_bitwise_or(): CmpopExprPair | null {
         // notin_bitwise_or: 'not' 'in' bitwise_or
-        let a, literal, literal_1;
+        let a, keyword, keyword_1;
         const mark = this.mark();
-        if ((literal = this.expect("not")) && (literal_1 = this.expect("in")) && (a = this.bitwise_or())) {
+        if ((keyword = this.expect("not")) && (keyword_1 = this.expect("in")) && (a = this.bitwise_or())) {
             return pegen.cmpop_expr_pair(this, astnodes.NotIn, a);
         }
         this.reset(mark);
@@ -2137,9 +2138,9 @@ export class GeneratedParser extends Parser {
     @memoize
     in_bitwise_or(): CmpopExprPair | null {
         // in_bitwise_or: 'in' bitwise_or
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("in")) && (a = this.bitwise_or())) {
+        if ((keyword = this.expect("in")) && (a = this.bitwise_or())) {
             return pegen.cmpop_expr_pair(this, astnodes.In, a);
         }
         this.reset(mark);
@@ -2150,9 +2151,9 @@ export class GeneratedParser extends Parser {
     @memoize
     isnot_bitwise_or(): CmpopExprPair | null {
         // isnot_bitwise_or: 'is' 'not' bitwise_or
-        let a, literal, literal_1;
+        let a, keyword, keyword_1;
         const mark = this.mark();
-        if ((literal = this.expect("is")) && (literal_1 = this.expect("not")) && (a = this.bitwise_or())) {
+        if ((keyword = this.expect("is")) && (keyword_1 = this.expect("not")) && (a = this.bitwise_or())) {
             return pegen.cmpop_expr_pair(this, astnodes.IsNot, a);
         }
         this.reset(mark);
@@ -2163,9 +2164,9 @@ export class GeneratedParser extends Parser {
     @memoize
     is_bitwise_or(): CmpopExprPair | null {
         // is_bitwise_or: 'is' bitwise_or
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("is")) && (a = this.bitwise_or())) {
+        if ((keyword = this.expect("is")) && (a = this.bitwise_or())) {
             return pegen.cmpop_expr_pair(this, astnodes.Is, a);
         }
         this.reset(mark);
@@ -2466,28 +2467,28 @@ export class GeneratedParser extends Parser {
     @memoize
     atom(): expr | null {
         // atom: NAME | 'True' | 'False' | 'None' | '__peg_parser__' | &STRING strings | NUMBER | &'(' (tuple | group | genexp) | &'[' (list | listcomp) | &'{' (dict | set | dictcomp | setcomp) | '...'
-        let _tmp_94, _tmp_95, _tmp_96, literal, name, number, strings;
+        let _tmp_94, _tmp_95, _tmp_96, keyword, literal, name, number, strings;
         const mark = this.mark();
         if ((name = this.name())) {
             return name;
         }
         this.reset(mark);
-        if ((literal = this.expect("True"))) {
+        if ((keyword = this.expect("True"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyTrue, null, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("False"))) {
+        if ((keyword = this.expect("False"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyFalse, null, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("None"))) {
+        if ((keyword = this.expect("None"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyNone, null, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("__peg_parser__"))) {
+        if ((keyword = this.expect("__peg_parser__"))) {
             return RAISE_SYNTAX_ERROR("You found it!");
         }
         this.reset(mark);
@@ -2774,14 +2775,14 @@ export class GeneratedParser extends Parser {
     @memoize
     for_if_clause(): comprehension | null {
         // for_if_clause: ASYNC 'for' star_targets 'in' ~ disjunction (('if' disjunction))* | 'for' star_targets 'in' ~ disjunction (('if' disjunction))* | invalid_for_target
-        let a, async, b, c, invalid_for_target, literal, literal_1;
+        let a, async, b, c, invalid_for_target, keyword, keyword_1;
         let cut = false;
         const mark = this.mark();
         if (
             (async = this.expect("ASYNC")) &&
-            (literal = this.expect("for")) &&
+            (keyword = this.expect("for")) &&
             (a = this.star_targets()) &&
-            (literal_1 = this.expect("in")) &&
+            (keyword_1 = this.expect("in")) &&
             (cut = true) &&
             (b = this.disjunction()) &&
             (c = this._loop0_103())
@@ -2791,9 +2792,9 @@ export class GeneratedParser extends Parser {
         this.reset(mark);
         if (cut) return null;
         if (
-            (literal = this.expect("for")) &&
+            (keyword = this.expect("for")) &&
             (a = this.star_targets()) &&
-            (literal_1 = this.expect("in")) &&
+            (keyword_1 = this.expect("in")) &&
             (cut = true) &&
             (b = this.disjunction()) &&
             (c = this._loop0_104())
@@ -2813,14 +2814,14 @@ export class GeneratedParser extends Parser {
     @memoize
     yield_expr(): expr | null {
         // yield_expr: 'yield' 'from' expression | 'yield' star_expressions?
-        let a, literal, literal_1;
+        let a, keyword, keyword_1;
         const mark = this.mark();
-        if ((literal = this.expect("yield")) && (literal_1 = this.expect("from")) && (a = this.expression())) {
+        if ((keyword = this.expect("yield")) && (keyword_1 = this.expect("from")) && (a = this.expression())) {
             const EXTRA = this.extra(mark);
             return new astnodes.YieldFrom(a, ...EXTRA);
         }
         this.reset(mark);
-        if ((literal = this.expect("yield")) && ((a = this.star_expressions()), 1)) {
+        if ((keyword = this.expect("yield")) && ((a = this.star_expressions()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Yield(a, ...EXTRA);
         }
@@ -3506,9 +3507,9 @@ export class GeneratedParser extends Parser {
     @memoize
     invalid_del_stmt(): any | null {
         // invalid_del_stmt: 'del' star_expressions
-        let a, literal;
+        let a, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("del")) && (a = this.star_expressions())) {
+        if ((keyword = this.expect("del")) && (a = this.star_expressions())) {
             return RAISE_SYNTAX_ERROR_INVALID_TARGET(DEL_TARGETS, a);
         }
         this.reset(mark);
@@ -3668,9 +3669,9 @@ export class GeneratedParser extends Parser {
     @memoize
     invalid_with_item(): any | null {
         // invalid_with_item: expression 'as' expression
-        let a, expression, literal;
+        let a, expression, keyword;
         const mark = this.mark();
-        if ((expression = this.expression()) && (literal = this.expect("as")) && (a = this.expression())) {
+        if ((expression = this.expression()) && (keyword = this.expect("as")) && (a = this.expression())) {
             return RAISE_SYNTAX_ERROR_INVALID_TARGET(STAR_TARGETS, a);
         }
         this.reset(mark);
@@ -3681,9 +3682,9 @@ export class GeneratedParser extends Parser {
     @memoize
     invalid_for_target(): any | null {
         // invalid_for_target: ASYNC? 'for' star_expressions
-        let a, literal, opt;
+        let a, keyword, opt;
         const mark = this.mark();
-        if (((opt = this.expect("ASYNC")), 1) && (literal = this.expect("for")) && (a = this.star_expressions())) {
+        if (((opt = this.expect("ASYNC")), 1) && (keyword = this.expect("for")) && (a = this.star_expressions())) {
             return RAISE_SYNTAX_ERROR_INVALID_TARGET(FOR_TARGETS, a);
         }
         this.reset(mark);
@@ -3905,14 +3906,14 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_14(): any | null {
         // _tmp_14: 'import' | 'from'
-        let literal;
+        let keyword;
         const mark = this.mark();
-        if ((literal = this.expect("import"))) {
-            return literal;
+        if ((keyword = this.expect("import"))) {
+            return keyword;
         }
         this.reset(mark);
-        if ((literal = this.expect("from"))) {
-            return literal;
+        if ((keyword = this.expect("from"))) {
+            return keyword;
         }
         this.reset(mark);
 
@@ -3922,10 +3923,10 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_15(): any | null {
         // _tmp_15: 'def' | '@' | ASYNC
-        let async, literal;
+        let async, keyword, literal;
         const mark = this.mark();
-        if ((literal = this.expect("def"))) {
-            return literal;
+        if ((keyword = this.expect("def"))) {
+            return keyword;
         }
         this.reset(mark);
         if ((literal = this.expect("@"))) {
@@ -3943,10 +3944,10 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_16(): any | null {
         // _tmp_16: 'class' | '@'
-        let literal;
+        let keyword, literal;
         const mark = this.mark();
-        if ((literal = this.expect("class"))) {
-            return literal;
+        if ((keyword = this.expect("class"))) {
+            return keyword;
         }
         this.reset(mark);
         if ((literal = this.expect("@"))) {
@@ -3960,10 +3961,10 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_17(): any | null {
         // _tmp_17: 'with' | ASYNC
-        let async, literal;
+        let async, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("with"))) {
-            return literal;
+        if ((keyword = this.expect("with"))) {
+            return keyword;
         }
         this.reset(mark);
         if ((async = this.expect("ASYNC"))) {
@@ -3977,10 +3978,10 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_18(): any | null {
         // _tmp_18: 'for' | ASYNC
-        let async, literal;
+        let async, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("for"))) {
-            return literal;
+        if ((keyword = this.expect("for"))) {
+            return keyword;
         }
         this.reset(mark);
         if ((async = this.expect("ASYNC"))) {
@@ -4230,9 +4231,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_35(): any | null {
         // _tmp_35: 'as' NAME
-        let literal, z;
+        let keyword, z;
         const mark = this.mark();
-        if ((literal = this.expect("as")) && (z = this.name())) {
+        if ((keyword = this.expect("as")) && (z = this.name())) {
             return z;
         }
         this.reset(mark);
@@ -4271,9 +4272,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_38(): any | null {
         // _tmp_38: 'as' NAME
-        let literal, z;
+        let keyword, z;
         const mark = this.mark();
-        if ((literal = this.expect("as")) && (z = this.name())) {
+        if ((keyword = this.expect("as")) && (z = this.name())) {
             return z;
         }
         this.reset(mark);
@@ -4432,9 +4433,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_49(): any | null {
         // _tmp_49: 'as' NAME
-        let literal, z;
+        let keyword, z;
         const mark = this.mark();
-        if ((literal = this.expect("as")) && (z = this.name())) {
+        if ((keyword = this.expect("as")) && (z = this.name())) {
             return z;
         }
         this.reset(mark);
@@ -4445,9 +4446,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_50(): any | null {
         // _tmp_50: 'from' expression
-        let literal, z;
+        let keyword, z;
         const mark = this.mark();
-        if ((literal = this.expect("from")) && (z = this.expression())) {
+        if ((keyword = this.expect("from")) && (z = this.expression())) {
             return z;
         }
         this.reset(mark);
@@ -5838,9 +5839,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_143(): any | null {
         // _tmp_143: 'or' conjunction
-        let c, literal;
+        let c, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("or")) && (c = this.conjunction())) {
+        if ((keyword = this.expect("or")) && (c = this.conjunction())) {
             return c;
         }
         this.reset(mark);
@@ -5851,9 +5852,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_144(): any | null {
         // _tmp_144: 'and' inversion
-        let c, literal;
+        let c, keyword;
         const mark = this.mark();
-        if ((literal = this.expect("and")) && (c = this.inversion())) {
+        if ((keyword = this.expect("and")) && (c = this.inversion())) {
             return c;
         }
         this.reset(mark);
@@ -5864,9 +5865,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_145(): any | null {
         // _tmp_145: 'if' disjunction
-        let literal, z;
+        let keyword, z;
         const mark = this.mark();
-        if ((literal = this.expect("if")) && (z = this.disjunction())) {
+        if ((keyword = this.expect("if")) && (z = this.disjunction())) {
             return z;
         }
         this.reset(mark);
@@ -5877,9 +5878,9 @@ export class GeneratedParser extends Parser {
     @memoize
     _tmp_146(): any | null {
         // _tmp_146: 'if' disjunction
-        let literal, z;
+        let keyword, z;
         const mark = this.mark();
-        if ((literal = this.expect("if")) && (z = this.disjunction())) {
+        if ((keyword = this.expect("if")) && (z = this.disjunction())) {
             return z;
         }
         this.reset(mark);
@@ -6020,3 +6021,40 @@ export class GeneratedParser extends Parser {
         return null;
     }
 }
+
+GeneratedParser.prototype.keywords = new Map([
+    ["return", new KeywordToken("return", 500)],
+    ["raise", new KeywordToken("raise", 501)],
+    ["pass", new KeywordToken("pass", 502)],
+    ["del", new KeywordToken("del", 503)],
+    ["yield", new KeywordToken("yield", 504)],
+    ["assert", new KeywordToken("assert", 505)],
+    ["break", new KeywordToken("break", 506)],
+    ["continue", new KeywordToken("continue", 507)],
+    ["global", new KeywordToken("global", 508)],
+    ["nonlocal", new KeywordToken("nonlocal", 509)],
+    ["if", new KeywordToken("if", 510)],
+    ["try", new KeywordToken("try", 511)],
+    ["while", new KeywordToken("while", 512)],
+    ["import", new KeywordToken("import", 513)],
+    ["from", new KeywordToken("from", 514)],
+    ["elif", new KeywordToken("elif", 515)],
+    ["else", new KeywordToken("else", 516)],
+    ["for", new KeywordToken("for", 517)],
+    ["in", new KeywordToken("in", 518)],
+    ["with", new KeywordToken("with", 519)],
+    ["as", new KeywordToken("as", 520)],
+    ["except", new KeywordToken("except", 521)],
+    ["finally", new KeywordToken("finally", 522)],
+    ["def", new KeywordToken("def", 523)],
+    ["class", new KeywordToken("class", 524)],
+    ["lambda", new KeywordToken("lambda", 525)],
+    ["not", new KeywordToken("not", 526)],
+    ["is", new KeywordToken("is", 527)],
+    ["True", new KeywordToken("True", 528)],
+    ["False", new KeywordToken("False", 529)],
+    ["None", new KeywordToken("None", 530)],
+    ["__peg_parser__", new KeywordToken("__peg_parser__", 531)],
+    ["or", new KeywordToken("or", 532)],
+    ["and", new KeywordToken("and", 533)],
+]);

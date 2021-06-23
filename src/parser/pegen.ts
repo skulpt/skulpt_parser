@@ -11,12 +11,14 @@ import {
     Constant,
     exprKind,
     cmpop,
+    operator,
+    arguments_,
 } from "../ast/astnodes.ts";
+import { NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
-import { CmpopExprPair, KeyValuePair, KeywordOrStarred } from "./pegen_types.ts";
-
-// Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
+import { parseString } from "./parse_string.ts";
+import { AugOperator, CmpopExprPair, KeyValuePair, KeywordOrStarred, KeywordToken } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
     constructor(message: string) {
@@ -575,6 +577,22 @@ export function dummy_name(p: Parser): Name {
 //     cache = Name(id, Load, 1, 0, 1, 0, p->arena);
 //     return cache;
 // }
+
+export interface NameTokenInfo extends TokenInfo {
+    type: 1;
+}
+
+/** Expects a NAME token. Check if we're a a keyword before returning the token type. If we are a keyword change the type */
+export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): number {
+    const string = token.string;
+    if (p.keywords.has(string)) {
+        const type = (p.keywords.get(string) as KeywordToken).type;
+        // change the token type to what it should be - in cpython this happens in _PyPegen_fill_token
+        (token as TokenInfo).type = type;
+        return type;
+    }
+    return NAME;
+}
 
 // static int
 // _get_keyword_or_name_type(Parser *p, const char *name, int name_len)
@@ -2008,6 +2026,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //                          posdefaults, p->arena);
 // }
 
+export function empty_arguments(p: Parser) {
+    return new arguments_([], [], null, [], [], null, []);
+}
+
 // /* Constructs an empty arguments_ty object, that gets used when a function accepts no
 //  * arguments. */
 // arguments_ty
@@ -2037,6 +2059,10 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return _Py_arguments(posonlyargs, posargs, NULL, kwonlyargs, kwdefaults, NULL, kwdefaults,
 //                          p->arena);
 // }
+
+export function augoperator(p: Parser, kind: operator) {
+    return new AugOperator(kind);
+}
 
 // /* Encapsulates the value of an operator_ty into an AugOperator struct */
 // AugOperator *
@@ -2178,8 +2204,9 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
     const [lineno, col_offset] = a[0].start;
     const [end_lineno, end_col_offset] = a[a.length - 1].end;
-    /** @todo parse_string.c */
-    return new Constant(a.map((t) => t.string).join(), null, lineno, col_offset, end_lineno, end_col_offset);
+    /** @todo Implement this properly - see parse_string.c */
+    const s = a.map((t) => parseString(t.string)).join();
+    return new Constant(s, null, lineno, col_offset, end_lineno, end_col_offset);
 }
 
 // expr_ty
