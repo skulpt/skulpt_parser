@@ -440,6 +440,15 @@ function* _tokenize(
                         // ordinary string
                         yield new TokenInfo(tokens.STRING, token, spos, epos, line);
                     }
+                } else if (initial === "a") {
+                    // maybe async
+                    if (token === "async") {
+                        yield new TokenInfo(tokens.ASYNC, token, spos, epos, line);
+                    } else if (token === "await") {
+                        yield new TokenInfo(tokens.AWAIT, token, spos, epos, line);
+                    } else {
+                        yield new TokenInfo(tokens.NAME, token, spos, epos, line);
+                    }
                 } else if (isIdentifier(initial)) {
                     // ordinary name
                     yield new TokenInfo(tokens.NAME, token, spos, epos, line);
