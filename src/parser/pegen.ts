@@ -1413,7 +1413,14 @@ export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null) {
 //     return new_seq;
 // }
 
-// /* Creates a copy of seq and appends a to it */
+/* Creates a copy of seq and appends a to it */
+export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr) {
+    assert(a !== null);
+    if (seq === null) {
+        return [a];
+    }
+    return seq.concat(a);
+}
 // asdl_seq *
 // _PyPegen_seq_append_to_end(Parser *p, asdl_seq *seq, void *a)
 // {
