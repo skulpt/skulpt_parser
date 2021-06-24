@@ -2309,9 +2309,6 @@ kwarg_or_starred[KeywordOrStarred*]:
     | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
     | invalid_kwarg
 */
-export function keyword_or_starred(p: Parser, element: keyword, is_keyword: boolean) {
-    return new KeywordOrStarred(element, is_keyword);
-}
 
 // /* Construct a KeywordOrStarred */
 // KeywordOrStarred *
