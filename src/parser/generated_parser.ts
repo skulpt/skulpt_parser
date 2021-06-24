@@ -23,7 +23,6 @@ import type {
     StartRule,
     CmpopExprPair,
     KeyValuePair,
-    KeywordOrStarred,
     NameDefaultPair,
     SlashWithDefault,
     StarEtc,
@@ -34,7 +33,7 @@ import type { TokenInfo } from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
 import { pegen } from "./pegen_proxy.ts";
-import { KeywordToken } from "./pegen_types.ts";
+import { KeywordToken, KeywordOrStarred } from "./pegen_types.ts";
 import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
 import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
@@ -2921,11 +2920,11 @@ export class GeneratedParser extends Parser {
         const mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
+            return new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((a = this.starred_expression())) {
-            return pegen.keyword_or_starred(this, a, false);
+            return new KeywordOrStarred(a, false);
         }
         this.reset(mark);
         if ((invalid_kwarg = this.invalid_kwarg())) {
@@ -2943,12 +2942,12 @@ export class GeneratedParser extends Parser {
         const mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
+            return new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((literal = this.expect("**")) && (a = this.expression())) {
             const EXTRA = this.extra(mark);
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), true);
+            return new KeywordOrStarred(CHECK(new astnodes.keyword(null, a, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((invalid_kwarg = this.invalid_kwarg())) {

@@ -58,7 +58,7 @@ type KeywordOrStarredElement<IsKeyword> = IsKeyword extends true
     ? keyword
     : IsKeyword extends false
     ? Starred
-    : Starred | keyword;
+    : keyword | Starred;
 
 export class KeywordOrStarred<IsKeyword extends boolean = boolean> {
     element: KeywordOrStarredElement<IsKeyword>;

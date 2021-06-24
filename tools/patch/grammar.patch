@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..6fc9c84270 100644
+index 64e205e7fd..99182cfaca 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -841,16 +841,16 @@ index 64e205e7fd..6fc9c84270 100644
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) }
-+        pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
-+    | a=starred_expression { pegen.keyword_or_starred(this, a, false) }
++        new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
++    | a=starred_expression { new KeywordOrStarred(a, false) }
      | invalid_kwarg
 -kwarg_or_double_starred[KeywordOrStarred*]:
 +kwarg_or_double_starred[KeywordOrStarred]:
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | '**' a=expression { _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(NULL, a, EXTRA)), 1) }
-+        pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
-+    | '**' a=expression { pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), true) }
++        new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
++    | '**' a=expression { new KeywordOrStarred(CHECK(new astnodes.keyword(null, a, ...EXTRA)), true) }
      | invalid_kwarg
  
  # NOTE: star_targets may contain *bitwise_or, targets may not.
