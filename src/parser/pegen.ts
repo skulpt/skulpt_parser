@@ -1902,6 +1902,9 @@ export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInf
 //     return a;
 // }
 
+export function slash_with_default(p: Parser, plain_names: arg[], names_with_default: NameDefaultPair[]) {
+    return new SlashWithDefault(plain_names, names_with_default);
+}
 // /* Constructs a SlashWithDefault */
 // SlashWithDefault *
 // _PyPegen_slash_with_default(Parser *p, asdl_seq *plain_names, asdl_seq *names_with_defaults)
