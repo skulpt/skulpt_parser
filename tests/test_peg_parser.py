@@ -12,11 +12,10 @@ import os
 
 
 def ts_ast_dump(source, mode="exec"):
-    with open("tests/tmp.txt", "w") as f:
+    with open("tests/tmp.txt", "w+") as f:
         f.write(source)
-    from time import sleep
 
-    sleep(0)
+    os.path.isfile("tests/tmp.txt")
 
     run = subprocess.run(
         [
