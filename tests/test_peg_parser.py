@@ -308,7 +308,7 @@ TEST_CASES = [
     ("dict_empty", "{}"),
     (
         "empty_line_after_linecont",
-        r"""
+        """
         pass
         \
 
