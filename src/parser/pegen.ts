@@ -1908,6 +1908,10 @@ export function star_etc(p: Parser, vararg: arg, kwonlyargs: NameDefaultPair[], 
 //     return a;
 // }
 
+export function join_sequences(p: Parser, a: KeywordOrStarred[], b: KeywordOrStarred[]): KeywordOrStarred[] {
+    return a.concat(b);
+}
+
 // asdl_seq *
 // _PyPegen_join_sequences(Parser *p, asdl_seq *a, asdl_seq *b)
 // {

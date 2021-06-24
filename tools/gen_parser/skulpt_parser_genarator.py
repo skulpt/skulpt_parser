@@ -69,6 +69,8 @@ function CHECK_NULL_ALLOWED(p: Parser, result: any) {{
     return result;
 }}
 
+type KeywordOrStarredArray = KeywordOrStarred[]
+
 """
 
 MODULE_SUFFIX = """
