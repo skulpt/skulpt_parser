@@ -1,3 +1,4 @@
+// deno-lint-ignore-file camelcase
 import { arg, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
 import { pyNone, pyNoneType } from "../ast/constants.ts";
 
@@ -38,9 +39,9 @@ export class NameDefaultPair {
 }
 
 export class SlashWithDefault {
-    plain_names: any[]; /**@todo */
+    plain_names: arg[];
     names_with_defaults: NameDefaultPair[]; // asdl_seq* of NameDefaultsPair's
-    constructor(plain_names: any[], names_with_defaults: NameDefaultPair[]) {
+    constructor(plain_names: arg[], names_with_defaults: NameDefaultPair[]) {
         this.plain_names = plain_names;
         this.names_with_defaults = names_with_defaults;
     }
