@@ -1645,10 +1645,6 @@ export function map_names_to_ids(p: Parser, seq: Name[]) {
 //     return new_seq;
 // }
 
-export function cmpop_expr_pair(p: Parser, cmpop: cmpop, expr: expr) {
-    return new CmpopExprPair(cmpop, expr);
-}
-
 // /* Constructs a CmpopExprPair */
 // CmpopExprPair *
 // _PyPegen_cmpop_expr_pair(Parser *p, cmpop_ty cmpop, expr_ty expr)
@@ -1826,10 +1822,6 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return new;
 // }
 
-export function key_value_pair(p: Parser, key: expr, value: expr) {
-    return new KeyValuePair(key, value);
-}
-
 // /* Constructs a KeyValuePair that is used when parsing a dict's key value pairs */
 // KeyValuePair *
 // _PyPegen_key_value_pair(Parser *p, expr_ty key, expr_ty value)
@@ -1921,10 +1913,6 @@ export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInf
 //     a->names_with_defaults = names_with_defaults;
 //     return a;
 // }
-
-export function star_etc(p: Parser, vararg: arg, kwonlyargs: NameDefaultPair[], kwarg: arg) {
-    return new StarEtc(vararg, kwonlyargs, kwarg);
-}
 
 // /* Constructs a StarEtc */
 // StarEtc *
@@ -2232,10 +2220,6 @@ export function empty_arguments(p: Parser) {
 //     return _Py_arguments(posonlyargs, posargs, NULL, kwonlyargs, kwdefaults, NULL, kwdefaults,
 //                          p->arena);
 // }
-
-export function augoperator(p: Parser, kind: operator) {
-    return new AugOperator(kind);
-}
 
 // /* Encapsulates the value of an operator_ty into an AugOperator struct */
 // AugOperator *

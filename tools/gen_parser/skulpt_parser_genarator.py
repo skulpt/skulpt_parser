@@ -43,13 +43,12 @@ MODULE_PREFIX = """\
 // @ts-nocheck
 
 import type {{ mod, expr, stmt, operator, alias, withitem, excepthandler, arguments_, arg, comprehension, Name, Call, FunctionDef, AsyncFunctionDef, Starred }} from "../ast/astnodes.ts";
-import type {{ StartRule, CmpopExprPair, KeyValuePair, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator }} from "./pegen_types.ts";
 import type {{ Tokenizer }} from "../tokenize/Tokenizer.ts";
 import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
+import {{ StartRule, CmpopExprPair, KeyValuePair, KeywordToken, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator }} from "./pegen_types.ts";
 import {{ pegen }} from "./pegen_proxy.ts";
-import {{ KeywordToken, KeywordOrStarred }} from "./pegen_types.ts";
 import {{ FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
 
 import {{ memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";

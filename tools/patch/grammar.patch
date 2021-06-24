@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..99182cfaca 100644
+index 64e205e7fd..091ca0b65c 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -141,19 +141,19 @@ index 64e205e7fd..99182cfaca 100644
 -del_stmt[stmt_ty]:
 -    | 'del' a=del_targets &(';' | NEWLINE) { _Py_Delete(a, EXTRA) }
 +augassign[AugOperator]:
-+    | '+=' { pegen.augoperator(this, astnodes.Add) }
-+    | '-=' { pegen.augoperator(this, astnodes.Sub) }
-+    | '*=' { pegen.augoperator(this, astnodes.Mult) }
-+    | '@=' { CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, astnodes.MatMult)) }
-+    | '/=' { pegen.augoperator(this, astnodes.Div) }
-+    | '%=' { pegen.augoperator(this, astnodes.Mod) }
-+    | '&=' { pegen.augoperator(this, astnodes.BitAnd) }
-+    | '|=' { pegen.augoperator(this, astnodes.BitOr) }
-+    | '^=' { pegen.augoperator(this, astnodes.BitXor) }
-+    | '<<=' { pegen.augoperator(this, astnodes.LShift) }
-+    | '>>=' { pegen.augoperator(this, astnodes.RShift) }
-+    | '**=' { pegen.augoperator(this, astnodes.Pow) }
-+    | '//=' { pegen.augoperator(this, astnodes.FloorDiv) }
++    | '+=' { new AugOperator(astnodes.Add) }
++    | '-=' { new AugOperator(astnodes.Sub) }
++    | '*=' { new AugOperator(astnodes.Mult) }
++    | '@=' { CHECK_VERSION(5, "The '@' operator is", new AugOperator(astnodes.MatMult)) }
++    | '/=' { new AugOperator(astnodes.Div) }
++    | '%=' { new AugOperator(astnodes.Mod) }
++    | '&=' { new AugOperator(astnodes.BitAnd) }
++    | '|=' { new AugOperator(astnodes.BitOr) }
++    | '^=' { new AugOperator(astnodes.BitXor) }
++    | '<<=' { new AugOperator(astnodes.LShift) }
++    | '>>=' { new AugOperator(astnodes.RShift) }
++    | '**=' { new AugOperator(astnodes.Pow) }
++    | '//=' { new AugOperator(astnodes.FloorDiv) }
 +
 +global_stmt[stmt]: 'global' a=','.NAME+ {
 +    new astnodes.Global(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA) }
@@ -358,19 +358,19 @@ index 64e205e7fd..99182cfaca 100644
 -    | a=param_no_default* b=param_with_default+ '/' ',' { _PyPegen_slash_with_default(p, a, b) }
 -    | a=param_no_default* b=param_with_default+ '/' &')' { _PyPegen_slash_with_default(p, a, b) }
 +slash_with_default[SlashWithDefault]:
-+    | a=param_no_default* b=param_with_default+ '/' ',' { pegen.slash_with_default(this, a, b) }
-+    | a=param_no_default* b=param_with_default+ '/' &')' { pegen.slash_with_default(this, a, b) }
++    | a=param_no_default* b=param_with_default+ '/' ',' { new SlashWithDefault(a, b) }
++    | a=param_no_default* b=param_with_default+ '/' &')' { new SlashWithDefault(a, b) }
  
 -star_etc[StarEtc*]:
 +star_etc[StarEtc]:
      | '*' a=param_no_default b=param_maybe_default* c=[kwds] {
 -        _PyPegen_star_etc(p, a, b, c) }
-+        pegen.star_etc(this, a, b, c) }
++        new StarEtc(a, b, c) }
      | '*' ',' b=param_maybe_default+ c=[kwds] {
 -        _PyPegen_star_etc(p, NULL, b, c) }
 -    | a=kwds { _PyPegen_star_etc(p, NULL, NULL, a) }
-+        pegen.star_etc(this, null, b, c) }
-+    | a=kwds { pegen.star_etc(this, null, null, a) }
++        new StarEtc(null, b, c) }
++    | a=kwds { new StarEtc(null, null, a) }
      | invalid_star_etc
  
 -kwds[arg_ty]: '**' a=param_no_default { a }
@@ -523,19 +523,19 @@ index 64e205e7fd..99182cfaca 100644
 -    | a=lambda_param_no_default* b=lambda_param_with_default+ '/' ',' { _PyPegen_slash_with_default(p, a, b) }
 -    | a=lambda_param_no_default* b=lambda_param_with_default+ '/' &':' { _PyPegen_slash_with_default(p, a, b) }
 +lambda_slash_with_default[SlashWithDefault]:
-+    | a=lambda_param_no_default* b=lambda_param_with_default+ '/' ',' { pegen.slash_with_default(this, a, b) }
-+    | a=lambda_param_no_default* b=lambda_param_with_default+ '/' &':' { pegen.slash_with_default(this, a, b) }
++    | a=lambda_param_no_default* b=lambda_param_with_default+ '/' ',' { new SlashWithDefault(a, b) }
++    | a=lambda_param_no_default* b=lambda_param_with_default+ '/' &':' { new SlashWithDefault(a, b) }
  
 -lambda_star_etc[StarEtc*]:
 +lambda_star_etc[StarEtc]:
      | '*' a=lambda_param_no_default b=lambda_param_maybe_default* c=[lambda_kwds] {
 -        _PyPegen_star_etc(p, a, b, c) }
-+        pegen.star_etc(this, a, b, c) }
++        new StarEtc(a, b, c) }
      | '*' ',' b=lambda_param_maybe_default+ c=[lambda_kwds] {
 -        _PyPegen_star_etc(p, NULL, b, c) }
 -    | a=lambda_kwds { _PyPegen_star_etc(p, NULL, NULL, a) }
-+        pegen.star_etc(this, null, b, c) }
-+    | a=lambda_kwds { pegen.star_etc(this, null, null, a) }
++        new StarEtc(null, b, c) }
++    | a=lambda_kwds { new StarEtc(null, null, a) }
      | invalid_lambda_star_etc
  
 -lambda_kwds[arg_ty]: '**' a=lambda_param_no_default { a }
@@ -617,17 +617,17 @@ index 64e205e7fd..99182cfaca 100644
 -
 -bitwise_or[expr_ty]:
 -    | a=bitwise_or '|' b=bitwise_xor { _Py_BinOp(a, BitOr, b, EXTRA) }
-+eq_bitwise_or[CmpopExprPair]: '==' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Eq, a) }
++eq_bitwise_or[CmpopExprPair]: '==' a=bitwise_or { new CmpopExprPair(astnodes.Eq, a) }
 +noteq_bitwise_or[CmpopExprPair]:
-+    | (tok='!=' { pegen.check_barry_as_flufl(this, tok) ? null : tok}) a=bitwise_or {pegen.cmpop_expr_pair(this, astnodes.NotEq, a) }
-+lte_bitwise_or[CmpopExprPair]: '<=' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.LtE, a) }
-+lt_bitwise_or[CmpopExprPair]: '<' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Lt, a) }
-+gte_bitwise_or[CmpopExprPair]: '>=' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.GtE, a) }
-+gt_bitwise_or[CmpopExprPair]: '>' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Gt, a) }
-+notin_bitwise_or[CmpopExprPair]: 'not' 'in' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.NotIn, a) }
-+in_bitwise_or[CmpopExprPair]: 'in' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.In, a) }
-+isnot_bitwise_or[CmpopExprPair]: 'is' 'not' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.IsNot, a) }
-+is_bitwise_or[CmpopExprPair]: 'is' a=bitwise_or { pegen.cmpop_expr_pair(this, astnodes.Is, a) }
++    | (tok='!=' { pegen.check_barry_as_flufl(this, tok) ? null : tok}) a=bitwise_or {new CmpopExprPair(astnodes.NotEq, a) }
++lte_bitwise_or[CmpopExprPair]: '<=' a=bitwise_or { new CmpopExprPair(astnodes.LtE, a) }
++lt_bitwise_or[CmpopExprPair]: '<' a=bitwise_or { new CmpopExprPair(astnodes.Lt, a) }
++gte_bitwise_or[CmpopExprPair]: '>=' a=bitwise_or { new CmpopExprPair(astnodes.GtE, a) }
++gt_bitwise_or[CmpopExprPair]: '>' a=bitwise_or { new CmpopExprPair(astnodes.Gt, a) }
++notin_bitwise_or[CmpopExprPair]: 'not' 'in' a=bitwise_or { new CmpopExprPair(astnodes.NotIn, a) }
++in_bitwise_or[CmpopExprPair]: 'in' a=bitwise_or { new CmpopExprPair(astnodes.In, a) }
++isnot_bitwise_or[CmpopExprPair]: 'is' 'not' a=bitwise_or { new CmpopExprPair(astnodes.IsNot, a) }
++is_bitwise_or[CmpopExprPair]: 'is' a=bitwise_or { new CmpopExprPair(astnodes.Is, a) }
 +
 +bitwise_or[expr]:
 +    | a=bitwise_or '|' b=bitwise_xor { new astnodes.BinOp(a, astnodes.BitOr, b, ...EXTRA) }
@@ -786,11 +786,11 @@ index 64e205e7fd..99182cfaca 100644
 -    | '**' a=bitwise_or { _PyPegen_key_value_pair(p, NULL, a) }
 +double_starred_kvpairs[any]: a=','.double_starred_kvpair+ [','] { a }
 +double_starred_kvpair[KeyValuePair]:
-+    | '**' a=bitwise_or { pegen.key_value_pair(this, null, a) }
++    | '**' a=bitwise_or { new KeyValuePair(null, a) }
      | kvpair
 -kvpair[KeyValuePair*]: a=expression ':' b=expression { _PyPegen_key_value_pair(p, a, b) }
 -for_if_clauses[asdl_seq*]:
-+kvpair[KeyValuePair]: a=expression ':' b=expression { pegen.key_value_pair(this, a, b) }
++kvpair[KeyValuePair]: a=expression ':' b=expression { new KeyValuePair(a, b) }
 +for_if_clauses[any]:
      | for_if_clause+
 -for_if_clause[comprehension_ty]:
