@@ -42,7 +42,7 @@ MODULE_PREFIX = """\
 // deno-lint-ignore-file no-explicit-any camelcase no-unused-vars
 // @ts-nocheck
 
-import type {{ mod, expr, stmt, operator, alias, withitem, excepthandler, arguments_, arg, comprehension, Name, Call, FunctionDef, AsyncFunctionDef }} from "../ast/astnodes.ts";
+import type {{ mod, expr, stmt, operator, alias, withitem, excepthandler, arguments_, arg, comprehension, Name, Call, FunctionDef, AsyncFunctionDef, Starred }} from "../ast/astnodes.ts";
 import type {{ StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator }} from "./pegen_types.ts";
 import type {{ Tokenizer }} from "../tokenize/Tokenizer.ts";
 import type {{ TokenInfo }} from "../tokenize/tokenize.ts";

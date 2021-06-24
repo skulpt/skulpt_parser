@@ -1,4 +1,4 @@
-import { arg, cmpop, expr, keyword, operator } from "../ast/astnodes.ts";
+import { arg, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
 
 export class CmpopExprPair {
     cmpop: cmpop;
@@ -54,11 +54,17 @@ export class StarEtc {
     }
 }
 
-export class KeywordOrStarred {
-    element: keyword | expr;
-    is_keyword: boolean;
+type KeywordOrStarredElement<IsKeyword> = IsKeyword extends true
+    ? keyword
+    : IsKeyword extends false
+    ? Starred
+    : Starred | keyword;
 
-    constructor(element: keyword | expr, is_keyword: boolean) {
+export class KeywordOrStarred<IsKeyword extends boolean = boolean> {
+    element: KeywordOrStarredElement<IsKeyword>;
+    is_keyword: IsKeyword;
+
+    constructor(element: KeywordOrStarredElement<IsKeyword>, is_keyword: IsKeyword) {
         this.element = element;
         this.is_keyword = is_keyword;
     }

@@ -18,6 +18,7 @@ import {
     keyword,
     FunctionDef,
     AsyncFunctionDef,
+    Starred,
 } from "../ast/astnodes.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -2339,8 +2340,16 @@ export function keyword_or_starred(p: Parser, element: keyword, is_keyword: bool
 //     return n;
 // }
 
-export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): expr[] {
-    return kwargs.filter((kw) => !kw.is_keyword).map((kw) => kw.element);
+function isKeyword(kw: KeywordOrStarred): kw is KeywordOrStarred<true> {
+    return kw.is_keyword;
+}
+
+function isStarred(kw: KeywordOrStarred): kw is KeywordOrStarred<false> {
+    return !kw.is_keyword;
+}
+
+export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): Starred[] {
+    return kwargs.filter(isStarred).map((kw) => kw.element);
 }
 
 // /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
@@ -2367,7 +2376,7 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 // }
 
 export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
-    return kwargs.filter((kw) => kw.is_keyword).map((kw) => kw.element as keyword);
+    return kwargs.filter(isKeyword).map((kw) => kw.element);
 }
 
 // /* Return a new asdl_seq* with only the keywords in kwargs */

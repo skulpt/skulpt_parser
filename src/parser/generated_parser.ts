@@ -17,6 +17,7 @@ import type {
     Call,
     FunctionDef,
     AsyncFunctionDef,
+    Starred,
 } from "../ast/astnodes.ts";
 import type {
     StartRule,
@@ -2900,7 +2901,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    starred_expression(): expr | null {
+    starred_expression(): Starred | null {
         // starred_expression: '*' expression
         let a, literal;
         const mark = this.mark();
