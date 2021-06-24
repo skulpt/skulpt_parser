@@ -1,4 +1,4 @@
-// deno-lint-ignore-file camelcase
+// deno-lint-ignore-file camelcase no-fallthrough
 
 import {
     AST,
@@ -13,8 +13,6 @@ import {
     Load,
     Constant,
     exprKind,
-    cmpop,
-    operator,
     arguments_,
     arg,
     keyword,
@@ -22,13 +20,38 @@ import {
     AsyncFunctionDef,
     Starred,
     alias,
+    Attribute,
+    Subscript,
+    List,
+    Tuple,
+    Lambda,
+    BoolOp,
+    BinOp,
+    UnaryOp,
+    GeneratorExp,
+    Yield,
+    YieldFrom,
+    Await,
+    ListComp,
+    SetComp,
+    DictComp,
+    Dict,
+    JoinedStr,
+    FormattedValue,
+    Compare,
+    IfExp,
+    NamedExpr,
+    Set as Set_,
 } from "../ast/astnodes.ts";
+import { pyFalse } from "../ast/constants.ts";
+import { pyTrue } from "../ast/constants.ts";
+import { pyEllipsis } from "../ast/constants.ts";
+import { pyNone } from "../ast/constants.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { parseString } from "./parse_string.ts";
 import {
-    AugOperator,
     CmpopExprPair,
     exprOrNone,
     KeyValuePair,
@@ -234,80 +257,65 @@ export function _create_dummy_identifier(p: Parser) {
 //     return size;
 // }
 
-// const char *
-// _PyPegen_get_expr_name(expr_ty e)
-// {
-//     assert(e != NULL);
-//     switch (e->kind) {
-//         case Attribute_kind:
-//             return "attribute";
-//         case Subscript_kind:
-//             return "subscript";
-//         case Starred_kind:
-//             return "starred";
-//         case Name_kind:
-//             return "name";
-//         case List_kind:
-//             return "list";
-//         case Tuple_kind:
-//             return "tuple";
-//         case Lambda_kind:
-//             return "lambda";
-//         case Call_kind:
-//             return "function call";
-//         case BoolOp_kind:
-//         case BinOp_kind:
-//         case UnaryOp_kind:
-//             return "operator";
-//         case GeneratorExp_kind:
-//             return "generator expression";
-//         case Yield_kind:
-//         case YieldFrom_kind:
-//             return "yield expression";
-//         case Await_kind:
-//             return "await expression";
-//         case ListComp_kind:
-//             return "list comprehension";
-//         case SetComp_kind:
-//             return "set comprehension";
-//         case DictComp_kind:
-//             return "dict comprehension";
-//         case Dict_kind:
-//             return "dict display";
-//         case Set_kind:
-//             return "set display";
-//         case JoinedStr_kind:
-//         case FormattedValue_kind:
-//             return "f-string expression";
-//         case Constant_kind: {
-//             PyObject *value = e->v.Constant.value;
-//             if (value == Py_None) {
-//                 return "None";
-//             }
-//             if (value == Py_False) {
-//                 return "False";
-//             }
-//             if (value == Py_True) {
-//                 return "True";
-//             }
-//             if (value == Py_Ellipsis) {
-//                 return "Ellipsis";
-//             }
-//             return "literal";
-//         }
-//         case Compare_kind:
-//             return "comparison";
-//         case IfExp_kind:
-//             return "conditional expression";
-//         case NamedExpr_kind:
-//             return "named expression";
-//         default:
-//             PyErr_Format(PyExc_SystemError,
-//                          "unexpected expression in assignment %d (line %d)",
-//                          e->kind, e->lineno);
-//             return NULL;
-//     }
-// }
+export function get_expr_name(e: expr): string {
+    assert(e != null);
+    switch (e.constructor as exprKind) {
+        case Attribute:
+        case Subscript:
+        case Starred:
+        case Name:
+        case List:
+        case Tuple:
+        case Lambda:
+            return e[Symbol.toStringTag].toLowerCase();
+        case Call:
+            return "function call";
+        case BoolOp:
+        case BinOp:
+        case UnaryOp:
+            return "operator";
+        case GeneratorExp:
+            return "generator expression";
+        case Yield:
+        case YieldFrom:
+            return "yield expression";
+        case Await:
+            return "await expression";
+        case ListComp:
+            return "list comprehension";
+        case SetComp:
+            return "set comprehension";
+        case DictComp:
+            return "dict comprehension";
+        case Dict:
+            return "dict display";
+        case Set_:
+            return "set display";
+        case JoinedStr:
+        case FormattedValue:
+            return "f-string expression";
+        case Constant: {
+            const value = (e as Constant).value;
+            switch (value) {
+                case pyNone:
+                case pyFalse:
+                case pyTrue:
+                case pyEllipsis:
+                    return value.toString();
+                default:
+                    return "literal";
+            }
+        }
+        case Compare:
+            return "comparison";
+        case IfExp:
+            return "conditional expression";
+        case NamedExpr:
+            return "named expression";
+        default:
+            throw new Error("unexpected expression in assignment");
+    }
+}
 
 // static int
 // raise_decode_error(Parser *p)
