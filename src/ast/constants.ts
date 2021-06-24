@@ -54,7 +54,11 @@ export class pyBool extends pyConstant<boolean> {
     }
 }
 
-export class pyEllipsisType extends pyConstant<"..."> {}
+export class pyEllipsisType extends pyConstant<"..."> {
+    toString() {
+        return "Ellipsis";
+    }
+}
 
 export const pyNone = new pyNoneType(null);
 export const pyTrue = new pyBool(true);
