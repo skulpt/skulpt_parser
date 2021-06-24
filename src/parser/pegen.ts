@@ -1701,7 +1701,6 @@ export function get_exprs(p: Parser, seq: CmpopExprPair[]) {
 //     return new_seq;
 // }
 
-// /* Creates an asdl_seq* where all the elements have been changed to have ctx as context */
 // static asdl_seq *
 // _set_seq_context(Parser *p, asdl_seq *seq, expr_context_ty ctx)
 // {
@@ -1720,13 +1719,6 @@ export function get_exprs(p: Parser, seq: CmpopExprPair[]) {
 //     }
 //     return new_seq;
 // }
-function EXTRA_EXPR(e: expr): Attrs {
-    return [e.lineno, e.col_offset, e.end_lineno, e.end_col_offset];
-}
-// static expr_ty
-function _set_name_context(e: Name, ctx: expr_context) {
-    return new Name(e.id, ctx, ...EXTRA_EXPR(e));
-}
 // _set_name_context(Parser *p, expr_ty e, expr_context_ty ctx)
 // {
 //     return _Py_Name(e->v.Name.id, ctx, EXTRA_EXPR(e, e));
@@ -1762,30 +1754,63 @@ function _set_name_context(e: Name, ctx: expr_context) {
 //     return _Py_Starred(_PyPegen_set_expr_context(p, e->v.Starred.value, ctx), ctx, EXTRA_EXPR(e, e));
 // }
 
-/* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
+function EXTRA_EXPR(head: expr, tail?: expr): Attrs {
+    tail ??= head;
+    return [head.lineno, head.col_offset, tail.end_lineno, tail.end_col_offset];
+}
 
+/* Creates an asdl_seq* where all the elements have been changed to have ctx as context */
+function _set_seq_context(p: Parser, seq: expr[], ctx: expr_context) {
+    return seq.map((e) => set_expr_context(p, e, ctx));
+}
+
+function _set_name_context(p: Parser, e: Name, ctx: expr_context): Name {
+    return new Name(e.id, ctx, ...EXTRA_EXPR(e));
+}
+
+function _set_tuple_context(p: Parser, e: Tuple, ctx: expr_context): Tuple {
+    return new Tuple(_set_seq_context(p, e.elts, ctx), ctx, ...EXTRA_EXPR(e));
+}
+
+function _set_list_context(p: Parser, e: List, ctx: expr_context): List {
+    return new List(_set_seq_context(p, e.elts, ctx), ctx, ...EXTRA_EXPR(e));
+}
+
+function _set_subscript_context(p: Parser, e: Subscript, ctx: expr_context): Subscript {
+    return new Subscript(e.value, e.slice, ctx, ...EXTRA_EXPR(e));
+}
+
+function _set_attribute_context(p: Parser, e: Attribute, ctx: expr_context): Attribute {
+    return new Attribute(e.value, e.attr, ctx, ...EXTRA_EXPR(e));
+}
+
+function _set_starred_context(p: Parser, e: Starred, ctx: expr_context): Starred {
+    return new Starred(set_expr_context(p, e.value, ctx), ctx, ...EXTRA_EXPR(e));
+}
+
+/* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
 export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
     assert(expr !== null);
     let newExpr: expr;
     switch (e.constructor as exprKind) {
         case Name:
-            newExpr = _set_name_context(e as Name, ctx);
+            newExpr = _set_name_context(p, e as Name, ctx);
             break;
-        // case Tuple_kind:
-        //     newExpr = _set_tuple_context(p, expr, ctx);
-        //     break;
-        // case List_kind:
-        //     newExpr = _set_list_context(p, expr, ctx);
-        //     break;
-        // case Subscript_kind:
-        //     newExpr = _set_subscript_context(p, expr, ctx);
-        //     break;
-        // case Attribute_kind:
-        //     newExpr = _set_attribute_context(p, expr, ctx);
-        //     break;
-        // case Starred_kind:
-        //     newExpr = _set_starred_context(p, expr, ctx);
-        //     break;
+        case Tuple:
+            newExpr = _set_tuple_context(p, e as Tuple, ctx);
+            break;
+        case List:
+            newExpr = _set_list_context(p, e as List, ctx);
+            break;
+        case Subscript:
+            newExpr = _set_subscript_context(p, e as Subscript, ctx);
+            break;
+        case Attribute:
+            newExpr = _set_attribute_context(p, e as Attribute, ctx);
+            break;
+        case Starred:
+            newExpr = _set_starred_context(p, e as Starred, ctx);
+            break;
         default:
             newExpr = e;
     }
