@@ -15,6 +15,8 @@ import type {
     comprehension,
     Name,
     Call,
+    FunctionDef,
+    AsyncFunctionDef,
 } from "../ast/astnodes.ts";
 import type {
     StartRule,
