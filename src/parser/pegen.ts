@@ -1,3 +1,5 @@
+// deno-lint-ignore-file camelcase
+
 import {
     AST,
     Attrs,
@@ -28,6 +30,7 @@ import { parseString } from "./parse_string.ts";
 import {
     AugOperator,
     CmpopExprPair,
+    exprOrNone,
     KeyValuePair,
     KeywordOrStarred,
     KeywordToken,
@@ -1978,7 +1981,7 @@ export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | nu
 //     return seq;
 // }
 
-export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]): expr[] {
+export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]): exprOrNone[] {
     return names_with_defaults.map((pair) => pair.value);
 }
 
@@ -2023,7 +2026,7 @@ export function make_arguments(
         posargs = plain_names;
     }
 
-    let posdefaults: expr[] = [];
+    let posdefaults: exprOrNone[] = [];
     if (slash_with_default !== null && names_with_default !== null) {
         const slash_with_default_values = get_defaults(p, slash_with_default.names_with_defaults);
         const names_with_default_values = get_defaults(p, names_with_default);
@@ -2044,7 +2047,7 @@ export function make_arguments(
         kwonlyargs = get_names(p, star_etc.kwonlyargs);
     }
 
-    let kwdefaults: expr[] = [];
+    let kwdefaults: exprOrNone[] = [];
     if (star_etc !== null && star_etc.kwonlyargs !== null) {
         kwdefaults = get_defaults(p, star_etc.kwonlyargs);
     }
