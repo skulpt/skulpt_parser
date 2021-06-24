@@ -22,6 +22,10 @@ import {
     AsyncFunctionDef,
     Starred,
     alias,
+    Tuple,
+    List,
+    Subscript,
+    Attribute,
 } from "../ast/astnodes.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -85,7 +89,7 @@ export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
         return a;
     }
 
-    return new arg(a.arg, a.annotation, tc.string, a.lineno, a.col_offset, a.end_lineno, a.end_col_offset);
+    return new arg(a.arg, a.annotation, tc.string, ...EXTRA_EXPR(a));
 }
 
 // arg_ty
@@ -1486,14 +1490,7 @@ export function join_names_with_dot(p: Parser, first_name: Name, second_name: Na
     const first_identifier = first_name.id;
     const second_identifier = second_name.id;
     /** @todo if we make these pyStrings we'll have to change this */
-    return new Name(
-        first_identifier + "." + second_identifier,
-        Load,
-        first_name.lineno,
-        first_name.col_offset,
-        second_name.end_lineno,
-        second_name.end_col_offset
-    );
+    return new Name(first_identifier + "." + second_identifier, Load, ...EXTRA_EXPR(first_name, second_name));
 }
 // expr_ty
 // _PyPegen_join_names_with_dot(Parser *p, expr_ty first_name, expr_ty second_name)
@@ -2275,12 +2272,10 @@ export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef
         decorators,
         fdef.returns,
         fdef.type_comment,
-        fdef.lineno,
-        fdef.col_offset,
-        fdef.end_lineno,
-        fdef.end_col_offset
+        ...EXTRA_EXPR(fdef)
     );
 }
+
 // stmt_ty
 // _PyPegen_function_def_decorators(Parser *p, asdl_seq *decorators, stmt_ty function_def)
 // {
@@ -2311,10 +2306,7 @@ export function class_def_decorators(p: Parser, decorators: expr[], class_def: C
         class_def.keywords,
         class_def.body,
         decorators,
-        class_def.lineno,
-        class_def.col_offset,
-        class_def.end_lineno,
-        class_def.end_col_offset
+        ...EXTRA_EXPR(class_def)
     );
 }
 
