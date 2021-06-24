@@ -11,11 +11,25 @@ import subprocess
 import os
 
 
-def ts_ast_dump(source, mode="exec"):
-    with open("tests/tmp.txt", "w+") as f:
-        f.write(source)
+COLOR_MAP = {"green": 32, "red": 31, "yellow": 33}
 
-    os.path.isfile("tests/tmp.txt")
+
+class colors:
+    def wrap_color(color):
+        color = color.lower()
+        return lambda text: f"[{COLOR_MAP.get(color, 37)}m" + text + "[39m"
+
+    green = staticmethod(wrap_color("green"))
+    red = staticmethod(wrap_color("red"))
+    yellow = staticmethod(wrap_color("yellow"))
+
+
+TEMP_FILE = "tests/tmp.txt"
+
+
+def run_process(source, mode="exec"):
+    with open(TEMP_FILE, "w+") as f:
+        f.write(source)
 
     run = subprocess.run(
         [
@@ -24,31 +38,27 @@ def ts_ast_dump(source, mode="exec"):
             "--allow-read",
             "--allow-run",
             "scripts/parse.ts",
-            "tests/tmp.txt",
+            TEMP_FILE,
             "--no_compare",
             "--mode=" + mode,
         ],
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
-    os.remove("tests/tmp.txt")
-    dumped = run.stdout
-    err = run.stderr
+    os.remove(TEMP_FILE)
+    return str(run.stdout or b"", "utf"), str(run.stderr or b"", "utf")
+
+
+# prime deno otherwise we get a weird race condition
+_, err = run_process("x")
+print(colors.red(err))
+
+
+def ts_ast_dump(source, mode="exec"):
+    dumped, err = run_process(source, mode)
     if err:
-        raise Exception("".join(str(err, "utf").splitlines(True)[:6]))
-    return str(dumped, "utf").strip()
-
-
-color_map = {"green": 32, "red": 31, "yellow": 33}
-
-
-class colors:
-    def wrap_color(color):
-        return lambda text: f"[{color_map.get(color.lower(), 37)}m" + text + "[39m"
-
-    green = staticmethod(wrap_color("green"))
-    red = staticmethod(wrap_color("red"))
-    yellow = staticmethod(wrap_color("yellow"))
+        raise Exception("".join(err.splitlines(True)[:6]))
+    return dumped.strip()
 
 
 class PegenTestResult(TextTestResult):
