@@ -19,6 +19,7 @@ import {
     FunctionDef,
     AsyncFunctionDef,
     Starred,
+    alias,
 } from "../ast/astnodes.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -1592,7 +1593,12 @@ export function seq_count_dots(seq: TokenInfo[]) {
 //     return number_of_dots;
 // }
 
-// /* Creates an alias with '*' as the identifier name */
+/* Creates an alias with '*' as the identifier name */
+export function alias_for_star(p: Parser) {
+    /** @todo should we inline this? */
+    return new alias("*", null);
+}
+
 // alias_ty
 // _PyPegen_alias_for_star(Parser *p)
 // {
