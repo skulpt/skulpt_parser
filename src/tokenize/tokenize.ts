@@ -461,7 +461,9 @@ function* _tokenize(
                     } else if (")]}".includes(initial)) {
                         parenlev -= 1;
                     }
-                    yield new TokenInfo(tokens.OP, token, spos, epos, line);
+                    const tok = new TokenInfo(tokens.OP, token, spos, epos, line);
+                    tok.type = tok.exact_type;
+                    yield tok;
                 }
             } else {
                 yield new TokenInfo(tokens.ERRORTOKEN, line[pos], [lnum, pos], [lnum, pos + 1], line);
