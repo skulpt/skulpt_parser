@@ -2590,6 +2590,18 @@ export function make_module(p: Parser, a: stmt[]) {
 //     }
 // }
 
+export function arguments_parsing_error(p: Parser, e: Call) {
+    let msg: string;
+    if (e.keywords.some((k) => k.arg === null)) {
+        msg = "positional argument follows keyword argument unpacking";
+    } else {
+        msg = "positional argument follows keyword argument";
+    }
+    /** @todo */
+    // @ts-ignore
+    return RAISE_SYNTAX_ERROR(msg);
+}
+
 // void *_PyPegen_arguments_parsing_error(Parser *p, expr_ty e) {
 //     int kwarg_unpacking = 0;
 //     for (Py_ssize_t i = 0, l = asdl_seq_LEN(e->v.Call.keywords); i < l; i++) {
