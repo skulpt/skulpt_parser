@@ -1,4 +1,4 @@
-// deno-lint-ignore-file camelcase
+// deno-lint-ignore-file camelcase no-fallthrough
 
 import {
     AST,
@@ -13,8 +13,6 @@ import {
     Load,
     Constant,
     exprKind,
-    cmpop,
-    operator,
     arguments_,
     arg,
     keyword,
@@ -22,17 +20,38 @@ import {
     AsyncFunctionDef,
     Starred,
     alias,
-    Tuple,
-    List,
-    Subscript,
     Attribute,
+    Subscript,
+    List,
+    Tuple,
+    Lambda,
+    BoolOp,
+    BinOp,
+    UnaryOp,
+    GeneratorExp,
+    Yield,
+    YieldFrom,
+    Await,
+    ListComp,
+    SetComp,
+    DictComp,
+    Dict,
+    JoinedStr,
+    FormattedValue,
+    Compare,
+    IfExp,
+    NamedExpr,
+    Set as Set_,
 } from "../ast/astnodes.ts";
+import { pyFalse } from "../ast/constants.ts";
+import { pyTrue } from "../ast/constants.ts";
+import { pyEllipsis } from "../ast/constants.ts";
+import { pyNone } from "../ast/constants.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
 import { parseString } from "./parse_string.ts";
 import {
-    AugOperator,
     CmpopExprPair,
     exprOrNone,
     EXTRA_EXPR,
@@ -239,80 +258,65 @@ export function _create_dummy_identifier(p: Parser) {
 //     return size;
 // }
 
-// const char *
-// _PyPegen_get_expr_name(expr_ty e)
-// {
-//     assert(e != NULL);
-//     switch (e->kind) {
-//         case Attribute_kind:
-//             return "attribute";
-//         case Subscript_kind:
-//             return "subscript";
-//         case Starred_kind:
-//             return "starred";
-//         case Name_kind:
-//             return "name";
-//         case List_kind:
-//             return "list";
-//         case Tuple_kind:
-//             return "tuple";
-//         case Lambda_kind:
-//             return "lambda";
-//         case Call_kind:
-//             return "function call";
-//         case BoolOp_kind:
-//         case BinOp_kind:
-//         case UnaryOp_kind:
-//             return "operator";
-//         case GeneratorExp_kind:
-//             return "generator expression";
-//         case Yield_kind:
-//         case YieldFrom_kind:
-//             return "yield expression";
-//         case Await_kind:
-//             return "await expression";
-//         case ListComp_kind:
-//             return "list comprehension";
-//         case SetComp_kind:
-//             return "set comprehension";
-//         case DictComp_kind:
-//             return "dict comprehension";
-//         case Dict_kind:
-//             return "dict display";
-//         case Set_kind:
-//             return "set display";
-//         case JoinedStr_kind:
-//         case FormattedValue_kind:
-//             return "f-string expression";
-//         case Constant_kind: {
-//             PyObject *value = e->v.Constant.value;
-//             if (value == Py_None) {
-//                 return "None";
-//             }
-//             if (value == Py_False) {
-//                 return "False";
-//             }
-//             if (value == Py_True) {
-//                 return "True";
-//             }
-//             if (value == Py_Ellipsis) {
-//                 return "Ellipsis";
-//             }
-//             return "literal";
-//         }
-//         case Compare_kind:
-//             return "comparison";
-//         case IfExp_kind:
-//             return "conditional expression";
-//         case NamedExpr_kind:
-//             return "named expression";
-//         default:
-//             PyErr_Format(PyExc_SystemError,
-//                          "unexpected expression in assignment %d (line %d)",
-//                          e->kind, e->lineno);
-//             return NULL;
-//     }
-// }
+export function get_expr_name(e: expr): string {
+    assert(e != null);
+    switch (e.constructor as exprKind) {
+        case Attribute:
+        case Subscript:
+        case Starred:
+        case Name:
+        case List:
+        case Tuple:
+        case Lambda:
+            return e[Symbol.toStringTag].toLowerCase();
+        case Call:
+            return "function call";
+        case BoolOp:
+        case BinOp:
+        case UnaryOp:
+            return "operator";
+        case GeneratorExp:
+            return "generator expression";
+        case Yield:
+        case YieldFrom:
+            return "yield expression";
+        case Await:
+            return "await expression";
+        case ListComp:
+            return "list comprehension";
+        case SetComp:
+            return "set comprehension";
+        case DictComp:
+            return "dict comprehension";
+        case Dict:
+            return "dict display";
+        case Set_:
+            return "set display";
+        case JoinedStr:
+        case FormattedValue:
+            return "f-string expression";
+        case Constant: {
+            const value = (e as Constant).value;
+            switch (value) {
+                case pyNone:
+                case pyFalse:
+                case pyTrue:
+                case pyEllipsis:
+                    return value.toString();
+                default:
+                    return "literal";
+            }
+        }
+        case Compare:
+            return "comparison";
+        case IfExp:
+            return "conditional expression";
+        case NamedExpr:
+            return "named expression";
+        default:
+            throw new Error("unexpected expression in assignment");
+    }
+}
 
 // static int
 // raise_decode_error(Parser *p)
@@ -2427,7 +2431,7 @@ export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
     const [lineno, col_offset] = a[0].start;
     const [end_lineno, end_col_offset] = a[a.length - 1].end;
     /** @todo Implement this properly - see parse_string.c */
-    const s = a.map((t) => parseString(t.string)).join();
+    const s = a.map((t) => parseString(t.string)).join("");
     return new Constant(s, null, lineno, col_offset, end_lineno, end_col_offset);
 }
 
@@ -2609,6 +2613,18 @@ export function make_module(p: Parser, a: stmt[]) {
 //     }
 // }
 
+export function arguments_parsing_error(p: Parser, e: Call) {
+    let msg: string;
+    if (e.keywords.some((k) => k.arg === null)) {
+        msg = "positional argument follows keyword argument unpacking";
+    } else {
+        msg = "positional argument follows keyword argument";
+    }
+    /** @todo */
+    // @ts-ignore
+    return RAISE_SYNTAX_ERROR(msg);
+}
+
 // void *_PyPegen_arguments_parsing_error(Parser *p, expr_ty e) {
 //     int kwarg_unpacking = 0;
 //     for (Py_ssize_t i = 0, l = asdl_seq_LEN(e->v.Call.keywords); i < l; i++) {
@@ -2628,26 +2644,23 @@ export function make_module(p: Parser, a: stmt[]) {
 //     return RAISE_SYNTAX_ERROR(msg);
 // }
 
-// void *
-// _PyPegen_nonparen_genexp_in_call(Parser *p, expr_ty args)
-// {
-//     /* The rule that calls this function is 'args for_if_clauses'.
-//        For the input f(L, x for x in y), L and x are in args and
-//        the for is parsed as a for_if_clause. We have to check if
-//        len <= 1, so that input like dict((a, b) for a, b in x)
-//        gets successfully parsed and then we pass the last
-//        argument (x in the above example) as the location of the
-//        error */
-//     Py_ssize_t len = asdl_seq_LEN(args->v.Call.args);
-//     if (len <= 1) {
-//         return NULL;
-//     }
+export function nonparen_genexp_in_call(p: Parser, c: Call) {
+    /* The rule that calls this function is 'args for_if_clauses'.
+       For the input f(L, x for x in y), L and x are in args and
+       the for is parsed as a for_if_clause. We have to check if
+       len <= 1, so that input like dict((a, b) for a, b in x)
+       gets successfully parsed and then we pass the last
+       argument (x in the above example) as the location of the
+       error */
+    const args = c.args;
+    if (args.length <= 1) {
+        return null;
+    }
 
-//     return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
-//         (expr_ty) asdl_seq_GET(args->v.Call.args, len - 1),
-//         "Generator expression must be parenthesized"
-//     );
-// }
+    /**@todo */
+    //@ts-ignore
+    return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(args[args.length - 1], "Generator expression must be parenthesized");
+}
 
 // @stu why does our parser not call these functions with the parser?
 export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null, ...attrs: Attrs) {
