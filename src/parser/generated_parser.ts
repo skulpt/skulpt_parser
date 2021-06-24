@@ -47,11 +47,9 @@ function CHECK_VERSION(i: number, msg: string, ret: any) {
 }
 
 /** @todo */
-function CHECK_NULL_ALLOWED(p: Parser, result: any) {
+function CHECK_NULL_ALLOWED(result: any) {
     return result;
 }
-
-type KeywordOrStarredArray = KeywordOrStarred[];
 
 export class GeneratedParser extends Parser {
     start_rule: StartRule;
@@ -1090,7 +1088,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    function_def(): stmt | null {
+    function_def(): FunctionDef | AsyncFunctionDef | null {
         // function_def: decorators function_def_raw | function_def_raw
         let d, f, function_def_raw;
         const mark = this.mark();
@@ -1107,7 +1105,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    function_def_raw(): stmt | null {
+    function_def_raw(): FunctionDef | AsyncFunctionDef | null {
         // function_def_raw: 'def' NAME '(' params? ')' ['->' expression] ':' func_type_comment? block | ASYNC 'def' NAME '(' params? ')' ['->' expression] ':' func_type_comment? block
         let a, async, b, keyword, literal, literal_1, literal_2, n, params, tc;
         const mark = this.mark();
@@ -2879,7 +2877,7 @@ export class GeneratedParser extends Parser {
     }
 
     @memoize
-    kwargs(): KeywordOrStarredArray | null {
+    kwargs(): KeywordOrStarred[] | null {
         // kwargs: ','.kwarg_or_starred+ ',' ','.kwarg_or_double_starred+ | ','.kwarg_or_starred+ | ','.kwarg_or_double_starred+
         let _gather_112, _gather_114, a, b, literal;
         const mark = this.mark();
@@ -2942,12 +2940,12 @@ export class GeneratedParser extends Parser {
         const mark = this.mark();
         if ((a = this.name()) && (literal = this.expect("=")) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1);
+            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((literal = this.expect("**")) && (a = this.expression())) {
             const EXTRA = this.extra(mark);
-            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), 1);
+            return pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), true);
         }
         this.reset(mark);
         if ((invalid_kwarg = this.invalid_kwarg())) {

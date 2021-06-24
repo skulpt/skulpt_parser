@@ -16,6 +16,8 @@ import {
     arguments_,
     arg,
     keyword,
+    FunctionDef,
+    AsyncFunctionDef,
 } from "../ast/astnodes.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -1467,7 +1469,20 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return flattened_seq;
 // }
 
-// /* Creates a new name of the form <first_name>.<second_name> */
+/* Creates a new name of the form <first_name>.<second_name> */
+export function join_names_with_dot(p: Parser, first_name: Name, second_name: Name): Name {
+    const first_identifier = first_name.id;
+    const second_identifier = second_name.id;
+    /** @todo if we make these pyStrings we'll have to change this */
+    return new Name(
+        first_identifier + "." + second_identifier,
+        Load,
+        first_name.lineno,
+        first_name.col_offset,
+        second_name.end_lineno,
+        second_name.end_col_offset
+    );
+}
 // expr_ty
 // _PyPegen_join_names_with_dot(Parser *p, expr_ty first_name, expr_ty second_name)
 // {
@@ -2217,7 +2232,26 @@ export function augoperator(p: Parser, kind: operator) {
 //     return a;
 // }
 
-// /* Construct a FunctionDef equivalent to function_def, but with decorators */
+/* Construct a FunctionDef equivalent to function_def, but with decorators */
+export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef>(
+    p: Parser,
+    decorators: expr[],
+    fdef: T
+): T extends FunctionDef ? FunctionDef : AsyncFunctionDef {
+    assert(fdef !== null);
+    return new (fdef.constructor as typeof FunctionDef | typeof AsyncFunctionDef)(
+        fdef.name,
+        fdef.args,
+        fdef.body,
+        decorators,
+        fdef.returns,
+        fdef.type_comment,
+        fdef.lineno,
+        fdef.col_offset,
+        fdef.end_lineno,
+        fdef.end_col_offset
+    );
+}
 // stmt_ty
 // _PyPegen_function_def_decorators(Parser *p, asdl_seq *decorators, stmt_ty function_def)
 // {
@@ -2305,12 +2339,8 @@ export function keyword_or_starred(p: Parser, element: keyword, is_keyword: bool
 //     return n;
 // }
 
-function isKeyword(kw: expr | keyword): kw is keyword {
-    return kw instanceof keyword;
-}
-
 export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): expr[] {
-    return kwargs.map((kw) => kw.element).filter((kw) => !isKeyword(kw));
+    return kwargs.filter((kw) => !kw.is_keyword).map((kw) => kw.element);
 }
 
 // /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
@@ -2337,7 +2367,7 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 // }
 
 export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
-    return kwargs.map((kw) => kw.element).filter(isKeyword);
+    return kwargs.filter((kw) => kw.is_keyword).map((kw) => kw.element as keyword);
 }
 
 // /* Return a new asdl_seq* with only the keywords in kwargs */
