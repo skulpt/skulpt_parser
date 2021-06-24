@@ -2598,6 +2598,18 @@ export function make_module(p: Parser, a: stmt[]) {
 //     }
 // }
 
+export function arguments_parsing_error(p: Parser, e: Call) {
+    let msg: string;
+    if (e.keywords.some((k) => k.arg === null)) {
+        msg = "positional argument follows keyword argument unpacking";
+    } else {
+        msg = "positional argument follows keyword argument";
+    }
+    /** @todo */
+    // @ts-ignore
+    return RAISE_SYNTAX_ERROR(msg);
+}
+
 // void *_PyPegen_arguments_parsing_error(Parser *p, expr_ty e) {
 //     int kwarg_unpacking = 0;
 //     for (Py_ssize_t i = 0, l = asdl_seq_LEN(e->v.Call.keywords); i < l; i++) {
@@ -2617,26 +2629,23 @@ export function make_module(p: Parser, a: stmt[]) {
 //     return RAISE_SYNTAX_ERROR(msg);
 // }
 
-// void *
-// _PyPegen_nonparen_genexp_in_call(Parser *p, expr_ty args)
-// {
-//     /* The rule that calls this function is 'args for_if_clauses'.
-//        For the input f(L, x for x in y), L and x are in args and
-//        the for is parsed as a for_if_clause. We have to check if
-//        len <= 1, so that input like dict((a, b) for a, b in x)
-//        gets successfully parsed and then we pass the last
-//        argument (x in the above example) as the location of the
-//        error */
-//     Py_ssize_t len = asdl_seq_LEN(args->v.Call.args);
-//     if (len <= 1) {
-//         return NULL;
-//     }
+export function nonparen_genexp_in_call(p: Parser, c: Call) {
+    /* The rule that calls this function is 'args for_if_clauses'.
+       For the input f(L, x for x in y), L and x are in args and
+       the for is parsed as a for_if_clause. We have to check if
+       len <= 1, so that input like dict((a, b) for a, b in x)
+       gets successfully parsed and then we pass the last
+       argument (x in the above example) as the location of the
+       error */
+    const args = c.args;
+    if (args.length <= 1) {
+        return null;
+    }
 
-//     return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
-//         (expr_ty) asdl_seq_GET(args->v.Call.args, len - 1),
-//         "Generator expression must be parenthesized"
-//     );
-// }
+    /**@todo */
+    //@ts-ignore
+    return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(args[args.length - 1], "Generator expression must be parenthesized");
+}
 
 // @stu why does our parser not call these functions with the parser?
 export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null, ...attrs: Attrs) {
