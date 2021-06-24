@@ -2408,7 +2408,7 @@ export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
     const [lineno, col_offset] = a[0].start;
     const [end_lineno, end_col_offset] = a[a.length - 1].end;
     /** @todo Implement this properly - see parse_string.c */
-    const s = a.map((t) => parseString(t.string)).join();
+    const s = a.map((t) => parseString(t.string)).join("");
     return new Constant(s, null, lineno, col_offset, end_lineno, end_col_offset);
 }
 
