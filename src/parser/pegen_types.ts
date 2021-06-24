@@ -1,4 +1,5 @@
 import { arg, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
+import { pyNone, pyNoneType } from "../ast/constants.ts";
 
 export class CmpopExprPair {
     cmpop: cmpop;
@@ -26,12 +27,13 @@ export class AugOperator {
     }
 }
 
+export type exprOrNone = expr | pyNoneType;
 export class NameDefaultPair {
     arg: arg;
-    value: expr;
-    constructor(arg: arg, value: expr) {
+    value: exprOrNone;
+    constructor(arg: arg, value: expr | null) {
         this.arg = arg;
-        this.value = value;
+        this.value = value ?? pyNone;
     }
 }
 

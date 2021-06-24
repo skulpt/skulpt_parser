@@ -196,7 +196,11 @@ class PrototypeVisitor(EmitVisitor):
                 name = f.name
             # XXX should extend get_c_type() to handle this
             if f.seq:
-                ts_type = f"{f.type}[]"
+                # @TODO this would be replaces by an asdl patch
+                if name == "defaults" or name == "kw_defaults":
+                    ts_type = "exprOrNone[]"
+                else:
+                    ts_type = f"{f.type}[]"
             else:
                 ts_type = get_ts_type(f.type)
             args.append((ts_type, name, f.opt, f.seq))
@@ -341,6 +345,7 @@ def main(asdlfile, outputfile):
     argv0 = os.sep.join(components[-2:])
     auto_gen_msg = common_msg % argv0
     with open(asdlfile, "r") as file:
+        # @TODO this would be replaces by an asdl patch
         lines = file.read().replace("arguments", "arguments_").replace("Continue", "Continue | Debugger")
     with open("temp.asdl", "w") as f:
         f.write(lines)
@@ -353,7 +358,8 @@ def main(asdlfile, outputfile):
     f = open(outputfile, "w")
 
     f.write(auto_gen_msg)
-    f.write("/* Object that holds all nodes */\n")
+    f.write("/* module that holds all nodes */\n\n")
+    f.write('import type { exprOrNone } from "../parser/pegen_types.ts";\n')
     f.write(
         """
 /** @todo these should be a python types */
