@@ -19,21 +19,22 @@ import type {
     AsyncFunctionDef,
     Starred,
 } from "../ast/astnodes.ts";
-import type {
+import type { Tokenizer } from "../tokenize/Tokenizer.ts";
+import type { TokenInfo } from "../tokenize/tokenize.ts";
+import * as astnodes from "../ast/astnodes.ts";
+import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
+import {
     StartRule,
     CmpopExprPair,
     KeyValuePair,
+    KeywordToken,
+    KeywordOrStarred,
     NameDefaultPair,
     SlashWithDefault,
     StarEtc,
     AugOperator,
 } from "./pegen_types.ts";
-import type { Tokenizer } from "../tokenize/Tokenizer.ts";
-import type { TokenInfo } from "../tokenize/tokenize.ts";
-import * as astnodes from "../ast/astnodes.ts";
-import { pyNone, pyTrue, pyFalse, pyEllipsis } from "../ast/constants.ts";
 import { pegen } from "./pegen_proxy.ts";
-import { KeywordToken, KeywordOrStarred } from "./pegen_types.ts";
 import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
 import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
@@ -463,55 +464,55 @@ export class GeneratedParser extends Parser {
         let literal;
         const mark = this.mark();
         if ((literal = this.expect("+="))) {
-            return pegen.augoperator(this, astnodes.Add);
+            return new AugOperator(astnodes.Add);
         }
         this.reset(mark);
         if ((literal = this.expect("-="))) {
-            return pegen.augoperator(this, astnodes.Sub);
+            return new AugOperator(astnodes.Sub);
         }
         this.reset(mark);
         if ((literal = this.expect("*="))) {
-            return pegen.augoperator(this, astnodes.Mult);
+            return new AugOperator(astnodes.Mult);
         }
         this.reset(mark);
         if ((literal = this.expect("@="))) {
-            return CHECK_VERSION(5, "The '@' operator is", pegen.augoperator(this, astnodes.MatMult));
+            return CHECK_VERSION(5, "The '@' operator is", new AugOperator(astnodes.MatMult));
         }
         this.reset(mark);
         if ((literal = this.expect("/="))) {
-            return pegen.augoperator(this, astnodes.Div);
+            return new AugOperator(astnodes.Div);
         }
         this.reset(mark);
         if ((literal = this.expect("%="))) {
-            return pegen.augoperator(this, astnodes.Mod);
+            return new AugOperator(astnodes.Mod);
         }
         this.reset(mark);
         if ((literal = this.expect("&="))) {
-            return pegen.augoperator(this, astnodes.BitAnd);
+            return new AugOperator(astnodes.BitAnd);
         }
         this.reset(mark);
         if ((literal = this.expect("|="))) {
-            return pegen.augoperator(this, astnodes.BitOr);
+            return new AugOperator(astnodes.BitOr);
         }
         this.reset(mark);
         if ((literal = this.expect("^="))) {
-            return pegen.augoperator(this, astnodes.BitXor);
+            return new AugOperator(astnodes.BitXor);
         }
         this.reset(mark);
         if ((literal = this.expect("<<="))) {
-            return pegen.augoperator(this, astnodes.LShift);
+            return new AugOperator(astnodes.LShift);
         }
         this.reset(mark);
         if ((literal = this.expect(">>="))) {
-            return pegen.augoperator(this, astnodes.RShift);
+            return new AugOperator(astnodes.RShift);
         }
         this.reset(mark);
         if ((literal = this.expect("**="))) {
-            return pegen.augoperator(this, astnodes.Pow);
+            return new AugOperator(astnodes.Pow);
         }
         this.reset(mark);
         if ((literal = this.expect("//="))) {
-            return pegen.augoperator(this, astnodes.FloorDiv);
+            return new AugOperator(astnodes.FloorDiv);
         }
         this.reset(mark);
 
@@ -1270,7 +1271,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("/")) &&
             (literal_1 = this.expect(","))
         ) {
-            return pegen.slash_with_default(this, a, b);
+            return new SlashWithDefault(a, b);
         }
         this.reset(mark);
         if (
@@ -1279,7 +1280,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("/")) &&
             this.positive_lookahead(this.expect, ")")
         ) {
-            return pegen.slash_with_default(this, a, b);
+            return new SlashWithDefault(a, b);
         }
         this.reset(mark);
 
@@ -1297,7 +1298,7 @@ export class GeneratedParser extends Parser {
             (b = this._loop0_66()) &&
             ((c = this.kwds()), 1)
         ) {
-            return pegen.star_etc(this, a, b, c);
+            return new StarEtc(a, b, c);
         }
         this.reset(mark);
         if (
@@ -1306,11 +1307,11 @@ export class GeneratedParser extends Parser {
             (b = this._loop1_67()) &&
             ((c = this.kwds()), 1)
         ) {
-            return pegen.star_etc(this, null, b, c);
+            return new StarEtc(null, b, c);
         }
         this.reset(mark);
         if ((a = this.kwds())) {
-            return pegen.star_etc(this, null, null, a);
+            return new StarEtc(null, null, a);
         }
         this.reset(mark);
         if ((invalid_star_etc = this.invalid_star_etc())) {
@@ -1787,7 +1788,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("/")) &&
             (literal_1 = this.expect(","))
         ) {
-            return pegen.slash_with_default(this, a, b);
+            return new SlashWithDefault(a, b);
         }
         this.reset(mark);
         if (
@@ -1796,7 +1797,7 @@ export class GeneratedParser extends Parser {
             (literal = this.expect("/")) &&
             this.positive_lookahead(this.expect, ":")
         ) {
-            return pegen.slash_with_default(this, a, b);
+            return new SlashWithDefault(a, b);
         }
         this.reset(mark);
 
@@ -1814,7 +1815,7 @@ export class GeneratedParser extends Parser {
             (b = this._loop0_86()) &&
             ((c = this.lambda_kwds()), 1)
         ) {
-            return pegen.star_etc(this, a, b, c);
+            return new StarEtc(a, b, c);
         }
         this.reset(mark);
         if (
@@ -1823,11 +1824,11 @@ export class GeneratedParser extends Parser {
             (b = this._loop1_87()) &&
             ((c = this.lambda_kwds()), 1)
         ) {
-            return pegen.star_etc(this, null, b, c);
+            return new StarEtc(null, b, c);
         }
         this.reset(mark);
         if ((a = this.lambda_kwds())) {
-            return pegen.star_etc(this, null, null, a);
+            return new StarEtc(null, null, a);
         }
         this.reset(mark);
         if ((invalid_lambda_star_etc = this.invalid_lambda_star_etc())) {
@@ -2057,7 +2058,7 @@ export class GeneratedParser extends Parser {
         let a, literal;
         const mark = this.mark();
         if ((literal = this.expect("==")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.Eq, a);
+            return new CmpopExprPair(astnodes.Eq, a);
         }
         this.reset(mark);
 
@@ -2070,7 +2071,7 @@ export class GeneratedParser extends Parser {
         let a, tok;
         const mark = this.mark();
         if ((tok = this.expect("!=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.NotEq, a);
+            return new CmpopExprPair(astnodes.NotEq, a);
         }
         this.reset(mark);
 
@@ -2083,7 +2084,7 @@ export class GeneratedParser extends Parser {
         let a, literal;
         const mark = this.mark();
         if ((literal = this.expect("<=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.LtE, a);
+            return new CmpopExprPair(astnodes.LtE, a);
         }
         this.reset(mark);
 
@@ -2096,7 +2097,7 @@ export class GeneratedParser extends Parser {
         let a, literal;
         const mark = this.mark();
         if ((literal = this.expect("<")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.Lt, a);
+            return new CmpopExprPair(astnodes.Lt, a);
         }
         this.reset(mark);
 
@@ -2109,7 +2110,7 @@ export class GeneratedParser extends Parser {
         let a, literal;
         const mark = this.mark();
         if ((literal = this.expect(">=")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.GtE, a);
+            return new CmpopExprPair(astnodes.GtE, a);
         }
         this.reset(mark);
 
@@ -2122,7 +2123,7 @@ export class GeneratedParser extends Parser {
         let a, literal;
         const mark = this.mark();
         if ((literal = this.expect(">")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.Gt, a);
+            return new CmpopExprPair(astnodes.Gt, a);
         }
         this.reset(mark);
 
@@ -2135,7 +2136,7 @@ export class GeneratedParser extends Parser {
         let a, keyword, keyword_1;
         const mark = this.mark();
         if ((keyword = this.expect("not")) && (keyword_1 = this.expect("in")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.NotIn, a);
+            return new CmpopExprPair(astnodes.NotIn, a);
         }
         this.reset(mark);
 
@@ -2148,7 +2149,7 @@ export class GeneratedParser extends Parser {
         let a, keyword;
         const mark = this.mark();
         if ((keyword = this.expect("in")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.In, a);
+            return new CmpopExprPair(astnodes.In, a);
         }
         this.reset(mark);
 
@@ -2161,7 +2162,7 @@ export class GeneratedParser extends Parser {
         let a, keyword, keyword_1;
         const mark = this.mark();
         if ((keyword = this.expect("is")) && (keyword_1 = this.expect("not")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.IsNot, a);
+            return new CmpopExprPair(astnodes.IsNot, a);
         }
         this.reset(mark);
 
@@ -2174,7 +2175,7 @@ export class GeneratedParser extends Parser {
         let a, keyword;
         const mark = this.mark();
         if ((keyword = this.expect("is")) && (a = this.bitwise_or())) {
-            return pegen.cmpop_expr_pair(this, astnodes.Is, a);
+            return new CmpopExprPair(astnodes.Is, a);
         }
         this.reset(mark);
 
@@ -2742,7 +2743,7 @@ export class GeneratedParser extends Parser {
         let a, kvpair, literal;
         const mark = this.mark();
         if ((literal = this.expect("**")) && (a = this.bitwise_or())) {
-            return pegen.key_value_pair(this, null, a);
+            return new KeyValuePair(null, a);
         }
         this.reset(mark);
         if ((kvpair = this.kvpair())) {
@@ -2759,7 +2760,7 @@ export class GeneratedParser extends Parser {
         let a, b, literal;
         const mark = this.mark();
         if ((a = this.expression()) && (literal = this.expect(":")) && (b = this.expression())) {
-            return pegen.key_value_pair(this, a, b);
+            return new KeyValuePair(a, b);
         }
         this.reset(mark);
 
