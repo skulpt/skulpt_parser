@@ -1,5 +1,5 @@
 // deno-lint-ignore-file camelcase
-import { arg, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
+import { arg, Attrs, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
 import { pyNone, pyNoneType } from "../ast/constants.ts";
 
 export class CmpopExprPair {
@@ -93,3 +93,8 @@ export const FUNC_TYPE_INPUT = 345;
 export const FSTRING_INPUT = 800;
 
 export type StartRule = 256 | 257 | 258 | 345 | 800;
+
+export function EXTRA_EXPR(head: expr, tail?: expr): Attrs {
+    tail ??= head;
+    return [head.lineno, head.col_offset, tail.end_lineno, tail.end_col_offset];
+}

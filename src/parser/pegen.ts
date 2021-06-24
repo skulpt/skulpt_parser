@@ -35,6 +35,7 @@ import {
     AugOperator,
     CmpopExprPair,
     exprOrNone,
+    EXTRA_EXPR,
     KeyValuePair,
     KeywordOrStarred,
     KeywordToken,
@@ -89,7 +90,7 @@ export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
         return a;
     }
 
-    return new arg(a.arg, a.annotation, tc.string, ...EXTRA_EXPR(a));
+    return new arg(a.arg, a.annotation, tc.string, a.lineno, a.col_offset, a.end_lineno, a.end_col_offset);
 }
 
 // arg_ty
@@ -1751,11 +1752,6 @@ export function get_exprs(p: Parser, seq: CmpopExprPair[]) {
 //     return _Py_Starred(_PyPegen_set_expr_context(p, e->v.Starred.value, ctx), ctx, EXTRA_EXPR(e, e));
 // }
 
-function EXTRA_EXPR(head: expr, tail?: expr): Attrs {
-    tail ??= head;
-    return [head.lineno, head.col_offset, tail.end_lineno, tail.end_col_offset];
-}
-
 /* Creates an asdl_seq* where all the elements have been changed to have ctx as context */
 function _set_seq_context(p: Parser, seq: expr[], ctx: expr_context) {
     return seq.map((e) => set_expr_context(p, e, ctx));
@@ -2272,7 +2268,10 @@ export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef
         decorators,
         fdef.returns,
         fdef.type_comment,
-        ...EXTRA_EXPR(fdef)
+        fdef.lineno,
+        fdef.col_offset,
+        fdef.end_lineno,
+        fdef.end_col_offset
     );
 }
 
@@ -2306,7 +2305,10 @@ export function class_def_decorators(p: Parser, decorators: expr[], class_def: C
         class_def.keywords,
         class_def.body,
         decorators,
-        ...EXTRA_EXPR(class_def)
+        class_def.lineno,
+        class_def.col_offset,
+        class_def.end_lineno,
+        class_def.end_col_offset
     );
 }
 
