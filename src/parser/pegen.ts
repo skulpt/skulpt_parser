@@ -16,6 +16,10 @@ import {
     arguments_,
     arg,
     keyword,
+    FunctionDef,
+    AsyncFunctionDef,
+    Starred,
+    alias,
 } from "../ast/astnodes.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
@@ -1467,7 +1471,20 @@ export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
 //     return flattened_seq;
 // }
 
-// /* Creates a new name of the form <first_name>.<second_name> */
+/* Creates a new name of the form <first_name>.<second_name> */
+export function join_names_with_dot(p: Parser, first_name: Name, second_name: Name): Name {
+    const first_identifier = first_name.id;
+    const second_identifier = second_name.id;
+    /** @todo if we make these pyStrings we'll have to change this */
+    return new Name(
+        first_identifier + "." + second_identifier,
+        Load,
+        first_name.lineno,
+        first_name.col_offset,
+        second_name.end_lineno,
+        second_name.end_col_offset
+    );
+}
 // expr_ty
 // _PyPegen_join_names_with_dot(Parser *p, expr_ty first_name, expr_ty second_name)
 // {
@@ -1576,7 +1593,12 @@ export function seq_count_dots(seq: TokenInfo[]) {
 //     return number_of_dots;
 // }
 
-// /* Creates an alias with '*' as the identifier name */
+/* Creates an alias with '*' as the identifier name */
+export function alias_for_star(p: Parser) {
+    /** @todo should we inline this? */
+    return new alias("*", null);
+}
+
 // alias_ty
 // _PyPegen_alias_for_star(Parser *p)
 // {
@@ -2217,7 +2239,26 @@ export function augoperator(p: Parser, kind: operator) {
 //     return a;
 // }
 
-// /* Construct a FunctionDef equivalent to function_def, but with decorators */
+/* Construct a FunctionDef equivalent to function_def, but with decorators */
+export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef>(
+    p: Parser,
+    decorators: expr[],
+    fdef: T
+): T extends FunctionDef ? FunctionDef : AsyncFunctionDef {
+    assert(fdef !== null);
+    return new (fdef.constructor as typeof FunctionDef | typeof AsyncFunctionDef)(
+        fdef.name,
+        fdef.args,
+        fdef.body,
+        decorators,
+        fdef.returns,
+        fdef.type_comment,
+        fdef.lineno,
+        fdef.col_offset,
+        fdef.end_lineno,
+        fdef.end_col_offset
+    );
+}
 // stmt_ty
 // _PyPegen_function_def_decorators(Parser *p, asdl_seq *decorators, stmt_ty function_def)
 // {
@@ -2274,9 +2315,6 @@ kwarg_or_starred[KeywordOrStarred*]:
     | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) } <<-- here
     | invalid_kwarg
 */
-export function keyword_or_starred(p: Parser, element: keyword, is_keyword: boolean) {
-    return new KeywordOrStarred(element, is_keyword);
-}
 
 // /* Construct a KeywordOrStarred */
 // KeywordOrStarred *
@@ -2305,12 +2343,16 @@ export function keyword_or_starred(p: Parser, element: keyword, is_keyword: bool
 //     return n;
 // }
 
-function isKeyword(kw: expr | keyword): kw is keyword {
-    return kw instanceof keyword;
+function isKeyword(kw: KeywordOrStarred): kw is KeywordOrStarred<true> {
+    return kw.is_keyword;
 }
 
-export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): expr[] {
-    return kwargs.map((kw) => kw.element).filter((kw) => !isKeyword(kw));
+function isStarred(kw: KeywordOrStarred): kw is KeywordOrStarred<false> {
+    return !kw.is_keyword;
+}
+
+export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): Starred[] {
+    return kwargs.filter(isStarred).map((kw) => kw.element);
 }
 
 // /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
@@ -2337,7 +2379,7 @@ export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[])
 // }
 
 export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
-    return kwargs.map((kw) => kw.element).filter(isKeyword);
+    return kwargs.filter(isKeyword).map((kw) => kw.element);
 }
 
 // /* Return a new asdl_seq* with only the keywords in kwargs */

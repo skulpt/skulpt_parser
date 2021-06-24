@@ -42,14 +42,14 @@ MODULE_PREFIX = """\
 // deno-lint-ignore-file no-explicit-any camelcase no-unused-vars
 // @ts-nocheck
 
-import type {{ mod, expr, stmt, operator, alias, withitem, excepthandler, arguments_, arg, comprehension, Name, Call }} from "../ast/astnodes.ts";
-import type {{ StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator }} from "./pegen_types.ts";
+import type {{ mod, expr, stmt, operator, alias, withitem, excepthandler, arguments_, arg, comprehension, Name, Call, FunctionDef, AsyncFunctionDef, Starred }} from "../ast/astnodes.ts";
+import type {{ StartRule, CmpopExprPair, KeyValuePair, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator }} from "./pegen_types.ts";
 import type {{ Tokenizer }} from "../tokenize/Tokenizer.ts";
 import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
 import {{ pegen }} from "./pegen_proxy.ts";
-import {{ KeywordToken }} from "./pegen_types.ts";
+import {{ KeywordToken, KeywordOrStarred }} from "./pegen_types.ts";
 import {{ FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT }} from "./pegen_types.ts";
 
 import {{ memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
@@ -65,11 +65,9 @@ function CHECK_VERSION(i: number, msg: string, ret: any) {{
 }}
 
 /** @todo */
-function CHECK_NULL_ALLOWED(p: Parser, result: any) {{
+function CHECK_NULL_ALLOWED(result: any) {{
     return result;
 }}
-
-type KeywordOrStarredArray = KeywordOrStarred[]
 
 """
 
@@ -132,6 +130,11 @@ reserved = {
 
 def fix_reserved(name):
     return name + "_" if name in reserved else name
+
+
+def clean_type(type):
+    # because grammar doesn't allow certain characters
+    return type.replace("_UNION_", "|").replace("_ARRAY", "[]")
 
 
 non_exact_tok = (
@@ -356,7 +359,7 @@ export class GeneratedParser extends Parser {
                 self.print("@logger")
         else:
             self.print("@memoize")
-        node_type = node.type or "any"
+        node_type = clean_type(node.type or "any")
         self.print(f"{node.name}(): {node_type} | null {{")  # -> Optional[{node_type}] {{")
         with self.indent():
             self.print(f"// {node.name}: {rhs}")

@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..ddc442a97b 100644
+index 64e205e7fd..99182cfaca 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -296,12 +296,12 @@ index 64e205e7fd..ddc442a97b 100644
  
 -function_def[stmt_ty]:
 -    | d=decorators f=function_def_raw { _PyPegen_function_def_decorators(p, d, f) }
-+function_def[stmt]:
++function_def[FunctionDef_UNION_AsyncFunctionDef]:
 +    | d=decorators f=function_def_raw { pegen.function_def_decorators(this, d, f) }
      | function_def_raw
  
 -function_def_raw[stmt_ty]:
-+function_def_raw[stmt]:
++function_def_raw[FunctionDef_UNION_AsyncFunctionDef]:
      | 'def' n=NAME '(' params=[params] ')' a=['->' z=expression { z }] ':' tc=[func_type_comment] b=block {
 -        _Py_FunctionDef(n->v.Name.id,
 -                        (params) ? params : CHECK(_PyPegen_empty_arguments(p)),
@@ -828,29 +828,29 @@ index 64e205e7fd..ddc442a97b 100644
 +                          CHECK_NULL_ALLOWED(pegen.seq_extract_starred_exprs(this, a)),
 +                          CHECK_NULL_ALLOWED(pegen.seq_delete_starred_exprs(this, a)),
 +                          ...EXTRA) }
-+kwargs[KeywordOrStarredArray]:
++kwargs[KeywordOrStarred_ARRAY]:
 +    | a=','.kwarg_or_starred+ ',' b=','.kwarg_or_double_starred+ { pegen.join_sequences(this, a, b) }
      | ','.kwarg_or_starred+
      | ','.kwarg_or_double_starred+
 -starred_expression[expr_ty]:
 -    | '*' a=expression { _Py_Starred(a, Load, EXTRA) }
 -kwarg_or_starred[KeywordOrStarred*]:
-+starred_expression[expr]:
++starred_expression[Starred]:
 +    | '*' a=expression { new astnodes.Starred(a, astnodes.Load, ...EXTRA) }
 +kwarg_or_starred[KeywordOrStarred]:
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | a=starred_expression { _PyPegen_keyword_or_starred(p, a, 0) }
-+        pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
-+    | a=starred_expression { pegen.keyword_or_starred(this, a, false) }
++        new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
++    | a=starred_expression { new KeywordOrStarred(a, false) }
      | invalid_kwarg
 -kwarg_or_double_starred[KeywordOrStarred*]:
 +kwarg_or_double_starred[KeywordOrStarred]:
      | a=NAME '=' b=expression {
 -        _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(a->v.Name.id, b, EXTRA)), 1) }
 -    | '**' a=expression { _PyPegen_keyword_or_starred(p, CHECK(_Py_keyword(NULL, a, EXTRA)), 1) }
-+        pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), 1) }
-+    | '**' a=expression { pegen.keyword_or_starred(this, CHECK(new astnodes.keyword(null, a, ...EXTRA)), 1) }
++        new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true) }
++    | '**' a=expression { new KeywordOrStarred(CHECK(new astnodes.keyword(null, a, ...EXTRA)), true) }
      | invalid_kwarg
  
  # NOTE: star_targets may contain *bitwise_or, targets may not.
