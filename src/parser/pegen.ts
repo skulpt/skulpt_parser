@@ -42,6 +42,7 @@ import {
     IfExp,
     NamedExpr,
     Set as Set_,
+    cmpop,
 } from "../ast/astnodes.ts";
 import { pyFalse } from "../ast/constants.ts";
 import { pyTrue } from "../ast/constants.ts";
@@ -169,7 +170,7 @@ export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
 //     return 0;
 // }
 
-export function new_identifier(/*p: Parser, */ n: string) {
+export function new_identifier(/*p: Parser, */ n: string): string {
     // todo pull in the identifier check stuff we already have
     // this will have to return an interned python string
     return n;
@@ -231,7 +232,7 @@ export function new_identifier(/*p: Parser, */ n: string) {
 //     return NULL;
 // }
 
-export function _create_dummy_identifier(p: Parser) {
+export function _create_dummy_identifier(p: Parser): string {
     return new_identifier("");
 }
 
@@ -1391,7 +1392,7 @@ export function singleton_seq(p: Parser, a: AST): AST[] {
 //     return seq;
 // }
 
-export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null) {
+export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null): any {
     assert(a !== null);
 
     if (seq === null) {
@@ -1423,7 +1424,7 @@ export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null) {
 // }
 
 /* Creates a copy of seq and appends a to it */
-export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr) {
+export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr): any {
     assert(a !== null);
     if (seq === null) {
         return [a];
@@ -1553,22 +1554,7 @@ export function join_names_with_dot(p: Parser, first_name: Name, second_name: Na
 
 class UnreachableException extends Error {}
 
-// export function seq_count_dots(seq: TokenInfo[]) {
-//     return seq
-//         .map((current_expr) => {
-//             switch (current_expr.type) {
-//                 case ELLIPSIS:
-//                     return 3;
-//                 case DOT:
-//                     return 1;
-//                 default:
-//                     throw new UnreachableException();
-//             }
-//         })
-//         .reduce((a, b) => a + b, 0);
-// }
-
-function getNumDots(e: TokenInfo) {
+function getNumDots(e: TokenInfo): number {
     switch (e.type) {
         case ELLIPSIS:
             return 3;
@@ -1579,7 +1565,7 @@ function getNumDots(e: TokenInfo) {
     }
 }
 
-export function seq_count_dots(seq: TokenInfo[]) {
+export function seq_count_dots(seq: TokenInfo[]): number {
     return seq.reduce((a, b) => a + getNumDots(b), 0);
 }
 
@@ -1606,7 +1592,7 @@ export function seq_count_dots(seq: TokenInfo[]) {
 // }
 
 /* Creates an alias with '*' as the identifier name */
-export function alias_for_star(p: Parser) {
+export function alias_for_star(p: Parser): alias {
     /** @todo should we inline this? */
     return new alias("*", null);
 }
@@ -1625,7 +1611,7 @@ export function alias_for_star(p: Parser) {
 //     return alias(str, NULL, p->arena);
 // }
 
-export function map_names_to_ids(p: Parser, seq: Name[]) {
+export function map_names_to_ids(p: Parser, seq: Name[]): string[] {
     return seq.map((e) => e.id);
 }
 
@@ -1661,7 +1647,7 @@ export function map_names_to_ids(p: Parser, seq: Name[]) {
 //     return a;
 // }
 
-export function get_cmpops(p: Parser, seq: CmpopExprPair[]) {
+export function get_cmpops(p: Parser, seq: CmpopExprPair[]): cmpop[] {
     return seq.map((pair) => pair.cmpop);
 }
 
@@ -1682,7 +1668,7 @@ export function get_cmpops(p: Parser, seq: CmpopExprPair[]) {
 //     return new_seq;
 // }
 
-export function get_exprs(p: Parser, seq: CmpopExprPair[]) {
+export function get_exprs(p: Parser, seq: CmpopExprPair[]): expr[] {
     return seq.map((pair) => pair.expr);
 }
 
@@ -1857,7 +1843,7 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
-export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
+export function get_keys(p: Parser, seq: KeyValuePair[] | null): expr[] {
     if (seq === null) {
         return [];
     }
@@ -1881,7 +1867,7 @@ export function get_keys(p: Parser, seq: KeyValuePair[] | null) {
 //     return new_seq;
 // }
 
-export function get_values(p: Parser, seq: KeyValuePair[] | null) {
+export function get_values(p: Parser, seq: KeyValuePair[] | null): expr[] {
     if (seq === null) {
         return [];
     }
@@ -1905,7 +1891,7 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null) {
 //     return new_seq;
 // }
 
-export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInfo) {
+export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInfo): NameDefaultPair {
     const a = add_type_comment_to_arg(p, arg, tc);
     return new NameDefaultPair(a, value);
 }
@@ -1923,9 +1909,6 @@ export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInf
 //     return a;
 // }
 
-export function slash_with_default(p: Parser, plain_names: arg[], names_with_default: NameDefaultPair[]) {
-    return new SlashWithDefault(plain_names, names_with_default);
-}
 // /* Constructs a SlashWithDefault */
 // SlashWithDefault *
 // _PyPegen_slash_with_default(Parser *p, asdl_seq *plain_names, asdl_seq *names_with_defaults)
@@ -2212,7 +2195,7 @@ export function make_arguments(
 //                          posdefaults, p->arena);
 // }
 
-export function empty_arguments(p: Parser) {
+export function empty_arguments(p: Parser): arguments_ {
     return new arguments_([], [], null, [], [], null, []);
 }
 
@@ -2301,7 +2284,7 @@ export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef
 // }
 
 /* Construct a ClassDef equivalent to class_def, but with decorators */
-export function class_def_decorators(p: Parser, decorators: expr[], class_def: ClassDef) {
+export function class_def_decorators(p: Parser, decorators: expr[], class_def: ClassDef): ClassDef {
     assert(class_def !== null);
     return new ClassDef(
         class_def.name,
@@ -2524,7 +2507,7 @@ export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
 //     return NULL;
 // }
 
-export function make_module(p: Parser, a: stmt[]) {
+export function make_module(p: Parser, a: stmt[]): Module {
     // Ingoring the #type: ignore comment mangling here
     return new Module(a, []);
 }
@@ -2663,7 +2646,7 @@ export function nonparen_genexp_in_call(p: Parser, c: Call) {
 }
 
 // @stu why does our parser not call these functions with the parser?
-export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null, ...attrs: Attrs) {
+export function collect_call_seqs(p: Parser, a: expr[], b: KeywordOrStarred[] | null, ...attrs: Attrs): Call {
     if (b === null) {
         return new Call(dummy_name(p), a, [], ...attrs);
     }
