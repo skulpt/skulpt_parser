@@ -353,8 +353,6 @@ Module(
                     Constant(value='\nLONG INTEGERS')],
                 keywords=[])),
         Expr(
-            value=Constant(value="\nprint 0b0101L | 0b1010L == 0b1111L\nprint 0b0110L ^ 0b0101L == 0b0011L\nprint 0b1111L & 0b0001L == 0b0001L\nprint 0b0110L << 2L == 0b11000L\nprint 0b0110L >> 2L == 0b0001L\n#print ~0b0011L == -0b0100L #skulpt doesn't accept the ~ operator with longs\n")),
-        Expr(
             value=Call(
                 func=Name(id='print', ctx=Load()),
                 args=[

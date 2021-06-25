@@ -78,7 +78,7 @@ const Name = "[" + w + "]+";
 const Exponent = "[eE][-+]?[0-9](?:_?[0-9])*";
 const Pointfloat = group("[0-9](?:_?[0-9])*\\.(?:[0-9](?:_?[0-9])*)?", "\\.[0-9](?:_?[0-9])*") + maybe(Exponent);
 const Expfloat = "[0-9](?:_?[0-9])*" + Exponent;
-const Floatnumber = group(Pointfloat, Expfloat);
+export const Floatnumber = group(Pointfloat, Expfloat);
 const Imagnumber = group("[0-9](?:_?[0-9])*[jJ]", Floatnumber + "[jJ]");
 
 // Return the empty string, plus all of the valid string prefixes.

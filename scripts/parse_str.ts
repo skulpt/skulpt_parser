@@ -1,6 +1,6 @@
 import { Colors, parse } from "../deps.ts";
 
-const argv = parse(Deno.args);
+const argv = parse(Deno.args, { string: "_" });
 
 console.assert(
     argv._.length == 1,
