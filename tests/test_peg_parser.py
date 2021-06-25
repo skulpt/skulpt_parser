@@ -9,7 +9,8 @@ from test import support
 
 import subprocess
 import os
-
+import tempfile
+import atexit
 
 COLOR_MAP = {"green": 32, "red": 31, "yellow": 33}
 
@@ -24,7 +25,18 @@ class colors:
     yellow = staticmethod(wrap_color("yellow"))
 
 
-TEMP_FILE = "tests/tmp.txt"
+if not os.path.isdir("tmp"):
+    os.mkdir("tmp")
+
+TEMP_FILE = tempfile.mktemp(suffix=".txt", dir="./tmp")
+
+
+def exit_handler():
+    os.remove(TEMP_FILE)
+    os.removedirs("tmp")
+
+
+atexit.register(exit_handler)
 
 
 def run_process(source, mode="exec"):
@@ -45,7 +57,6 @@ def run_process(source, mode="exec"):
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
-    os.remove(TEMP_FILE)
     return str(run.stdout or b"", "utf"), str(run.stderr or b"", "utf")
 
 

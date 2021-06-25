@@ -9,7 +9,21 @@ console.assert(
 
 const code = argv._[0];
 const args = Deno.args.filter((arg) => arg !== code);
+const tmpPath = "./tmp";
 
-await Deno.writeTextFile("tmp.txt", "" + code || "");
+try {
+    await Deno.mkdir(tmpPath);
+} catch (e) {
+    if (!(e instanceof Deno.errors.AlreadyExists)) {
+        throw e;
+    }
+}
 
-await Deno.run({ cmd: ["vr", "parse", "tmp.txt", ...args] }).status();
+const filename = await Deno.makeTempFile({ dir: tmpPath, suffix: ".txt" });
+try {
+    await Deno.writeTextFile(filename, "\n" + code + "\n");
+    await Deno.run({ cmd: ["vr", "parse", filename, ...args] }).status();
+} finally {
+    await Deno.remove(filename);
+    await Deno.remove(tmpPath);
+}
