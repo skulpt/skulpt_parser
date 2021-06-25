@@ -1,3 +1,5 @@
+import { assert } from "../parser/pegen.ts";
+
 export class pyConstant<V> {
     _v: V;
     constructor(v: V) {
@@ -35,6 +37,20 @@ export class pyFloat extends pyConstant<number> {
             const ret = v.toString();
             return ret.includes(".") ? ret : ret + ".0";
         }
+    }
+}
+
+export class pyComplex extends pyConstant<{ real: number; imag: number }> {
+    constructor(c: { real?: number; imag?: number }) {
+        const real = c.real ?? 0.0;
+        const imag = c.imag ?? 0.0;
+        super({ real, imag });
+    }
+    toString() {
+        const { real, imag } = this._v;
+        // this is from the tokenizer and we shouldn't have a real except 0.
+        assert(real === 0);
+        return imag + "j";
     }
 }
 

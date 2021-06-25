@@ -8,6 +8,7 @@ import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
 import { KeywordToken } from "./pegen_types.ts";
 import { get_keyword_or_name_type } from "./pegen.ts";
 import type { NameTokenInfo } from "./pegen.ts";
+import { parsenumber } from "./parse_number.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type NoArgs = (this: Parser) => any | null;
@@ -154,8 +155,7 @@ export class Parser {
         let tok = this.peek();
         if (tok.type === NUMBER) {
             tok = this.getnext();
-            /** @todo parsenumber() */
-            return new Constant(new Number(tok.string), null, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
+            return new Constant(parsenumber(tok.string), null, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }
