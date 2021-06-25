@@ -1,8 +1,6 @@
 Module(
     body=[
         Expr(
-            value=Constant(value='\nAdapted from http://hg.python.org/cpython/file/936621d33c38/Lib/test/test_scope.py\n')),
-        Expr(
             value=Call(
                 func=Name(id='print', ctx=Load()),
                 args=[

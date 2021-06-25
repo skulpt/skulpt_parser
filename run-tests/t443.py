@@ -1,6 +1,4 @@
-"""
-Adapted from http://hg.python.org/cpython/file/936621d33c38/Lib/test/test_scope.py
-"""
+# Adapted from http://hg.python.org/cpython/file/936621d33c38/Lib/test/test_scope.py
 
 # testSimpleNesting
 print("\ntestSimpleNesting")

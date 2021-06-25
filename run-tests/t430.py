@@ -30,14 +30,12 @@ print(~2398 == -2399)
 
 print("\nLONG INTEGERS")
 # binary        # skulpt doesn't accept binary longs
-"""
-print 0b0101L | 0b1010L == 0b1111L
-print 0b0110L ^ 0b0101L == 0b0011L
-print 0b1111L & 0b0001L == 0b0001L
-print 0b0110L << 2L == 0b11000L
-print 0b0110L >> 2L == 0b0001L
-#print ~0b0011L == -0b0100L #skulpt doesn't accept the ~ operator with longs
-"""
+# print 0b0101L | 0b1010L == 0b1111L
+# print 0b0110L ^ 0b0101L == 0b0011L
+# print 0b1111L & 0b0001L == 0b0001L
+# print 0b0110L << 2L == 0b11000L
+# print 0b0110L >> 2L == 0b0001L
+# print ~0b0011L == -0b0100L #skulpt doesn't accept the ~ operator with longs
 # octal
 print(0o0505 | 0o1000 == 0o1505)
 print(0o1200 ^ 0o1034 == 0o0234)
