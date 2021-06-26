@@ -63,7 +63,6 @@ import {
     NameDefaultPair,
     SlashWithDefault,
     StarEtc,
-    FSTRING_INPUT,
     TARGETS_TYPE,
 } from "./pegen_types.ts";
 
@@ -108,7 +107,7 @@ export function new_type_comment(s: string | null): string | null {
     // }
 }
 
-export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
+export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo | null): arg {
     if (tc === null) {
         return a;
     }
@@ -1370,6 +1369,11 @@ export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): numbe
 //     return result;
 // }
 
+/** @todo */
+export function interactive_exit(p: Parser) {
+    return null;
+}
+
 // void *
 // _PyPegen_interactive_exit(Parser *p)
 // {
@@ -1380,7 +1384,7 @@ export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): numbe
 // }
 
 /* Creates a single-element asdl_seq* that contains a */
-export function singleton_seq(p: Parser, a: AST): AST[] {
+export function singleton_seq<A>(p: Parser, a: A): A[] {
     return [a];
 }
 // asdl_seq *
@@ -1427,7 +1431,7 @@ export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null): any {
 // }
 
 /* Creates a copy of seq and appends a to it */
-export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr): any {
+export function seq_append_to_end(p: Parser, seq: expr[] | null, a: expr): expr[] {
     assert(a !== null);
     if (seq === null) {
         return [a];
@@ -1466,7 +1470,7 @@ export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr): any {
 // }
 
 /* Flattens an asdl_seq* of asdl_seq*s */
-export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
+export function seq_flatten<A>(p: Parser, seqs: A[][]): A[] {
     // We might need a depth of more than 1. Remove this comment if we find we don't need it
     // return seqs?.flat(Infinity) as AST[];
     return seqs?.flat();
@@ -1894,9 +1898,9 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null): expr[] {
 //     return new_seq;
 // }
 
-export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInfo): NameDefaultPair {
+export function name_default_pair<V>(p: Parser, arg: arg, value: V, tc: TokenInfo | null): NameDefaultPair<V> {
     const a = add_type_comment_to_arg(p, arg, tc);
-    return new NameDefaultPair(a, value);
+    return new NameDefaultPair<V>(a, value);
 }
 
 // /* Constructs a NameDefaultPair */
@@ -2013,15 +2017,15 @@ export function get_defaults<T extends NameDefaultPair<exprOrNull<T>>>(
 export function make_arguments(
     p: Parser,
     slash_without_default: arg[] | null,
-    slash_with_default: SlashWithDefault,
-    plain_names: any[],
-    names_with_default: NameDefaultPair<expr>[],
-    star_etc: StarEtc
+    slash_with_default: SlashWithDefault | null,
+    plain_names: arg[] | null,
+    names_with_default: NameDefaultPair<expr>[] | null,
+    star_etc: StarEtc | null
 ): arguments_ {
     let posonlyargs: arg[] = [];
     if (slash_without_default !== null) {
         posonlyargs = slash_without_default;
-    } else if (slash_with_default) {
+    } else if (slash_with_default !== null) {
         const slash_with_default_names = get_names(p, slash_with_default.names_with_defaults);
         posonlyargs = slash_with_default.plain_names.concat(slash_with_default_names);
     }
@@ -2514,9 +2518,9 @@ export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
 //     return NULL;
 // }
 
-export function make_module(p: Parser, a: stmt[]): Module {
+export function make_module(p: Parser, a: stmt[] | null): Module {
     // Ingoring the #type: ignore comment mangling here
-    return new Module(a, []);
+    return new Module(a ?? [], []);
 }
 
 // mod_ty
