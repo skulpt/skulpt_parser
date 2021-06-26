@@ -2,10 +2,9 @@ import { DEDENT, ENDMARKER, NAME, NEWLINE, NUMBER, OP, STRING, tok_name } from "
 import { exact_token_types } from "../tokenize/Tokenizer.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import { tokens } from "../tokenize/token.ts";
-import { pySyntaxError } from "../tokenize/tokenize.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
-import { KeywordToken } from "./pegen_types.ts";
+import { KeywordToken, StartRule } from "./pegen_types.ts";
 import { get_keyword_or_name_type } from "./pegen.ts";
 import type { NameTokenInfo } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
@@ -89,6 +88,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
 // overloads for the expect method
 export interface Parser {
     keywords: Map<string, KeywordToken>;
+    start_rule: StartRule;
     negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): boolean;
     negative_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): boolean;
     positive_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): R;
