@@ -2,27 +2,18 @@ import { w } from "../util/unicode.ts";
 import { isIdentifier } from "../util/str_helpers.ts";
 import * as tokens from "./token.ts";
 import { EXACT_TOKEN_TYPES } from "./token.ts";
+import { pyExc, pyIndentationError } from "../ast/errors.ts";
 
 type token = number;
 type position = [number, number];
 
-class TokenError extends Error {
-    traceback: position;
-    constructor(msg: string, traceback: position) {
-        super(msg);
-        this.traceback = traceback;
+class TokenError extends pyExc {
+    position: position;
+    constructor(msg: string, position: position) {
+        super(msg, position);
+        this.position = position;
     }
 }
-
-export class pySyntaxError extends SyntaxError {
-    traceback: [string, number, number, string];
-    constructor(msg: string, traceback: [string, number, number, string]) {
-        super(msg);
-        this.traceback = traceback;
-    }
-}
-
-class IndentationError extends pySyntaxError {}
 
 export class TokenInfo {
     type: token;
@@ -333,7 +324,7 @@ function* _tokenize(
 
             while (column < indents[indents.length - 1]) {
                 if (!indents.includes(column)) {
-                    throw new IndentationError("unindent does not match any outer indentation level", [
+                    throw new pyIndentationError("unindent does not match any outer indentation level", [
                         filename,
                         lnum,
                         pos,
