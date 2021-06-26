@@ -55,7 +55,6 @@ import { Parser } from "./parser.ts";
 import { parseString } from "./parse_string.ts";
 import {
     CmpopExprPair,
-    exprOrNone,
     EXTRA_EXPR,
     KeyValuePair,
     KeywordOrStarred,
@@ -1860,7 +1859,7 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
-export function get_keys(p: Parser, seq: KeyValuePair[] | null): expr[] {
+export function get_keys(p: Parser, seq: KeyValuePair[] | null): (expr | null)[] {
     if (seq === null) {
         return [];
     }
@@ -2000,8 +1999,12 @@ export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | nu
 //     }
 //     return seq;
 // }
+type exprOrNull<T> = T extends NameDefaultPair<infer R> ? (R extends expr ? R : expr | null) : expr | null;
 
-export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]): exprOrNone[] {
+export function get_defaults<T extends NameDefaultPair<exprOrNull<T>>>(
+    p: Parser,
+    names_with_defaults: T[]
+): exprOrNull<T>[] {
     return names_with_defaults.map((pair) => pair.value);
 }
 
@@ -2046,7 +2049,7 @@ export function make_arguments(
         posargs = plain_names;
     }
 
-    let posdefaults: exprOrNone[] = [];
+    let posdefaults: expr[] = [];
     if (slash_with_default !== null && names_with_default !== null) {
         const slash_with_default_values = get_defaults(p, slash_with_default.names_with_defaults);
         const names_with_default_values = get_defaults(p, names_with_default);
@@ -2067,7 +2070,7 @@ export function make_arguments(
         kwonlyargs = get_names(p, star_etc.kwonlyargs);
     }
 
-    let kwdefaults: exprOrNone[] = [];
+    let kwdefaults: (expr | null)[] = [];
     if (star_etc !== null && star_etc.kwonlyargs !== null) {
         kwdefaults = get_defaults(p, star_etc.kwonlyargs);
     }

@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..091ca0b65c 100644
+index 64e205e7fd..427c5465f6 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -790,7 +790,7 @@ index 64e205e7fd..091ca0b65c 100644
      | kvpair
 -kvpair[KeyValuePair*]: a=expression ':' b=expression { _PyPegen_key_value_pair(p, a, b) }
 -for_if_clauses[asdl_seq*]:
-+kvpair[KeyValuePair]: a=expression ':' b=expression { new KeyValuePair(a, b) }
++kvpair[KeyValuePair_LT_expr_GT_]: a=expression ':' b=expression { new KeyValuePair(a, b) }
 +for_if_clauses[any]:
      | for_if_clause+
 -for_if_clause[comprehension_ty]:
