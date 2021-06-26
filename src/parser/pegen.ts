@@ -43,8 +43,9 @@ import {
     NamedExpr,
     Set as Set_,
     cmpop,
+    In,
 } from "../ast/astnodes.ts";
-import { pyFalse } from "../ast/constants.ts";
+import { pyFalse, pyStr } from "../ast/constants.ts";
 import { pyTrue } from "../ast/constants.ts";
 import { pyEllipsis } from "../ast/constants.ts";
 import { pyNone } from "../ast/constants.ts";
@@ -63,6 +64,7 @@ import {
     SlashWithDefault,
     StarEtc,
     FSTRING_INPUT,
+    TARGETS_TYPE,
 } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
@@ -2028,7 +2030,7 @@ export function make_arguments(
     slash_without_default: arg[] | null,
     slash_with_default: SlashWithDefault,
     plain_names: any[],
-    names_with_default: any[],
+    names_with_default: NameDefaultPair<expr>[],
     star_etc: StarEtc
 ): arguments_ {
     let posonlyargs: arg[] = [];
@@ -2435,7 +2437,7 @@ export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
     const [end_lineno, end_col_offset] = a[a.length - 1].end;
     /** @todo Implement this properly - see parse_string.c */
     const s = a.map((t) => parseString(t.string)).join("");
-    return new Constant(s, null, lineno, col_offset, end_lineno, end_col_offset);
+    return new Constant(new pyStr(s), null, lineno, col_offset, end_lineno, end_col_offset);
 }
 
 // expr_ty
@@ -2557,7 +2559,48 @@ export function make_module(p: Parser, a: stmt[]): Module {
 //     return Module(a, type_ignores, p->arena);
 // }
 
-// // Error reporting helpers
+// Error reporting helpers
+export function get_invalid_target(e: expr | null, targets_type: TARGETS_TYPE): expr | null {
+    if (e === null) {
+        return null;
+    }
+    function _visit_container(container: List | Tuple) {
+        for (const other of container.elts) {
+            const child = get_invalid_target(other, targets_type);
+            if (child !== null) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    switch (e.constructor as exprKind) {
+        case List:
+            return _visit_container(e as List);
+        case Tuple:
+            return _visit_container(e as Tuple);
+        case Starred:
+            return get_invalid_target((e as Starred).value, targets_type);
+        case Compare:
+            // This is needed, because the `a in b` in `for a in b` gets parsed
+            // as a comparison, and so we need to search the left side of the comparison
+            // for invalid targets.\
+            if (targets_type == TARGETS_TYPE.FOR_TARGETS) {
+                const cmpopVal = (e as Compare).ops[0];
+                if (cmpopVal === In) {
+                    return get_invalid_target((e as Compare).left, targets_type);
+                }
+                return null;
+            }
+            return e;
+        case Name:
+        case Subscript:
+        case Attribute:
+            return null;
+        default:
+            return e;
+    }
+}
 
 // expr_ty
 // _PyPegen_get_invalid_target(expr_ty e, TARGETS_TYPE targets_type)
@@ -2623,9 +2666,7 @@ export function arguments_parsing_error(p: Parser, e: Call) {
     } else {
         msg = "positional argument follows keyword argument";
     }
-    /** @todo */
-    // @ts-ignore
-    return RAISE_SYNTAX_ERROR(msg);
+    return p.raise_error(pySyntaxError, msg);
 }
 
 // void *_PyPegen_arguments_parsing_error(Parser *p, expr_ty e) {
@@ -2660,9 +2701,13 @@ export function nonparen_genexp_in_call(p: Parser, c: Call) {
         return null;
     }
 
-    /**@todo */
-    //@ts-ignore
-    return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(args[args.length - 1], "Generator expression must be parenthesized");
+    const { lineno, col_offset } = args[args.length - 1];
+    return p.raise_error_known_location(
+        pySyntaxError,
+        lineno,
+        col_offset + 1,
+        "Generator expression must be parenthesized"
+    );
 }
 
 // @stu why does our parser not call these functions with the parser?

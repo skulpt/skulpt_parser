@@ -1,3 +1,4 @@
+// deno-lint-ignore-file camelcase
 import { dump } from "../src/ast/dump.ts";
 import { Colors, parse } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
