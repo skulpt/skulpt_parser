@@ -8,38 +8,12 @@ export class Tokenizer {
     _tokengen: Iterator<TokenInfo, TokenInfo>;
     _tokens: TokenInfo[];
     _index: number;
-    _verbose: boolean;
-    constructor(tokengen: Iterator<TokenInfo, TokenInfo>, verbose: boolean = false) {
+    constructor(tokengen: Iterator<TokenInfo, TokenInfo>) {
         this._tokengen = tokengen;
         this._tokens = [];
         this._index = 0;
-        this._verbose = verbose;
-        if (verbose) {
-            this.report(false, false);
-        }
     }
-    getnext(): TokenInfo {
-        let cached = true;
-        let tok: TokenInfo;
-        while (this._index === this._tokens.length) {
-            tok = this._tokengen.next().value;
-            if (tok.type === NL || tok.type === COMMENT) {
-                continue;
-            }
-            if (tok.type === ERRORTOKEN && isSpace(tok.string)) {
-                continue;
-            }
-            this._tokens.push(tok);
-            cached = false;
-        }
-        tok = this._tokens[this._index];
-        this._index++;
-        if (this._verbose) {
-            this.report(cached, false);
-        }
-        return tok;
-    }
-    peek(): TokenInfo {
+    _push(): void {
         while (this._index === this._tokens.length) {
             const tok = this._tokengen.next().value;
             if (tok.type === NL || tok.type === COMMENT) {
@@ -50,10 +24,17 @@ export class Tokenizer {
             }
             this._tokens.push(tok);
         }
+    }
+    getnext(): TokenInfo {
+        this._push();
+        return this._tokens[this._index++];
+    }
+    peek(): TokenInfo {
+        this._push();
         return this._tokens[this._index];
     }
     diagnose(): TokenInfo {
-        if (!this._tokens.length) {
+        if (this._tokens.length === 0) {
             this.getnext();
         }
         return this._tokens[this._tokens.length - 1];
@@ -66,13 +47,6 @@ export class Tokenizer {
             return null;
         }
         // assert(0 <= index && index <= this._tokens.length);
-        const old_index = this._index;
         this._index = index;
-        if (this._verbose) {
-            this.report(true, index < old_index);
-        }
-    }
-    report(cached: boolean, back: boolean): void {
-        // pass
     }
 }
