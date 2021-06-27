@@ -3,15 +3,16 @@ import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser as BaseParser } from "./parser.ts";
 import { Colors } from "../../deps.ts";
+import type { AST } from "../ast/astnodes.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
-type NoArgs = (this: BaseParser) => any | null;
+type NoArgs = (this: BaseParser) => AST | TokenInfo | null;
 type Expect = (this: BaseParser, arg: string) => TokenInfo | null;
 type ParserMethod = NoArgs | Expect;
 
 type colors = "yellow" | "red" | "blue" | "brightGreen" | "dim";
 /** logging adapted from cpython/Tools/peg_generator/pegen/parser.py */
-const trim = (s: any) => String(s).slice(0, 200);
+const trim = (s: AST | TokenInfo | null) => String(s).slice(0, 200);
 const log = (s: string, col: colors) => {
     if (col === "yellow") {
         console.log(Colors.dim(Colors[col](`${s.replace(/\n/g, "\\n")}`)));
@@ -22,26 +23,26 @@ const log = (s: string, col: colors) => {
 const argstr = (arg?: string) => (arg === undefined ? "" : `'${arg}'`);
 
 /** For non-memoized functions that we want to be logged.*/
-export function logger(target: VerboseParser, propertyKey: string, descriptor: PropertyDescriptor) {
+export function logger(_target: VerboseParser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: NoArgs = descriptor.value;
-    const method_name = propertyKey;
-    function logger_wrapper(this: VerboseParser) {
+    const methodName = propertyKey;
+    function loggerWrapper(this: VerboseParser): AST | TokenInfo | null {
         const fill = this._fill();
-        log(`${fill}${method_name}() ... (looking at ${this.showpeek()})`, "dim");
+        log(`${fill}${methodName}() ... (looking at ${this.showpeek()})`, "dim");
         this._level++;
         const tree = method.call(this);
         this._level--;
-        log(`${fill}... ${method_name}() --> ${trim(tree)}`, "dim");
+        log(`${fill}... ${methodName}() --> ${trim(tree)}`, "dim");
         return tree;
     }
-    descriptor.value = logger_wrapper;
+    descriptor.value = loggerWrapper;
 }
 
 /** memoize the return value from the parser method. All parser methods take no args except expect which takes a token string */
 export function memoize(_target: VerboseParser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
-    function memoizeWrapper<R = any | null>(this: VerboseParser, arg?: string): R {
+    function memoizeWrapper(this: VerboseParser, arg?: string): AST | TokenInfo | null {
         const mark = this.mark();
         const key = `${mark},${methodName},${arg ?? ""}`;
         const cached = this._cache[key];
@@ -76,7 +77,7 @@ export function memoize(_target: VerboseParser, propertyKey: string, descriptor:
 export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: NoArgs = descriptor.value;
     const methodName = propertyKey;
-    function memoizeLeftRecWrapper(this: VerboseParser) {
+    function memoizeLeftRecWrapper(this: VerboseParser): AST | TokenInfo | null {
         const mark = this.mark();
         const key = `${mark},${methodName},`;
         const cached = this._cache[key];
@@ -91,7 +92,7 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
         }
         // Slow path: no cache hit
         log(`${this._fill()}${methodName}() ... (looking at ${this.showpeek()})`, "dim");
-        let lastresult: any | null;
+        let lastresult: AST | TokenInfo | null;
         let lastmark: number;
         let currmark: number;
         this._cache[key] = [(lastresult = null), (lastmark = mark)];

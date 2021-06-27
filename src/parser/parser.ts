@@ -1,17 +1,17 @@
 // deno-lint-ignore-file camelcase
-import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, OP, STRING, tokens} from "../tokenize/token.ts";
-import { exact_token_types } from "../tokenize/Tokenizer.ts";
+import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, OP, STRING, EXACT_TOKEN_TYPES, tokens } from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
 import { KeywordToken, StartRule, TARGETS_TYPE } from "./pegen_types.ts";
+import type { AST } from "../ast/astnodes.ts";
 import { get_expr_name, get_invalid_target, get_keyword_or_name_type } from "./pegen.ts";
 import type { NameTokenInfo } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
 import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
-type NoArgs = (this: Parser) => any | null;
+type NoArgs = (this: Parser) => AST | TokenInfo | null;
 type Expect = (this: Parser, arg: string) => TokenInfo | null;
 type ParserMethod = NoArgs | Expect;
 
@@ -22,7 +22,7 @@ export function logger(_target: Parser, _propertyKey: string, _descriptor: Prope
 export function memoize(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
-    function memoizeWrapper<R = any | null>(this: Parser, arg?: string): R {
+    function memoizeWrapper(this: Parser, arg?: string): AST | TokenInfo | null {
         const mark = this.mark();
         const key = `${mark},${methodName},${arg ?? ""}`;
         const cached = this._cache[key];
@@ -42,7 +42,7 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
 export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: NoArgs = descriptor.value;
     const methodName = propertyKey;
-    function memoizeLeftRecWrapper(this: Parser) {
+    function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this.mark();
         const key = `${mark},${methodName},`;
         const cached = this._cache[key];
@@ -52,7 +52,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
             return cached[0];
         }
         // Slow path: no cache hit
-        let lastresult: any | null;
+        let lastresult: AST | TokenInfo | null;
         let lastmark: number;
         let currmark: number;
         this._cache[key] = [(lastresult = null), (lastmark = mark)];
@@ -89,16 +89,16 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
 export interface Parser {
     keywords: Map<string, KeywordToken>;
     start_rule: StartRule;
-    negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): boolean;
-    negative_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): boolean;
-    positive_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): R;
-    positive_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): R;
+    negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg?: T): boolean;
+    negative_lookahead<T = string, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean;
+    positive_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg?: T): R;
+    positive_lookahead<T = string, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): R;
 }
 
 /** The base class for the generated Parser. Largely based on cpython/Tools/peg_generator/pegen/parser.py */
 export class Parser {
     _tokenizer: Tokenizer;
-    _cache: { [key: string]: [any, number] };
+    _cache: { [key: string]: [AST | TokenInfo | null, number] };
     mark: () => number;
     reset: (number: number) => null | void;
     peek: () => TokenInfo;
@@ -234,8 +234,8 @@ export class Parser {
         if (tok.string === type) {
             return this.getnext();
         }
-        if (type in exact_token_types) {
-            if (tok.type === exact_token_types[type]) {
+        if (type in EXACT_TOKEN_TYPES) {
+            if (tok.type === EXACT_TOKEN_TYPES[type]) {
                 return this.getnext();
             }
         }
@@ -250,14 +250,14 @@ export class Parser {
         return null;
     }
 
-    positive_lookahead<T = never, R = any | null>(func: (arg?: T) => R, arg?: T): R {
+    positive_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg?: T) => R, arg?: T): R {
         const mark = this.mark();
         const ok = func.call(this, arg);
         this.reset(mark);
         return ok;
     }
 
-    negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg: T): boolean {
+    negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean {
         const mark = this.mark();
         const ok = func.call(this, arg);
         this.reset(mark);

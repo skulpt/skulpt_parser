@@ -1,3 +1,4 @@
+// deno-lint-ignore-file camelcase
 import { w } from "../util/unicode.ts";
 import { isIdentifier } from "../util/str_helpers.ts";
 import { tokens, EXACT_TOKEN_TYPES } from "./token.ts";
@@ -59,7 +60,7 @@ function rstrip(input: string, what: string): string {
 
 const Whitespace = "[ \\f\\t]*";
 const Comment_ = "#[^\\r\\n]*";
-const Ignore = Whitespace + any("\\\\\\r?\\n" + Whitespace) + maybe(Comment_);
+const _Ignore = Whitespace + any("\\\\\\r?\\n" + Whitespace) + maybe(Comment_);
 const Name = "[" + w + "]+";
 
 const Exponent = "[eE][-+]?[0-9](?:_?[0-9])*";
@@ -465,7 +466,7 @@ function* _tokenize(
     if (lastline && !"\r\n".includes(lastline[lastline.length - 1])) {
         yield new TokenInfo(tokens.NEWLINE, "", [lnum - 1, lastline.length], [lnum - 1, lastline.length + 1], "");
     }
-    for (let _ in indents.slice(1)) {
+    for (const _ in indents.slice(1)) {
         // pop remaining indent levels
         yield new TokenInfo(tokens.DEDENT, "", [lnum, 0], [lnum, 0], "");
     }
