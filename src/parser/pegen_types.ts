@@ -83,6 +83,16 @@ export class KeywordToken {
     }
 }
 
+/** TARGET_TYPES used in error handling */
+export enum TARGETS_TYPE {
+    STAR_TARGETS,
+    DEL_TARGETS,
+    FOR_TARGETS,
+}
+export const STAR_TARGETS = TARGETS_TYPE.STAR_TARGETS;
+export const DEL_TARGETS = TARGETS_TYPE.DEL_TARGETS;
+export const FOR_TARGETS = TARGETS_TYPE.FOR_TARGETS;
+
 /* These definitions must match corresponding definitions in graminit.h. */
 export enum StartRule {
     SINGLE_INPUT = 256,
