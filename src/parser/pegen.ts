@@ -44,7 +44,7 @@ import {
     cmpop,
     In,
 } from "../ast/astnodes.ts";
-import { pyFalse, pyStr } from "../ast/constants.ts";
+import { pyBytes, pyFalse, pyStr } from "../ast/constants.ts";
 import { pyTrue } from "../ast/constants.ts";
 import { pyEllipsis } from "../ast/constants.ts";
 import { pyNone } from "../ast/constants.ts";
@@ -52,7 +52,7 @@ import { pySyntaxError } from "../ast/errors.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
-import { parseString } from "./parse_string.ts";
+import { parsestr } from "./parse_string.ts";
 import {
     CmpopExprPair,
     EXTRA_EXPR,
@@ -2419,13 +2419,36 @@ export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]):
 //     return new_seq;
 // }
 
+const encoder = new TextEncoder();
+
 /** concatenate strings from python like `'foo' 'bar'` */
-export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
-    const [lineno, col_offset] = a[0].start;
-    const [end_lineno, end_col_offset] = a[a.length - 1].end;
-    /** @todo Implement this properly - see parse_string.c */
-    const s = a.map((t) => parseString(t.string)).join("");
-    return new Constant(new pyStr(s), null, lineno, col_offset, end_lineno, end_col_offset);
+export function concatenate_strings(p: Parser, tokens: TokenInfo[]): Constant {
+    const [lineno, col_offset] = tokens[0].start;
+    const [end_lineno, end_col_offset] = tokens[tokens.length - 1].end;
+    let bytesmode: boolean | null = null;
+    let res = "";
+    let kind: "u" | null = null;
+
+    for (const t of tokens) {
+        const [s, fmode, this_bytesmode, rawmode] = parsestr(p, t);
+        if (bytesmode !== null && bytesmode !== this_bytesmode) {
+            p.raise_error(pySyntaxError, "cannot mix bytes and nonbytes literals");
+        }
+        bytesmode = this_bytesmode;
+        if (fmode) {
+            /** @todo */
+        } else {
+            res += s;
+        }
+    }
+    if (bytesmode) {
+        return new Constant(new pyBytes(encoder.encode(res)), null, lineno, col_offset, end_lineno, end_col_offset);
+    }
+    if (tokens[0].string[0] === "u") {
+        // as far as I can tell - this is only for ast unparsing
+        kind = "u";
+    }
+    return new Constant(new pyStr(res), kind, lineno, col_offset, end_lineno, end_col_offset);
 }
 
 // expr_ty
