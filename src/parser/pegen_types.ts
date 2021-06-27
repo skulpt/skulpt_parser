@@ -84,15 +84,14 @@ export class KeywordToken {
 }
 
 /* These definitions must match corresponding definitions in graminit.h. */
-export const SINGLE_INPUT = 256;
-export const FILE_INPUT = 257;
-export const EVAL_INPUT = 258;
-export const FUNC_TYPE_INPUT = 345;
-
-/* This doesn't need to match anything */
-export const FSTRING_INPUT = 800;
-
-export type StartRule = 256 | 257 | 258 | 345 | 800;
+export enum StartRule {
+    SINGLE_INPUT = 256,
+    FILE_INPUT,
+    EVAL_INPUT,
+    FUNC_TYPE_INPUT = 345,
+    /* This doesn't need to match anything */
+    FSTRING_INPUT = 800,
+}
 
 export function EXTRA_EXPR(head: expr, tail?: expr): Attrs {
     tail ??= head;

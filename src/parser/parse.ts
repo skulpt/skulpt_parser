@@ -1,17 +1,17 @@
 import { tokenizerFromFile, tokenizerFromString } from "../tokenize/mod.ts";
 import { GeneratedParser } from "./generated_parser.ts";
-import { EVAL_INPUT, FILE_INPUT, SINGLE_INPUT, StartRule } from "./pegen_types.ts";
+import { StartRule } from "./pegen_types.ts";
 
 type ModeStr = "exec" | "eval" | "single";
 
 function modeStrToStartRule(mode: ModeStr): StartRule {
     switch (mode) {
         case "exec":
-            return FILE_INPUT;
+            return StartRule.FILE_INPUT;
         case "eval":
-            return EVAL_INPUT;
+            return StartRule.EVAL_INPUT;
         case "single":
-            return SINGLE_INPUT;
+            return StartRule.SINGLE_INPUT;
         default:
             throw new Error(`bad mode - got ${mode} - use 'exec', 'eval' or 'single'`);
     }
