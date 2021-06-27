@@ -470,21 +470,6 @@ export function get_expr_name(e: expr): string {
 //     return NULL;
 // }
 
-export function raise_error_known_location(
-    p: Parser,
-    errtype: typeof pySyntaxError,
-    lineno: number,
-    col_offset: number,
-    msg: string
-): never {
-    if (p.start_rule === FSTRING_INPUT) {
-        /** @todo */
-    }
-    /** @todo should we just set the error indicator and return null then check this in the memoize decorator? */
-    // p.error_indicator = 1;
-    throw new errtype(msg, ["<file>", lineno, col_offset, p.peek().string]);
-}
-
 // void *
 // _PyPegen_raise_error_known_location(Parser *p, PyObject *errtype,
 //                                     Py_ssize_t lineno, Py_ssize_t col_offset,
