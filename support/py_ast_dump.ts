@@ -4,14 +4,14 @@ export async function getPyAstDump(
     content: string,
     options: { indent?: null | number; include_attributes?: boolean; js?: boolean }
 ): Promise<string> {
-    const { indent = null, include_attributes = false, js = false } = options;
+    const { indent = null, include_attributes: includeAttrs = false, js = false } = options;
     const cmd = Deno.run({
         cmd: [
             "python3",
             "support/ast_dump_helper.py",
             content,
             `--indent=${indent === null ? -1 : indent}`,
-            include_attributes ? "--attrs=1" : "--attrs=0",
+            includeAttrs ? "--attrs=1" : "--attrs=0",
             js ? "--js=1" : "--js=0",
         ],
         stdout: "piped",

@@ -1,7 +1,6 @@
 // deno-lint-ignore-file camelcase no-fallthrough
 
 import {
-    AST,
     Attrs,
     ClassDef,
     expr_context,
@@ -1399,7 +1398,7 @@ export function singleton_seq<A>(p: Parser, a: A): A[] {
 //     return seq;
 // }
 
-export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null): any {
+export function seq_insert_in_front<T>(p: Parser, a: T, seq: T[] | null): T[] {
     assert(a !== null);
 
     if (seq === null) {

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { Colors } from "../../deps.ts";
 import * as pegenReal from "./pegen.ts";
 import type { Parser } from "./parser.ts";
