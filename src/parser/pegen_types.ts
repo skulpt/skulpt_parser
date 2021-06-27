@@ -1,6 +1,5 @@
 // deno-lint-ignore-file camelcase
 import { arg, Attrs, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
-import { pyNone, pyNoneType } from "../ast/constants.ts";
 
 export class CmpopExprPair {
     cmpop: cmpop;
@@ -12,10 +11,10 @@ export class CmpopExprPair {
     }
 }
 
-export class KeyValuePair {
-    key: expr;
+export class KeyValuePair<K = expr | null> {
+    key: K; // null signals that we're an unpacking like **a
     value: expr;
-    constructor(key: expr, value: expr) {
+    constructor(key: K, value: expr) {
         this.key = key;
         this.value = value;
     }
@@ -28,29 +27,28 @@ export class AugOperator {
     }
 }
 
-export type exprOrNone = expr | pyNoneType;
-export class NameDefaultPair {
+export class NameDefaultPair<V = expr | null> {
     arg: arg;
-    value: exprOrNone;
-    constructor(arg: arg, value: expr | null) {
+    value: V;
+    constructor(arg: arg, value: V) {
         this.arg = arg;
-        this.value = value ?? pyNone;
+        this.value = value;
     }
 }
 
 export class SlashWithDefault {
     plain_names: arg[];
-    names_with_defaults: NameDefaultPair[]; // asdl_seq* of NameDefaultsPair's
-    constructor(plain_names: arg[], names_with_defaults: NameDefaultPair[]) {
+    names_with_defaults: NameDefaultPair<expr>[]; // asdl_seq* of NameDefaultsPair's
+    constructor(plain_names: arg[], names_with_defaults: NameDefaultPair<expr>[]) {
         this.plain_names = plain_names;
         this.names_with_defaults = names_with_defaults;
     }
 }
 export class StarEtc {
-    vararg: arg;
-    kwonlyargs: NameDefaultPair[]; // asdl_seq* of NameDefaultsPair's
-    kwarg: arg;
-    constructor(vararg: arg, kwonlyargs: NameDefaultPair[], kwarg: arg) {
+    vararg: arg | null;
+    kwonlyargs: NameDefaultPair<expr | null>[] | null; // asdl_seq* of NameDefaultsPair's
+    kwarg: arg | null;
+    constructor(vararg: arg | null, kwonlyargs: NameDefaultPair<expr | null>[] | null, kwarg: arg | null) {
         this.vararg = vararg;
         this.kwonlyargs = kwonlyargs;
         this.kwarg = kwarg;

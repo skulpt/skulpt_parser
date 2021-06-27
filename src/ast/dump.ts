@@ -77,6 +77,8 @@ export function dump(node: AST, options: dumpOptions): string {
                     quote = '"';
                 }
                 return [quote + node + quote, true];
+            } else if (node === null) {
+                return ["None", true];
             } else {
                 // builtin ast constant type
                 return [String(node), true];
