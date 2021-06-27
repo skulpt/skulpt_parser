@@ -48,6 +48,7 @@ import { pyFalse } from "../ast/constants.ts";
 import { pyTrue } from "../ast/constants.ts";
 import { pyEllipsis } from "../ast/constants.ts";
 import { pyNone } from "../ast/constants.ts";
+import { pySyntaxError } from "../ast/errors.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser } from "./parser.ts";
@@ -62,6 +63,7 @@ import {
     NameDefaultPair,
     SlashWithDefault,
     StarEtc,
+    FSTRING_INPUT,
 } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
@@ -466,6 +468,21 @@ export function get_expr_name(e: expr): string {
 
 //     return NULL;
 // }
+
+export function raise_error_known_location(
+    p: Parser,
+    errtype: typeof pySyntaxError,
+    lineno: number,
+    col_offset: number,
+    msg: string
+): never {
+    if (p.start_rule === FSTRING_INPUT) {
+        /** @todo */
+    }
+    /** @todo should we just set the error indicator and return null then check this in the memoize decorator? */
+    // p.error_indicator = 1;
+    throw new errtype(msg, ["<file>", lineno, col_offset, p.peek().string]);
+}
 
 // void *
 // _PyPegen_raise_error_known_location(Parser *p, PyObject *errtype,

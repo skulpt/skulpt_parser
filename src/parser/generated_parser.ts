@@ -2497,7 +2497,7 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((keyword = this.expect("__peg_parser__"))) {
-            return RAISE_SYNTAX_ERROR("You found it!");
+            return pegen.raise_error(this, pySyntaxError, "You found it!");
         }
         this.reset(mark);
         if (this.positive_lookahead(this.string) && (strings = this.strings())) {
@@ -3374,7 +3374,11 @@ export class GeneratedParser extends Parser {
         let a, args, for_if_clauses, literal, literal_1, opt;
         const mark = this.mark();
         if ((args = this.args()) && (literal = this.expect(",")) && (literal_1 = this.expect("*"))) {
-            return RAISE_SYNTAX_ERROR("iterable argument unpacking follows keyword argument unpacking");
+            return pegen.raise_error(
+                this,
+                pySyntaxError,
+                "iterable argument unpacking follows keyword argument unpacking"
+            );
         }
         this.reset(mark);
         if (
@@ -3383,7 +3387,13 @@ export class GeneratedParser extends Parser {
             (literal = this.expect(",")) &&
             ((opt = this._tmp_125()), 1)
         ) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "Generator expression must be parenthesized"
+            );
         }
         this.reset(mark);
         if ((a = this.args()) && (for_if_clauses = this.for_if_clauses())) {
@@ -3396,7 +3406,13 @@ export class GeneratedParser extends Parser {
             (a = this.expression()) &&
             (for_if_clauses = this.for_if_clauses())
         ) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "Generator expression must be parenthesized");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "Generator expression must be parenthesized"
+            );
         }
         this.reset(mark);
         if ((a = this.args()) && (literal = this.expect(",")) && (args = this.args())) {
@@ -3413,8 +3429,11 @@ export class GeneratedParser extends Parser {
         let a, literal;
         const mark = this.mark();
         if ((a = this.expression()) && (literal = this.expect("="))) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
-                a,
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
                 'expression cannot contain assignment, perhaps you meant "=="?'
             );
         }
@@ -3429,8 +3448,11 @@ export class GeneratedParser extends Parser {
         let a, expression, literal;
         const mark = this.mark();
         if ((a = this.expression()) && (literal = this.expect(":=")) && (expression = this.expression())) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
-                a,
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
                 "cannot use assignment expressions with %s",
                 pegen.get_expr_name(a)
             );
@@ -3450,8 +3472,11 @@ export class GeneratedParser extends Parser {
             (literal = this.expect(":")) &&
             (expression = this.expression())
         ) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
-                a,
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
                 "only single target (not %s) can be annotated",
                 pegen.get_expr_name(a)
             );
@@ -3464,11 +3489,23 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(":")) &&
             (expression = this.expression())
         ) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "only single target (not tuple) can be annotated");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "only single target (not tuple) can be annotated"
+            );
         }
         this.reset(mark);
         if ((a = this.expression()) && (literal = this.expect(":")) && (expression = this.expression())) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "illegal target for annotation");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "illegal target for annotation"
+            );
         }
         this.reset(mark);
         if ((_loop0_127 = this._loop0_127()) && (a = this.star_expressions()) && (literal = this.expect("="))) {
@@ -3476,12 +3513,21 @@ export class GeneratedParser extends Parser {
         }
         this.reset(mark);
         if ((_loop0_128 = this._loop0_128()) && (a = this.yield_expr()) && (literal = this.expect("="))) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "assignment to yield expression not possible");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "assignment to yield expression not possible"
+            );
         }
         this.reset(mark);
         if ((a = this.star_expressions()) && (augassign = this.augassign()) && (_tmp_129 = this._tmp_129())) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
-                a,
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
                 "'%s' is an illegal expression for augmented assignment",
                 pegen.get_expr_name(a)
             );
@@ -3531,7 +3577,7 @@ export class GeneratedParser extends Parser {
         let newline;
         const mark = this.mark();
         if ((newline = this.expect("NEWLINE")) && this.negative_lookahead(this.expect, "INDENT")) {
-            return RAISE_INDENTATION_ERROR("expected an indented block");
+            return pegen.raise_error(this, pyIndentationError, "expected an indented block");
         }
         this.reset(mark);
 
@@ -3544,7 +3590,7 @@ export class GeneratedParser extends Parser {
         let a, primary;
         const mark = this.mark();
         if ((primary = this.primary()) && (a = this.expect("{"))) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "invalid syntax");
+            return pegen.raise_error_known_location(this, pySyntaxError, a.lineno, a.col_offset + 1, "invalid syntax");
         }
         this.reset(mark);
 
@@ -3561,7 +3607,13 @@ export class GeneratedParser extends Parser {
             (a = this.starred_expression()) &&
             (for_if_clauses = this.for_if_clauses())
         ) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "iterable unpacking cannot be used in comprehension");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "iterable unpacking cannot be used in comprehension"
+            );
         }
         this.reset(mark);
 
@@ -3580,7 +3632,13 @@ export class GeneratedParser extends Parser {
             (for_if_clauses = this.for_if_clauses()) &&
             (literal_1 = this.expect("}"))
         ) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "dict unpacking cannot be used in dict comprehension");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "dict unpacking cannot be used in dict comprehension"
+            );
         }
         this.reset(mark);
 
@@ -3597,7 +3655,7 @@ export class GeneratedParser extends Parser {
             (_tmp_132 = this._tmp_132()) &&
             (param_no_default = this.param_no_default())
         ) {
-            return RAISE_SYNTAX_ERROR("non-default argument follows default argument");
+            return pegen.raise_error(this, pySyntaxError, "non-default argument follows default argument");
         }
         this.reset(mark);
 
@@ -3614,7 +3672,7 @@ export class GeneratedParser extends Parser {
             (_tmp_134 = this._tmp_134()) &&
             (lambda_param_no_default = this.lambda_param_no_default())
         ) {
-            return RAISE_SYNTAX_ERROR("non-default argument follows default argument");
+            return pegen.raise_error(this, pySyntaxError, "non-default argument follows default argument");
         }
         this.reset(mark);
 
@@ -3627,7 +3685,7 @@ export class GeneratedParser extends Parser {
         let _tmp_135, literal, literal_1, type_comment;
         const mark = this.mark();
         if ((literal = this.expect("*")) && (_tmp_135 = this._tmp_135())) {
-            return RAISE_SYNTAX_ERROR("named arguments must follow bare *");
+            return pegen.raise_error(this, pySyntaxError, "named arguments must follow bare *");
         }
         this.reset(mark);
         if (
@@ -3635,7 +3693,7 @@ export class GeneratedParser extends Parser {
             (literal_1 = this.expect(",")) &&
             (type_comment = this.expect("TYPE_COMMENT"))
         ) {
-            return RAISE_SYNTAX_ERROR("bare * has associated type comment");
+            return pegen.raise_error(this, pySyntaxError, "bare * has associated type comment");
         }
         this.reset(mark);
 
@@ -3648,7 +3706,7 @@ export class GeneratedParser extends Parser {
         let _tmp_136, literal;
         const mark = this.mark();
         if ((literal = this.expect("*")) && (_tmp_136 = this._tmp_136())) {
-            return RAISE_SYNTAX_ERROR("named arguments must follow bare *");
+            return pegen.raise_error(this, pySyntaxError, "named arguments must follow bare *");
         }
         this.reset(mark);
 
@@ -3667,7 +3725,7 @@ export class GeneratedParser extends Parser {
             (newline_1 = this.expect("NEWLINE")) &&
             (indent = this.expect("INDENT"))
         ) {
-            return RAISE_SYNTAX_ERROR("Cannot have two type comments on def");
+            return pegen.raise_error(this, pySyntaxError, "Cannot have two type comments on def");
         }
         this.reset(mark);
 
@@ -3706,7 +3764,13 @@ export class GeneratedParser extends Parser {
         let a, literal, literal_1;
         const mark = this.mark();
         if ((literal = this.expect("(")) && (a = this.starred_expression()) && (literal_1 = this.expect(")"))) {
-            return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "can't use starred expression here");
+            return pegen.raise_error_known_location(
+                this,
+                pySyntaxError,
+                a.lineno,
+                a.col_offset + 1,
+                "can't use starred expression here"
+            );
         }
         this.reset(mark);
 
@@ -3719,7 +3783,11 @@ export class GeneratedParser extends Parser {
         let import_from_as_names, literal;
         const mark = this.mark();
         if ((import_from_as_names = this.import_from_as_names()) && (literal = this.expect(","))) {
-            return RAISE_SYNTAX_ERROR("trailing comma not allowed without surrounding parentheses");
+            return pegen.raise_error(
+                this,
+                pySyntaxError,
+                "trailing comma not allowed without surrounding parentheses"
+            );
         }
         this.reset(mark);
 

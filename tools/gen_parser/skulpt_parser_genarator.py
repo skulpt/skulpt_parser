@@ -136,6 +136,24 @@ def clean_type(type):
     return type.replace("_UNION_", "|").replace("_ARRAY", "[]")
 
 
+def clean_action(action):
+    if not action.startswith("RAISE"):
+        return action
+    if action.startswith("RAISE_SYNTAX_ERROR ("):
+        return action.replace("RAISE_SYNTAX_ERROR (", "pegen.raise_error ( this, pySyntaxError,")
+    elif action.startswith("RAISE_SYNTAX_ERROR_KNOWN_LOCATION ( a"):
+        return action.replace(
+            "RAISE_SYNTAX_ERROR_KNOWN_LOCATION ( a",
+            "pegen.raise_error_known_location ( this, pySyntaxError, a.lineno, a.col_offset + 1",
+        )
+    elif action.startswith("RAISE_INDENTATION_ERROR ("):
+        return action.replace("RAISE_INDENTATION_ERROR (", "pegen.raise_error ( this, pyIndentationError,")
+    elif action.startswith("RAISE_SYNTAX_ERROR_INVALID_TARGET"):
+        # @TODO
+        pass
+    return action
+
+
 non_exact_tok = (
     "AWAIT",
     "OP",
@@ -445,7 +463,7 @@ export class GeneratedParser extends Parser {
                     else:
                         # @TODO is it ok to return an array here
                         action = f"[{', '.join(self.local_variable_names)}]"
-                # action = clean_action(action)
+                action = clean_action(action)
                 if is_loop:
                     self.print(f"children.push({action});")
                     self.print("mark = this.mark();")
