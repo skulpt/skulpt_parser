@@ -1049,7 +1049,7 @@ class ASTGenerationTest(unittest.TestCase):
                 self.test_result.addSubFailure(self._subtest, err)
                 raise err
             elif not isinstance(err, exc):
-                self.test_result.addSubFailure(self._subtest, err)
+                self.test_result.addSubFailure(self._subtest, AssertionError(f"{exc.__name__} not raised got:\n{err}"))
                 raise err
 
             self.test_result.addSuccess(self._subtest)

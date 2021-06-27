@@ -1,13 +1,14 @@
-import { DEDENT, ENDMARKER, NAME, NEWLINE, NUMBER, OP, STRING, tokens } from "../tokenize/token.ts";
+// deno-lint-ignore-file camelcase
+import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, OP, STRING, tokens} from "../tokenize/token.ts";
 import { exact_token_types } from "../tokenize/Tokenizer.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
-import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
-import { KeywordToken, StartRule } from "./pegen_types.ts";
-import { get_keyword_or_name_type } from "./pegen.ts";
+import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
+import { KeywordToken, StartRule, TARGETS_TYPE } from "./pegen_types.ts";
+import { get_expr_name, get_invalid_target, get_keyword_or_name_type } from "./pegen.ts";
 import type { NameTokenInfo } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
-import { pySyntaxError } from "../ast/errors.ts";
+import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type NoArgs = (this: Parser) => any | null;
@@ -117,6 +118,7 @@ export class Parser {
         this.diagnose = this._tokenizer.diagnose.bind(this._tokenizer);
         this._tokens = this._tokenizer._tokens;
     }
+
     extra(start: number): [number, number, number, number] {
         const START = this._tokens[start].start;
         let m = this.mark() - 1;
@@ -132,6 +134,60 @@ export class Parser {
         return [START[0], START[1], END[0], END[1]];
     }
 
+    raise_error(errType: typeof pySyntaxError, msg: string, ...formatArgs: string[]): never {
+        // console.log(this.mark())
+        const tok = this.diagnose();
+        return this.raise_error_known_location(errType, tok.start[0], tok.start[1] + 1, msg, ...formatArgs);
+    }
+
+    raise_error_known_location(
+        errType: typeof pySyntaxError,
+        lineno: number,
+        offset: number,
+        msg: string,
+        ...formatArgs: string[]
+    ): never {
+        if (this.start_rule === StartRule.FSTRING_INPUT) {
+            /** @todo */
+        }
+
+        /** @todo should we just set the error indicator and return null then check this in the memoize decorator? */
+        // this.error_indicator = 1;
+        for (const arg of formatArgs) {
+            msg = msg.replace("%s", arg);
+        }
+        let i = this.mark() - 1;
+        let errLine = "";
+        while (i >= 0) {
+            const tok = this._tokens[i];
+            if (tok.lineno === lineno) {
+                errLine = tok.line;
+                break;
+            }
+            i--;
+        }
+        throw new errType(msg, ["<file>", lineno, offset, errLine]);
+    }
+
+    raise_error_invalid_target(type: TARGETS_TYPE, e: expr | null): never {
+        // const invalidTarget = get_inalid_target(e, type); CHECK_NULL_NOT_ALLOWED
+        const invalidTarget = get_invalid_target(e, type);
+        if (invalidTarget !== null) {
+            const msg =
+                type === TARGETS_TYPE.STAR_TARGETS || type === TARGETS_TYPE.FOR_TARGETS
+                    ? "cannot assign to %s"
+                    : "cannot delete %s";
+            return this.raise_error_known_location(
+                pySyntaxError,
+                invalidTarget.lineno,
+                invalidTarget.col_offset,
+                msg,
+                get_expr_name(invalidTarget)
+            );
+        }
+        return this.raise_error(pySyntaxError, "invalid syntax");
+    }
+
     @memoize
     name(): Name | null {
         let tok = this.peek();
@@ -141,6 +197,7 @@ export class Parser {
         }
         return null;
     }
+
     @memoize
     string(): TokenInfo | null {
         const tok = this.peek();
@@ -150,6 +207,7 @@ export class Parser {
         }
         return null;
     }
+
     @memoize
     number(): Constant | null {
         let tok = this.peek();
@@ -169,6 +227,7 @@ export class Parser {
         }
         return null;
     }
+
     @memoize
     expect(type: string): TokenInfo | null {
         const tok = this.peek();
@@ -197,14 +256,22 @@ export class Parser {
         this.reset(mark);
         return ok;
     }
+
     negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg: T): boolean {
         const mark = this.mark();
         const ok = func.call(this, arg);
         this.reset(mark);
         return !ok;
     }
-    make_syntax_error(filename = "<unknown>") {
+
+    make_syntax_error(): never {
         const tok = this.diagnose();
-        return new pySyntaxError("pegen parse failure", [filename, tok.start[0], 1 + tok.start[1], tok.line]);
+        const { type: lastTokenType } = tok;
+        if (lastTokenType === INDENT) {
+            this.raise_error(pyIndentationError, "unexpected indent");
+        } else if (lastTokenType === DEDENT) {
+            this.raise_error(pyIndentationError, "unexpected unindent");
+        }
+        throw this.raise_error(pySyntaxError, "invalid syntax");
     }
 }
