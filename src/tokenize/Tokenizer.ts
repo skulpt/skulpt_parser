@@ -1,8 +1,6 @@
 import { isSpace } from "../util/str_helpers.ts";
-import { COMMENT, ERRORTOKEN, EXACT_TOKEN_TYPES, NL } from "./token.ts";
+import { COMMENT, ERRORTOKEN, NL } from "./token.ts";
 import type { TokenInfo } from "./tokenize.ts";
-
-export const exact_token_types = EXACT_TOKEN_TYPES;
 
 export class Tokenizer {
     _tokengen: Iterator<TokenInfo, TokenInfo>;
@@ -66,13 +64,13 @@ export class Tokenizer {
             return null;
         }
         // assert(0 <= index && index <= this._tokens.length);
-        const old_index = this._index;
+        const oldIndex = this._index;
         this._index = index;
         if (this._verbose) {
-            this.report(true, index < old_index);
+            this.report(true, index < oldIndex);
         }
     }
-    report(cached: boolean, back: boolean): void {
-        // pass
+    report(_cached: boolean, _back: boolean): void {
+        /** @todo - either support a verbose tokenizer or remove the verbosity argument */
     }
 }

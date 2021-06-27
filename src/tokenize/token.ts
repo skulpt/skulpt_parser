@@ -1,4 +1,5 @@
-// we should auto generate this
+// deno-lint-ignore-file camelcase
+/** @todo we should auto-generate this */
 
 export const ENDMARKER = 0;
 export const NAME = 1;

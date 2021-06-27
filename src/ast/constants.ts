@@ -1,6 +1,6 @@
-// deno-lint-ignore-file no-explicit-any
 import { assert } from "../parser/pegen.ts";
 
+// deno-lint-ignore no-explicit-any
 export class pyConstant<V = any> {
     static _name = "constant";
     _v: V;
