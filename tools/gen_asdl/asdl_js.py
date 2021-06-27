@@ -137,8 +137,8 @@ class TypeDefVisitor(EmitVisitor):
         emit(f"export class {name} extends AST {{")
         self.emit_tp_name(name)
         emit("}")
-        emit("")
         emit(f"{name}.prototype._enum = true;")
+        emit("")
 
         class T:
             def __init__(self, name):
