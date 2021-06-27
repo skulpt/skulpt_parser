@@ -1,7 +1,6 @@
-import { DEDENT, ENDMARKER, NAME, NEWLINE, NUMBER, OP, STRING, tok_name } from "../tokenize/token.ts";
+import { DEDENT, ENDMARKER, NAME, NEWLINE, NUMBER, OP, STRING, tokens } from "../tokenize/token.ts";
 import { exact_token_types } from "../tokenize/Tokenizer.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
-import { tokens } from "../tokenize/token.ts";
 import { pySyntaxError } from "../tokenize/tokenize.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
@@ -181,7 +180,7 @@ export class Parser {
             }
         }
         if (type in tokens) {
-            if (tok.type === tokens[type]) {
+            if (tok.type === tokens[type as keyof typeof tokens]) {
                 return this.getnext();
             }
         }

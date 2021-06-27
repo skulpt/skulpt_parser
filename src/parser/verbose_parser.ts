@@ -1,4 +1,4 @@
-import { tok_name } from "../tokenize/token.ts";
+import { tokens } from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Parser as BaseParser } from "./parser.ts";
@@ -144,7 +144,7 @@ export class VerboseParser extends BaseParser {
     }
     showpeek(): string {
         const tok = this.peek();
-        return `${tok.start[0]}.${tok.start[1]}: ${tok_name[tok.type]}:'${tok.string}'`;
+        return `${tok.start[0]}.${tok.start[1]}: ${tokens[tok.type]}:'${tok.string}'`;
     }
     _fill() {
         return "  ".repeat(this._level);

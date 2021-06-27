@@ -35,7 +35,6 @@ import {
     AugOperator,
 } from "./pegen_types.ts";
 import { pegen } from "./pegen_proxy.ts";
-import { FILE_INPUT, SINGLE_INPUT, EVAL_INPUT, FUNC_TYPE_INPUT, FSTRING_INPUT } from "./pegen_types.ts";
 
 import { memoize, memoizeLeftRec, logger, Parser } from "./parser.ts";
 
@@ -58,7 +57,7 @@ export class GeneratedParser extends Parser {
     start_rule: StartRule;
     flags: number;
 
-    constructor(T: Tokenizer, start_rule: StartRule = FILE_INPUT, flags = 0) {
+    constructor(T: Tokenizer, start_rule: StartRule = StartRule.FILE_INPUT, flags = 0) {
         super(T);
         this.start_rule = start_rule;
         this.flags = flags; // unused
@@ -66,15 +65,15 @@ export class GeneratedParser extends Parser {
 
     parse(): mod | expr | null {
         switch (this.start_rule) {
-            case FILE_INPUT:
+            case StartRule.FILE_INPUT:
                 return this.file();
-            case SINGLE_INPUT:
+            case StartRule.SINGLE_INPUT:
                 return this.interactive();
-            case EVAL_INPUT:
+            case StartRule.EVAL_INPUT:
                 return this.eval();
-            case FUNC_TYPE_INPUT:
+            case StartRule.FUNC_TYPE_INPUT:
                 return this.func_type();
-            case FSTRING_INPUT:
+            case StartRule.FSTRING_INPUT:
                 return this.fstring();
             default:
                 return null;

@@ -1,7 +1,6 @@
 import { w } from "../util/unicode.ts";
 import { isIdentifier } from "../util/str_helpers.ts";
-import * as tokens from "./token.ts";
-import { EXACT_TOKEN_TYPES } from "./token.ts";
+import { tokens, EXACT_TOKEN_TYPES } from "./token.ts";
 
 type token = number;
 type position = [number, number];
