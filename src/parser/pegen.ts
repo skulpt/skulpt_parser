@@ -44,14 +44,11 @@ import {
     cmpop,
     In,
 } from "../ast/astnodes.ts";
-import { pyBytes, pyFalse, pyStr } from "../ast/constants.ts";
-import { pyTrue } from "../ast/constants.ts";
-import { pyEllipsis } from "../ast/constants.ts";
-import { pyNone } from "../ast/constants.ts";
+import { pyBytes, pyEllipsis, pyFalse, pyNone, pyStr, pyTrue } from "../ast/constants.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
-import { Parser } from "./parser.ts";
+import type { Parser } from "./parser.ts";
 import { parsestr } from "./parse_string.ts";
 import {
     CmpopExprPair,
