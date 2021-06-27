@@ -12,8 +12,9 @@ export function parsestr(p: Parser, t: TokenInfo): [string, boolean, boolean, bo
         bytesmode = false,
         rawmode = false;
     let i = 0;
-    if (quote !== "'" && quote !== "'") {
-        while (!bytesmode || !rawmode) {
+    // we already know the tokenizer has ensured the prefixes are correct
+    if (quote !== "'" && quote !== '"') {
+        while (true) {
             if (quote === "b" || quote === "B") {
                 quote = s[++i];
                 bytesmode = true;
