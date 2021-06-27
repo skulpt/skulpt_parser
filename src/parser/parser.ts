@@ -9,6 +9,7 @@ import { KeywordToken } from "./pegen_types.ts";
 import { get_keyword_or_name_type } from "./pegen.ts";
 import type { NameTokenInfo } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
+import { pySyntaxError } from "../ast/errors.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type NoArgs = (this: Parser) => any | null;
