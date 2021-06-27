@@ -18,15 +18,24 @@ export class pyConstant<V = any> {
     }
 }
 
+const escape = { "\n": "n", "\r": "r", "\t": "t", "\\": "\\", "'": "'", '"': '"' };
+
+function _stringRepr(v: string): string {
+    let quote = "'";
+    if (v.includes("'") && !v.includes('"')) {
+        quote = '"';
+    }
+    const toEscape = new RegExp(`([\\n\\r\\\\\t${quote}])`, "g");
+    v = v.replace(toEscape, (_m, m1) => "\\" + escape[m1 as keyof typeof escape]);
+    // deno-lint-ignore no-control-regex
+    v = v.replace(/[\x00-\x1f]/g, (m) => "\\x" + m.charCodeAt(0).toString(16).padStart(2, "0"));
+    return quote + v + quote;
+}
+
 export class pyStr extends pyConstant<string> {
     static _name = "str";
     toString() {
-        const v = this._v.replace(/\n/g, "\\n");
-        let quote = "'";
-        if (v.includes("'") && !v.includes('"')) {
-            quote = '"';
-        }
-        return quote + v + quote;
+        return _stringRepr(this._v);
     }
 }
 
@@ -65,12 +74,7 @@ export class pyComplex extends pyConstant<{ real: number; imag: number }> {
 export class pyBytes extends pyConstant<Uint8Array> {
     static _name = "bytes";
     toString() {
-        const v = new TextDecoder().decode(this._v).replace(/\n/g, "\\n");
-        let quote = "'";
-        if (v.includes("'") && !v.includes('"')) {
-            quote = '"';
-        }
-        return "b" + quote + v + quote;
+        return "b" + _stringRepr(new TextDecoder().decode(this._v));
     }
 }
 
