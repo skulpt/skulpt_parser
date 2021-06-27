@@ -36,8 +36,8 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 export class expr_context extends AST {
     static _name = "expr_context";
 }
-
 expr_context.prototype._enum = true;
+
 export type expr_contextKind = typeof expr_context | typeof LoadType | typeof StoreType | typeof DelType;
 
 export class LoadType extends expr_context {
@@ -57,8 +57,8 @@ export const Del = new DelType();
 export class boolop extends AST {
     static _name = "boolop";
 }
-
 boolop.prototype._enum = true;
+
 export type boolopKind = typeof boolop | typeof AndType | typeof OrType;
 
 export class AndType extends boolop {
@@ -74,8 +74,8 @@ export const Or = new OrType();
 export class operator extends AST {
     static _name = "operator";
 }
-
 operator.prototype._enum = true;
+
 export type operatorKind =
     | typeof operator
     | typeof AddType
@@ -149,8 +149,8 @@ export const FloorDiv = new FloorDivType();
 export class unaryop extends AST {
     static _name = "unaryop";
 }
-
 unaryop.prototype._enum = true;
+
 export type unaryopKind = typeof unaryop | typeof InvertType | typeof NotType | typeof UAddType | typeof USubType;
 
 export class InvertType extends unaryop {
@@ -174,8 +174,8 @@ export const USub = new USubType();
 export class cmpop extends AST {
     static _name = "cmpop";
 }
-
 cmpop.prototype._enum = true;
+
 export type cmpopKind =
     | typeof cmpop
     | typeof EqType
