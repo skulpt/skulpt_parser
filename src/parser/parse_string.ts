@@ -1,12 +1,13 @@
 // deno-lint-ignore-file camelcase
-import { expr, FormattedValue } from "../ast/astnodes.ts";
+import { Constant, expr, FormattedValue, JoinedStr } from "../ast/astnodes.ts";
+import { pyStr } from "../ast/constants.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { tokenizerFromString } from "../tokenize/mod.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { GeneratedParser } from "./generated_parser.ts";
 import { Parser } from "./parser.ts";
 import { assert } from "./pegen.ts";
-import { FSTRING_INPUT } from "./pegen_types.ts";
+import { StartRule } from "./pegen_types.ts";
 
 // deno-lint-ignore no-control-regex
 const NON_ASCII = /[^\x00-\x7F]/;
@@ -133,7 +134,8 @@ const WHITE_SPACE = /^\s*$/;
 function fstring_compile_expr(p: Parser, str: string, expr_start: number, expr_end: number, t: TokenInfo): expr {
     assert(expr_end >= expr_start);
     assert(str[expr_start - 1] === "{");
-    assert(str[expr_end] === "}" || str[expr_end] === "!" || str[expr_end] === ":");
+    const end_ch = str[expr_end];
+    assert(end_ch === "}" || end_ch === "!" || end_ch === ":" || end_ch === "=");
 
     let s = str.substring(expr_start, expr_end);
 
@@ -150,7 +152,8 @@ function fstring_compile_expr(p: Parser, str: string, expr_start: number, expr_e
     s = "(" + s + ")";
     try {
         const tokenizer = tokenizerFromString(s);
-        const p2 = new GeneratedParser(tokenizer, FSTRING_INPUT);
+        /**@todo adjust the offsets here */
+        const p2 = new GeneratedParser(tokenizer, StartRule.FSTRING_INPUT);
         return p2.parse();
     } catch (e) {
         // if (e.traceback && e.traceback[0]) {
@@ -163,13 +166,15 @@ function fstring_compile_expr(p: Parser, str: string, expr_start: number, expr_e
 }
 
 function fstring_find_expr(
+    this: FstringParser,
     p: Parser,
     str: string,
     start: number,
     end: number,
     raw: boolean,
-    recurse_lvl: number
-): [expr, number] {
+    recurse_lvl: number,
+    t: TokenInfo
+): [FormattedValue, number, string | null] {
     /* Can only nest one level deep. */
     if (recurse_lvl >= 2) {
         p.raise_error(pySyntaxError, "f-string: expressions nested too deeply");
@@ -188,7 +193,7 @@ function fstring_find_expr(
        expressions. */
     let nested_depth = 0;
 
-    let format_spec: expr | null = null;
+    let format_spec: JoinedStr | null = null;
     let conversion: string | null = null;
     let expr_text: string | null = null;
 
@@ -252,14 +257,28 @@ function fstring_find_expr(
             /* Error: can't include a comment character, inside parens
                or not. */
             p.raise_error(pySyntaxError, "f-string expression part cannot include '#'");
-        } else if (nested_depth === 0 && (ch === "!" || ch === ":" || ch === "}")) {
+        } else if (
+            nested_depth === 0 &&
+            (ch === "!" || ch === ":" || ch === "}" || ch === "=" || ch === "<" || ch === ">")
+        ) {
             /* First, test for the special case of "!=". Since '=' is
                not an allowed conversion character, nothing is lost in
                this test. */
-            if (ch === "!" && i + 1 < end && str[i + 1] === "=") {
-                /* This isn't a conversion character, just continue. */
-                continue;
+            if (i + 1 < end) {
+                if (str[i + 1] === "=" && (ch === "!" || ch === "=" || ch === "<" || ch === ">")) {
+                    /* !=, ==, <=, >= */
+                    /* This isn't a conversion character, just continue. */
+                    i++;
+                    continue;
+                }
+                /* Don't get out of the loop for these, if they're single
+                   chars (not part of 2-char tokens). If by themselves, they
+                   don't end an expression (unlike say '!'). */
+                if (ch === ">" || ch === "<") {
+                    continue;
+                }
             }
+
             /* Normal way out of this loop. */
             break;
         } else {
@@ -283,7 +302,7 @@ function fstring_find_expr(
     /* Compile the expression as soon as possible, so we show errors
        related to the expression before errors related to the
        conversion or format_spec. */
-    const simple_expression = fstring_compile_expr(p, str, expr_start, expr_end, c, n);
+    const simple_expression = fstring_compile_expr(p, str, expr_start, expr_end, t);
 
     /* Check for =, which puts the text value of the expression in
        expr_text. */
@@ -296,7 +315,7 @@ function fstring_find_expr(
         while (WHITE_SPACE.test(str[i])) {
             i++;
         }
-        expr_text = str.slice(i);
+        expr_text = str.slice(expr_start, i);
     }
 
     /* Check for a conversion char, if present. */
@@ -318,9 +337,8 @@ function fstring_find_expr(
     if (str[i] === ":") {
         i++;
         if (i >= end) unexpected_end_of_string(p);
-
         /* Parse the format spec. */
-        [format_spec, i] = fstring_parse(str, i, end, raw, recurse_lvl + 1, c, n);
+        [format_spec, i] = fstring_parse(p, str, i, end, raw, recurse_lvl + 1, this.first, t, this.last);
     }
 
     if (i >= end || str[i] !== "}") unexpected_end_of_string(p);
@@ -334,16 +352,32 @@ function fstring_find_expr(
 
     /* And now create the FormattedValue node that represents this
        entire expression with the conversion and format spec. */
-    const expr = new FormattedValue(simple_expression, conversion, format_spec);
+    const expr = new FormattedValue(
+        simple_expression,
+        conversion === null ? -1 : conversion.charCodeAt(0),
+        format_spec,
+        this.a0,
+        this.a1,
+        this.a2,
+        this.a3
+    );
 
-    return [expr, i];
+    return [expr, i, expr_text];
 }
 
 const BRACES_RE = /(^|[^}])}(}})*($|[^}])/;
 const SINGLE_BRACE_RE = /}}/g;
 
-export function fstring_parse(p: Parser, str: string, start: number, end: number, raw: boolean, recurse_lvl: number) {
-    const values = [];
+export function fstring_find_literal_and_expr(
+    this: FstringParser,
+    str: string,
+    start: number,
+    end: number,
+    raw: boolean,
+    recurse_lvl: number,
+    t: TokenInfo
+) {
+    const p: Parser = this.parser;
     let idx = start;
 
     const addLiteral = (literal: string) => {
@@ -356,7 +390,14 @@ export function fstring_parse(p: Parser, str: string, start: number, end: number
         if (raw || literal.includes("\\")) {
             literal = decodeEscape(p, literal);
         }
-        values.push(literal); // ???
+        // if (this.last_str) {
+        //     literal = this.last_str + literal;
+        //     this.last_str = "";
+        // }
+        this.concat(literal);
+        // if (literal) {
+        //     this.expr_list.push(this.mkStrNode(literal)); // ???
+        // }
     };
 
     while (idx < end) {
@@ -388,9 +429,89 @@ export function fstring_parse(p: Parser, str: string, start: number, end: number
             idx = bidx;
 
             // And now parse the f-string expression itself
-            const [expr, endIdx] = fstring_find_expr(p, str, bidx, end, raw, recurse_lvl, c, n);
-            values.push(expr);
+            const [expr, endIdx, expr_text] = fstring_find_expr.call(this, p, str, bidx, end, raw, recurse_lvl, t);
+
+            if (expr_text) {
+                this.concat(expr_text);
+            }
+            if (this.last_str) {
+                this.expr_list.push(this.mkStrNode(this.last_str));
+                this.last_str = "";
+            }
+            this.expr_list.push(expr);
             idx = endIdx;
         }
     }
+    return idx;
+}
+
+export class FstringParser {
+    last_str: string;
+    fmode: boolean;
+    expr_list: (Constant | FormattedValue)[];
+    parser: Parser;
+    first: TokenInfo;
+    last: TokenInfo;
+    a0: number;
+    a1: number;
+    a2: number;
+    a3: number;
+    kind: "u" | null;
+    constructor(p: Parser, first: TokenInfo, last: TokenInfo) {
+        this.parser = p;
+        this.last_str = "";
+        this.fmode = false;
+        this.expr_list = [];
+        this.first = first;
+        this.last = last;
+        // attrs
+        this.a0 = first.start[0];
+        this.a1 = first.start[1];
+        this.a2 = last.end[0];
+        this.a3 = last.end[1];
+        // all strings get the same kind
+        // this only seems useful for unparsing AST
+        this.kind = first.string[0] === "u" ? "u" : null;
+    }
+    concatFstring(fstr: string, rawmode: boolean, recurse_lvl: number, t: TokenInfo) {
+        this.fmode = true;
+        return fstring_find_literal_and_expr.call(this, fstr, 0, fstr.length, rawmode, recurse_lvl, t);
+    }
+    concat(str: string) {
+        this.last_str += str;
+    }
+    mkStrNode(str: string) {
+        return new Constant(new pyStr(str), this.kind, this.a0, this.a1, this.a2, this.a3);
+    }
+    finish(): JoinedStr | Constant {
+        if (!this.fmode) {
+            assert(this.expr_list.length === 0);
+            return this.mkStrNode(this.last_str);
+        }
+        /* Create a Constant node out of last_str, if needed. It will be the
+       last node in our expression list. */
+        if (this.last_str) {
+            this.expr_list.push(this.mkStrNode(this.last_str));
+        }
+        return new JoinedStr(this.expr_list, this.a0, this.a1, this.a2, this.a3);
+    }
+}
+
+/* Given an f-string (with no 'f' or quotes) that's in *str and ends
+   at end, parse it into an expr_ty.  Return NULL on error.  Adjust
+   str to point past the parsed portion. */
+export function fstring_parse(
+    p: Parser,
+    str: string,
+    start: number,
+    end: number,
+    raw: boolean,
+    recurse_lvl: number,
+    first: TokenInfo,
+    t: TokenInfo,
+    last: TokenInfo
+): [JoinedStr, number] {
+    const fstringParser = new FstringParser(p, first, last);
+    const i = fstringParser.concatFstring(str.slice(start, end), raw, recurse_lvl, t);
+    return [fstringParser.finish() as JoinedStr, i + start];
 }
