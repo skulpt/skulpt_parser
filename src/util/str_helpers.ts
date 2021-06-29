@@ -1,3 +1,4 @@
+// deno-lint-ignore-file camelcase
 import { Ll, Lm, Lo, Lt, Lu, Mc, Mn, Nd, Nl, Pc } from "./unicode.ts";
 
 const the_underscore = "_";

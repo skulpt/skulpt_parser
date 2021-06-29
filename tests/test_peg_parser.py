@@ -80,7 +80,10 @@ class PegenTestResult(TextTestResult):
 
     def getDescription(self, test):
         try:
-            return f"{test._message:<50}   {test.params['source']!s}"
+            msg = test._message[:47]
+            if len(msg) == 47:
+                msg += "..."
+            return f"{msg:<50}   {test.params['source']!s}"
         except AttributeError:
             return super().getDescription(test)
 
@@ -92,10 +95,10 @@ class PegenTestResult(TextTestResult):
         super(TextTestResult, self).addSuccess(test)
         # if self.showAll:
         desc = self.getDescription(test)
-        self.stream.writeln(colors.green("ok:   " + desc))
+        self.stream.writeln(colors.green("ok   : " + desc))
 
     def addSubFailure(self, test, err):
-        flavour = "FAIL" if test.failureException is type(err) else "ERROR"
+        flavour = "FAIL " if test.failureException is type(err) else "ERROR"
         if self.showAll:
             self.printFail(test, err, flavour)
         else:
@@ -105,7 +108,6 @@ class PegenTestResult(TextTestResult):
     def printFail(self, test, err, flavour):
         self.stream.writeln(self.separator1)
         self.stream.writeln(colors.red("%s: %s" % (flavour, self.getDescription(test))))
-        self.stream.writeln(self.separator2)
         errlines = str(err).splitlines(True)
         for i, line in enumerate(errlines):
             if line.startswith("+"):
@@ -114,6 +116,7 @@ class PegenTestResult(TextTestResult):
                 errlines[i] = colors.red(line)
         err = "".join(errlines)
         self.stream.writeln("%s" % err)
+        self.stream.writeln(self.separator2)
 
     def printErrorList(self, flavour, errors):
         # don't print the errors
@@ -1025,29 +1028,59 @@ class ASTGenerationTest(unittest.TestCase):
                 self.test_result.addSubFailure(self._subtest, e)
                 raise e
 
+    def ast_fail_runner(self, desc, source, mode="exec", exc=None, msg="", error_text=None):
+        with self.subTest(desc, source=source):
+            # with self.assertRaises(exc, msg=msg) as e:
+            err = None
+            err_type = None
+            try:
+                ts_ast_dump(source, mode=mode)
+            except Exception as e:
+                as_str = str(e)
+                _, _type, _msg = as_str.split("\n")[0].split(": ")
+                _type = _type.replace("Uncaught ", "")
+                err_type = __builtins__.get(_type)
+                if err_type is not None and issubclass(err_type, exc):
+                    err = err_type(_msg)
+                else:
+                    err = e
+            if err is None:
+                err = AssertionError(msg or f"{exc.__name__} not raised")
+                self.test_result.addSubFailure(self._subtest, err)
+                raise err
+            elif not isinstance(err, exc):
+                self.test_result.addSubFailure(self._subtest, AssertionError(f"{exc.__name__} not raised got:\n{err}"))
+                raise err
+
+            self.test_result.addSuccess(self._subtest)
+
+            if error_text is None:
+                return
+
+            with self.subTest("checking error text for", source=source):
+                try:
+                    self.assertTrue(
+                        error_text in str(err),
+                        f"Actual error message does not match expexted for {source}\ngot   : {str(err)}\nwanted: {error_text}",
+                    )
+                    self.test_result.addSuccess(self._subtest)
+                except Exception as e:
+                    self.test_result.addSubFailure(self._subtest, e)
+                    raise e
+
     def test_correct_ast_generation_on_source_files(self) -> None:
         print()
         for desc, source in zip(TEST_IDS, TEST_SOURCES):
             self.ast_runner(desc, source)
 
-    # @TODO
-    @unittest.skip("Syntax Errors not yet implemented")
     def test_incorrect_ast_generation_on_source_files(self) -> None:
-        for source in FAIL_SOURCES:
-            with self.assertRaises(SyntaxError, msg=f"Parsing {source} did not raise an exception"):
-                peg_parser.parse_string(source)
+        for desc, source in zip(FAIL_TEST_IDS, FAIL_SOURCES):
+            self.ast_fail_runner(desc, source, exc=SyntaxError, msg=f"Parsing {source} did not raise an exception")
 
-    # @TODO
-    @unittest.skip("Syntax Errors not yet implemented")
     def test_incorrect_ast_generation_with_specialized_errors(self) -> None:
         for source, error_text in FAIL_SPECIALIZED_MESSAGE_CASES:
             exc = IndentationError if "indent" in error_text else SyntaxError
-            with self.assertRaises(exc) as se:
-                peg_parser.parse_string(source)
-            self.assertTrue(
-                error_text in se.exception.msg,
-                f"Actual error message does not match expexted for {source}",
-            )
+            self.ast_fail_runner(error_text, source, exc=exc, error_text=error_text)
 
     # @unittest.expectedFailure
     # def test_correct_but_known_to_fail_ast_generation_on_source_files(self) -> None:
@@ -1062,7 +1095,7 @@ class ASTGenerationTest(unittest.TestCase):
             self.ast_runner(desc, source)
 
     # @TODO
-    @unittest.skip("Syntax Errors not yet implemented")
+    @unittest.skip("fstring Syntax Errors not yet implemented")
     def test_fstring_parse_error_tracebacks(self) -> None:
         for source, error_text in FSTRINGS_TRACEBACKS.values():
             with self.assertRaises(SyntaxError) as se:

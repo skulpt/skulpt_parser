@@ -1,7 +1,6 @@
 // deno-lint-ignore-file camelcase no-fallthrough
 
 import {
-    AST,
     Attrs,
     ClassDef,
     expr_context,
@@ -43,18 +42,16 @@ import {
     NamedExpr,
     Set as Set_,
     cmpop,
+    In,
 } from "../ast/astnodes.ts";
-import { pyFalse } from "../ast/constants.ts";
-import { pyTrue } from "../ast/constants.ts";
-import { pyEllipsis } from "../ast/constants.ts";
-import { pyNone } from "../ast/constants.ts";
+import { pyBytes, pyEllipsis, pyFalse, pyNone, pyStr, pyTrue } from "../ast/constants.ts";
+import { pySyntaxError } from "../ast/errors.ts";
 import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
-import { Parser } from "./parser.ts";
-import { parseString } from "./parse_string.ts";
+import type { Parser } from "./parser.ts";
+import { parsestr } from "./parse_string.ts";
 import {
     CmpopExprPair,
-    exprOrNone,
     EXTRA_EXPR,
     KeyValuePair,
     KeywordOrStarred,
@@ -62,6 +59,7 @@ import {
     NameDefaultPair,
     SlashWithDefault,
     StarEtc,
+    TARGETS_TYPE,
 } from "./pegen_types.ts";
 
 export class InternalAssertionError extends Error {
@@ -105,7 +103,7 @@ export function new_type_comment(s: string | null): string | null {
     // }
 }
 
-export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo): arg {
+export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo | null): arg {
     if (tc === null) {
         return a;
     }
@@ -1367,6 +1365,11 @@ export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): numbe
 //     return result;
 // }
 
+/** @todo */
+export function interactive_exit(p: Parser) {
+    return null;
+}
+
 // void *
 // _PyPegen_interactive_exit(Parser *p)
 // {
@@ -1377,7 +1380,7 @@ export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): numbe
 // }
 
 /* Creates a single-element asdl_seq* that contains a */
-export function singleton_seq(p: Parser, a: AST): AST[] {
+export function singleton_seq<A>(p: Parser, a: A): A[] {
     return [a];
 }
 // asdl_seq *
@@ -1392,7 +1395,7 @@ export function singleton_seq(p: Parser, a: AST): AST[] {
 //     return seq;
 // }
 
-export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null): any {
+export function seq_insert_in_front<T>(p: Parser, a: T, seq: T[] | null): T[] {
     assert(a !== null);
 
     if (seq === null) {
@@ -1424,7 +1427,7 @@ export function seq_insert_in_front(p: Parser, a: any, seq: any[] | null): any {
 // }
 
 /* Creates a copy of seq and appends a to it */
-export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr): any {
+export function seq_append_to_end(p: Parser, seq: expr[] | null, a: expr): expr[] {
     assert(a !== null);
     if (seq === null) {
         return [a];
@@ -1463,7 +1466,7 @@ export function seq_append_to_end(p: Parser, seq: any[] | null, a: expr): any {
 // }
 
 /* Flattens an asdl_seq* of asdl_seq*s */
-export function seq_flatten(p: Parser, seqs: AST[][]): AST[] {
+export function seq_flatten<A>(p: Parser, seqs: A[][]): A[] {
     // We might need a depth of more than 1. Remove this comment if we find we don't need it
     // return seqs?.flat(Infinity) as AST[];
     return seqs?.flat();
@@ -1843,7 +1846,7 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 //     return a;
 // }
 
-export function get_keys(p: Parser, seq: KeyValuePair[] | null): expr[] {
+export function get_keys(p: Parser, seq: KeyValuePair[] | null): (expr | null)[] {
     if (seq === null) {
         return [];
     }
@@ -1891,9 +1894,9 @@ export function get_values(p: Parser, seq: KeyValuePair[] | null): expr[] {
 //     return new_seq;
 // }
 
-export function name_default_pair(p: Parser, arg: arg, value: expr, tc: TokenInfo): NameDefaultPair {
+export function name_default_pair<V>(p: Parser, arg: arg, value: V, tc: TokenInfo | null): NameDefaultPair<V> {
     const a = add_type_comment_to_arg(p, arg, tc);
-    return new NameDefaultPair(a, value);
+    return new NameDefaultPair<V>(a, value);
 }
 
 // /* Constructs a NameDefaultPair */
@@ -1983,8 +1986,12 @@ export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | nu
 //     }
 //     return seq;
 // }
+type exprOrNull<T> = T extends NameDefaultPair<infer R> ? (R extends expr ? R : expr | null) : expr | null;
 
-export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]): exprOrNone[] {
+export function get_defaults<T extends NameDefaultPair<exprOrNull<T>>>(
+    p: Parser,
+    names_with_defaults: T[]
+): exprOrNull<T>[] {
     return names_with_defaults.map((pair) => pair.value);
 }
 
@@ -2006,15 +2013,15 @@ export function get_defaults(p: Parser, names_with_defaults: NameDefaultPair[]):
 export function make_arguments(
     p: Parser,
     slash_without_default: arg[] | null,
-    slash_with_default: SlashWithDefault,
-    plain_names: any[],
-    names_with_default: any[],
-    star_etc: StarEtc
+    slash_with_default: SlashWithDefault | null,
+    plain_names: arg[] | null,
+    names_with_default: NameDefaultPair<expr>[] | null,
+    star_etc: StarEtc | null
 ): arguments_ {
     let posonlyargs: arg[] = [];
     if (slash_without_default !== null) {
         posonlyargs = slash_without_default;
-    } else if (slash_with_default) {
+    } else if (slash_with_default !== null) {
         const slash_with_default_names = get_names(p, slash_with_default.names_with_defaults);
         posonlyargs = slash_with_default.plain_names.concat(slash_with_default_names);
     }
@@ -2029,7 +2036,7 @@ export function make_arguments(
         posargs = plain_names;
     }
 
-    let posdefaults: exprOrNone[] = [];
+    let posdefaults: expr[] = [];
     if (slash_with_default !== null && names_with_default !== null) {
         const slash_with_default_values = get_defaults(p, slash_with_default.names_with_defaults);
         const names_with_default_values = get_defaults(p, names_with_default);
@@ -2050,7 +2057,7 @@ export function make_arguments(
         kwonlyargs = get_names(p, star_etc.kwonlyargs);
     }
 
-    let kwdefaults: exprOrNone[] = [];
+    let kwdefaults: (expr | null)[] = [];
     if (star_etc !== null && star_etc.kwonlyargs !== null) {
         kwdefaults = get_defaults(p, star_etc.kwonlyargs);
     }
@@ -2409,13 +2416,36 @@ export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]):
 //     return new_seq;
 // }
 
+const encoder = new TextEncoder();
+
 /** concatenate strings from python like `'foo' 'bar'` */
-export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
-    const [lineno, col_offset] = a[0].start;
-    const [end_lineno, end_col_offset] = a[a.length - 1].end;
-    /** @todo Implement this properly - see parse_string.c */
-    const s = a.map((t) => parseString(t.string)).join("");
-    return new Constant(s, null, lineno, col_offset, end_lineno, end_col_offset);
+export function concatenate_strings(p: Parser, tokens: TokenInfo[]): Constant {
+    const [lineno, col_offset] = tokens[0].start;
+    const [end_lineno, end_col_offset] = tokens[tokens.length - 1].end;
+    let bytesmode: boolean | null = null;
+    let res = "";
+    let kind: "u" | null = null;
+
+    for (const t of tokens) {
+        const [s, fmode, this_bytesmode, rawmode] = parsestr(p, t);
+        if (bytesmode !== null && bytesmode !== this_bytesmode) {
+            p.raise_error(pySyntaxError, "cannot mix bytes and nonbytes literals");
+        }
+        bytesmode = this_bytesmode;
+        if (fmode) {
+            /** @todo */
+        } else {
+            res += s;
+        }
+    }
+    if (bytesmode) {
+        return new Constant(new pyBytes(encoder.encode(res)), null, lineno, col_offset, end_lineno, end_col_offset);
+    }
+    if (tokens[0].string[0] === "u") {
+        // as far as I can tell - this is only for ast unparsing
+        kind = "u";
+    }
+    return new Constant(new pyStr(res), kind, lineno, col_offset, end_lineno, end_col_offset);
 }
 
 // expr_ty
@@ -2507,9 +2537,9 @@ export function concatenate_strings(p: Parser, a: TokenInfo[]): Constant {
 //     return NULL;
 // }
 
-export function make_module(p: Parser, a: stmt[]): Module {
+export function make_module(p: Parser, a: stmt[] | null): Module {
     // Ingoring the #type: ignore comment mangling here
-    return new Module(a, []);
+    return new Module(a ?? [], []);
 }
 
 // mod_ty
@@ -2537,7 +2567,48 @@ export function make_module(p: Parser, a: stmt[]): Module {
 //     return Module(a, type_ignores, p->arena);
 // }
 
-// // Error reporting helpers
+// Error reporting helpers
+export function get_invalid_target(e: expr | null, targets_type: TARGETS_TYPE): expr | null {
+    if (e === null) {
+        return null;
+    }
+    function _visit_container(container: List | Tuple) {
+        for (const other of container.elts) {
+            const child = get_invalid_target(other, targets_type);
+            if (child !== null) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    switch (e.constructor as exprKind) {
+        case List:
+            return _visit_container(e as List);
+        case Tuple:
+            return _visit_container(e as Tuple);
+        case Starred:
+            return get_invalid_target((e as Starred).value, targets_type);
+        case Compare:
+            // This is needed, because the `a in b` in `for a in b` gets parsed
+            // as a comparison, and so we need to search the left side of the comparison
+            // for invalid targets.\
+            if (targets_type == TARGETS_TYPE.FOR_TARGETS) {
+                const cmpopVal = (e as Compare).ops[0];
+                if (cmpopVal === In) {
+                    return get_invalid_target((e as Compare).left, targets_type);
+                }
+                return null;
+            }
+            return e;
+        case Name:
+        case Subscript:
+        case Attribute:
+            return null;
+        default:
+            return e;
+    }
+}
 
 // expr_ty
 // _PyPegen_get_invalid_target(expr_ty e, TARGETS_TYPE targets_type)
@@ -2603,9 +2674,7 @@ export function arguments_parsing_error(p: Parser, e: Call) {
     } else {
         msg = "positional argument follows keyword argument";
     }
-    /** @todo */
-    // @ts-ignore
-    return RAISE_SYNTAX_ERROR(msg);
+    return p.raise_error(pySyntaxError, msg);
 }
 
 // void *_PyPegen_arguments_parsing_error(Parser *p, expr_ty e) {
@@ -2640,9 +2709,13 @@ export function nonparen_genexp_in_call(p: Parser, c: Call) {
         return null;
     }
 
-    /**@todo */
-    //@ts-ignore
-    return RAISE_SYNTAX_ERROR_KNOWN_LOCATION(args[args.length - 1], "Generator expression must be parenthesized");
+    const { lineno, col_offset } = args[args.length - 1];
+    return p.raise_error_known_location(
+        pySyntaxError,
+        lineno,
+        col_offset + 1,
+        "Generator expression must be parenthesized"
+    );
 }
 
 // @stu why does our parser not call these functions with the parser?

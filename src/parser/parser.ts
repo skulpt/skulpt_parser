@@ -1,16 +1,28 @@
-import { DEDENT, ENDMARKER, NAME, NEWLINE, NUMBER, OP, STRING, tokens } from "../tokenize/token.ts";
-import { exact_token_types } from "../tokenize/Tokenizer.ts";
+// deno-lint-ignore-file camelcase
+import {
+    DEDENT,
+    ENDMARKER,
+    INDENT,
+    NAME,
+    NEWLINE,
+    NUMBER,
+    OP,
+    STRING,
+    EXACT_TOKEN_TYPES,
+    tokens,
+} from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
-import { pySyntaxError } from "../tokenize/tokenize.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
-import { Name, Load, TypeIgnore, Constant } from "../ast/astnodes.ts";
-import { KeywordToken } from "./pegen_types.ts";
-import { get_keyword_or_name_type } from "./pegen.ts";
+import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
+import { KeywordToken, StartRule, TARGETS_TYPE } from "./pegen_types.ts";
+import type { AST } from "../ast/astnodes.ts";
+import { get_expr_name, get_invalid_target, get_keyword_or_name_type } from "./pegen.ts";
 import type { NameTokenInfo } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
+import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
-type NoArgs = (this: Parser) => any | null;
+type NoArgs = (this: Parser) => AST | TokenInfo | null;
 type Expect = (this: Parser, arg: string) => TokenInfo | null;
 type ParserMethod = NoArgs | Expect;
 
@@ -21,7 +33,7 @@ export function logger(_target: Parser, _propertyKey: string, _descriptor: Prope
 export function memoize(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
-    function memoizeWrapper<R = any | null>(this: Parser, arg?: string): R {
+    function memoizeWrapper(this: Parser, arg?: string): AST | TokenInfo | null {
         const mark = this.mark();
         const key = `${mark},${methodName},${arg ?? ""}`;
         const cached = this._cache[key];
@@ -41,7 +53,7 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
 export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: NoArgs = descriptor.value;
     const methodName = propertyKey;
-    function memoizeLeftRecWrapper(this: Parser) {
+    function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this.mark();
         const key = `${mark},${methodName},`;
         const cached = this._cache[key];
@@ -51,7 +63,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
             return cached[0];
         }
         // Slow path: no cache hit
-        let lastresult: any | null;
+        let lastresult: AST | TokenInfo | null;
         let lastmark: number;
         let currmark: number;
         this._cache[key] = [(lastresult = null), (lastmark = mark)];
@@ -87,16 +99,17 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
 // overloads for the expect method
 export interface Parser {
     keywords: Map<string, KeywordToken>;
-    negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): boolean;
-    negative_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): boolean;
-    positive_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg?: T): R;
-    positive_lookahead<T = string, R = any | null>(func: (arg: T) => R, arg: T): R;
+    start_rule: StartRule;
+    negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg?: T): boolean;
+    negative_lookahead<T = string, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean;
+    positive_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg?: T): R;
+    positive_lookahead<T = string, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): R;
 }
 
 /** The base class for the generated Parser. Largely based on cpython/Tools/peg_generator/pegen/parser.py */
 export class Parser {
     _tokenizer: Tokenizer;
-    _cache: { [key: string]: [any, number] };
+    _cache: { [key: string]: [AST | TokenInfo | null, number] };
     mark: () => number;
     reset: (number: number) => null | void;
     peek: () => TokenInfo;
@@ -116,6 +129,7 @@ export class Parser {
         this.diagnose = this._tokenizer.diagnose.bind(this._tokenizer);
         this._tokens = this._tokenizer._tokens;
     }
+
     extra(start: number): [number, number, number, number] {
         const START = this._tokens[start].start;
         let m = this.mark() - 1;
@@ -131,6 +145,60 @@ export class Parser {
         return [START[0], START[1], END[0], END[1]];
     }
 
+    raise_error(errType: typeof pySyntaxError, msg: string, ...formatArgs: string[]): never {
+        // console.log(this.mark())
+        const tok = this.diagnose();
+        return this.raise_error_known_location(errType, tok.start[0], tok.start[1] + 1, msg, ...formatArgs);
+    }
+
+    raise_error_known_location(
+        errType: typeof pySyntaxError,
+        lineno: number,
+        offset: number,
+        msg: string,
+        ...formatArgs: string[]
+    ): never {
+        if (this.start_rule === StartRule.FSTRING_INPUT) {
+            /** @todo */
+        }
+
+        /** @todo should we just set the error indicator and return null then check this in the memoize decorator? */
+        // this.error_indicator = 1;
+        for (const arg of formatArgs) {
+            msg = msg.replace("%s", arg);
+        }
+        let i = this.mark() - 1;
+        let errLine = "";
+        while (i >= 0) {
+            const tok = this._tokens[i];
+            if (tok.lineno === lineno) {
+                errLine = tok.line;
+                break;
+            }
+            i--;
+        }
+        throw new errType(msg, ["<file>", lineno, offset, errLine]);
+    }
+
+    raise_error_invalid_target(type: TARGETS_TYPE, e: expr | null): never {
+        // const invalidTarget = get_inalid_target(e, type); CHECK_NULL_NOT_ALLOWED
+        const invalidTarget = get_invalid_target(e, type);
+        if (invalidTarget !== null) {
+            const msg =
+                type === TARGETS_TYPE.STAR_TARGETS || type === TARGETS_TYPE.FOR_TARGETS
+                    ? "cannot assign to %s"
+                    : "cannot delete %s";
+            return this.raise_error_known_location(
+                pySyntaxError,
+                invalidTarget.lineno,
+                invalidTarget.col_offset,
+                msg,
+                get_expr_name(invalidTarget)
+            );
+        }
+        return this.raise_error(pySyntaxError, "invalid syntax");
+    }
+
     @memoize
     name(): Name | null {
         let tok = this.peek();
@@ -140,6 +208,7 @@ export class Parser {
         }
         return null;
     }
+
     @memoize
     string(): TokenInfo | null {
         const tok = this.peek();
@@ -149,6 +218,7 @@ export class Parser {
         }
         return null;
     }
+
     @memoize
     number(): Constant | null {
         let tok = this.peek();
@@ -168,14 +238,15 @@ export class Parser {
         }
         return null;
     }
+
     @memoize
     expect(type: string): TokenInfo | null {
         const tok = this.peek();
         if (tok.string === type) {
             return this.getnext();
         }
-        if (type in exact_token_types) {
-            if (tok.type === exact_token_types[type]) {
+        if (type in EXACT_TOKEN_TYPES) {
+            if (tok.type === EXACT_TOKEN_TYPES[type]) {
                 return this.getnext();
             }
         }
@@ -190,20 +261,28 @@ export class Parser {
         return null;
     }
 
-    positive_lookahead<T = never, R = any | null>(func: (arg?: T) => R, arg?: T): R {
+    positive_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg?: T) => R, arg?: T): R {
         const mark = this.mark();
         const ok = func.call(this, arg);
         this.reset(mark);
         return ok;
     }
-    negative_lookahead<T = never, R = any | null>(func: (arg: T) => R, arg: T): boolean {
+
+    negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean {
         const mark = this.mark();
         const ok = func.call(this, arg);
         this.reset(mark);
         return !ok;
     }
-    make_syntax_error(filename = "<unknown>") {
+
+    make_syntax_error(): never {
         const tok = this.diagnose();
-        return new pySyntaxError("pegen parse failure", [filename, tok.start[0], 1 + tok.start[1], tok.line]);
+        const { type: lastTokenType } = tok;
+        if (lastTokenType === INDENT) {
+            this.raise_error(pyIndentationError, "unexpected indent");
+        } else if (lastTokenType === DEDENT) {
+            this.raise_error(pyIndentationError, "unexpected unindent");
+        }
+        throw this.raise_error(pySyntaxError, "invalid syntax");
     }
 }

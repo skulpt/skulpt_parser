@@ -1,28 +1,11 @@
+// deno-lint-ignore-file camelcase
 import { w } from "../util/unicode.ts";
 import { isIdentifier } from "../util/str_helpers.ts";
 import { tokens, EXACT_TOKEN_TYPES } from "./token.ts";
+import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
 type token = number;
 type position = [number, number];
-
-class TokenError extends Error {
-    traceback: position;
-    constructor(msg: string, traceback: position) {
-        super(msg);
-        this.traceback = traceback;
-    }
-}
-
-export class pySyntaxError extends SyntaxError {
-    traceback: [string, number, number, string];
-    constructor(msg: string, traceback: [string, number, number, string]) {
-        super(msg);
-        this.traceback = traceback;
-    }
-}
-
-class IndentationError extends pySyntaxError {}
-
 export class TokenInfo {
     type: token;
     string: string;
@@ -42,6 +25,12 @@ export class TokenInfo {
         } else {
             return this.type;
         }
+    }
+    get lineno() {
+        return this.start[0];
+    }
+    get col_offset() {
+        return this.start[1];
     }
     get [Symbol.toStringTag]() {
         return "TokenInfo";
@@ -71,7 +60,7 @@ function rstrip(input: string, what: string): string {
 
 const Whitespace = "[ \\f\\t]*";
 const Comment_ = "#[^\\r\\n]*";
-const Ignore = Whitespace + any("\\\\\\r?\\n" + Whitespace) + maybe(Comment_);
+const _Ignore = Whitespace + any("\\\\\\r?\\n" + Whitespace) + maybe(Comment_);
 const Name = "[" + w + "]+";
 
 const Exponent = "[eE][-+]?[0-9](?:_?[0-9])*";
@@ -197,7 +186,7 @@ export function generate_tokens(readline: IterableIterator<string>): IterableIte
 /** We largely ignore the encoding here. In python the readline might be a bytes iterator */
 function* _tokenize(
     readline: IterableIterator<string>,
-    encoding?: string,
+    encoding?: string | null,
     filename = "<tokenize>"
 ): IterableIterator<TokenInfo> {
     const numchars = "0123456789";
@@ -215,7 +204,7 @@ function* _tokenize(
         pseudomatch: RegExpExecArray | null;
 
     // since we don't do this with bytes this is not used
-    if (encoding !== undefined) {
+    if (encoding != null) {
         if (encoding === "utf-8-sig") {
             // BOM will already have been stripped.
             encoding = "utf-8";
@@ -224,7 +213,7 @@ function* _tokenize(
         yield new TokenInfo(tokens.ENCODING, encoding, [0, 0], [0, 0], "");
     }
 
-    let lasline = "";
+    let lastline = "";
     let line = "";
     while (true) {
         // loop over lines in stream
@@ -232,7 +221,7 @@ function* _tokenize(
         // readline uses the empty string '' to signal end of input,
         // hence `line` itself will always be overwritten at the end
         // of this loop.
-        lasline = line;
+        lastline = line;
         line = readline.next().value || "";
 
         // lets pretend this doesn't exist for now.
@@ -246,7 +235,9 @@ function* _tokenize(
         if (contstr) {
             // continued string
             if (!line) {
-                throw new TokenError("EOF in multi-line string", strstart);
+                yield new TokenInfo(tokens.ERRORTOKEN, "EOF in multi-line statement", [lnum, pos], [lnum, pos], line);
+                // if the Praser didn't throw they we throw
+                throw new pySyntaxError("EOF in multi-line string", [filename, ...strstart, lastline]);
             }
             endprog.lastIndex = 0;
             endmatch = endprog.exec(line);
@@ -332,7 +323,7 @@ function* _tokenize(
 
             while (column < indents[indents.length - 1]) {
                 if (!indents.includes(column)) {
-                    throw new IndentationError("unindent does not match any outer indentation level", [
+                    throw new pyIndentationError("unindent does not match any outer indentation level", [
                         filename,
                         lnum,
                         pos,
@@ -347,13 +338,14 @@ function* _tokenize(
         } else {
             // continued statement
             if (!line) {
-                throw new TokenError("EOF in multi-line statement", [lnum, 0]);
+                yield new TokenInfo(tokens.ERRORTOKEN, "EOF in multi-line statement", [lnum, pos], [lnum, pos], line);
+                // if the Praser didn't throw they we throw
+                throw new pySyntaxError("EOF in multi-line statement", [filename, lnum, 0, lastline]);
             }
             continued = 0;
         }
 
         while (pos < max) {
-            //console.log("pos:"+pos+":"+max);
             // js regexes don't return any info about matches, other than the
             // content. we'd like to put a \w+ before pseudomatch, but then we
             // can't get any data
@@ -377,7 +369,6 @@ function* _tokenize(
 
                 let token = line.substring(start, end);
                 const initial = line[start];
-                //console.log("token:",token, "initial:",initial, start, end);
                 if (
                     numchars.includes(initial) || // ordinary number
                     (initial === "." && token !== "." && token !== "...")
@@ -472,10 +463,10 @@ function* _tokenize(
     }
 
     // Add an implicit NEWLINE if the input doesn't end in one
-    if (lasline && !"\r\n".includes(lasline[lasline.length - 1])) {
-        yield new TokenInfo(tokens.NEWLINE, "", [lnum - 1, lasline.length], [lnum - 1, lasline.length + 1], "");
+    if (lastline && !"\r\n".includes(lastline[lastline.length - 1])) {
+        yield new TokenInfo(tokens.NEWLINE, "", [lnum - 1, lastline.length], [lnum - 1, lastline.length + 1], "");
     }
-    for (let _ in indents.slice(1)) {
+    for (const _ in indents.slice(1)) {
         // pop remaining indent levels
         yield new TokenInfo(tokens.DEDENT, "", [lnum, 0], [lnum, 0], "");
     }
