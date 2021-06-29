@@ -125,6 +125,29 @@ function decodeEscape(p: Parser, s: string) {
     return ret;
 }
 
+const NEWLINE = /\n/g;
+/* Fix locations for the given node and its children. */
+function fstring_find_expr_location(parent: TokenInfo, fstr: string, expr_start: number): [number, number] {
+    /** note cpython is currently broken https://bugs.python.org/issue35212 */
+    let line = parent.start[0];
+    let offset = parent.start[1];
+
+    const new_lines = [...fstr.substring(0, expr_start).matchAll(NEWLINE)];
+    const num_lines = new_lines.length;
+    if (num_lines === 0) {
+        // no new line characters before the start of this expression
+        // we need to know how offset the fstr is from the token.string
+        // e.g. the token.string could start like any of f', rf', fr", fr""" etc
+        offset += parent.string.indexOf(fstr);
+        offset += expr_start;
+    } else {
+        // we're not on the first line so get the relative offset
+        offset = expr_start - (new_lines[num_lines - 1].index as number);
+        line += num_lines;
+    }
+    return [line, offset];
+}
+
 function unexpected_end_of_string(p: Parser) {
     p.raise_error(pySyntaxError, "f-string: expecting '}'");
 }
@@ -146,13 +169,18 @@ function fstring_compile_expr(p: Parser, str: string, expr_start: number, expr_e
     if (WHITE_SPACE.test(s)) {
         p.raise_error(pySyntaxError, "f-string: empty expression not allowed");
     }
+
+    const [lines, cols] = fstring_find_expr_location(t, str, expr_start);
+
     // The parentheses are needed in order to allow for leading whitespace within
     // the f-string expression. This consequently gets parsed as a group (see the
     // group rule in python.gram).
     s = "(" + s + ")";
     try {
         const tokenizer = tokenizerFromString(s);
-        /**@todo adjust the offsets here */
+        tokenizer.starting_lineno = lines - 1;
+        tokenizer.starting_col_offset = cols - 1;
+        /**@todo adjust the filename here */
         const p2 = new GeneratedParser(tokenizer, StartRule.FSTRING_INPUT);
         return p2.parse();
     } catch (e) {

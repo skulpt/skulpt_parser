@@ -6,10 +6,29 @@ export class Tokenizer {
     _tokengen: Iterator<TokenInfo, TokenInfo>;
     _tokens: TokenInfo[];
     _index: number;
+    _fmode: boolean;
+    _lineno: number;
+    _offset: number;
     constructor(tokengen: Iterator<TokenInfo, TokenInfo>) {
         this._tokengen = tokengen;
         this._tokens = [];
         this._index = 0;
+        this._fmode = false;
+        this._lineno = 0;
+        this._offset = 0;
+    }
+    _adjust_offset(tok: TokenInfo) {
+        const start = tok.start;
+        const end = tok.end;
+        // only adjust the col_offset if we're on the first line
+        if (start[0] === 1) {
+            start[1] += this._offset;
+            if (end[0] === 1) {
+                end[1] += this._offset;
+            }
+        }
+        start[0] += this._lineno;
+        end[0] += this._lineno;
     }
     _push(): void {
         while (this._index === this._tokens.length) {
@@ -20,8 +39,21 @@ export class Tokenizer {
             if (tok.type === ERRORTOKEN && isSpace(tok.string)) {
                 continue;
             }
+            // if we're in fmode we may need to adjust the lineno and offset
+            if (this._fmode) {
+                this._adjust_offset(tok);
+            }
             this._tokens.push(tok);
         }
+    }
+    /** if we set thes starting_lineno or starting_col_offset we're in fmode */
+    set starting_lineno(lineno: number) {
+        this._lineno = lineno;
+        this._fmode = lineno === 0 ? this._fmode : true;
+    }
+    set starting_col_offset(offset: number) {
+        this._offset = offset;
+        this._fmode = offset === 0 ? this._fmode : true;
     }
     getnext(): TokenInfo {
         this._push();
