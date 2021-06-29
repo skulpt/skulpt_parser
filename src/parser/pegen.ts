@@ -2434,7 +2434,7 @@ export function concatenate_strings(p: Parser, tokens: TokenInfo[]): JoinedStr |
         }
         bytesmode = this_bytesmode;
         if (fmode) {
-            fstringParser.concatFstring(s, rawmode, 0, t);
+            fstringParser.concatFstring(s, 0, s.length, rawmode, 0, t);
             /** @todo */
         } else if (bytesmode) {
             bytestr += s;

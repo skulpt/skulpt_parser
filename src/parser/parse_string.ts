@@ -306,7 +306,6 @@ function fstring_find_expr(
 
     /* Check for =, which puts the text value of the expression in
        expr_text. */
-
     if (str[i] === "=") {
         i++;
         /* Skip over ASCII whitespace.  No need to test for end of string
@@ -354,6 +353,7 @@ function fstring_find_expr(
        entire expression with the conversion and format spec. */
     const expr = new FormattedValue(
         simple_expression,
+        /** @todo change this to accept "r", "s", "a" but to match cpython ast we'll need to output the charCode */
         conversion === null ? -1 : conversion.charCodeAt(0),
         format_spec,
         this.a0,
@@ -368,6 +368,7 @@ function fstring_find_expr(
 const BRACES_RE = /(^|[^}])}(}})*($|[^}])/;
 const SINGLE_BRACE_RE = /}}/g;
 
+/** find literal expressions and concat each with `this.last_str`. When we hit an expression outsource to find_expr. Push Constant and FormattedValue nodes onto `this.expr_list` */
 export function fstring_find_literal_and_expr(
     this: FstringParser,
     str: string,
@@ -387,17 +388,10 @@ export function fstring_find_literal_and_expr(
             }
             literal = literal.replace(SINGLE_BRACE_RE, "}");
         }
-        if (raw || literal.includes("\\")) {
+        if (!raw && literal.includes("\\")) {
             literal = decodeEscape(p, literal);
         }
-        // if (this.last_str) {
-        //     literal = this.last_str + literal;
-        //     this.last_str = "";
-        // }
         this.concat(literal);
-        // if (literal) {
-        //     this.expr_list.push(this.mkStrNode(literal)); // ???
-        // }
     };
 
     while (idx < end) {
@@ -431,7 +425,7 @@ export function fstring_find_literal_and_expr(
             // And now parse the f-string expression itself
             const [expr, endIdx, expr_text] = fstring_find_expr.call(this, p, str, bidx, end, raw, recurse_lvl, t);
 
-            if (expr_text) {
+            if (expr_text !== null) {
                 this.concat(expr_text);
             }
             if (this.last_str) {
@@ -464,18 +458,25 @@ export class FstringParser {
         this.expr_list = [];
         this.first = first;
         this.last = last;
-        // attrs
+        // attrs aka lineno, col_offset, end_lineno, end_col_offset
         this.a0 = first.start[0];
         this.a1 = first.start[1];
         this.a2 = last.end[0];
         this.a3 = last.end[1];
-        // all strings get the same kind
+        // all concatenated string nodes get the same 'kind' as the initial token string
         // this only seems useful for unparsing AST
         this.kind = first.string[0] === "u" ? "u" : null;
     }
-    concatFstring(fstr: string, rawmode: boolean, recurse_lvl: number, t: TokenInfo) {
+    concatFstring(
+        fstr: string,
+        start: number,
+        end: number,
+        rawmode: boolean,
+        recurse_lvl: number,
+        t: TokenInfo
+    ): number {
         this.fmode = true;
-        return fstring_find_literal_and_expr.call(this, fstr, 0, fstr.length, rawmode, recurse_lvl, t);
+        return fstring_find_literal_and_expr.call(this, fstr, start, end, rawmode, recurse_lvl, t);
     }
     concat(str: string) {
         this.last_str += str;
@@ -512,6 +513,6 @@ export function fstring_parse(
     last: TokenInfo
 ): [JoinedStr, number] {
     const fstringParser = new FstringParser(p, first, last);
-    const i = fstringParser.concatFstring(str.slice(start, end), raw, recurse_lvl, t);
-    return [fstringParser.finish() as JoinedStr, i + start];
+    const i = fstringParser.concatFstring(str, start, end, raw, recurse_lvl, t);
+    return [fstringParser.finish() as JoinedStr, i];
 }
