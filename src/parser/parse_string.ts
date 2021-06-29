@@ -176,21 +176,15 @@ function fstring_compile_expr(p: Parser, str: string, expr_start: number, expr_e
     // the f-string expression. This consequently gets parsed as a group (see the
     // group rule in python.gram).
     s = "(" + s + ")";
-    try {
-        const tokenizer = tokenizerFromString(s);
-        tokenizer.starting_lineno = lines - 1;
-        tokenizer.starting_col_offset = cols - 1;
-        /**@todo adjust the filename here */
-        const p2 = new GeneratedParser(tokenizer, StartRule.FSTRING_INPUT);
-        return p2.parse();
-    } catch (e) {
-        // if (e.traceback && e.traceback[0]) {
-        //     let tb = e.traceback[0];
-        //     tb.lineno = (tb.lineno || 1) - 1 + LINENO(n);
-        //     tb.filename = c.c_filename;
-        // }
-        throw e;
-    }
+
+    const tokenizer = tokenizerFromString(s, p.filename);
+    tokenizer.starting_lineno = lines - 1;
+    tokenizer.starting_col_offset = cols - 1;
+    const p2 = new GeneratedParser(tokenizer, StartRule.FSTRING_INPUT);
+    p2.filename = p.filename;
+
+    // this might throw - lineno and offsets already adjusted
+    return p2.parse();
 }
 
 function fstring_find_expr(

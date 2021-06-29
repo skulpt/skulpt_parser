@@ -17,12 +17,22 @@ function modeStrToStartRule(mode: ModeStr): StartRule {
     }
 }
 
-export function runParserFromString(text: string, mode: ModeStr = "exec") {
-    const parser = new GeneratedParser(tokenizerFromString(text), modeStrToStartRule(mode));
-    return parser.parse();
+export function parserFromString(text: string, mode: ModeStr = "exec", filename = "<string>") {
+    const parser = new GeneratedParser(tokenizerFromString(text, filename), modeStrToStartRule(mode));
+    parser.filename = filename;
+    return parser;
+}
+
+export function runParserFromString(text: string, mode: ModeStr = "exec", filename = "<string>") {
+    return parserFromString(text, mode, filename).parse();
+}
+
+export function parserFromFile(filename: string, mode: ModeStr = "exec") {
+    const parser = new GeneratedParser(tokenizerFromFile(filename), modeStrToStartRule(mode));
+    parser.filename = filename;
+    return parser;
 }
 
 export function runParserFromFile(filename: string, mode: ModeStr = "exec") {
-    const parser = new GeneratedParser(tokenizerFromFile(filename), modeStrToStartRule(mode));
-    return parser.parse();
+    return parserFromFile(filename, mode).parse();
 }
