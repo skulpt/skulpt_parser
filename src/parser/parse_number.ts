@@ -1,5 +1,8 @@
 import { pyComplex, pyFloat, pyInt } from "../ast/constants.ts";
 import { Floatnumber } from "../tokenize/tokenize.ts";
+declare global {
+    var JSBI: { BigInt: typeof BigInt };
+}
 
 const FLOAT_RE = new RegExp(Floatnumber);
 
@@ -25,10 +28,10 @@ export function parsenumber(s: string): pyFloat | pyComplex | pyInt {
     }
 
     // we know it's a valid octal, hex, binary or decimal so let Number do its thing
-    /** @todo bigint */
     const val = Number(s); // we can rely on this since we know s is positive and is already a valid int literal
     if (val > Number.MAX_SAFE_INTEGER) {
-        return new pyInt(BigInt(s));
+        const x = typeof BigInt === "undefined" ? JSBI.BigInt(val) : BigInt(val);
+        return new pyInt(x);
     }
     return new pyInt(val);
 }
