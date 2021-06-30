@@ -9,27 +9,27 @@
 ### Scripts
 
 - `vr build`
-  ⋅⋅⋅ _bundles the typescript files into a javascript bundle)_
+  - _bundles the typescript files into a javascript bundle)_
 - `vr bundle`
-  _an alternative to build - uses deno bundle - no minified version_
+  - _an alternative to build - uses deno bundle - no minified version_
 - `vr format`
-  _runs the precommit hooks for all files_
+  - _runs the precommit hooks for all files_
 - `vr gen_parser [-v --verbose --verbosity]=1|2`
-  _generates the javascript parser. Use `--verbose|-v|--verbosity` to generate a verbose parser._
+  - _generates the javascript parser. Use `--verbose|-v|--verbosity` to generate a verbose parser._
 - `vr gen_asdl`
-  _generates the javascript astnodes_
+  - _generates the javascript astnodes_
 - `vr gen_ast`
-  _regenerates the ast for the run-test files from python and dumps the ast in .ast files_
+  - _regenerates the ast for the run-test files from python and dumps the ast in .ast files_
 - `vr gen_gramar_patch`
-  _run this after you manually changed the gramar file to store your changes_
+  - _run this after you manually changed the gramar file to store your changes_
 - `vr apply_gramar_patch`
-  _run this patch the gramar with the changes stored in the patch_
+  - _run this patch the gramar with the changes stored in the patch_
 - `vr parse <filename|number> [--nc --no_comapre] [--mode=exec]`
-  _parses a python file and logs the generated ast vs the python ast_
+  - _parses a python file and logs the generated ast vs the python ast_
 - `vr parse_str <code string> [--nc --no_comapre] [--mode=exec]`
-  _parses a python file and logs the generated ast vs the python ast_
+  - _parses a python file and logs the generated ast vs the python ast_
 - `vr test <shortname> [-f --fail-fast] [-v]`
-  _run a test - shortnames: `pypeg`, `parse`, `dump`_
+  - _run a test - shortnames: `pypeg`, `parse`, `dump`_
 
 ### Debugging/Pofiling
 
