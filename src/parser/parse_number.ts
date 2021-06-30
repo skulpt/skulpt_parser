@@ -30,8 +30,8 @@ export function parsenumber(s: string): pyFloat | pyComplex | pyInt {
     // we know it's a valid octal, hex, binary or decimal so let Number do its thing
     const val = Number(s); // we can rely on this since we know s is positive and is already a valid int literal
     if (val > Number.MAX_SAFE_INTEGER) {
-        const x = typeof BigInt === "undefined" ? JSBI.BigInt(val) : BigInt(val);
-        return new pyInt(x);
+        const val = typeof BigInt === "undefined" ? JSBI.BigInt(s) : BigInt(s);
+        return new pyInt(val);
     }
     return new pyInt(val);
 }
