@@ -9,7 +9,7 @@
 ### Scripts
 
 - `vr build`
-  _bundles the typescript files into a javascript bundle)_
+  ⋅⋅⋅ _bundles the typescript files into a javascript bundle)_
 - `vr bundle`
   _an alternative to build - uses deno bundle - no minified version_
 - `vr format`
