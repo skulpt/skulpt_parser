@@ -1,5 +1,16 @@
 // deno-lint-ignore-file camelcase
-import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, OP, STRING, EXACT_TOKEN_TYPES, tokens } from "../tokenize/token.ts";
+import {
+    DEDENT,
+    ENDMARKER,
+    INDENT,
+    NAME,
+    NEWLINE,
+    NUMBER,
+    OP,
+    STRING,
+    EXACT_TOKEN_TYPES,
+    tokens,
+} from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
