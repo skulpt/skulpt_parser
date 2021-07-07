@@ -294,17 +294,19 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.print(subheader.format(filename=filename))
         self.print(
             """
-export class GeneratedParser extends Parser {
+type ParseResult<T> = T extends typeof StartRule.FSTRING_INPUT | typeof StartRule.EVAL_INPUT ? expr : mod;
+
+export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> extends Parser {
     start_rule: StartRule;
     flags: number;
 
-    constructor(T: Tokenizer, start_rule: StartRule=StartRule.FILE_INPUT, flags=0) {
+    constructor(T: Tokenizer, start_rule: T = StartRule.FILE_INPUT as T, flags = 0) {
         super(T);
-        this.start_rule=start_rule;
-        this.flags=flags; // unused
+        this.start_rule = start_rule;
+        this.flags = flags; // unused
     }
 
-    parse(): mod | expr {
+    parse(): ParseResult<T> {
         let ret = null;
         switch (this.start_rule) {
             case StartRule.FILE_INPUT:
@@ -326,9 +328,8 @@ export class GeneratedParser extends Parser {
         if (ret === null) {
             return this.make_syntax_error();
         }
-        return ret;
+        return ret as ParseResult<T>;
     }
-
 """
         )
 
