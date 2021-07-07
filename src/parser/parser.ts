@@ -116,6 +116,7 @@ export class Parser {
     getnext: () => TokenInfo;
     diagnose: () => TokenInfo;
     _tokens: TokenInfo[];
+    filename: string;
 
     type_ignore_comments: TypeIgnore[] = [];
 
@@ -128,6 +129,7 @@ export class Parser {
         this.getnext = this._tokenizer.getnext.bind(this._tokenizer);
         this.diagnose = this._tokenizer.diagnose.bind(this._tokenizer);
         this._tokens = this._tokenizer._tokens;
+        this.filename = "<unknown>";
     }
 
     extra(start: number): [number, number, number, number] {
@@ -177,7 +179,7 @@ export class Parser {
             }
             i--;
         }
-        throw new errType(msg, ["<file>", lineno, offset, errLine]);
+        throw new errType(msg, [this.filename, lineno, offset, errLine]);
     }
 
     raise_error_invalid_target(type: TARGETS_TYPE, e: expr | null): never {
