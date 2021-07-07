@@ -35,8 +35,9 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
     const methodName = propertyKey;
     function memoizeWrapper(this: Parser, arg?: string): AST | TokenInfo | null {
         const mark = this.mark();
-        const key = `${mark},${methodName},${arg ?? ""}`;
-        const cached = this._cache[key];
+        const actionCache = this._cache[mark];
+        const key = arg ?? methodName;
+        const cached = actionCache[key];
         // fastpath cache hit
         if (cached !== undefined) {
             this.reset(cached[1]);
@@ -44,7 +45,7 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
         }
         // Slow path: no cache hit
         const tree = arg === undefined ? (method as NoArgs).call(this) : (method as Expect).call(this, arg);
-        this._cache[key] = [tree, this.mark()];
+        actionCache[key] = [tree, this.mark()];
         return tree;
     }
     descriptor.value = memoizeWrapper;
@@ -55,8 +56,9 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
     const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this.mark();
-        const key = `${mark},${methodName},`;
-        const cached = this._cache[key];
+        const actionCache = this._cache[mark];
+        const key = methodName;
+        const cached = actionCache[key];
         // fastpath cache hit
         if (cached !== undefined) {
             this.reset(cached[1]);
@@ -66,7 +68,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
         let lastresult: AST | TokenInfo | null;
         let lastmark: number;
         let currmark: number;
-        this._cache[key] = [(lastresult = null), (lastmark = mark)];
+        actionCache[key] = [(lastresult = null), (lastmark = mark)];
         while (true) {
             this.reset(mark);
             const result = method.call(this);
@@ -79,7 +81,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
                 // bailing
                 break;
             }
-            this._cache[key] = [(lastresult = result), (lastmark = currmark)];
+            actionCache[key] = [(lastresult = result), (lastmark = currmark)];
         }
         this.reset(lastmark);
         const tree = lastresult;
@@ -90,7 +92,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
             endmark = mark;
             this.reset(endmark);
         }
-        this._cache[key] = [tree, endmark];
+        actionCache[key] = [tree, endmark];
         return tree;
     }
     descriptor.value = memoizeLeftRecWrapper;
@@ -109,7 +111,7 @@ export interface Parser {
 /** The base class for the generated Parser. Largely based on cpython/Tools/peg_generator/pegen/parser.py */
 export class Parser {
     _tokenizer: Tokenizer;
-    _cache: { [key: string]: [AST | TokenInfo | null, number] };
+    _cache: { [key: string]: [AST | TokenInfo | null, number] }[];
     mark: () => number;
     reset: (number: number) => null | void;
     peek: () => TokenInfo;
@@ -121,7 +123,7 @@ export class Parser {
 
     constructor(tokenizer: Tokenizer) {
         this._tokenizer = tokenizer;
-        this._cache = {};
+        this._cache = this._tokenizer._cache;
         this.mark = this._tokenizer.mark.bind(this._tokenizer);
         this.reset = this._tokenizer.reset.bind(this._tokenizer);
         this.peek = this._tokenizer.peek.bind(this._tokenizer);

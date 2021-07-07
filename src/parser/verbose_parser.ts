@@ -44,8 +44,9 @@ export function memoize(_target: VerboseParser, propertyKey: string, descriptor:
     const methodName = propertyKey;
     function memoizeWrapper(this: VerboseParser, arg?: string): AST | TokenInfo | null {
         const mark = this.mark();
-        const key = `${mark},${methodName},${arg ?? ""}`;
-        const cached = this._cache[key];
+        const actionCache = this._cache[mark];
+        const key = arg ?? methodName;
+        const cached = actionCache[key];
         // fastpath cache hit
         if (cached !== undefined) {
             log(
@@ -68,7 +69,7 @@ export function memoize(_target: VerboseParser, propertyKey: string, descriptor:
         } else {
             log(`${this._fill()}... ${methodName}(${argstr(arg)}) -> ${trim(tree)} [caching null]`, "blue");
         }
-        this._cache[key] = [tree, this.mark()];
+        actionCache[key] = [tree, this.mark()];
         return tree;
     }
     descriptor.value = memoizeWrapper;
@@ -79,8 +80,9 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
     const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: VerboseParser): AST | TokenInfo | null {
         const mark = this.mark();
-        const key = `${mark},${methodName},`;
-        const cached = this._cache[key];
+        const actionCache = this._cache[mark];
+        const key = methodName;
+        const cached = actionCache[key];
         // fastpath cache hit
         if (cached !== undefined) {
             log(
@@ -95,7 +97,7 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
         let lastresult: AST | TokenInfo | null;
         let lastmark: number;
         let currmark: number;
-        this._cache[key] = [(lastresult = null), (lastmark = mark)];
+        actionCache[key] = [(lastresult = null), (lastmark = mark)];
         let depth = 0;
         log(`${this._fill()}Recursive ${methodName} at ${mark} depth ${depth}`, "dim");
         while (true) {
@@ -117,7 +119,7 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
                 log(`${this._fill()}Bailing with ${trim(lastresult)} to ${lastmark}`, "red");
                 break;
             }
-            this._cache[key] = [(lastresult = result), (lastmark = currmark)];
+            actionCache[key] = [(lastresult = result), (lastmark = currmark)];
         }
         this.reset(lastmark);
         const tree = lastresult;
@@ -130,7 +132,7 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
             endmark = mark;
             this.reset(endmark);
         }
-        this._cache[key] = [tree, endmark];
+        actionCache[key] = [tree, endmark];
         return tree;
     }
     descriptor.value = memoizeLeftRecWrapper;
