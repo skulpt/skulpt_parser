@@ -173,22 +173,23 @@ const PseudoToken = Whitespace + group(PseudoExtras, Number_, Funny, ContStr, Na
 
 const PseudoTokenRegexp = new RegExp(PseudoToken);
 
+const UnknownFile = "<unknown>";
+
 /** In python this should actually yield bytes */
-export function tokenize(readline: IterableIterator<string>): IterableIterator<TokenInfo> {
-    return _tokenize(readline);
+export function tokenize(readline: IterableIterator<string>, filename = UnknownFile): IterableIterator<TokenInfo> {
+    return _tokenize(readline, filename);
 }
 
 /** In python this the same api i.e. we yield strings except the readline is callable rather than a generator - see tokenize.py */
-export function generate_tokens(readline: IterableIterator<string>): IterableIterator<TokenInfo> {
-    return _tokenize(readline);
+export function generate_tokens(
+    readline: IterableIterator<string>,
+    filename = UnknownFile
+): IterableIterator<TokenInfo> {
+    return _tokenize(readline, filename);
 }
 
 /** We largely ignore the encoding here. In python the readline might be a bytes iterator */
-function* _tokenize(
-    readline: IterableIterator<string>,
-    encoding?: string | null,
-    filename = "<tokenize>"
-): IterableIterator<TokenInfo> {
+function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile): IterableIterator<TokenInfo> {
     const numchars = "0123456789";
     let lnum = 0,
         parenlev = 0,
@@ -204,14 +205,14 @@ function* _tokenize(
         pseudomatch: RegExpExecArray | null;
 
     // since we don't do this with bytes this is not used
-    if (encoding != null) {
-        if (encoding === "utf-8-sig") {
-            // BOM will already have been stripped.
-            encoding = "utf-8";
-        }
+    // if (encoding != null) {
+    //     if (encoding === "utf-8-sig") {
+    //         // BOM will already have been stripped.
+    //         encoding = "utf-8";
+    //     }
 
-        yield new TokenInfo(tokens.ENCODING, encoding, [0, 0], [0, 0], "");
-    }
+    //     yield new TokenInfo(tokens.ENCODING, encoding, [0, 0], [0, 0], "");
+    // }
 
     let lastline = "";
     let line = "";
