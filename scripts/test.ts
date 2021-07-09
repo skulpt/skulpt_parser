@@ -10,7 +10,15 @@ switch (test) {
         extra.push("tests/parse.test.ts");
         break;
     case "pypeg":
-        await Deno.run({ cmd: ["python", "-m", "unittest", "tests/test_peg_parser.py", ...Deno.args] }).status();
+        await Deno.run({
+            cmd: [
+                "python",
+                "-m",
+                "unittest",
+                "tests/test_peg_parser.py",
+                ...Deno.args.filter((arg) => arg !== "pypeg"),
+            ],
+        }).status();
         Deno.exit();
         break; // just to keep ts happy
     /** @todo the default should be to do nothing here and run all the tests */

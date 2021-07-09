@@ -163,7 +163,7 @@ export class Parser {
         ...formatArgs: string[]
     ): never {
         if (this.start_rule === StartRule.FSTRING_INPUT) {
-            /** @todo */
+            msg = "f-string: " + msg;
         }
 
         /** @todo should we just set the error indicator and return null then check this in the memoize decorator? */
@@ -171,17 +171,12 @@ export class Parser {
         for (const arg of formatArgs) {
             msg = msg.replace("%s", arg);
         }
-        let i = this.mark() - 1;
-        let errLine = "";
-        while (i >= 0) {
-            const tok = this._tokens[i];
-            if (tok.lineno === lineno) {
-                errLine = tok.line;
-                break;
-            }
-            i--;
+        let tok = this.diagnose();
+        let i = this._tokens.length - 1;
+        while (tok.lineno !== lineno && i > 0) {
+            tok = this._tokens[--i];
         }
-        throw new errType(msg, [this.filename, lineno, offset, errLine]);
+        throw new errType(msg, [this.filename, lineno, offset, tok.line]);
     }
 
     raise_error_invalid_target(type: TARGETS_TYPE, e: expr | null): never {

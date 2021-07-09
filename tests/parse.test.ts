@@ -16,4 +16,6 @@ async function doTest(source: string) {
 
 const files: string[] = JSON.parse(Deno.env.get("_TESTFILES") || "[]");
 
-await runTests(doTest, { files, skip: new Set(), failFast: false });
+// t542.py uses unicode characters which have different bytes offsets compared with
+// skulpt parser which uses javascript string offsets
+await runTests(doTest, { files, skip: new Set(["t542.py"]), failFast: false });

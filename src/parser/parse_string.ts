@@ -321,6 +321,10 @@ function fstring_find_expr(
 
     const expr_end = i;
 
+    if (expr_start >= expr_end) {
+        unexpected_end_of_string(p);
+    }
+
     /* Compile the expression as soon as possible, so we show errors
        related to the expression before errors related to the
        conversion or format_spec. */
