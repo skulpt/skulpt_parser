@@ -4,16 +4,17 @@ import { Colors, parse } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 import { runParserFromFile } from "../src/parser/parse.ts";
+import type { expr, mod } from "../src/ast/astnodes.ts";
 
 const argv = parse(Deno.args, {
     default: { mode: "exec" } /** @todo this doesn't get passed to the python script */,
-    boolean: ["no_compare"],
+    boolean: ["no_compare", "ignore_attrs"],
     alias: { mode: "m", no_compare: "nc" },
 });
 
-const { _: args, mode, no_compare: noCompare } = argv;
+const { _: args, mode, no_compare: noCompare, ignore_attrs: ignoreAttrs } = argv;
 
-const options = { indent: 2, include_attributes: true };
+const options = { indent: 2, include_attributes: !ignoreAttrs };
 
 console.assert(args.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
 
@@ -26,7 +27,17 @@ if (typeof filearg === "number") {
     filename = filearg;
 }
 
-const ast = runParserFromFile(filename, mode);
+let ast: mod | expr | null = null;
+try {
+    ast = runParserFromFile(filename, mode);
+} catch (e) {
+    // include the traceback in our output
+    if (e.traceback) {
+        e.message = e.message + "\n" + e.traceback;
+    }
+    throw e;
+}
+
 if (ast === null) {
     throw new Error(Colors.red("Parser returned null"));
 }

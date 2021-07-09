@@ -39,21 +39,25 @@ def exit_handler():
 atexit.register(exit_handler)
 
 
-def run_process(source, mode="exec"):
+def run_process(source, mode="exec", include_attributes=True):
     with open(TEMP_FILE, "w+") as f:
         f.write(source)
 
+    args = [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-run",
+        "scripts/parse.ts",
+        TEMP_FILE,
+        "--no_compare",
+        "--mode=" + mode,
+    ]
+    if not include_attributes:
+        args.append("--ignore_attrs")
+
     run = subprocess.run(
-        [
-            "deno",
-            "run",
-            "--allow-read",
-            "--allow-run",
-            "scripts/parse.ts",
-            TEMP_FILE,
-            "--no_compare",
-            "--mode=" + mode,
-        ],
+        args,
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
@@ -65,8 +69,8 @@ _, err = run_process("x")
 print(colors.red(err))
 
 
-def ts_ast_dump(source, mode="exec"):
-    dumped, err = run_process(source, mode)
+def ts_ast_dump(source, mode="exec", include_attributes=True):
+    dumped, err = run_process(source, mode, include_attributes)
     if err:
         raise Exception("".join(err.splitlines(True)[:6]))
     return dumped.strip()
@@ -142,6 +146,16 @@ def wrapRunTests(oldRunTests):
 
 
 TestProgram.runTests = wrapRunTests(TestProgram.runTests)
+
+# these test give incorrect linenos because cpython doesn't handle format specs in fstrings correctly
+# https://bugs.python.org/issue35212
+IGNORE_ATTRS = {
+    "f-string_repr",
+    "f-string_str",
+    "f-string_ascii",
+    "f-string_debug",
+    "f-string_padding",
+}
 
 
 TEST_CASES = [
@@ -1009,14 +1023,15 @@ class ASTGenerationTest(unittest.TestCase):
 
     def ast_runner(self, desc, source, mode="exec"):
         with self.subTest(desc, source=source):
+            include_attributes = desc not in IGNORE_ATTRS
             try:
-                actual_ast_dump = ts_ast_dump(source, mode=mode)
+                actual_ast_dump = ts_ast_dump(source, mode=mode, include_attributes=include_attributes)
             except Exception as e:
                 self.test_result.addSubFailure(self._subtest, e)
                 raise e
 
             expected_ast = peg_parser.parse_string(source, mode=mode)
-            expected_ast_dump = ast.dump(expected_ast, include_attributes=True, indent=2)
+            expected_ast_dump = ast.dump(expected_ast, include_attributes=include_attributes, indent=2)
             try:
                 self.assertEqual(
                     actual_ast_dump,
@@ -1028,7 +1043,7 @@ class ASTGenerationTest(unittest.TestCase):
                 self.test_result.addSubFailure(self._subtest, e)
                 raise e
 
-    def ast_fail_runner(self, desc, source, mode="exec", exc=None, msg="", error_text=None):
+    def ast_fail_runner(self, desc, source, mode="exec", exc=None, msg="", error_text=None, error_line=None):
         with self.subTest(desc, source=source):
             # with self.assertRaises(exc, msg=msg) as e:
             err = None
@@ -1037,9 +1052,12 @@ class ASTGenerationTest(unittest.TestCase):
                 ts_ast_dump(source, mode=mode)
             except Exception as e:
                 as_str = str(e)
-                _, _type, _msg = as_str.split("\n")[0].split(": ")
+                lines = as_str.split("\n")
+                _, _type, _msg = lines[0].split(": ", 2)
                 _type = _type.replace("Uncaught ", "")
                 err_type = __builtins__.get(_type)
+                file, lineno, col_offset, line = lines[1].split(",", 3)
+                line += "\n"
                 if err_type is not None and issubclass(err_type, exc):
                     err = err_type(_msg)
                 else:
@@ -1049,24 +1067,36 @@ class ASTGenerationTest(unittest.TestCase):
                 self.test_result.addSubFailure(self._subtest, err)
                 raise err
             elif not isinstance(err, exc):
-                self.test_result.addSubFailure(self._subtest, AssertionError(f"{exc.__name__} not raised got:\n{err}"))
+                self.test_result.addSubFailure(
+                    self._subtest,
+                    AssertionError(f"{exc.__name__} not raised got:\n{err}"),
+                )
                 raise err
 
             self.test_result.addSuccess(self._subtest)
 
-            if error_text is None:
-                return
-
-            with self.subTest("checking error text for", source=source):
-                try:
-                    self.assertTrue(
-                        error_text in str(err),
-                        f"Actual error message does not match expexted for {source}\ngot   : {str(err)}\nwanted: {error_text}",
-                    )
-                    self.test_result.addSuccess(self._subtest)
-                except Exception as e:
-                    self.test_result.addSubFailure(self._subtest, e)
-                    raise e
+            if error_text is not None:
+                with self.subTest("checking error text for", source=source):
+                    try:
+                        self.assertTrue(
+                            error_text in str(err),
+                            f"Actual error message does not match expexted for {source}\ngot   : {str(err)}\nwanted: {error_text}",
+                        )
+                        self.test_result.addSuccess(self._subtest)
+                    except Exception as e:
+                        self.test_result.addSubFailure(self._subtest, e)
+                        raise e
+            if error_line is not None:
+                with self.subTest("checking error line for", source=source):
+                    try:
+                        self.assertTrue(
+                            error_line == line,
+                            f"Actual error line does not match expexted for {source}\ngot   : {line}\nwanted: {error_line}",
+                        )
+                        self.test_result.addSuccess(self._subtest)
+                    except Exception as e:
+                        self.test_result.addSubFailure(self._subtest, e)
+                        raise e
 
     def test_correct_ast_generation_on_source_files(self) -> None:
         print()
@@ -1075,7 +1105,12 @@ class ASTGenerationTest(unittest.TestCase):
 
     def test_incorrect_ast_generation_on_source_files(self) -> None:
         for desc, source in zip(FAIL_TEST_IDS, FAIL_SOURCES):
-            self.ast_fail_runner(desc, source, exc=SyntaxError, msg=f"Parsing {source} did not raise an exception")
+            self.ast_fail_runner(
+                desc,
+                source,
+                exc=SyntaxError,
+                msg=f"Parsing {source} did not raise an exception",
+            )
 
     def test_incorrect_ast_generation_with_specialized_errors(self) -> None:
         for source, error_text in FAIL_SPECIALIZED_MESSAGE_CASES:
@@ -1094,13 +1129,10 @@ class ASTGenerationTest(unittest.TestCase):
         for desc, source in zip(GOOD_BUT_FAIL_TEST_IDS, GOOD_BUT_FAIL_SOURCES):
             self.ast_runner(desc, source)
 
-    # @TODO
-    @unittest.skip("fstring Syntax Errors not yet implemented")
     def test_fstring_parse_error_tracebacks(self) -> None:
-        for source, error_text in FSTRINGS_TRACEBACKS.values():
-            with self.assertRaises(SyntaxError) as se:
-                peg_parser.parse_string(dedent(source))
-            self.assertEqual(error_text, se.exception.text)
+        exc = SyntaxError
+        for source, error_line in FSTRINGS_TRACEBACKS.values():
+            self.ast_fail_runner(error_line, dedent(source), exc=exc, error_line=error_line)
 
     def test_correct_ast_generatrion_eval(self) -> None:
         print()
