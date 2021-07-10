@@ -11,9 +11,7 @@ import { parsenumber } from "./parse_number.ts";
 import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
-type NoArgs = (this: Parser) => AST | TokenInfo | null;
-type Expect = (this: Parser, arg: string) => TokenInfo | null;
-type ParserMethod = NoArgs | Expect;
+type ParserMethod = (this: Parser) => AST | TokenInfo | null;
 
 /** For non-memoized functions that we want to be logged.*/
 export function logger(_target: Parser, _propertyKey: string, _descriptor: PropertyDescriptor) {}
@@ -22,29 +20,26 @@ export function logger(_target: Parser, _propertyKey: string, _descriptor: Prope
 export function memoize(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
-    function memoizeWrapper(this: Parser, arg?: string): AST | TokenInfo | null {
+    function memoizeWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this._mark;
         const actionCache = this._cache[mark];
-        const key = arg ?? methodName;
-        let cached = actionCache.get(key);
+        const key = methodName;
+        const cached = actionCache.get(key);
         // fastpath cache hit
         if (cached !== undefined) {
             this._mark = cached[1];
             return cached[0];
         }
         // Slow path: no cache hit
-        cached = [null, mark];
-        actionCache.set(key, cached);
-        const tree = arg === undefined ? (method as NoArgs).call(this) : (method as Expect).call(this, arg);
-        cached[0] = tree;
-        cached[1] = this._mark;
+        const tree = method.call(this);
+        actionCache.set(key, [tree, this._mark]);
         return tree;
     }
     descriptor.value = memoizeWrapper;
 }
 
 export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
-    const method: NoArgs = descriptor.value;
+    const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this._mark;
@@ -138,7 +133,7 @@ export class Parser {
 
     getnext(): TokenInfo {
         this._cache.push(new Map());
-        return this._tok.get(this._mark++);
+        return this._tokens[this._mark++];
     }
 
     peek(): TokenInfo {
