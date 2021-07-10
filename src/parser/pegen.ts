@@ -221,7 +221,7 @@ export function seq_append_to_end(p: Parser, seq: expr[] | null, a: expr): expr[
 
 /* Flattens an asdl_seq* of asdl_seq*s */
 export function seq_flatten<A>(p: Parser, seqs: A[][]): A[] {
-    return seqs.map((seq) => seq[0]);
+    return seqs.flat();
 }
 
 /* Creates a new name of the form <first_name>.<second_name> */
