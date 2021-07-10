@@ -203,7 +203,6 @@ export class Parser {
         return this.raise_error(pySyntaxError, "invalid syntax");
     }
 
-    @memoize
     name(): Name | null {
         let tok = this.peek();
         if (tok.type === NAME && get_keyword_or_name_type(this, tok as NameTokenInfo) === NAME) {
@@ -213,7 +212,6 @@ export class Parser {
         return null;
     }
 
-    @memoize
     string(): TokenInfo | null {
         const tok = this.peek();
         if (tok.type === STRING) {
@@ -223,7 +221,6 @@ export class Parser {
         return null;
     }
 
-    @memoize
     number(): Constant | null {
         let tok = this.peek();
         if (tok.type === NUMBER) {
@@ -233,7 +230,6 @@ export class Parser {
         return null;
     }
 
-    @memoize
     expect(type: string | number): TokenInfo | null {
         const tok = this.peek();
         if (typeof type === "string") {
