@@ -110,7 +110,7 @@ export class Parser {
     constructor(tokenizer: Tokenizer) {
         this._tok = tokenizer;
         this._mark = 0;
-        this._cache = this._tok._cache;
+        this._cache = [new Map()];
         this._tokens = this._tok._tokens;
         this.filename = "<unknown>";
     }
@@ -131,7 +131,11 @@ export class Parser {
     }
 
     peek(): TokenInfo {
-        return this._tok.get(this._mark);
+        if (this._mark === this._tokens.length) {
+            this._cache.push(new Map());
+            return this._tok.getnext();
+        }
+        return this._tokens[this._mark];
     }
 
     diagnose(): TokenInfo {

@@ -7,13 +7,11 @@ export class Tokenizer {
     _gen: Iterator<TokenInfo, TokenInfo>;
     _tokens: TokenInfo[];
     _fmode: boolean;
-    _cache: Map<string | number, [AST | TokenInfo | null, number]>[];
     _lineno: number;
     _offset: number;
     constructor(tokengen: Iterator<TokenInfo, TokenInfo>) {
         this._gen = tokengen;
         this._tokens = [];
-        this._cache = [new Map()];
         this._fmode = false;
         this._lineno = 0;
         this._offset = 0;
@@ -31,13 +29,9 @@ export class Tokenizer {
         start[0] += this._lineno;
         end[0] += this._lineno;
     }
-    get(i: number): TokenInfo {
-        if (i !== this._tokens.length) {
-            return this._tokens[i];
-        }
-        let tok;
+    getnext(): TokenInfo {
         while (true) {
-            tok = this._gen.next().value;
+            const tok = this._gen.next().value;
             const type = tok.type;
             if (type === NL || type === COMMENT) {
                 continue;
@@ -47,11 +41,9 @@ export class Tokenizer {
             if (this._fmode) {
                 this._adjust_offset(tok);
             }
-            this._cache.push(new Map());
             this._tokens.push(tok);
-            break;
+            return tok;
         }
-        return tok;
     }
     /** if we set thes starting_lineno or starting_col_offset we're in fmode */
     set starting_lineno(lineno: number) {
