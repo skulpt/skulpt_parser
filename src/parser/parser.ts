@@ -54,36 +54,25 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
         // Slow path: no cache hit
         let lastresult: AST | TokenInfo | null = null;
         let lastmark = mark;
-        let currmark = mark;
         cached = [lastresult, lastmark];
         actionCache.set(key, cached);
         while (true) {
             this._mark = mark;
-            const result = method.call(this);
-            currmark = this._mark;
-            if (result === null) {
+            const tree = method.call(this);
+            if (tree === null) {
+                this._mark = lastmark;
                 // failed
                 break;
             }
-            if (currmark <= lastmark) {
+            if (this._mark <= lastmark) {
+                this._mark = lastmark;
                 // bailing
                 break;
             }
-            cached[0] = lastresult = result;
-            cached[1] = lastmark = currmark;
+            cached[0] = lastresult = tree;
+            cached[1] = lastmark = this._mark;
         }
-        this._mark = lastmark;
-        const tree = lastresult;
-        let endmark: number;
-        if (tree !== null) {
-            endmark = this._mark;
-        } else {
-            endmark = mark;
-            this._mark = endmark;
-        }
-        cached[0] = tree;
-        cached[1] = endmark;
-        return tree;
+        return lastresult;
     }
     descriptor.value = memoizeLeftRecWrapper;
 }
