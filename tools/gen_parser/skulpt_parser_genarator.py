@@ -329,6 +329,10 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (ret === null) {
             return this.make_syntax_error();
         }
+        // drop the cache apart from the first element which stores the parsed result should we want to call parse again
+        // also seems to improve performance - possible because it helps the garbage collector
+        this._cache.length = 1;
+        this._mark = 0
         return ret as ParseResult<T>;
     }
 """
