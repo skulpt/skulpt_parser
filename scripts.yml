@@ -1,7 +1,7 @@
 scripts:
     build:
         desc: bundles the source files and copies it to dist folder
-        cmd: deno run --unstable scripts/build.ts
+        cmd: deno run scripts/build.ts
         allow:
             - write
             - read
@@ -64,7 +64,7 @@ scripts:
 
     bench:
         desc: Parse a file
-        cmd: deno run --unstable scripts/bench.ts
+        cmd: deno run scripts/bench.ts
         allow:
             - read
             - run

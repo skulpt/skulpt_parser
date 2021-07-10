@@ -1,5 +1,7 @@
 /** deno run -A --unstable scripts/sk_bench.ts tmp.txt */
-import { bench, Colors, createRequire, parse, runBenchmarks } from "../deps.ts";
+import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
+// don't make this part of the deps.ts because it's unstable and means an unstable flag everywher
+import { createRequire } from "https://deno.land/std@0.100.0/node/module.ts";
 
 const require = createRequire(import.meta.url);
 // Loads extensionless module.

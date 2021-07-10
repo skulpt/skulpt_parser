@@ -1,11 +1,11 @@
 /**
- * deno run -A --unstable scripts/bench.ts tmp.txt
+ * deno run -A scripts/bench.ts tmp.txt
  *
  * Note it's also a good idea to bundle this first using vr build
  * changing scripts/build.ts to build this file instead
  *
  * then adjust the above command to
- * deno run -A --unstable dist/bundle.min.js tmp.txt
+ * deno run -A dist/bundle.min.js tmp.txt
  */
 import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
 import { runParserFromString } from "../src/parser/parse.ts";
