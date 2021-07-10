@@ -1,7 +1,7 @@
 scripts:
     build:
         desc: bundles the source files and copies it to dist folder
-        cmd: deno run scripts/build.ts
+        cmd: deno run --unstable scripts/build.ts
         allow:
             - write
             - read
@@ -57,6 +57,14 @@ scripts:
     parse_str:
         desc: takes in a string as the first argument. Creates a temp file and the calls vr parse
         cmd: deno run scripts/parse_str.ts
+        allow:
+            - read
+            - run
+            - write
+
+    bench:
+        desc: Parse a file
+        cmd: deno run --unstable scripts/bench.ts
         allow:
             - read
             - run
