@@ -1,16 +1,5 @@
 // deno-lint-ignore-file camelcase
-import {
-    DEDENT,
-    ENDMARKER,
-    INDENT,
-    NAME,
-    NEWLINE,
-    NUMBER,
-    OP,
-    STRING,
-    EXACT_TOKEN_TYPES,
-    tokens,
-} from "../tokenize/token.ts";
+import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, STRING } from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
@@ -34,18 +23,21 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
     const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
     function memoizeWrapper(this: Parser, arg?: string): AST | TokenInfo | null {
-        const mark = this.mark();
+        const mark = this._mark;
         const actionCache = this._cache[mark];
         const key = arg ?? methodName;
-        const cached = actionCache[key];
+        let cached = actionCache.get(key);
         // fastpath cache hit
         if (cached !== undefined) {
-            this.reset(cached[1]);
+            this._mark = cached[1];
             return cached[0];
         }
         // Slow path: no cache hit
+        cached = [null, mark];
+        actionCache.set(key, cached);
         const tree = arg === undefined ? (method as NoArgs).call(this) : (method as Expect).call(this, arg);
-        actionCache[key] = [tree, this.mark()];
+        cached[0] = tree;
+        cached[1] = this._mark;
         return tree;
     }
     descriptor.value = memoizeWrapper;
@@ -55,24 +47,25 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
     const method: NoArgs = descriptor.value;
     const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
-        const mark = this.mark();
+        const mark = this._mark;
         const actionCache = this._cache[mark];
         const key = methodName;
-        const cached = actionCache[key];
+        let cached = actionCache.get(key);
         // fastpath cache hit
         if (cached !== undefined) {
-            this.reset(cached[1]);
+            this._mark = cached[1];
             return cached[0];
         }
         // Slow path: no cache hit
-        let lastresult: AST | TokenInfo | null;
-        let lastmark: number;
-        let currmark: number;
-        actionCache[key] = [(lastresult = null), (lastmark = mark)];
+        let lastresult: AST | TokenInfo | null = null;
+        let lastmark = mark;
+        let currmark = mark;
+        cached = [lastresult, lastmark];
+        actionCache.set(key, cached);
         while (true) {
-            this.reset(mark);
+            this._mark = mark;
             const result = method.call(this);
-            currmark = this.mark();
+            currmark = this._mark;
             if (result === null) {
                 // failed
                 break;
@@ -81,18 +74,20 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
                 // bailing
                 break;
             }
-            actionCache[key] = [(lastresult = result), (lastmark = currmark)];
+            cached[0] = lastresult = result;
+            cached[1] = lastmark = currmark;
         }
-        this.reset(lastmark);
+        this._mark = lastmark;
         const tree = lastresult;
         let endmark: number;
         if (tree !== null) {
-            endmark = this.mark();
+            endmark = this._mark;
         } else {
             endmark = mark;
-            this.reset(endmark);
+            this._mark = endmark;
         }
-        actionCache[key] = [tree, endmark];
+        cached[0] = tree;
+        cached[1] = endmark;
         return tree;
     }
     descriptor.value = memoizeLeftRecWrapper;
@@ -110,47 +105,57 @@ export interface Parser {
 
 /** The base class for the generated Parser. Largely based on cpython/Tools/peg_generator/pegen/parser.py */
 export class Parser {
-    _tokenizer: Tokenizer;
-    _cache: { [key: string]: [AST | TokenInfo | null, number] }[];
-    mark: () => number;
-    reset: (number: number) => null | void;
-    peek: () => TokenInfo;
-    getnext: () => TokenInfo;
-    diagnose: () => TokenInfo;
+    _tok: Tokenizer;
+    _cache: Map<string | number, [AST | TokenInfo | null, number]>[];
+    _mark: number;
+    // peek: () => TokenInfo;
+    // getnext: () => TokenInfo;
+    // diagnose: () => TokenInfo;
     _tokens: TokenInfo[];
     filename: string;
 
     type_ignore_comments: TypeIgnore[] = [];
 
     constructor(tokenizer: Tokenizer) {
-        this._tokenizer = tokenizer;
-        this._cache = this._tokenizer._cache;
-        this.mark = this._tokenizer.mark.bind(this._tokenizer);
-        this.reset = this._tokenizer.reset.bind(this._tokenizer);
-        this.peek = this._tokenizer.peek.bind(this._tokenizer);
-        this.getnext = this._tokenizer.getnext.bind(this._tokenizer);
-        this.diagnose = this._tokenizer.diagnose.bind(this._tokenizer);
-        this._tokens = this._tokenizer._tokens;
+        this._tok = tokenizer;
+        this._mark = 0;
+        this._cache = [new Map()];
+        this._tokens = this._tok._tokens;
         this.filename = "<unknown>";
     }
 
     extra(start: number): [number, number, number, number] {
         const START = this._tokens[start].start;
-        let m = this.mark() - 1;
+        let m = this._mark - 1;
         let END_TOKEN = this._tokens[m];
         while (m >= 0) {
             const type = END_TOKEN.type;
             if (type !== ENDMARKER && (type < NEWLINE || type > DEDENT)) {
                 break;
             }
-            END_TOKEN = this._tokens[m--];
+            END_TOKEN = this._tokens[--m];
         }
         const END = END_TOKEN.end;
         return [START[0], START[1], END[0], END[1]];
     }
 
+    getnext(): TokenInfo {
+        this._cache.push(new Map());
+        return this._tok.get(this._mark++);
+    }
+
+    peek(): TokenInfo {
+        return this._tok.get(this._mark);
+    }
+
+    diagnose(): TokenInfo {
+        if (this._tokens.length === 0) {
+            this.getnext();
+        }
+        return this._tokens[this._tokens.length - 1];
+    }
+
     raise_error(errType: typeof pySyntaxError, msg: string, ...formatArgs: string[]): never {
-        // console.log(this.mark())
         const tok = this.diagnose();
         return this.raise_error_known_location(errType, tok.start[0], tok.start[1] + 1, msg, ...formatArgs);
     }
@@ -229,48 +234,33 @@ export class Parser {
     }
 
     @memoize
-    op(): TokenInfo | null {
-        // this never gets called in the generated parser - probably only relevant for the grammar parser
+    expect(type: string | number): TokenInfo | null {
         const tok = this.peek();
-        if (tok.type === OP) {
-            return this.getnext();
-        }
-        return null;
-    }
-
-    @memoize
-    expect(type: string): TokenInfo | null {
-        const tok = this.peek();
-        if (tok.string === type) {
-            return this.getnext();
-        }
-        if (type in EXACT_TOKEN_TYPES) {
-            if (tok.type === EXACT_TOKEN_TYPES[type]) {
+        if (typeof type === "string") {
+            // keywords
+            if (tok.string === type) {
                 return this.getnext();
+            } else {
+                return null;
             }
         }
-        if (type in tokens) {
-            if (tok.type === tokens[type as keyof typeof tokens]) {
-                return this.getnext();
-            }
-        }
-        if (tok.type === OP && tok.string === type) {
+        if (type === tok.type) {
             return this.getnext();
         }
         return null;
     }
 
     positive_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg?: T) => R, arg?: T): R {
-        const mark = this.mark();
+        const mark = this._mark;
         const ok = func.call(this, arg);
-        this.reset(mark);
+        this._mark = mark;
         return ok;
     }
 
     negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean {
-        const mark = this.mark();
+        const mark = this._mark;
         const ok = func.call(this, arg);
-        this.reset(mark);
+        this._mark = mark;
         return !ok;
     }
 
