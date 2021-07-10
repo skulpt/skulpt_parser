@@ -1,3 +1,4 @@
+import type { AST } from "../ast/astnodes.ts";
 import { isSpace } from "../util/str_helpers.ts";
 import { COMMENT, ERRORTOKEN, NL } from "./token.ts";
 import type { TokenInfo } from "./tokenize.ts";
@@ -6,11 +7,13 @@ export class Tokenizer {
     _gen: Iterator<TokenInfo, TokenInfo>;
     _tokens: TokenInfo[];
     _fmode: boolean;
+    _cache: Map<string | number, [AST | TokenInfo | null, number]>[];
     _lineno: number;
     _offset: number;
     constructor(tokengen: Iterator<TokenInfo, TokenInfo>) {
         this._gen = tokengen;
         this._tokens = [];
+        this._cache = [new Map()];
         this._fmode = false;
         this._lineno = 0;
         this._offset = 0;
@@ -44,6 +47,7 @@ export class Tokenizer {
             if (this._fmode) {
                 this._adjust_offset(tok);
             }
+            this._cache.push(new Map());
             this._tokens.push(tok);
             break;
         }

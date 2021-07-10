@@ -110,7 +110,7 @@ export class Parser {
     constructor(tokenizer: Tokenizer) {
         this._tok = tokenizer;
         this._mark = 0;
-        this._cache = [new Map()];
+        this._cache = this._tok._cache;
         this._tokens = this._tok._tokens;
         this.filename = "<unknown>";
     }
@@ -130,18 +130,13 @@ export class Parser {
         return [START[0], START[1], END[0], END[1]];
     }
 
-    getnext(): TokenInfo {
-        this._cache.push(new Map());
-        return this._tokens[this._mark++];
-    }
-
     peek(): TokenInfo {
         return this._tok.get(this._mark);
     }
 
     diagnose(): TokenInfo {
         if (this._tokens.length === 0) {
-            this.getnext();
+            this.peek();
         }
         return this._tokens[this._tokens.length - 1];
     }
@@ -195,9 +190,9 @@ export class Parser {
     }
 
     name(): Name | null {
-        let tok = this.peek();
+        const tok = this.peek();
         if (tok.type === NAME && !KEYWORDS.has(tok.string)) {
-            tok = this.getnext();
+            this._mark++;
             return new Name(tok.string, Load, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
@@ -207,15 +202,16 @@ export class Parser {
         const tok = this.peek();
         if (tok.type === STRING) {
             // this gets handled by concatenate strings which always follows this.string();
-            return this.getnext();
+            this._mark++;
+            return tok;
         }
         return null;
     }
 
     number(): Constant | null {
-        let tok = this.peek();
+        const tok = this.peek();
         if (tok.type === NUMBER) {
-            tok = this.getnext();
+            this._mark++;
             return new Constant(parsenumber(tok.string), null, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
@@ -224,7 +220,8 @@ export class Parser {
     keyword(type: string): TokenInfo | null {
         const tok = this.peek();
         if (tok.string === type) {
-            return this.getnext();
+            this._mark++;
+            return tok;
         } else {
             return null;
         }
@@ -233,7 +230,8 @@ export class Parser {
     expect(type: number): TokenInfo | null {
         const tok = this.peek();
         if (type === tok.type) {
-            return this.getnext();
+            this._mark++;
+            return tok;
         }
         return null;
     }
