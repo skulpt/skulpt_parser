@@ -108,9 +108,6 @@ export class Parser {
     _tok: Tokenizer;
     _cache: Map<string | number, [AST | TokenInfo | null, number]>[];
     _mark: number;
-    // peek: () => TokenInfo;
-    // getnext: () => TokenInfo;
-    // diagnose: () => TokenInfo;
     _tokens: TokenInfo[];
     filename: string;
 
