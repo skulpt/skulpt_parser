@@ -3,12 +3,12 @@ import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, STRING } from "../tok
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
-import { KeywordToken, StartRule, TARGETS_TYPE } from "./pegen_types.ts";
+import { StartRule, TARGETS_TYPE } from "./pegen_types.ts";
 import type { AST } from "../ast/astnodes.ts";
-import { get_expr_name, get_invalid_target, get_keyword_or_name_type } from "./pegen.ts";
-import type { NameTokenInfo } from "./pegen.ts";
+import { get_expr_name, get_invalid_target } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
 import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
+import { KEYWORDS } from "./generated_parser.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type ParserMethod = (this: Parser) => AST | TokenInfo | null;
@@ -90,7 +90,6 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
 
 // overloads for the expect method
 export interface Parser {
-    keywords: Map<string, KeywordToken>;
     start_rule: StartRule;
     negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg?: T): boolean;
     negative_lookahead<T = string, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean;
@@ -197,7 +196,7 @@ export class Parser {
 
     name(): Name | null {
         let tok = this.peek();
-        if (tok.type === NAME && get_keyword_or_name_type(this, tok as NameTokenInfo) === NAME) {
+        if (tok.type === NAME && !KEYWORDS.has(tok.string)) {
             tok = this.getnext();
             return new Name(tok.string, Load, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
@@ -222,16 +221,17 @@ export class Parser {
         return null;
     }
 
-    expect(type: string | number): TokenInfo | null {
+    keyword(type: string): TokenInfo | null {
         const tok = this.peek();
-        if (typeof type === "string") {
-            // keywords
-            if (tok.string === type) {
-                return this.getnext();
-            } else {
-                return null;
-            }
+        if (tok.string === type) {
+            return this.getnext();
+        } else {
+            return null;
         }
+    }
+
+    expect(type: number): TokenInfo | null {
+        const tok = this.peek();
         if (type === tok.type) {
             return this.getnext();
         }

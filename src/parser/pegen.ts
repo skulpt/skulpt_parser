@@ -44,9 +44,9 @@ import {
     cmpop,
     In,
 } from "../ast/astnodes.ts";
-import { pyBytes, pyEllipsis, pyFalse, pyNone, pyStr, pyTrue } from "../ast/constants.ts";
+import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../ast/constants.ts";
 import { pySyntaxError } from "../ast/errors.ts";
-import { DOT, ELLIPSIS, NAME } from "../tokenize/token.ts";
+import { DOT, ELLIPSIS } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import type { Parser } from "./parser.ts";
 import { FstringParser, parsestr } from "./parse_string.ts";
@@ -55,7 +55,6 @@ import {
     EXTRA_EXPR,
     KeyValuePair,
     KeywordOrStarred,
-    KeywordToken,
     NameDefaultPair,
     SlashWithDefault,
     StarEtc,
@@ -175,18 +174,6 @@ export function dummy_name(p: Parser): Name {
 
 export interface NameTokenInfo extends TokenInfo {
     type: 1;
-}
-
-/** Expects a NAME token. Check if we're a a keyword before returning the token type. If we are a keyword change the type */
-export function get_keyword_or_name_type(p: Parser, token: NameTokenInfo): number {
-    const string = token.string;
-    if (p.keywords.has(string)) {
-        const type = (p.keywords.get(string) as KeywordToken).type;
-        // change the token type to what it should be - in cpython this happens in _PyPegen_fill_token
-        (token as TokenInfo).type = type;
-        return type;
-    }
-    return NAME;
 }
 
 /** @todo */
