@@ -121,8 +121,7 @@ const String_ = group(
 // Sorting in reverse order puts the long operators before their prefixes.
 // Otherwise if = came before ==, == would get recognized as two instances
 // of =.
-
-const EXACT_TOKENS_SORTED = Object.keys(EXACT_TOKEN_TYPES).sort();
+const EXACT_TOKENS_SORTED = [...EXACT_TOKEN_TYPES.keys()].sort();
 const Special = group(...EXACT_TOKENS_SORTED.reverse().map((t) => regexEscape(t)));
 const Funny = group("\\r?\\n", Special);
 
@@ -446,7 +445,7 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     } else if (")]}".includes(initial)) {
                         parenlev -= 1;
                     }
-                    const type = EXACT_TOKEN_TYPES[token] || tokens.OP;
+                    const type = EXACT_TOKEN_TYPES.get(token) || tokens.OP;
                     yield new TokenInfo(type, token, spos, epos, line);
                 }
             } else {

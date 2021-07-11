@@ -375,6 +375,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
                 self.print("@logger")
         elif not node.name.startswith("_tmp_"):
             # tmp methods are small and checking the caching is more expensive than just doing the function
+
             self.print("@memoize")
         node_type = clean_type(node.type or "")
         node_type = node_type and f": {node_type} | null"  # let typescript infer the type rather than using any
