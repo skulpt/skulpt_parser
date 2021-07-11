@@ -179,7 +179,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
         if keyword not in self.keyword_cache:
             self.keyword_cache[keyword] = self.gen.keyword_type()
 
-        return "keyword_", f"this.keyword({keyword!r})"
+        return "keyword", f"this.keyword({keyword!r})"
 
     def visit_StringLeaf(self, node: StringLeaf) -> Tuple[str, str]:
         val = ast.literal_eval(node.value)
