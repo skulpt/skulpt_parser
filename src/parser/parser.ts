@@ -13,18 +13,19 @@ import { KEYWORDS } from "./generated_parser.ts";
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type ParserMethod = (this: Parser) => AST | TokenInfo | null;
 
-/** For non-memoized functions that we want to be logged.*/
+/** For non-memoized functions that we want to be logged. Only applied in the verbose parser */
 export function logger(_target: Parser, _propertyKey: string, _descriptor: PropertyDescriptor) {}
 
-/** memoize the return value from the parser method. All parser methods take no args except expect which takes a token string */
+/**
+ * memoize the return value from a parser method. `propertyKey` is the method name.
+ * We don't memoize expect() and friends because doing so is more expensive than just calling the method.
+ */
 export function memoize(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
-    const methodName = propertyKey;
     function memoizeWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this._mark;
         const actionCache = this._cache[mark];
-        const key = methodName;
-        const cached = actionCache.get(key);
+        const cached = actionCache.get(propertyKey);
         // fastpath cache hit
         if (cached !== undefined) {
             this._mark = cached[1];
@@ -32,7 +33,7 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
         }
         // Slow path: no cache hit
         const tree = method.call(this);
-        actionCache.set(key, [tree, this._mark]);
+        actionCache.set(propertyKey, [tree, this._mark]);
         return tree;
     }
     descriptor.value = memoizeWrapper;
@@ -40,12 +41,10 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
 
 export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
-    const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this._mark;
         const actionCache = this._cache[mark];
-        const key = methodName;
-        let cached = actionCache.get(key);
+        let cached = actionCache.get(propertyKey);
         // fastpath cache hit
         if (cached !== undefined) {
             this._mark = cached[1];
@@ -55,7 +54,7 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
         let lastresult: AST | TokenInfo | null = null;
         let lastmark = mark;
         cached = [lastresult, lastmark];
-        actionCache.set(key, cached);
+        actionCache.set(propertyKey, cached);
         while (true) {
             this._mark = mark;
             const tree = method.call(this);
@@ -210,9 +209,9 @@ export class Parser {
         return null;
     }
 
-    keyword(type: string): TokenInfo | null {
+    keyword(word: string): TokenInfo | null {
         const tok = this.peek();
-        if (tok.string === type) {
+        if (tok.string === word) {
             this._mark++;
             return tok;
         } else {

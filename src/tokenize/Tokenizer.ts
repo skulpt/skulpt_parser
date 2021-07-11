@@ -1,4 +1,3 @@
-import type { AST } from "../ast/astnodes.ts";
 import { isSpace } from "../util/str_helpers.ts";
 import { COMMENT, ERRORTOKEN, NL } from "./token.ts";
 import type { TokenInfo } from "./tokenize.ts";
