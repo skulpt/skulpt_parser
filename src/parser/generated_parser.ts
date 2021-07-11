@@ -4065,7 +4065,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_14() {
         // _tmp_14: 'import' | 'from'
         let keyword;
@@ -4082,7 +4081,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_15() {
         // _tmp_15: 'def' | '@' | ASYNC
         let async, keyword, literal;
@@ -4103,7 +4101,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_16() {
         // _tmp_16: 'class' | '@'
         let keyword, literal;
@@ -4120,7 +4117,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_17() {
         // _tmp_17: 'with' | ASYNC
         let async, keyword;
@@ -4137,7 +4133,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_18() {
         // _tmp_18: 'for' | ASYNC
         let async, keyword;
@@ -4154,7 +4149,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_19() {
         // _tmp_19: '=' annotated_rhs
         let d, literal;
@@ -4167,7 +4161,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_20() {
         // _tmp_20: '(' single_target ')' | single_subscript_attribute_target
         let b, literal, literal_1, single_subscript_attribute_target;
@@ -4188,7 +4181,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_21() {
         // _tmp_21: '=' annotated_rhs
         let d, literal;
@@ -4216,7 +4208,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children.length ? children : null;
     }
 
-    @memoize
     _tmp_23() {
         // _tmp_23: yield_expr | star_expressions
         let star_expressions, yield_expr;
@@ -4233,7 +4224,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_24() {
         // _tmp_24: yield_expr | star_expressions
         let star_expressions, yield_expr;
@@ -4306,7 +4296,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_29() {
         // _tmp_29: ',' expression
         let literal, z;
@@ -4319,7 +4308,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_30() {
         // _tmp_30: ';' | NEWLINE
         let literal, newline;
@@ -4394,7 +4382,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_35() {
         // _tmp_35: 'as' NAME
         let keyword, z;
@@ -4435,7 +4422,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_38() {
         // _tmp_38: 'as' NAME
         let keyword, z;
@@ -4560,7 +4546,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_47() {
         // _tmp_47: ',' | ')' | ':'
         let literal;
@@ -4596,7 +4581,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children.length ? children : null;
     }
 
-    @memoize
     _tmp_49() {
         // _tmp_49: 'as' NAME
         let keyword, z;
@@ -4609,7 +4593,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_50() {
         // _tmp_50: 'from' expression
         let keyword, z;
@@ -4622,7 +4605,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_51() {
         // _tmp_51: '->' expression
         let literal, z;
@@ -4635,7 +4617,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_52() {
         // _tmp_52: '->' expression
         let literal, z;
@@ -4648,7 +4629,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_53() {
         // _tmp_53: NEWLINE INDENT
         let indent, newline;
@@ -4886,7 +4866,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children.length ? children : null;
     }
 
-    @memoize
     _tmp_69() {
         // _tmp_69: '(' arguments_? ')'
         let literal, literal_1, z;
@@ -5244,7 +5223,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_93() {
         // _tmp_93: ':' expression?
         let d, literal;
@@ -5257,7 +5235,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_94() {
         // _tmp_94: tuple | group | genexp
         let genexp, group, tuple;
@@ -5278,7 +5255,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_95() {
         // _tmp_95: list | listcomp
         let list, listcomp;
@@ -5295,7 +5271,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_96() {
         // _tmp_96: dict | set | dictcomp | setcomp
         let dict, dictcomp, set, setcomp;
@@ -5335,7 +5310,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children.length ? children : null;
     }
 
-    @memoize
     _tmp_98() {
         // _tmp_98: star_named_expression ',' star_named_expressions?
         let literal, y, z;
@@ -5352,7 +5326,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_99() {
         // _tmp_99: yield_expr | named_expression
         let named_expression, yield_expr;
@@ -5470,7 +5443,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_107() {
         // _tmp_107: ',' kwargs
         let k, literal;
@@ -5653,7 +5625,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children.length ? children : null;
     }
 
-    @memoize
     _tmp_120() {
         // _tmp_120: !'*' star_target
         let star_target;
@@ -5722,7 +5693,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_125() {
         // _tmp_125: args | expression for_if_clauses
         let args, expression, for_if_clauses;
@@ -5784,7 +5754,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children;
     }
 
-    @memoize
     _tmp_129() {
         // _tmp_129: yield_expr | star_expressions
         let star_expressions, yield_expr;
@@ -5801,7 +5770,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_130() {
         // _tmp_130: '[' | '(' | '{'
         let literal;
@@ -5837,7 +5805,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children;
     }
 
-    @memoize
     _tmp_132() {
         // _tmp_132: slash_with_default | param_with_default+
         let _loop1_152, slash_with_default;
@@ -5869,7 +5836,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children;
     }
 
-    @memoize
     _tmp_134() {
         // _tmp_134: lambda_slash_with_default | lambda_param_with_default+
         let _loop1_153, lambda_slash_with_default;
@@ -5886,7 +5852,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_135() {
         // _tmp_135: ')' | ',' (')' | '**')
         let _tmp_154, literal;
@@ -5903,7 +5868,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_136() {
         // _tmp_136: ':' | ',' (':' | '**')
         let _tmp_155, literal;
@@ -5920,7 +5884,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_137() {
         // _tmp_137: star_targets '='
         let literal, z;
@@ -5933,7 +5896,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_138() {
         // _tmp_138: '.' | '...'
         let literal;
@@ -5950,7 +5912,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_139() {
         // _tmp_139: '.' | '...'
         let literal;
@@ -5967,7 +5928,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_140() {
         // _tmp_140: '@' named_expression NEWLINE
         let f, literal, newline;
@@ -5984,7 +5944,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_141() {
         // _tmp_141: ',' star_expression
         let c, literal;
@@ -5997,7 +5956,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_142() {
         // _tmp_142: ',' expression
         let c, literal;
@@ -6010,7 +5968,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_143() {
         // _tmp_143: 'or' conjunction
         let c, keyword;
@@ -6023,7 +5980,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_144() {
         // _tmp_144: 'and' inversion
         let c, keyword;
@@ -6036,7 +5992,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_145() {
         // _tmp_145: 'if' disjunction
         let keyword, z;
@@ -6049,7 +6004,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_146() {
         // _tmp_146: 'if' disjunction
         let keyword, z;
@@ -6062,7 +6016,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_147() {
         // _tmp_147: starred_expression | named_expression !'='
         let named_expression, starred_expression;
@@ -6079,7 +6032,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_148() {
         // _tmp_148: ',' star_target
         let c, literal;
@@ -6092,7 +6044,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_149() {
         // _tmp_149: ',' star_target
         let c, literal;
@@ -6105,7 +6056,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_150() {
         // _tmp_150: star_targets '='
         let literal, star_targets;
@@ -6118,7 +6068,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_151() {
         // _tmp_151: star_targets '='
         let literal, star_targets;
@@ -6161,7 +6110,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return children.length ? children : null;
     }
 
-    @memoize
     _tmp_154() {
         // _tmp_154: ')' | '**'
         let literal;
@@ -6178,7 +6126,6 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         return null;
     }
 
-    @memoize
     _tmp_155() {
         // _tmp_155: ':' | '**'
         let literal;

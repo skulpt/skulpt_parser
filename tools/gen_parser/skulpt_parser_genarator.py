@@ -373,7 +373,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
                 # Non-leader rules in a cycle are not memoized,
                 # but they must still be logged.
                 self.print("@logger")
-        else:
+        elif not node.name.startswith("_tmp_"):
+            # tmp methods are small and checking the caching is more expensive than just doing the function
             self.print("@memoize")
         node_type = clean_type(node.type or "")
         node_type = node_type and f": {node_type} | null"  # let typescript infer the type rather than using any
