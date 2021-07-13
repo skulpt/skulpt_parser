@@ -354,19 +354,17 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                 let token = line.substring(start, end);
                 const initial = line[start];
                 if (
-                    (initial === "0" ||
-                        initial === "1" ||
-                        initial === "2" ||
-                        initial === "3" ||
-                        initial === "4" ||
-                        initial === "5" ||
-                        initial === "6" ||
-                        initial === "7" ||
-                        initial === "8" ||
-                        initial === "9" ||
-                        initial === ".") &&
-                    token !== "." &&
-                    token !== "..."
+                    (initial === "." && token !== "." && token !== "...") ||
+                    initial === "0" ||
+                    initial === "1" ||
+                    initial === "2" ||
+                    initial === "3" ||
+                    initial === "4" ||
+                    initial === "5" ||
+                    initial === "6" ||
+                    initial === "7" ||
+                    initial === "8" ||
+                    initial === "9"
                 ) {
                     yield new TokenInfo(tokens.NUMBER, token, spos, epos, line);
                 } else if (initial === "\r" || initial === "\n") {
@@ -379,9 +377,9 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     //assert not token.endswith("\n")
                     yield new TokenInfo(tokens.COMMENT, token, spos, epos, line);
                 } else if (
-                    (maybeQuote =
-                        initial === "'" ||
-                        initial === '"' ||
+                    token === "'''" ||
+                    token === '"""' ||
+                    ((maybeQuote =
                         initial === "f" ||
                         initial === "r" ||
                         initial === "b" ||
@@ -390,7 +388,7 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                         initial === "R" ||
                         initial === "B" ||
                         initial === "U") &&
-                    (token === "'''" || token === '"""' || triple_quoted.has(token))
+                        triple_quoted.has(token))
                 ) {
                     endprog = endpats[token];
                     const endmatch = endprog.exec(line.substring(pos));
@@ -416,11 +414,10 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     // Also note that single quote checking must come after
                     //  triple quote checking (above).
                 } else if (
-                    maybeQuote &&
-                    (initial === "'" ||
-                        initial === '"' ||
-                        single_quoted.has(token.substring(0, 2)) ||
-                        single_quoted.has(token.substring(0, 3)))
+                    initial === "'" ||
+                    initial === '"' ||
+                    (maybeQuote &&
+                        (single_quoted.has(token.substring(0, 2)) || single_quoted.has(token.substring(0, 3))))
                 ) {
                     if (token[token.length - 1] === "\n") {
                         // continued string
