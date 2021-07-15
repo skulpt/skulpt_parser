@@ -6,6 +6,7 @@ import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
 type token = number;
 type position = [number, number];
+
 export class TokenInfo {
     type: token;
     string: string;
@@ -18,13 +19,6 @@ export class TokenInfo {
         this.start = start;
         this.end = end;
         this.line = line;
-    }
-    get exact_type(): token {
-        if (this.type === tokens.OP && this.string in EXACT_TOKEN_TYPES) {
-            return EXACT_TOKEN_TYPES[this.string];
-        } else {
-            return this.type;
-        }
     }
     get lineno() {
         return this.start[0];
@@ -141,13 +135,13 @@ const PseudoExtras = group("\\\\\\r?\\n|$", Comment_, Triple);
 // For a given string prefix plus quotes, endpats maps it to a regex
 //  to match the remainder of that string. _prefix can be empty, for
 //  a normal single or triple quoted string (with no prefix).
-const endpats: { [endpat: string]: string } = {};
+const endpats: { [endpat: string]: RegExp } = {};
 const prefixes = _all_string_prefixes();
 for (const _prefix of prefixes) {
-    endpats[_prefix + "'"] = Single;
-    endpats[_prefix + '"'] = Double;
-    endpats[_prefix + "'''"] = Single3;
-    endpats[_prefix + '"""'] = Double3;
+    endpats[_prefix + "'"] = new RegExp(Single);
+    endpats[_prefix + '"'] = new RegExp(Double);
+    endpats[_prefix + "'''"] = new RegExp(Single3);
+    endpats[_prefix + '"""'] = new RegExp(Double3);
 }
 
 // A set of all of the single and triple quoted string prefixes,
@@ -385,7 +379,7 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     //assert not token.endswith("\n")
                     yield new TokenInfo(tokens.COMMENT, token, spos, epos, line);
                 } else if (triple_quoted.has(token)) {
-                    endprog = RegExp(endpats[token]);
+                    endprog = endpats[token];
                     endmatch = endprog.exec(line.substring(pos));
                     if (endmatch) {
                         // all on one line
@@ -422,7 +416,7 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                         //  character. So it's really looking for
                         //  endpats["'"] or endpats['"'], by trying to
                         //  skip string prefix characters, if any.
-                        endprog = RegExp(endpats[initial] || endpats[token[1]] || endpats[token[2]]);
+                        endprog = endpats[initial] || endpats[token[1]] || endpats[token[2]];
                         contstr = line.substring(start);
                         needcont = 1;
                         contline = line;
@@ -452,9 +446,8 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     } else if (")]}".includes(initial)) {
                         parenlev -= 1;
                     }
-                    const tok = new TokenInfo(tokens.OP, token, spos, epos, line);
-                    tok.type = tok.exact_type;
-                    yield tok;
+                    const type = EXACT_TOKEN_TYPES[token] || tokens.OP;
+                    yield new TokenInfo(type, token, spos, epos, line);
                 }
             } else {
                 yield new TokenInfo(tokens.ERRORTOKEN, line[pos], [lnum, pos], [lnum, pos + 1], line);

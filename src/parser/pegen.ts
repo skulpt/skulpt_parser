@@ -207,7 +207,7 @@ export function seq_insert_in_front<T>(p: Parser, a: T, seq: T[] | null): T[] {
         return singleton_seq(p, a);
     }
 
-    return [a].concat(...seq);
+    return [a, ...seq];
 }
 
 /* Creates a copy of seq and appends a to it */
@@ -221,9 +221,7 @@ export function seq_append_to_end(p: Parser, seq: expr[] | null, a: expr): expr[
 
 /* Flattens an asdl_seq* of asdl_seq*s */
 export function seq_flatten<A>(p: Parser, seqs: A[][]): A[] {
-    // We might need a depth of more than 1. Remove this comment if we find we don't need it
-    // return seqs?.flat(Infinity) as AST[];
-    return seqs?.flat();
+    return seqs.flat();
 }
 
 /* Creates a new name of the form <first_name>.<second_name> */

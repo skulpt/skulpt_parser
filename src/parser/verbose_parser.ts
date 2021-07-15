@@ -43,17 +43,17 @@ export function memoize(_target: VerboseParser, propertyKey: string, descriptor:
     const method: ParserMethod = descriptor.value;
     const methodName = propertyKey;
     function memoizeWrapper(this: VerboseParser, arg?: string): AST | TokenInfo | null {
-        const mark = this.mark();
+        const mark = this._mark;
         const actionCache = this._cache[mark];
         const key = arg ?? methodName;
-        const cached = actionCache[key];
+        const cached = actionCache.get(key);
         // fastpath cache hit
         if (cached !== undefined) {
             log(
                 `${this._fill()}${methodName}(${argstr(arg)}) -> ${trim(cached[0])} [hit cache]`,
                 cached[0] === null ? "yellow" : "brightGreen"
             );
-            this.reset(cached[1]);
+            this._mark = cached[1];
             return cached[0];
         }
         // Slow path: no cache hit
@@ -69,7 +69,7 @@ export function memoize(_target: VerboseParser, propertyKey: string, descriptor:
         } else {
             log(`${this._fill()}... ${methodName}(${argstr(arg)}) -> ${trim(tree)} [caching null]`, "blue");
         }
-        actionCache[key] = [tree, this.mark()];
+        actionCache.set(key, [tree, this._mark]);
         return tree;
     }
     descriptor.value = memoizeWrapper;
@@ -79,31 +79,32 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
     const method: NoArgs = descriptor.value;
     const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: VerboseParser): AST | TokenInfo | null {
-        const mark = this.mark();
+        const mark = this._mark;
         const actionCache = this._cache[mark];
         const key = methodName;
-        const cached = actionCache[key];
+        let cached = actionCache.get(key);
         // fastpath cache hit
         if (cached !== undefined) {
             log(
                 `${this._fill()}${methodName}() -> ${trim(cached[0])} [hit cache]`,
                 cached[0] === null ? "yellow" : "brightGreen"
             );
-            this.reset(cached[1]);
+            this._mark = cached[1];
             return cached[0];
         }
         // Slow path: no cache hit
         log(`${this._fill()}${methodName}() ... (looking at ${this.showpeek()})`, "dim");
-        let lastresult: AST | TokenInfo | null;
-        let lastmark: number;
-        let currmark: number;
-        actionCache[key] = [(lastresult = null), (lastmark = mark)];
+        let lastresult: AST | TokenInfo | null = null;
+        let lastmark = mark;
+        let currmark = mark;
+        cached = [lastresult, lastmark];
+        actionCache.set(key, cached);
         let depth = 0;
         log(`${this._fill()}Recursive ${methodName} at ${mark} depth ${depth}`, "dim");
         while (true) {
-            this.reset(mark);
+            this._mark = mark;
             const result = method.call(this);
-            currmark = this.mark();
+            currmark = this._mark;
             depth++;
             log(
                 `${this._fill()}Recursive ${methodName} at ${mark} depth ${depth}: ${trim(result)} to ${currmark}`,
@@ -119,20 +120,22 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
                 log(`${this._fill()}Bailing with ${trim(lastresult)} to ${lastmark}`, "red");
                 break;
             }
-            actionCache[key] = [(lastresult = result), (lastmark = currmark)];
+            cached[0] = lastresult = result;
+            cached[1] = lastmark = currmark;
         }
-        this.reset(lastmark);
+        this._mark = lastmark;
         const tree = lastresult;
         let endmark: number;
         if (tree !== null) {
             log(`${this._fill()}${methodName}() -> ${trim(tree)} [caching ${tree.toString()}]`, "brightGreen");
-            endmark = this.mark();
+            endmark = this._mark;
         } else {
             log(`${this._fill()}${methodName}() -> ${trim(tree)} [caching null]`, "blue");
             endmark = mark;
-            this.reset(endmark);
+            this._mark = endmark;
         }
-        actionCache[key] = [tree, endmark];
+        cached[0] = tree;
+        cached[1] = endmark;
         return tree;
     }
     descriptor.value = memoizeLeftRecWrapper;

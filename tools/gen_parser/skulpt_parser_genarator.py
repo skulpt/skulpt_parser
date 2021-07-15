@@ -1,4 +1,5 @@
 import token
+from token import EXACT_TOKEN_TYPES
 from typing import Any, Dict, Optional, IO, Text, Tuple
 from io import StringIO
 from pegen.grammar import (
@@ -34,7 +35,7 @@ import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
 import {{ StartRule, CmpopExprPair, KeyValuePair, KeywordToken, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator, STAR_TARGETS, DEL_TARGETS, FOR_TARGETS  }} from "./pegen_types.ts";
-import {{ pegen }} from "./pegen_proxy.ts";
+import * as pegen from "./pegen.ts";
 import {{ pySyntaxError, pyIndentationError }} from "../ast/errors.ts";
 
 import {{ memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
@@ -171,7 +172,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
             name = name.lower()
             return name, f"this.{name}()"
         if name in non_exact_tok:
-            return name.lower(), f"this.expect({name!r})"
+            return name.lower(), f"this.expect({getattr(token, name)}  /* '{name}' */)"
         return name, f"this.{name}()"
 
     def keyword_helper(self, keyword):
@@ -199,7 +200,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
             #     return_type="Token *",
             #     comment=f"token='{val}'",
             # )
-            return "literal", f"this.expect({node.value})"
+            return "literal", f"this.expect({EXACT_TOKEN_TYPES[val]} /* '{val}' */)"
 
     def visit_Rhs(self, node: Rhs) -> Tuple[Optional[str], str]:
         if node in self.cache:
@@ -328,6 +329,10 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (ret === null) {
             return this.make_syntax_error();
         }
+        // drop the cache apart from the first element which stores the parsed result should we want to call parse again
+        // also seems to improve performance - possible because it helps the garbage collector
+        this._cache.length = 1;
+        this._mark = 0
         return ret as ParseResult<T>;
     }
 """
@@ -394,7 +399,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
                 self.print("let cut = false;")
             if is_loop:
                 self.print("const children = [];")
-            self.print(f"{'let' if is_loop else 'const'} mark = this.mark();")
+            self.print(f"{'let' if is_loop else 'const'} mark = this._mark;")
 
             self.print(tmp_file.getvalue())
             tmp_file.close()
@@ -461,11 +466,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
                 action = clean_action(action)
                 if is_loop:
                     self.print(f"children.push({action});")
-                    self.print("mark = this.mark();")
+                    self.print("mark = this._mark;")
                 else:
                     self.print(f"return {action};")
             self.print("}")
-            self.print("this.reset(mark);")
+            self.print("this._mark = mark;")
             # Skip remaining alternatives if a cut was reached.
             if self.has_local_cut:
                 self.print("if (cut) return null;")

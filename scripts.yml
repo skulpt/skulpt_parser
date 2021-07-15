@@ -61,3 +61,11 @@ scripts:
             - read
             - run
             - write
+
+    bench:
+        desc: Parse a file
+        cmd: deno run scripts/bench.ts
+        allow:
+            - read
+            - run
+            - write
