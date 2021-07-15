@@ -34,7 +34,7 @@ import type {{ Tokenizer }} from "../tokenize/Tokenizer.ts";
 import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
 import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
-import {{ StartRule, CmpopExprPair, KeyValuePair, KeywordToken, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator, STAR_TARGETS, DEL_TARGETS, FOR_TARGETS  }} from "./pegen_types.ts";
+import {{ StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator, STAR_TARGETS, DEL_TARGETS, FOR_TARGETS  }} from "./pegen_types.ts";
 import * as pegen from "./pegen.ts";
 import {{ pySyntaxError, pyIndentationError }} from "../ast/errors.ts";
 
@@ -179,7 +179,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
         if keyword not in self.keyword_cache:
             self.keyword_cache[keyword] = self.gen.keyword_type()
 
-        return "keyword", f"this.expect({keyword!r})"
+        return "keyword", f"this.keyword({keyword!r})"
 
     def visit_StringLeaf(self, node: StringLeaf) -> Tuple[str, str]:
         val = ast.literal_eval(node.value)
@@ -346,10 +346,10 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
                     self.visit(rule)
         self.print("}")
         self.print()
-        self.print("GeneratedParser.prototype.keywords = new Map([")
+        self.print("export const KEYWORDS = new Set([")
         with self.indent():
-            for name, token_type in self.callmakervisitor.keyword_cache.items():
-                self.print(f'["{name}", new KeywordToken("{name}", {token_type})],')
+            for name in self.callmakervisitor.keyword_cache:
+                self.print(f'"{name}",')
         self.print("]);")
         self.print()
 

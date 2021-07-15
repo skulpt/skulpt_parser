@@ -7,6 +7,7 @@ const require = createRequire(import.meta.url);
 // Loads extensionless module.
 require("../../skulpt/dist/skulpt.min.js");
 
+// deno-lint-ignore no-explicit-any
 declare var Sk: any;
 Sk.__future__ = { python3: true };
 

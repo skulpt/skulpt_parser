@@ -3,28 +3,29 @@ import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, STRING } from "../tok
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { Name, Load, TypeIgnore, Constant, expr } from "../ast/astnodes.ts";
-import { KeywordToken, StartRule, TARGETS_TYPE } from "./pegen_types.ts";
+import { StartRule, TARGETS_TYPE } from "./pegen_types.ts";
 import type { AST } from "../ast/astnodes.ts";
-import { get_expr_name, get_invalid_target, get_keyword_or_name_type } from "./pegen.ts";
-import type { NameTokenInfo } from "./pegen.ts";
+import { get_expr_name, get_invalid_target } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
 import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
+import { KEYWORDS } from "./generated_parser.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */
 type ParserMethod = (this: Parser) => AST | TokenInfo | null;
 
-/** For non-memoized functions that we want to be logged.*/
+/** For non-memoized functions that we want to be logged. Only applied in the verbose parser */
 export function logger(_target: Parser, _propertyKey: string, _descriptor: PropertyDescriptor) {}
 
-/** memoize the return value from the parser method. All parser methods take no args except expect which takes a token string */
+/**
+ * memoize the return value from a parser method. `propertyKey` is the method name.
+ * We don't memoize expect() and friends because doing so is more expensive than just calling the method.
+ */
 export function memoize(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
-    const methodName = propertyKey;
     function memoizeWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this._mark;
         const actionCache = this._cache[mark];
-        const key = methodName;
-        const cached = actionCache.get(key);
+        const cached = actionCache.get(propertyKey);
         // fastpath cache hit
         if (cached !== undefined) {
             this._mark = cached[1];
@@ -32,7 +33,7 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
         }
         // Slow path: no cache hit
         const tree = method.call(this);
-        actionCache.set(key, [tree, this._mark]);
+        actionCache.set(propertyKey, [tree, this._mark]);
         return tree;
     }
     descriptor.value = memoizeWrapper;
@@ -40,12 +41,10 @@ export function memoize(_target: Parser, propertyKey: string, descriptor: Proper
 
 export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor: PropertyDescriptor) {
     const method: ParserMethod = descriptor.value;
-    const methodName = propertyKey;
     function memoizeLeftRecWrapper(this: Parser): AST | TokenInfo | null {
         const mark = this._mark;
         const actionCache = this._cache[mark];
-        const key = methodName;
-        let cached = actionCache.get(key);
+        let cached = actionCache.get(propertyKey);
         // fastpath cache hit
         if (cached !== undefined) {
             this._mark = cached[1];
@@ -54,43 +53,31 @@ export function memoizeLeftRec(_target: Parser, propertyKey: string, descriptor:
         // Slow path: no cache hit
         let lastresult: AST | TokenInfo | null = null;
         let lastmark = mark;
-        let currmark = mark;
         cached = [lastresult, lastmark];
-        actionCache.set(key, cached);
+        actionCache.set(propertyKey, cached);
         while (true) {
             this._mark = mark;
-            const result = method.call(this);
-            currmark = this._mark;
-            if (result === null) {
+            const tree = method.call(this);
+            if (tree === null) {
+                this._mark = lastmark;
                 // failed
                 break;
             }
-            if (currmark <= lastmark) {
+            if (this._mark <= lastmark) {
+                this._mark = lastmark;
                 // bailing
                 break;
             }
-            cached[0] = lastresult = result;
-            cached[1] = lastmark = currmark;
+            cached[0] = lastresult = tree;
+            cached[1] = lastmark = this._mark;
         }
-        this._mark = lastmark;
-        const tree = lastresult;
-        let endmark: number;
-        if (tree !== null) {
-            endmark = this._mark;
-        } else {
-            endmark = mark;
-            this._mark = endmark;
-        }
-        cached[0] = tree;
-        cached[1] = endmark;
-        return tree;
+        return lastresult;
     }
     descriptor.value = memoizeLeftRecWrapper;
 }
 
 // overloads for the expect method
 export interface Parser {
-    keywords: Map<string, KeywordToken>;
     start_rule: StartRule;
     negative_lookahead<T = never, R = AST | TokenInfo | null>(func: (arg: T) => R, arg?: T): boolean;
     negative_lookahead<T = string, R = AST | TokenInfo | null>(func: (arg: T) => R, arg: T): boolean;
@@ -131,18 +118,17 @@ export class Parser {
         return [START[0], START[1], END[0], END[1]];
     }
 
-    getnext(): TokenInfo {
-        this._cache.push(new Map());
-        return this._tokens[this._mark++];
-    }
-
     peek(): TokenInfo {
-        return this._tok.get(this._mark);
+        if (this._mark === this._tokens.length) {
+            this._cache.push(new Map());
+            return this._tok.getnext();
+        }
+        return this._tokens[this._mark];
     }
 
     diagnose(): TokenInfo {
         if (this._tokens.length === 0) {
-            this.getnext();
+            this.peek();
         }
         return this._tokens[this._tokens.length - 1];
     }
@@ -196,9 +182,9 @@ export class Parser {
     }
 
     name(): Name | null {
-        let tok = this.peek();
-        if (tok.type === NAME && get_keyword_or_name_type(this, tok as NameTokenInfo) === NAME) {
-            tok = this.getnext();
+        const tok = this.peek();
+        if (tok.type === NAME && !KEYWORDS.has(tok.string)) {
+            this._mark++;
             return new Name(tok.string, Load, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
@@ -208,32 +194,36 @@ export class Parser {
         const tok = this.peek();
         if (tok.type === STRING) {
             // this gets handled by concatenate strings which always follows this.string();
-            return this.getnext();
+            this._mark++;
+            return tok;
         }
         return null;
     }
 
     number(): Constant | null {
-        let tok = this.peek();
+        const tok = this.peek();
         if (tok.type === NUMBER) {
-            tok = this.getnext();
+            this._mark++;
             return new Constant(parsenumber(tok.string), null, tok.start[0], tok.start[1], tok.end[0], tok.end[1]);
         }
         return null;
     }
 
-    expect(type: string | number): TokenInfo | null {
+    keyword(word: string): TokenInfo | null {
         const tok = this.peek();
-        if (typeof type === "string") {
-            // keywords
-            if (tok.string === type) {
-                return this.getnext();
-            } else {
-                return null;
-            }
+        if (tok.string === word) {
+            this._mark++;
+            return tok;
+        } else {
+            return null;
         }
+    }
+
+    expect(type: number): TokenInfo | null {
+        const tok = this.peek();
         if (type === tok.type) {
-            return this.getnext();
+            this._mark++;
+            return tok;
         }
         return null;
     }

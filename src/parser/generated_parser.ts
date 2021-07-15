@@ -26,7 +26,6 @@ import {
     StartRule,
     CmpopExprPair,
     KeyValuePair,
-    KeywordToken,
     KeywordOrStarred,
     NameDefaultPair,
     SlashWithDefault,
@@ -340,7 +339,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return new astnodes.Expr(e, ...EXTRA);
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "return") && (return_stmt = this.return_stmt())) {
+        if (this.positive_lookahead(this.keyword, "return") && (return_stmt = this.return_stmt())) {
             return return_stmt;
         }
         this._mark = mark;
@@ -348,42 +347,42 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return import_stmt;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "raise") && (raise_stmt = this.raise_stmt())) {
+        if (this.positive_lookahead(this.keyword, "raise") && (raise_stmt = this.raise_stmt())) {
             return raise_stmt;
         }
         this._mark = mark;
-        if ((keyword = this.expect("pass"))) {
+        if ((keyword = this.keyword("pass"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Pass(...EXTRA);
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "del") && (del_stmt = this.del_stmt())) {
+        if (this.positive_lookahead(this.keyword, "del") && (del_stmt = this.del_stmt())) {
             return del_stmt;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "yield") && (yield_stmt = this.yield_stmt())) {
+        if (this.positive_lookahead(this.keyword, "yield") && (yield_stmt = this.yield_stmt())) {
             return yield_stmt;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "assert") && (assert_stmt = this.assert_stmt())) {
+        if (this.positive_lookahead(this.keyword, "assert") && (assert_stmt = this.assert_stmt())) {
             return assert_stmt;
         }
         this._mark = mark;
-        if ((keyword = this.expect("break"))) {
+        if ((keyword = this.keyword("break"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Break(...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("continue"))) {
+        if ((keyword = this.keyword("continue"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Continue(...EXTRA);
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "global") && (global_stmt = this.global_stmt())) {
+        if (this.positive_lookahead(this.keyword, "global") && (global_stmt = this.global_stmt())) {
             return global_stmt;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "nonlocal") && (nonlocal_stmt = this.nonlocal_stmt())) {
+        if (this.positive_lookahead(this.keyword, "nonlocal") && (nonlocal_stmt = this.nonlocal_stmt())) {
             return nonlocal_stmt;
         }
         this._mark = mark;
@@ -400,7 +399,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return function_def;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "if") && (if_stmt = this.if_stmt())) {
+        if (this.positive_lookahead(this.keyword, "if") && (if_stmt = this.if_stmt())) {
             return if_stmt;
         }
         this._mark = mark;
@@ -416,11 +415,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return for_stmt;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "try") && (try_stmt = this.try_stmt())) {
+        if (this.positive_lookahead(this.keyword, "try") && (try_stmt = this.try_stmt())) {
             return try_stmt;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, "while") && (while_stmt = this.while_stmt())) {
+        if (this.positive_lookahead(this.keyword, "while") && (while_stmt = this.while_stmt())) {
             return while_stmt;
         }
         this._mark = mark;
@@ -548,7 +547,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // global_stmt: 'global' ','.NAME+
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("global")) && (a = this._gather_25())) {
+        if ((keyword = this.keyword("global")) && (a = this._gather_25())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Global(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA);
         }
@@ -562,7 +561,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // nonlocal_stmt: 'nonlocal' ','.NAME+
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("nonlocal")) && (a = this._gather_27())) {
+        if ((keyword = this.keyword("nonlocal")) && (a = this._gather_27())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Nonlocal(CHECK(pegen.map_names_to_ids(this, a)), ...EXTRA);
         }
@@ -590,7 +589,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // assert_stmt: 'assert' expression [',' expression]
         let a, b, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("assert")) && (a = this.expression()) && ((b = this._tmp_29()), 1)) {
+        if ((keyword = this.keyword("assert")) && (a = this.expression()) && ((b = this._tmp_29()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Assert(a, b, ...EXTRA);
         }
@@ -604,7 +603,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // del_stmt: 'del' del_targets &(';' | NEWLINE) | invalid_del_stmt
         let a, invalid_del_stmt, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("del")) && (a = this.del_targets()) && this.positive_lookahead(this._tmp_30)) {
+        if ((keyword = this.keyword("del")) && (a = this.del_targets()) && this.positive_lookahead(this._tmp_30)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Delete(a, ...EXTRA);
         }
@@ -639,7 +638,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // import_name: 'import' dotted_as_names
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("import")) && (a = this.dotted_as_names())) {
+        if ((keyword = this.keyword("import")) && (a = this.dotted_as_names())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Import(a, ...EXTRA);
         }
@@ -654,10 +653,10 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, keyword, keyword_1;
         const mark = this._mark;
         if (
-            (keyword = this.expect("from")) &&
+            (keyword = this.keyword("from")) &&
             (a = this._loop0_31()) &&
             (b = this.dotted_name()) &&
-            (keyword_1 = this.expect("import")) &&
+            (keyword_1 = this.keyword("import")) &&
             (c = this.import_from_targets())
         ) {
             const EXTRA = this.extra(mark);
@@ -665,9 +664,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (keyword = this.expect("from")) &&
+            (keyword = this.keyword("from")) &&
             (a = this._loop1_32()) &&
-            (keyword_1 = this.expect("import")) &&
+            (keyword_1 = this.keyword("import")) &&
             (b = this.import_from_targets())
         ) {
             const EXTRA = this.extra(mark);
@@ -786,7 +785,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, keyword, literal;
         const mark = this._mark;
         if (
-            (keyword = this.expect("if")) &&
+            (keyword = this.keyword("if")) &&
             (a = this.named_expression()) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
@@ -797,7 +796,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (keyword = this.expect("if")) &&
+            (keyword = this.keyword("if")) &&
             (a = this.named_expression()) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
@@ -817,7 +816,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, keyword, literal;
         const mark = this._mark;
         if (
-            (keyword = this.expect("elif")) &&
+            (keyword = this.keyword("elif")) &&
             (a = this.named_expression()) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
@@ -828,7 +827,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (keyword = this.expect("elif")) &&
+            (keyword = this.keyword("elif")) &&
             (a = this.named_expression()) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
@@ -847,7 +846,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // else_block: 'else' ':' block
         let b, keyword, literal;
         const mark = this._mark;
-        if ((keyword = this.expect("else")) && (literal = this.expect(11 /* ':' */)) && (b = this.block())) {
+        if ((keyword = this.keyword("else")) && (literal = this.expect(11 /* ':' */)) && (b = this.block())) {
             return b;
         }
         this._mark = mark;
@@ -861,7 +860,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, keyword, literal;
         const mark = this._mark;
         if (
-            (keyword = this.expect("while")) &&
+            (keyword = this.keyword("while")) &&
             (a = this.named_expression()) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
@@ -882,9 +881,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let cut = false;
         const mark = this._mark;
         if (
-            (keyword = this.expect("for")) &&
+            (keyword = this.keyword("for")) &&
             (t = this.star_targets()) &&
-            (keyword_1 = this.expect("in")) &&
+            (keyword_1 = this.keyword("in")) &&
             (cut = true) &&
             (ex = this.star_expressions()) &&
             (literal = this.expect(11 /* ':' */)) &&
@@ -899,9 +898,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (cut) return null;
         if (
             (async = this.expect(56 /* 'ASYNC' */)) &&
-            (keyword = this.expect("for")) &&
+            (keyword = this.keyword("for")) &&
             (t = this.star_targets()) &&
-            (keyword_1 = this.expect("in")) &&
+            (keyword_1 = this.keyword("in")) &&
             (cut = true) &&
             (ex = this.star_expressions()) &&
             (literal = this.expect(11 /* ':' */)) &&
@@ -932,7 +931,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, async, b, keyword, literal, literal_1, literal_2, opt, tc;
         const mark = this._mark;
         if (
-            (keyword = this.expect("with")) &&
+            (keyword = this.keyword("with")) &&
             (literal = this.expect(7 /* '(' */)) &&
             (a = this._gather_39()) &&
             ((opt = this.expect(12 /* ',' */)), 1) &&
@@ -945,7 +944,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (keyword = this.expect("with")) &&
+            (keyword = this.keyword("with")) &&
             (a = this._gather_41()) &&
             (literal = this.expect(11 /* ':' */)) &&
             ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
@@ -957,7 +956,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (async = this.expect(56 /* 'ASYNC' */)) &&
-            (keyword = this.expect("with")) &&
+            (keyword = this.keyword("with")) &&
             (literal = this.expect(7 /* '(' */)) &&
             (a = this._gather_43()) &&
             ((opt = this.expect(12 /* ',' */)), 1) &&
@@ -971,7 +970,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (async = this.expect(56 /* 'ASYNC' */)) &&
-            (keyword = this.expect("with")) &&
+            (keyword = this.keyword("with")) &&
             (a = this._gather_45()) &&
             (literal = this.expect(11 /* ':' */)) &&
             ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
@@ -996,7 +995,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (e = this.expression()) &&
-            (keyword = this.expect("as")) &&
+            (keyword = this.keyword("as")) &&
             (t = this.star_target()) &&
             this.positive_lookahead(this._tmp_47)
         ) {
@@ -1021,7 +1020,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let b, el, ex, f, keyword, literal;
         const mark = this._mark;
         if (
-            (keyword = this.expect("try")) &&
+            (keyword = this.keyword("try")) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             (f = this.finally_block())
@@ -1031,7 +1030,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (keyword = this.expect("try")) &&
+            (keyword = this.keyword("try")) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             (ex = this._loop1_48()) &&
@@ -1052,7 +1051,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let b, e, keyword, literal, t;
         const mark = this._mark;
         if (
-            (keyword = this.expect("except")) &&
+            (keyword = this.keyword("except")) &&
             (e = this.expression()) &&
             ((t = this._tmp_49()), 1) &&
             (literal = this.expect(11 /* ':' */)) &&
@@ -1062,7 +1061,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return new astnodes.ExceptHandler(e, t ? t.id : null, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("except")) && (literal = this.expect(11 /* ':' */)) && (b = this.block())) {
+        if ((keyword = this.keyword("except")) && (literal = this.expect(11 /* ':' */)) && (b = this.block())) {
             const EXTRA = this.extra(mark);
             return new astnodes.ExceptHandler(null, null, b, ...EXTRA);
         }
@@ -1076,7 +1075,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // finally_block: 'finally' ':' block
         let a, keyword, literal;
         const mark = this._mark;
-        if ((keyword = this.expect("finally")) && (literal = this.expect(11 /* ':' */)) && (a = this.block())) {
+        if ((keyword = this.keyword("finally")) && (literal = this.expect(11 /* ':' */)) && (a = this.block())) {
             return a;
         }
         this._mark = mark;
@@ -1089,7 +1088,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // return_stmt: 'return' star_expressions?
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("return")) && ((a = this.star_expressions()), 1)) {
+        if ((keyword = this.keyword("return")) && ((a = this.star_expressions()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Return(a, ...EXTRA);
         }
@@ -1103,12 +1102,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // raise_stmt: 'raise' expression ['from' expression] | 'raise'
         let a, b, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("raise")) && (a = this.expression()) && ((b = this._tmp_50()), 1)) {
+        if ((keyword = this.keyword("raise")) && (a = this.expression()) && ((b = this._tmp_50()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Raise(a, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("raise"))) {
+        if ((keyword = this.keyword("raise"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Raise(null, null, ...EXTRA);
         }
@@ -1140,7 +1139,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, async, b, keyword, literal, literal_1, literal_2, n, params, tc;
         const mark = this._mark;
         if (
-            (keyword = this.expect("def")) &&
+            (keyword = this.keyword("def")) &&
             (n = this.name()) &&
             (literal = this.expect(7 /* '(' */)) &&
             ((params = this.params()), 1) &&
@@ -1164,7 +1163,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (async = this.expect(56 /* 'ASYNC' */)) &&
-            (keyword = this.expect("def")) &&
+            (keyword = this.keyword("def")) &&
             (n = this.name()) &&
             (literal = this.expect(7 /* '(' */)) &&
             ((params = this.params()), 1) &&
@@ -1525,7 +1524,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, keyword, literal;
         const mark = this._mark;
         if (
-            (keyword = this.expect("class")) &&
+            (keyword = this.keyword("class")) &&
             (a = this.name()) &&
             ((b = this._tmp_69()), 1) &&
             (literal = this.expect(11 /* ':' */)) &&
@@ -1708,9 +1707,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.disjunction()) &&
-            (keyword = this.expect("if")) &&
+            (keyword = this.keyword("if")) &&
             (b = this.disjunction()) &&
-            (keyword_1 = this.expect("else")) &&
+            (keyword_1 = this.keyword("else")) &&
             (c = this.expression())
         ) {
             const EXTRA = this.extra(mark);
@@ -1735,7 +1734,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, keyword, literal;
         const mark = this._mark;
         if (
-            (keyword = this.expect("lambda")) &&
+            (keyword = this.keyword("lambda")) &&
             ((a = this.lambda_params()), 1) &&
             (literal = this.expect(11 /* ':' */)) &&
             (b = this.expression())
@@ -2009,7 +2008,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // inversion: 'not' inversion | comparison
         let a, comparison, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("not")) && (a = this.inversion())) {
+        if ((keyword = this.keyword("not")) && (a = this.inversion())) {
             const EXTRA = this.extra(mark);
             return new astnodes.UnaryOp(astnodes.Not, a, ...EXTRA);
         }
@@ -2186,7 +2185,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // notin_bitwise_or: 'not' 'in' bitwise_or
         let a, keyword, keyword_1;
         const mark = this._mark;
-        if ((keyword = this.expect("not")) && (keyword_1 = this.expect("in")) && (a = this.bitwise_or())) {
+        if ((keyword = this.keyword("not")) && (keyword_1 = this.keyword("in")) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.NotIn, a);
         }
         this._mark = mark;
@@ -2199,7 +2198,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // in_bitwise_or: 'in' bitwise_or
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("in")) && (a = this.bitwise_or())) {
+        if ((keyword = this.keyword("in")) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.In, a);
         }
         this._mark = mark;
@@ -2212,7 +2211,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // isnot_bitwise_or: 'is' 'not' bitwise_or
         let a, keyword, keyword_1;
         const mark = this._mark;
-        if ((keyword = this.expect("is")) && (keyword_1 = this.expect("not")) && (a = this.bitwise_or())) {
+        if ((keyword = this.keyword("is")) && (keyword_1 = this.keyword("not")) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.IsNot, a);
         }
         this._mark = mark;
@@ -2225,7 +2224,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // is_bitwise_or: 'is' bitwise_or
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("is")) && (a = this.bitwise_or())) {
+        if ((keyword = this.keyword("is")) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.Is, a);
         }
         this._mark = mark;
@@ -2532,22 +2531,22 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return name;
         }
         this._mark = mark;
-        if ((keyword = this.expect("True"))) {
+        if ((keyword = this.keyword("True"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyTrue, null, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("False"))) {
+        if ((keyword = this.keyword("False"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyFalse, null, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("None"))) {
+        if ((keyword = this.keyword("None"))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyNone, null, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("__peg_parser__"))) {
+        if ((keyword = this.keyword("__peg_parser__"))) {
             return this.raise_error(pySyntaxError, "You found it!");
         }
         this._mark = mark;
@@ -2847,9 +2846,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (async = this.expect(56 /* 'ASYNC' */)) &&
-            (keyword = this.expect("for")) &&
+            (keyword = this.keyword("for")) &&
             (a = this.star_targets()) &&
-            (keyword_1 = this.expect("in")) &&
+            (keyword_1 = this.keyword("in")) &&
             (cut = true) &&
             (b = this.disjunction()) &&
             (c = this._loop0_103())
@@ -2859,9 +2858,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (cut) return null;
         if (
-            (keyword = this.expect("for")) &&
+            (keyword = this.keyword("for")) &&
             (a = this.star_targets()) &&
-            (keyword_1 = this.expect("in")) &&
+            (keyword_1 = this.keyword("in")) &&
             (cut = true) &&
             (b = this.disjunction()) &&
             (c = this._loop0_104())
@@ -2883,12 +2882,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // yield_expr: 'yield' 'from' expression | 'yield' star_expressions?
         let a, keyword, keyword_1;
         const mark = this._mark;
-        if ((keyword = this.expect("yield")) && (keyword_1 = this.expect("from")) && (a = this.expression())) {
+        if ((keyword = this.keyword("yield")) && (keyword_1 = this.keyword("from")) && (a = this.expression())) {
             const EXTRA = this.extra(mark);
             return new astnodes.YieldFrom(a, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("yield")) && ((a = this.star_expressions()), 1)) {
+        if ((keyword = this.keyword("yield")) && ((a = this.star_expressions()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Yield(a, ...EXTRA);
         }
@@ -3649,7 +3648,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_del_stmt: 'del' star_expressions
         let a, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("del")) && (a = this.star_expressions())) {
+        if ((keyword = this.keyword("del")) && (a = this.star_expressions())) {
             return this.raise_error_invalid_target(DEL_TARGETS, a);
         }
         this._mark = mark;
@@ -3821,7 +3820,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_with_item: expression 'as' expression
         let a, expression, keyword;
         const mark = this._mark;
-        if ((expression = this.expression()) && (keyword = this.expect("as")) && (a = this.expression())) {
+        if ((expression = this.expression()) && (keyword = this.keyword("as")) && (a = this.expression())) {
             return this.raise_error_invalid_target(STAR_TARGETS, a);
         }
         this._mark = mark;
@@ -3836,7 +3835,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             ((opt = this.expect(56 /* 'ASYNC' */)), 1) &&
-            (keyword = this.expect("for")) &&
+            (keyword = this.keyword("for")) &&
             (a = this.star_expressions())
         ) {
             return this.raise_error_invalid_target(FOR_TARGETS, a);
@@ -4071,11 +4070,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_14: 'import' | 'from'
         let keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("import"))) {
+        if ((keyword = this.keyword("import"))) {
             return keyword;
         }
         this._mark = mark;
-        if ((keyword = this.expect("from"))) {
+        if ((keyword = this.keyword("from"))) {
             return keyword;
         }
         this._mark = mark;
@@ -4088,7 +4087,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_15: 'def' | '@' | ASYNC
         let async, keyword, literal;
         const mark = this._mark;
-        if ((keyword = this.expect("def"))) {
+        if ((keyword = this.keyword("def"))) {
             return keyword;
         }
         this._mark = mark;
@@ -4109,7 +4108,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_16: 'class' | '@'
         let keyword, literal;
         const mark = this._mark;
-        if ((keyword = this.expect("class"))) {
+        if ((keyword = this.keyword("class"))) {
             return keyword;
         }
         this._mark = mark;
@@ -4126,7 +4125,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_17: 'with' | ASYNC
         let async, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("with"))) {
+        if ((keyword = this.keyword("with"))) {
             return keyword;
         }
         this._mark = mark;
@@ -4143,7 +4142,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_18: 'for' | ASYNC
         let async, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("for"))) {
+        if ((keyword = this.keyword("for"))) {
             return keyword;
         }
         this._mark = mark;
@@ -4400,7 +4399,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_35: 'as' NAME
         let keyword, z;
         const mark = this._mark;
-        if ((keyword = this.expect("as")) && (z = this.name())) {
+        if ((keyword = this.keyword("as")) && (z = this.name())) {
             return z;
         }
         this._mark = mark;
@@ -4441,7 +4440,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_38: 'as' NAME
         let keyword, z;
         const mark = this._mark;
-        if ((keyword = this.expect("as")) && (z = this.name())) {
+        if ((keyword = this.keyword("as")) && (z = this.name())) {
             return z;
         }
         this._mark = mark;
@@ -4602,7 +4601,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_49: 'as' NAME
         let keyword, z;
         const mark = this._mark;
-        if ((keyword = this.expect("as")) && (z = this.name())) {
+        if ((keyword = this.keyword("as")) && (z = this.name())) {
             return z;
         }
         this._mark = mark;
@@ -4615,7 +4614,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_50: 'from' expression
         let keyword, z;
         const mark = this._mark;
-        if ((keyword = this.expect("from")) && (z = this.expression())) {
+        if ((keyword = this.keyword("from")) && (z = this.expression())) {
             return z;
         }
         this._mark = mark;
@@ -6016,7 +6015,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_143: 'or' conjunction
         let c, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("or")) && (c = this.conjunction())) {
+        if ((keyword = this.keyword("or")) && (c = this.conjunction())) {
             return c;
         }
         this._mark = mark;
@@ -6029,7 +6028,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_144: 'and' inversion
         let c, keyword;
         const mark = this._mark;
-        if ((keyword = this.expect("and")) && (c = this.inversion())) {
+        if ((keyword = this.keyword("and")) && (c = this.inversion())) {
             return c;
         }
         this._mark = mark;
@@ -6042,7 +6041,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_145: 'if' disjunction
         let keyword, z;
         const mark = this._mark;
-        if ((keyword = this.expect("if")) && (z = this.disjunction())) {
+        if ((keyword = this.keyword("if")) && (z = this.disjunction())) {
             return z;
         }
         this._mark = mark;
@@ -6055,7 +6054,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_146: 'if' disjunction
         let keyword, z;
         const mark = this._mark;
-        if ((keyword = this.expect("if")) && (z = this.disjunction())) {
+        if ((keyword = this.keyword("if")) && (z = this.disjunction())) {
             return z;
         }
         this._mark = mark;
@@ -6197,39 +6196,39 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
     }
 }
 
-GeneratedParser.prototype.keywords = new Map([
-    ["return", new KeywordToken("return", 500)],
-    ["raise", new KeywordToken("raise", 501)],
-    ["pass", new KeywordToken("pass", 502)],
-    ["del", new KeywordToken("del", 503)],
-    ["yield", new KeywordToken("yield", 504)],
-    ["assert", new KeywordToken("assert", 505)],
-    ["break", new KeywordToken("break", 506)],
-    ["continue", new KeywordToken("continue", 507)],
-    ["global", new KeywordToken("global", 508)],
-    ["nonlocal", new KeywordToken("nonlocal", 509)],
-    ["if", new KeywordToken("if", 510)],
-    ["try", new KeywordToken("try", 511)],
-    ["while", new KeywordToken("while", 512)],
-    ["import", new KeywordToken("import", 513)],
-    ["from", new KeywordToken("from", 514)],
-    ["elif", new KeywordToken("elif", 515)],
-    ["else", new KeywordToken("else", 516)],
-    ["for", new KeywordToken("for", 517)],
-    ["in", new KeywordToken("in", 518)],
-    ["with", new KeywordToken("with", 519)],
-    ["as", new KeywordToken("as", 520)],
-    ["except", new KeywordToken("except", 521)],
-    ["finally", new KeywordToken("finally", 522)],
-    ["def", new KeywordToken("def", 523)],
-    ["class", new KeywordToken("class", 524)],
-    ["lambda", new KeywordToken("lambda", 525)],
-    ["not", new KeywordToken("not", 526)],
-    ["is", new KeywordToken("is", 527)],
-    ["True", new KeywordToken("True", 528)],
-    ["False", new KeywordToken("False", 529)],
-    ["None", new KeywordToken("None", 530)],
-    ["__peg_parser__", new KeywordToken("__peg_parser__", 531)],
-    ["or", new KeywordToken("or", 532)],
-    ["and", new KeywordToken("and", 533)],
+export const KEYWORDS = new Set([
+    "return",
+    "raise",
+    "pass",
+    "del",
+    "yield",
+    "assert",
+    "break",
+    "continue",
+    "global",
+    "nonlocal",
+    "if",
+    "try",
+    "while",
+    "import",
+    "from",
+    "elif",
+    "else",
+    "for",
+    "in",
+    "with",
+    "as",
+    "except",
+    "finally",
+    "def",
+    "class",
+    "lambda",
+    "not",
+    "is",
+    "True",
+    "False",
+    "None",
+    "__peg_parser__",
+    "or",
+    "and",
 ]);

@@ -71,16 +71,6 @@ export class KeywordOrStarred<IsKeyword extends boolean = boolean> {
     }
 }
 
-export class KeywordToken {
-    name: string;
-    type: number;
-
-    constructor(name: string, type: number) {
-        this.name = name;
-        this.type = type;
-    }
-}
-
 /** TARGET_TYPES used in error handling */
 export enum TARGETS_TYPE {
     STAR_TARGETS,
