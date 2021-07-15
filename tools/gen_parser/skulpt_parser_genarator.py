@@ -172,7 +172,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
             name = name.lower()
             return name, f"this.{name}()"
         if name in non_exact_tok:
-            return name.lower(), f"this.expect({getattr(token, name)})"
+            return name.lower(), f"this.expect({getattr(token, name)}  /* '{name}' */)"
         return name, f"this.{name}()"
 
     def keyword_helper(self, keyword):
@@ -200,7 +200,7 @@ class PythonCallMakerVisitor(GrammarVisitor):
             #     return_type="Token *",
             #     comment=f"token='{val}'",
             # )
-            return "literal", f"this.expect({EXACT_TOKEN_TYPES[val]})"
+            return "literal", f"this.expect({EXACT_TOKEN_TYPES[val]} /* '{val}' */)"
 
     def visit_Rhs(self, node: Rhs) -> Tuple[Optional[str], str]:
         if node in self.cache:

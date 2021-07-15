@@ -102,7 +102,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // file: statements? $
         let a, endmarker;
         const mark = this._mark;
-        if (((a = this.statements()), 1) && (endmarker = this.expect(0))) {
+        if (((a = this.statements()), 1) && (endmarker = this.expect(0 /* 'ENDMARKER' */))) {
             return pegen.make_module(this, a);
         }
         this._mark = mark;
@@ -128,7 +128,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // eval: expressions NEWLINE* $
         let _loop0_1, a, endmarker;
         const mark = this._mark;
-        if ((a = this.expressions()) && (_loop0_1 = this._loop0_1()) && (endmarker = this.expect(0))) {
+        if (
+            (a = this.expressions()) &&
+            (_loop0_1 = this._loop0_1()) &&
+            (endmarker = this.expect(0 /* 'ENDMARKER' */))
+        ) {
             return new astnodes.Expression(a);
         }
         this._mark = mark;
@@ -142,13 +146,13 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let _loop0_2, a, b, endmarker, literal, literal_1, literal_2;
         const mark = this._mark;
         if (
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             ((a = this.type_expressions()), 1) &&
-            (literal_1 = this.expect(8)) &&
-            (literal_2 = this.expect(51)) &&
+            (literal_1 = this.expect(8 /* ')' */)) &&
+            (literal_2 = this.expect(51 /* '->' */)) &&
             (b = this.expression()) &&
             (_loop0_2 = this._loop0_2()) &&
-            (endmarker = this.expect(0))
+            (endmarker = this.expect(0 /* 'ENDMARKER' */))
         ) {
             return new astnodes.FunctionType(a, b);
         }
@@ -177,11 +181,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this._gather_3()) &&
-            (literal = this.expect(12)) &&
-            (literal_1 = this.expect(16)) &&
+            (literal = this.expect(12 /* ',' */)) &&
+            (literal_1 = this.expect(16 /* '*' */)) &&
             (b = this.expression()) &&
-            (literal_2 = this.expect(12)) &&
-            (literal_3 = this.expect(35)) &&
+            (literal_2 = this.expect(12 /* ',' */)) &&
+            (literal_3 = this.expect(35 /* '**' */)) &&
             (c = this.expression())
         ) {
             return pegen.seq_append_to_end(this, CHECK(pegen.seq_append_to_end(this, a, b)), c);
@@ -189,8 +193,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this._gather_5()) &&
-            (literal = this.expect(12)) &&
-            (literal_1 = this.expect(16)) &&
+            (literal = this.expect(12 /* ',' */)) &&
+            (literal_1 = this.expect(16 /* '*' */)) &&
             (b = this.expression())
         ) {
             return pegen.seq_append_to_end(this, a, b);
@@ -198,28 +202,28 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this._gather_7()) &&
-            (literal = this.expect(12)) &&
-            (literal_1 = this.expect(35)) &&
+            (literal = this.expect(12 /* ',' */)) &&
+            (literal_1 = this.expect(35 /* '**' */)) &&
             (b = this.expression())
         ) {
             return pegen.seq_append_to_end(this, a, b);
         }
         this._mark = mark;
         if (
-            (literal = this.expect(16)) &&
+            (literal = this.expect(16 /* '*' */)) &&
             (a = this.expression()) &&
-            (literal_1 = this.expect(12)) &&
-            (literal_2 = this.expect(35)) &&
+            (literal_1 = this.expect(12 /* ',' */)) &&
+            (literal_2 = this.expect(35 /* '**' */)) &&
             (b = this.expression())
         ) {
             return pegen.seq_append_to_end(this, CHECK(pegen.singleton_seq(this, a)), b);
         }
         this._mark = mark;
-        if ((literal = this.expect(16)) && (a = this.expression())) {
+        if ((literal = this.expect(16 /* '*' */)) && (a = this.expression())) {
             return pegen.singleton_seq(this, a);
         }
         this._mark = mark;
-        if ((literal = this.expect(35)) && (a = this.expression())) {
+        if ((literal = this.expect(35 /* '**' */)) && (a = this.expression())) {
             return pegen.singleton_seq(this, a);
         }
         this._mark = mark;
@@ -266,7 +270,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // statement_newline: compound_stmt NEWLINE | simple_stmt | NEWLINE | $
         let a, endmarker, newline, simple_stmt;
         const mark = this._mark;
-        if ((a = this.compound_stmt()) && (newline = this.expect(4))) {
+        if ((a = this.compound_stmt()) && (newline = this.expect(4 /* 'NEWLINE' */))) {
             return pegen.singleton_seq(this, a);
         }
         this._mark = mark;
@@ -274,12 +278,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return simple_stmt;
         }
         this._mark = mark;
-        if ((newline = this.expect(4))) {
+        if ((newline = this.expect(4 /* 'NEWLINE' */))) {
             const EXTRA = this.extra(mark);
             return pegen.singleton_seq(this, CHECK(new astnodes.Pass(...EXTRA)));
         }
         this._mark = mark;
-        if ((endmarker = this.expect(0))) {
+        if ((endmarker = this.expect(0 /* 'ENDMARKER' */))) {
             return pegen.interactive_exit(this);
         }
         this._mark = mark;
@@ -292,11 +296,19 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // simple_stmt: small_stmt !';' NEWLINE | ';'.small_stmt+ ';'? NEWLINE
         let a, newline, opt;
         const mark = this._mark;
-        if ((a = this.small_stmt()) && this.negative_lookahead(this.expect, 13) && (newline = this.expect(4))) {
+        if (
+            (a = this.small_stmt()) &&
+            this.negative_lookahead(this.expect, 13 /* ';' */) &&
+            (newline = this.expect(4 /* 'NEWLINE' */))
+        ) {
             return pegen.singleton_seq(this, a);
         }
         this._mark = mark;
-        if ((a = this._gather_12()) && ((opt = this.expect(13)), 1) && (newline = this.expect(4))) {
+        if (
+            (a = this._gather_12()) &&
+            ((opt = this.expect(13 /* ';' */)), 1) &&
+            (newline = this.expect(4 /* 'NEWLINE' */))
+        ) {
             return a;
         }
         this._mark = mark;
@@ -422,7 +434,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, invalid_assignment, literal, tc;
         let cut = false;
         const mark = this._mark;
-        if ((a = this.name()) && (literal = this.expect(11)) && (b = this.expression()) && ((c = this._tmp_19()), 1)) {
+        if (
+            (a = this.name()) &&
+            (literal = this.expect(11 /* ':' */)) &&
+            (b = this.expression()) &&
+            ((c = this._tmp_19()), 1)
+        ) {
             const EXTRA = this.extra(mark);
             return CHECK_VERSION(
                 6,
@@ -433,7 +450,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this._tmp_20()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.expression()) &&
             ((c = this._tmp_21()), 1)
         ) {
@@ -444,8 +461,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this._loop1_22()) &&
             (b = this._tmp_23()) &&
-            this.negative_lookahead(this.expect, 22) &&
-            ((tc = this.expect(58)), 1)
+            this.negative_lookahead(this.expect, 22 /* '=' */) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1)
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Assign(a, b, pegen.NEW_TYPE_COMMENT(this, tc), ...EXTRA);
@@ -470,55 +487,55 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // augassign: '+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=' | '**=' | '//='
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(36))) {
+        if ((literal = this.expect(36 /* '+=' */))) {
             return new AugOperator(astnodes.Add);
         }
         this._mark = mark;
-        if ((literal = this.expect(37))) {
+        if ((literal = this.expect(37 /* '-=' */))) {
             return new AugOperator(astnodes.Sub);
         }
         this._mark = mark;
-        if ((literal = this.expect(38))) {
+        if ((literal = this.expect(38 /* '*=' */))) {
             return new AugOperator(astnodes.Mult);
         }
         this._mark = mark;
-        if ((literal = this.expect(50))) {
+        if ((literal = this.expect(50 /* '@=' */))) {
             return CHECK_VERSION(5, "The '@' operator is", new AugOperator(astnodes.MatMult));
         }
         this._mark = mark;
-        if ((literal = this.expect(39))) {
+        if ((literal = this.expect(39 /* '/=' */))) {
             return new AugOperator(astnodes.Div);
         }
         this._mark = mark;
-        if ((literal = this.expect(40))) {
+        if ((literal = this.expect(40 /* '%=' */))) {
             return new AugOperator(astnodes.Mod);
         }
         this._mark = mark;
-        if ((literal = this.expect(41))) {
+        if ((literal = this.expect(41 /* '&=' */))) {
             return new AugOperator(astnodes.BitAnd);
         }
         this._mark = mark;
-        if ((literal = this.expect(42))) {
+        if ((literal = this.expect(42 /* '|=' */))) {
             return new AugOperator(astnodes.BitOr);
         }
         this._mark = mark;
-        if ((literal = this.expect(43))) {
+        if ((literal = this.expect(43 /* '^=' */))) {
             return new AugOperator(astnodes.BitXor);
         }
         this._mark = mark;
-        if ((literal = this.expect(44))) {
+        if ((literal = this.expect(44 /* '<<=' */))) {
             return new AugOperator(astnodes.LShift);
         }
         this._mark = mark;
-        if ((literal = this.expect(45))) {
+        if ((literal = this.expect(45 /* '>>=' */))) {
             return new AugOperator(astnodes.RShift);
         }
         this._mark = mark;
-        if ((literal = this.expect(46))) {
+        if ((literal = this.expect(46 /* '**=' */))) {
             return new AugOperator(astnodes.Pow);
         }
         this._mark = mark;
-        if ((literal = this.expect(48))) {
+        if ((literal = this.expect(48 /* '//=' */))) {
             return new AugOperator(astnodes.FloorDiv);
         }
         this._mark = mark;
@@ -667,19 +684,22 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, import_from_as_names, invalid_import_from_targets, literal, literal_1, opt;
         const mark = this._mark;
         if (
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             (a = this.import_from_as_names()) &&
-            ((opt = this.expect(12)), 1) &&
-            (literal_1 = this.expect(8))
+            ((opt = this.expect(12 /* ',' */)), 1) &&
+            (literal_1 = this.expect(8 /* ')' */))
         ) {
             return a;
         }
         this._mark = mark;
-        if ((import_from_as_names = this.import_from_as_names()) && this.negative_lookahead(this.expect, 12)) {
+        if (
+            (import_from_as_names = this.import_from_as_names()) &&
+            this.negative_lookahead(this.expect, 12 /* ',' */)
+        ) {
             return import_from_as_names;
         }
         this._mark = mark;
-        if ((literal = this.expect(16))) {
+        if ((literal = this.expect(16 /* '*' */))) {
             return pegen.singleton_seq(this, CHECK(pegen.alias_for_star(this)));
         }
         this._mark = mark;
@@ -748,7 +768,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // dotted_name: dotted_name '.' NAME | NAME
         let a, b, literal, name;
         const mark = this._mark;
-        if ((a = this.dotted_name()) && (literal = this.expect(23)) && (b = this.name())) {
+        if ((a = this.dotted_name()) && (literal = this.expect(23 /* '.' */)) && (b = this.name())) {
             return pegen.join_names_with_dot(this, a, b);
         }
         this._mark = mark;
@@ -768,7 +788,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("if")) &&
             (a = this.named_expression()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             (c = this.elif_stmt())
         ) {
@@ -779,7 +799,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("if")) &&
             (a = this.named_expression()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             ((c = this.else_block()), 1)
         ) {
@@ -799,7 +819,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("elif")) &&
             (a = this.named_expression()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             (c = this.elif_stmt())
         ) {
@@ -810,7 +830,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("elif")) &&
             (a = this.named_expression()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             ((c = this.else_block()), 1)
         ) {
@@ -827,7 +847,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // else_block: 'else' ':' block
         let b, keyword, literal;
         const mark = this._mark;
-        if ((keyword = this.expect("else")) && (literal = this.expect(11)) && (b = this.block())) {
+        if ((keyword = this.expect("else")) && (literal = this.expect(11 /* ':' */)) && (b = this.block())) {
             return b;
         }
         this._mark = mark;
@@ -843,7 +863,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("while")) &&
             (a = this.named_expression()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             ((c = this.else_block()), 1)
         ) {
@@ -867,8 +887,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             (keyword_1 = this.expect("in")) &&
             (cut = true) &&
             (ex = this.star_expressions()) &&
-            (literal = this.expect(11)) &&
-            ((tc = this.expect(58)), 1) &&
+            (literal = this.expect(11 /* ':' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
             (b = this.block()) &&
             ((el = this.else_block()), 1)
         ) {
@@ -878,14 +898,14 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (cut) return null;
         if (
-            (async = this.expect(56)) &&
+            (async = this.expect(56 /* 'ASYNC' */)) &&
             (keyword = this.expect("for")) &&
             (t = this.star_targets()) &&
             (keyword_1 = this.expect("in")) &&
             (cut = true) &&
             (ex = this.star_expressions()) &&
-            (literal = this.expect(11)) &&
-            ((tc = this.expect(58)), 1) &&
+            (literal = this.expect(11 /* ':' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
             (b = this.block()) &&
             ((el = this.else_block()), 1)
         ) {
@@ -913,11 +933,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (keyword = this.expect("with")) &&
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             (a = this._gather_39()) &&
-            ((opt = this.expect(12)), 1) &&
-            (literal_1 = this.expect(8)) &&
-            (literal_2 = this.expect(11)) &&
+            ((opt = this.expect(12 /* ',' */)), 1) &&
+            (literal_1 = this.expect(8 /* ')' */)) &&
+            (literal_2 = this.expect(11 /* ':' */)) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -927,8 +947,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("with")) &&
             (a = this._gather_41()) &&
-            (literal = this.expect(11)) &&
-            ((tc = this.expect(58)), 1) &&
+            (literal = this.expect(11 /* ':' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -936,13 +956,13 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (async = this.expect(56)) &&
+            (async = this.expect(56 /* 'ASYNC' */)) &&
             (keyword = this.expect("with")) &&
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             (a = this._gather_43()) &&
-            ((opt = this.expect(12)), 1) &&
-            (literal_1 = this.expect(8)) &&
-            (literal_2 = this.expect(11)) &&
+            ((opt = this.expect(12 /* ',' */)), 1) &&
+            (literal_1 = this.expect(8 /* ')' */)) &&
+            (literal_2 = this.expect(11 /* ':' */)) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -950,11 +970,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (async = this.expect(56)) &&
+            (async = this.expect(56 /* 'ASYNC' */)) &&
             (keyword = this.expect("with")) &&
             (a = this._gather_45()) &&
-            (literal = this.expect(11)) &&
-            ((tc = this.expect(58)), 1) &&
+            (literal = this.expect(11 /* ':' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -1002,7 +1022,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (keyword = this.expect("try")) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             (f = this.finally_block())
         ) {
@@ -1012,7 +1032,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (keyword = this.expect("try")) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block()) &&
             (ex = this._loop1_48()) &&
             ((el = this.else_block()), 1) &&
@@ -1035,14 +1055,14 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             (keyword = this.expect("except")) &&
             (e = this.expression()) &&
             ((t = this._tmp_49()), 1) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.block())
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.ExceptHandler(e, t ? t.id : null, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((keyword = this.expect("except")) && (literal = this.expect(11)) && (b = this.block())) {
+        if ((keyword = this.expect("except")) && (literal = this.expect(11 /* ':' */)) && (b = this.block())) {
             const EXTRA = this.extra(mark);
             return new astnodes.ExceptHandler(null, null, b, ...EXTRA);
         }
@@ -1056,7 +1076,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // finally_block: 'finally' ':' block
         let a, keyword, literal;
         const mark = this._mark;
-        if ((keyword = this.expect("finally")) && (literal = this.expect(11)) && (a = this.block())) {
+        if ((keyword = this.expect("finally")) && (literal = this.expect(11 /* ':' */)) && (a = this.block())) {
             return a;
         }
         this._mark = mark;
@@ -1122,11 +1142,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("def")) &&
             (n = this.name()) &&
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             ((params = this.params()), 1) &&
-            (literal_1 = this.expect(8)) &&
+            (literal_1 = this.expect(8 /* ')' */)) &&
             ((a = this._tmp_51()), 1) &&
-            (literal_2 = this.expect(11)) &&
+            (literal_2 = this.expect(11 /* ':' */)) &&
             ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
         ) {
@@ -1143,14 +1163,14 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (async = this.expect(56)) &&
+            (async = this.expect(56 /* 'ASYNC' */)) &&
             (keyword = this.expect("def")) &&
             (n = this.name()) &&
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             ((params = this.params()), 1) &&
-            (literal_1 = this.expect(8)) &&
+            (literal_1 = this.expect(8 /* ')' */)) &&
             ((a = this._tmp_52()), 1) &&
-            (literal_2 = this.expect(11)) &&
+            (literal_2 = this.expect(11 /* ':' */)) &&
             ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
         ) {
@@ -1179,7 +1199,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // func_type_comment: NEWLINE TYPE_COMMENT &(NEWLINE INDENT) | invalid_double_type_comments | TYPE_COMMENT
         let invalid_double_type_comments, newline, t, type_comment;
         const mark = this._mark;
-        if ((newline = this.expect(4)) && (t = this.expect(58)) && this.positive_lookahead(this._tmp_53)) {
+        if (
+            (newline = this.expect(4 /* 'NEWLINE' */)) &&
+            (t = this.expect(58 /* 'TYPE_COMMENT' */)) &&
+            this.positive_lookahead(this._tmp_53)
+        ) {
             return t;
         }
         this._mark = mark;
@@ -1187,7 +1211,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return invalid_double_type_comments;
         }
         this._mark = mark;
-        if ((type_comment = this.expect(58))) {
+        if ((type_comment = this.expect(58 /* 'TYPE_COMMENT' */))) {
             return type_comment;
         }
         this._mark = mark;
@@ -1251,11 +1275,19 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // slash_no_default: param_no_default+ '/' ',' | param_no_default+ '/' &')'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((a = this._loop1_60()) && (literal = this.expect(17)) && (literal_1 = this.expect(12))) {
+        if (
+            (a = this._loop1_60()) &&
+            (literal = this.expect(17 /* '/' */)) &&
+            (literal_1 = this.expect(12 /* ',' */))
+        ) {
             return a;
         }
         this._mark = mark;
-        if ((a = this._loop1_61()) && (literal = this.expect(17)) && this.positive_lookahead(this.expect, 8)) {
+        if (
+            (a = this._loop1_61()) &&
+            (literal = this.expect(17 /* '/' */)) &&
+            this.positive_lookahead(this.expect, 8 /* ')' */)
+        ) {
             return a;
         }
         this._mark = mark;
@@ -1271,8 +1303,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this._loop0_62()) &&
             (b = this._loop1_63()) &&
-            (literal = this.expect(17)) &&
-            (literal_1 = this.expect(12))
+            (literal = this.expect(17 /* '/' */)) &&
+            (literal_1 = this.expect(12 /* ',' */))
         ) {
             return new SlashWithDefault(a, b);
         }
@@ -1280,8 +1312,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this._loop0_64()) &&
             (b = this._loop1_65()) &&
-            (literal = this.expect(17)) &&
-            this.positive_lookahead(this.expect, 8)
+            (literal = this.expect(17 /* '/' */)) &&
+            this.positive_lookahead(this.expect, 8 /* ')' */)
         ) {
             return new SlashWithDefault(a, b);
         }
@@ -1296,7 +1328,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, invalid_star_etc, literal, literal_1;
         const mark = this._mark;
         if (
-            (literal = this.expect(16)) &&
+            (literal = this.expect(16 /* '*' */)) &&
             (a = this.param_no_default()) &&
             (b = this._loop0_66()) &&
             ((c = this.kwds()), 1)
@@ -1305,8 +1337,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (literal = this.expect(16)) &&
-            (literal_1 = this.expect(12)) &&
+            (literal = this.expect(16 /* '*' */)) &&
+            (literal_1 = this.expect(12 /* ',' */)) &&
             (b = this._loop1_67()) &&
             ((c = this.kwds()), 1)
         ) {
@@ -1330,7 +1362,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // kwds: '**' param_no_default
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(35)) && (a = this.param_no_default())) {
+        if ((literal = this.expect(35 /* '**' */)) && (a = this.param_no_default())) {
             return a;
         }
         this._mark = mark;
@@ -1343,11 +1375,19 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // param_no_default: param ',' TYPE_COMMENT? | param TYPE_COMMENT? &')'
         let a, literal, tc;
         const mark = this._mark;
-        if ((a = this.param()) && (literal = this.expect(12)) && ((tc = this.expect(58)), 1)) {
+        if (
+            (a = this.param()) &&
+            (literal = this.expect(12 /* ',' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1)
+        ) {
             return pegen.add_type_comment_to_arg(this, a, tc);
         }
         this._mark = mark;
-        if ((a = this.param()) && ((tc = this.expect(58)), 1) && this.positive_lookahead(this.expect, 8)) {
+        if (
+            (a = this.param()) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
+            this.positive_lookahead(this.expect, 8 /* ')' */)
+        ) {
             return pegen.add_type_comment_to_arg(this, a, tc);
         }
         this._mark = mark;
@@ -1360,15 +1400,20 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // param_with_default: param default ',' TYPE_COMMENT? | param default TYPE_COMMENT? &')'
         let a, c, literal, tc;
         const mark = this._mark;
-        if ((a = this.param()) && (c = this.default()) && (literal = this.expect(12)) && ((tc = this.expect(58)), 1)) {
+        if (
+            (a = this.param()) &&
+            (c = this.default()) &&
+            (literal = this.expect(12 /* ',' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1)
+        ) {
             return pegen.name_default_pair(this, a, c, tc);
         }
         this._mark = mark;
         if (
             (a = this.param()) &&
             (c = this.default()) &&
-            ((tc = this.expect(58)), 1) &&
-            this.positive_lookahead(this.expect, 8)
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
+            this.positive_lookahead(this.expect, 8 /* ')' */)
         ) {
             return pegen.name_default_pair(this, a, c, tc);
         }
@@ -1385,8 +1430,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this.param()) &&
             ((c = this.default()), 1) &&
-            (literal = this.expect(12)) &&
-            ((tc = this.expect(58)), 1)
+            (literal = this.expect(12 /* ',' */)) &&
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1)
         ) {
             return pegen.name_default_pair(this, a, c, tc);
         }
@@ -1394,8 +1439,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this.param()) &&
             ((c = this.default()), 1) &&
-            ((tc = this.expect(58)), 1) &&
-            this.positive_lookahead(this.expect, 8)
+            ((tc = this.expect(58 /* 'TYPE_COMMENT' */)), 1) &&
+            this.positive_lookahead(this.expect, 8 /* ')' */)
         ) {
             return pegen.name_default_pair(this, a, c, tc);
         }
@@ -1423,7 +1468,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // annotation: ':' expression
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(11)) && (a = this.expression())) {
+        if ((literal = this.expect(11 /* ':' */)) && (a = this.expression())) {
             return a;
         }
         this._mark = mark;
@@ -1436,7 +1481,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // default: '=' expression
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(22)) && (a = this.expression())) {
+        if ((literal = this.expect(22 /* '=' */)) && (a = this.expression())) {
             return a;
         }
         this._mark = mark;
@@ -1483,7 +1528,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             (keyword = this.expect("class")) &&
             (a = this.name()) &&
             ((b = this._tmp_69()), 1) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (c = this.block())
         ) {
             const EXTRA = this.extra(mark);
@@ -1500,10 +1545,10 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, dedent, indent, invalid_block, newline, simple_stmt;
         const mark = this._mark;
         if (
-            (newline = this.expect(4)) &&
-            (indent = this.expect(5)) &&
+            (newline = this.expect(4 /* 'NEWLINE' */)) &&
+            (indent = this.expect(5 /* 'INDENT' */)) &&
             (a = this.statements()) &&
-            (dedent = this.expect(6))
+            (dedent = this.expect(6 /* 'DEDENT' */))
         ) {
             return a;
         }
@@ -1525,12 +1570,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_expressions: star_expression ((',' star_expression))+ ','? | star_expression ',' | star_expression
         let a, b, literal, opt, star_expression;
         const mark = this._mark;
-        if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.star_expression()) && (literal = this.expect(12))) {
+        if ((a = this.star_expression()) && (literal = this.expect(12 /* ',' */))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), astnodes.Load, ...EXTRA);
         }
@@ -1548,7 +1593,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_expression: '*' bitwise_or | expression
         let a, expression, literal;
         const mark = this._mark;
-        if ((literal = this.expect(16)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(16 /* '*' */)) && (a = this.bitwise_or())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Starred(a, astnodes.Load, ...EXTRA);
         }
@@ -1566,7 +1611,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_named_expressions: ','.star_named_expression+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_71()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this._gather_71()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -1579,7 +1624,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_named_expression: '*' bitwise_or | named_expression
         let a, literal, named_expression;
         const mark = this._mark;
-        if ((literal = this.expect(16)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(16 /* '*' */)) && (a = this.bitwise_or())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Starred(a, astnodes.Load, ...EXTRA);
         }
@@ -1598,13 +1643,13 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, expression, invalid_named_expression, literal;
         let cut = false;
         const mark = this._mark;
-        if ((a = this.name()) && (literal = this.expect(53)) && (cut = true) && (b = this.expression())) {
+        if ((a = this.name()) && (literal = this.expect(53 /* ':=' */)) && (cut = true) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
             return new astnodes.NamedExpr(CHECK(pegen.set_expr_context(this, a, astnodes.Store)), b, ...EXTRA);
         }
         this._mark = mark;
         if (cut) return null;
-        if ((expression = this.expression()) && this.negative_lookahead(this.expect, 53)) {
+        if ((expression = this.expression()) && this.negative_lookahead(this.expect, 53 /* ':=' */)) {
             return expression;
         }
         this._mark = mark;
@@ -1638,12 +1683,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // expressions: expression ((',' expression))+ ','? | expression ',' | expression
         let a, b, expression, literal, opt;
         const mark = this._mark;
-        if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.expression()) && (literal = this.expect(12))) {
+        if ((a = this.expression()) && (literal = this.expect(12 /* ',' */))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.singleton_seq(this, a)), astnodes.Load, ...EXTRA);
         }
@@ -1692,7 +1737,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (keyword = this.expect("lambda")) &&
             ((a = this.lambda_params()), 1) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (b = this.expression())
         ) {
             const EXTRA = this.extra(mark);
@@ -1759,11 +1804,19 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lambda_slash_no_default: lambda_param_no_default+ '/' ',' | lambda_param_no_default+ '/' &':'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((a = this._loop1_80()) && (literal = this.expect(17)) && (literal_1 = this.expect(12))) {
+        if (
+            (a = this._loop1_80()) &&
+            (literal = this.expect(17 /* '/' */)) &&
+            (literal_1 = this.expect(12 /* ',' */))
+        ) {
             return a;
         }
         this._mark = mark;
-        if ((a = this._loop1_81()) && (literal = this.expect(17)) && this.positive_lookahead(this.expect, 11)) {
+        if (
+            (a = this._loop1_81()) &&
+            (literal = this.expect(17 /* '/' */)) &&
+            this.positive_lookahead(this.expect, 11 /* ':' */)
+        ) {
             return a;
         }
         this._mark = mark;
@@ -1779,8 +1832,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this._loop0_82()) &&
             (b = this._loop1_83()) &&
-            (literal = this.expect(17)) &&
-            (literal_1 = this.expect(12))
+            (literal = this.expect(17 /* '/' */)) &&
+            (literal_1 = this.expect(12 /* ',' */))
         ) {
             return new SlashWithDefault(a, b);
         }
@@ -1788,8 +1841,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         if (
             (a = this._loop0_84()) &&
             (b = this._loop1_85()) &&
-            (literal = this.expect(17)) &&
-            this.positive_lookahead(this.expect, 11)
+            (literal = this.expect(17 /* '/' */)) &&
+            this.positive_lookahead(this.expect, 11 /* ':' */)
         ) {
             return new SlashWithDefault(a, b);
         }
@@ -1804,7 +1857,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, c, invalid_lambda_star_etc, literal, literal_1;
         const mark = this._mark;
         if (
-            (literal = this.expect(16)) &&
+            (literal = this.expect(16 /* '*' */)) &&
             (a = this.lambda_param_no_default()) &&
             (b = this._loop0_86()) &&
             ((c = this.lambda_kwds()), 1)
@@ -1813,8 +1866,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         }
         this._mark = mark;
         if (
-            (literal = this.expect(16)) &&
-            (literal_1 = this.expect(12)) &&
+            (literal = this.expect(16 /* '*' */)) &&
+            (literal_1 = this.expect(12 /* ',' */)) &&
             (b = this._loop1_87()) &&
             ((c = this.lambda_kwds()), 1)
         ) {
@@ -1838,7 +1891,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lambda_kwds: '**' lambda_param_no_default
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(35)) && (a = this.lambda_param_no_default())) {
+        if ((literal = this.expect(35 /* '**' */)) && (a = this.lambda_param_no_default())) {
             return a;
         }
         this._mark = mark;
@@ -1851,11 +1904,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lambda_param_no_default: lambda_param ',' | lambda_param &':'
         let a, literal;
         const mark = this._mark;
-        if ((a = this.lambda_param()) && (literal = this.expect(12))) {
+        if ((a = this.lambda_param()) && (literal = this.expect(12 /* ',' */))) {
             return a;
         }
         this._mark = mark;
-        if ((a = this.lambda_param()) && this.positive_lookahead(this.expect, 11)) {
+        if ((a = this.lambda_param()) && this.positive_lookahead(this.expect, 11 /* ':' */)) {
             return a;
         }
         this._mark = mark;
@@ -1868,11 +1921,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lambda_param_with_default: lambda_param default ',' | lambda_param default &':'
         let a, c, literal;
         const mark = this._mark;
-        if ((a = this.lambda_param()) && (c = this.default()) && (literal = this.expect(12))) {
+        if ((a = this.lambda_param()) && (c = this.default()) && (literal = this.expect(12 /* ',' */))) {
             return pegen.name_default_pair(this, a, c, null);
         }
         this._mark = mark;
-        if ((a = this.lambda_param()) && (c = this.default()) && this.positive_lookahead(this.expect, 11)) {
+        if ((a = this.lambda_param()) && (c = this.default()) && this.positive_lookahead(this.expect, 11 /* ':' */)) {
             return pegen.name_default_pair(this, a, c, null);
         }
         this._mark = mark;
@@ -1885,11 +1938,15 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lambda_param_maybe_default: lambda_param default? ',' | lambda_param default? &':'
         let a, c, literal;
         const mark = this._mark;
-        if ((a = this.lambda_param()) && ((c = this.default()), 1) && (literal = this.expect(12))) {
+        if ((a = this.lambda_param()) && ((c = this.default()), 1) && (literal = this.expect(12 /* ',' */))) {
             return pegen.name_default_pair(this, a, c, null);
         }
         this._mark = mark;
-        if ((a = this.lambda_param()) && ((c = this.default()), 1) && this.positive_lookahead(this.expect, 11)) {
+        if (
+            (a = this.lambda_param()) &&
+            ((c = this.default()), 1) &&
+            this.positive_lookahead(this.expect, 11 /* ':' */)
+        ) {
             return pegen.name_default_pair(this, a, c, null);
         }
         this._mark = mark;
@@ -2051,7 +2108,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // eq_bitwise_or: '==' bitwise_or
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(27)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(27 /* '==' */)) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.Eq, a);
         }
         this._mark = mark;
@@ -2064,7 +2121,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // noteq_bitwise_or: ('!=') bitwise_or
         let a, tok;
         const mark = this._mark;
-        if ((tok = this.expect(28)) && (a = this.bitwise_or())) {
+        if ((tok = this.expect(28 /* '!=' */)) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.NotEq, a);
         }
         this._mark = mark;
@@ -2077,7 +2134,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lte_bitwise_or: '<=' bitwise_or
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(29)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(29 /* '<=' */)) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.LtE, a);
         }
         this._mark = mark;
@@ -2090,7 +2147,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // lt_bitwise_or: '<' bitwise_or
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(20)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(20 /* '<' */)) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.Lt, a);
         }
         this._mark = mark;
@@ -2103,7 +2160,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // gte_bitwise_or: '>=' bitwise_or
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(30)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(30 /* '>=' */)) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.GtE, a);
         }
         this._mark = mark;
@@ -2116,7 +2173,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // gt_bitwise_or: '>' bitwise_or
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(21)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(21 /* '>' */)) && (a = this.bitwise_or())) {
             return new CmpopExprPair(astnodes.Gt, a);
         }
         this._mark = mark;
@@ -2181,7 +2238,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // bitwise_or: bitwise_or '|' bitwise_xor | bitwise_xor
         let a, b, bitwise_xor, literal;
         const mark = this._mark;
-        if ((a = this.bitwise_or()) && (literal = this.expect(18)) && (b = this.bitwise_xor())) {
+        if ((a = this.bitwise_or()) && (literal = this.expect(18 /* '|' */)) && (b = this.bitwise_xor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.BitOr, b, ...EXTRA);
         }
@@ -2199,7 +2256,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // bitwise_xor: bitwise_xor '^' bitwise_and | bitwise_and
         let a, b, bitwise_and, literal;
         const mark = this._mark;
-        if ((a = this.bitwise_xor()) && (literal = this.expect(32)) && (b = this.bitwise_and())) {
+        if ((a = this.bitwise_xor()) && (literal = this.expect(32 /* '^' */)) && (b = this.bitwise_and())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.BitXor, b, ...EXTRA);
         }
@@ -2217,7 +2274,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // bitwise_and: bitwise_and '&' shift_expr | shift_expr
         let a, b, literal, shift_expr;
         const mark = this._mark;
-        if ((a = this.bitwise_and()) && (literal = this.expect(19)) && (b = this.shift_expr())) {
+        if ((a = this.bitwise_and()) && (literal = this.expect(19 /* '&' */)) && (b = this.shift_expr())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.BitAnd, b, ...EXTRA);
         }
@@ -2235,12 +2292,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // shift_expr: shift_expr '<<' sum | shift_expr '>>' sum | sum
         let a, b, literal, sum;
         const mark = this._mark;
-        if ((a = this.shift_expr()) && (literal = this.expect(33)) && (b = this.sum())) {
+        if ((a = this.shift_expr()) && (literal = this.expect(33 /* '<<' */)) && (b = this.sum())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.LShift, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.shift_expr()) && (literal = this.expect(34)) && (b = this.sum())) {
+        if ((a = this.shift_expr()) && (literal = this.expect(34 /* '>>' */)) && (b = this.sum())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.RShift, b, ...EXTRA);
         }
@@ -2258,12 +2315,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // sum: sum '+' term | sum '-' term | term
         let a, b, literal, term;
         const mark = this._mark;
-        if ((a = this.sum()) && (literal = this.expect(14)) && (b = this.term())) {
+        if ((a = this.sum()) && (literal = this.expect(14 /* '+' */)) && (b = this.term())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.Add, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.sum()) && (literal = this.expect(15)) && (b = this.term())) {
+        if ((a = this.sum()) && (literal = this.expect(15 /* '-' */)) && (b = this.term())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.Sub, b, ...EXTRA);
         }
@@ -2281,27 +2338,27 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // term: term '*' factor | term '/' factor | term '//' factor | term '%' factor | term '@' factor | factor
         let a, b, factor, literal;
         const mark = this._mark;
-        if ((a = this.term()) && (literal = this.expect(16)) && (b = this.factor())) {
+        if ((a = this.term()) && (literal = this.expect(16 /* '*' */)) && (b = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.Mult, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.term()) && (literal = this.expect(17)) && (b = this.factor())) {
+        if ((a = this.term()) && (literal = this.expect(17 /* '/' */)) && (b = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.Div, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.term()) && (literal = this.expect(47)) && (b = this.factor())) {
+        if ((a = this.term()) && (literal = this.expect(47 /* '//' */)) && (b = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.FloorDiv, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.term()) && (literal = this.expect(24)) && (b = this.factor())) {
+        if ((a = this.term()) && (literal = this.expect(24 /* '%' */)) && (b = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.Mod, b, ...EXTRA);
         }
         this._mark = mark;
-        if ((a = this.term()) && (literal = this.expect(49)) && (b = this.factor())) {
+        if ((a = this.term()) && (literal = this.expect(49 /* '@' */)) && (b = this.factor())) {
             const EXTRA = this.extra(mark);
             return CHECK_VERSION(5, "The '@' operator is", new astnodes.BinOp(a, astnodes.MatMult, b, ...EXTRA));
         }
@@ -2319,17 +2376,17 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // factor: '+' factor | '-' factor | '~' factor | power
         let a, literal, power;
         const mark = this._mark;
-        if ((literal = this.expect(14)) && (a = this.factor())) {
+        if ((literal = this.expect(14 /* '+' */)) && (a = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.UnaryOp(astnodes.UAdd, a, ...EXTRA);
         }
         this._mark = mark;
-        if ((literal = this.expect(15)) && (a = this.factor())) {
+        if ((literal = this.expect(15 /* '-' */)) && (a = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.UnaryOp(astnodes.USub, a, ...EXTRA);
         }
         this._mark = mark;
-        if ((literal = this.expect(31)) && (a = this.factor())) {
+        if ((literal = this.expect(31 /* '~' */)) && (a = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.UnaryOp(astnodes.Invert, a, ...EXTRA);
         }
@@ -2347,7 +2404,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // power: await_primary '**' factor | await_primary
         let a, await_primary, b, literal;
         const mark = this._mark;
-        if ((a = this.await_primary()) && (literal = this.expect(35)) && (b = this.factor())) {
+        if ((a = this.await_primary()) && (literal = this.expect(35 /* '**' */)) && (b = this.factor())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BinOp(a, astnodes.Pow, b, ...EXTRA);
         }
@@ -2365,7 +2422,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // await_primary: AWAIT primary | primary
         let a, await_, primary;
         const mark = this._mark;
-        if ((await_ = this.expect(55)) && (a = this.primary())) {
+        if ((await_ = this.expect(55 /* 'AWAIT' */)) && (a = this.primary())) {
             const EXTRA = this.extra(mark);
             return CHECK_VERSION(5, "Await expressions are", new astnodes.Await(a, ...EXTRA));
         }
@@ -2387,7 +2444,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return invalid_primary;
         }
         this._mark = mark;
-        if ((a = this.primary()) && (literal = this.expect(23)) && (b = this.name())) {
+        if ((a = this.primary()) && (literal = this.expect(23 /* '.' */)) && (b = this.name())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA);
         }
@@ -2399,9 +2456,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.primary()) &&
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             ((b = this.arguments_()), 1) &&
-            (literal_1 = this.expect(8))
+            (literal_1 = this.expect(8 /* ')' */))
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Call(a, b ? b.args : null, b ? b.keywords : null, ...EXTRA);
@@ -2409,9 +2466,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.primary()) &&
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (b = this.slices()) &&
-            (literal_1 = this.expect(10))
+            (literal_1 = this.expect(10 /* ']' */))
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA);
@@ -2430,11 +2487,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // slices: slice !',' | ','.slice+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this.slice()) && this.negative_lookahead(this.expect, 12)) {
+        if ((a = this.slice()) && this.negative_lookahead(this.expect, 12 /* ',' */)) {
             return a;
         }
         this._mark = mark;
-        if ((a = this._gather_91()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this._gather_91()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(a, astnodes.Load, ...EXTRA);
         }
@@ -2450,7 +2507,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             ((a = this.expression()), 1) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             ((b = this.expression()), 1) &&
             ((c = this._tmp_93()), 1)
         ) {
@@ -2502,19 +2559,19 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return number;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, 7) && (_tmp_94 = this._tmp_94())) {
+        if (this.positive_lookahead(this.expect, 7 /* '(' */) && (_tmp_94 = this._tmp_94())) {
             return _tmp_94;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, 9) && (_tmp_95 = this._tmp_95())) {
+        if (this.positive_lookahead(this.expect, 9 /* '[' */) && (_tmp_95 = this._tmp_95())) {
             return _tmp_95;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, 25) && (_tmp_96 = this._tmp_96())) {
+        if (this.positive_lookahead(this.expect, 25 /* '{' */) && (_tmp_96 = this._tmp_96())) {
             return _tmp_96;
         }
         this._mark = mark;
-        if ((literal = this.expect(52))) {
+        if ((literal = this.expect(52 /* '...' */))) {
             const EXTRA = this.extra(mark);
             return new astnodes.Constant(pyEllipsis, null, ...EXTRA);
         }
@@ -2541,7 +2598,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // list: '[' star_named_expressions? ']'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(9)) && ((a = this.star_named_expressions()), 1) && (literal_1 = this.expect(10))) {
+        if (
+            (literal = this.expect(9 /* '[' */)) &&
+            ((a = this.star_named_expressions()), 1) &&
+            (literal_1 = this.expect(10 /* ']' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.List(a, astnodes.Load, ...EXTRA);
         }
@@ -2557,11 +2618,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let cut = false;
         const mark = this._mark;
         if (
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (a = this.named_expression()) &&
             (cut = true) &&
             (b = this.for_if_clauses()) &&
-            (literal_1 = this.expect(10))
+            (literal_1 = this.expect(10 /* ']' */))
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.ListComp(a, b, ...EXTRA);
@@ -2581,7 +2642,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // tuple: '(' [star_named_expression ',' star_named_expressions?] ')'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(7)) && ((a = this._tmp_98()), 1) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            ((a = this._tmp_98()), 1) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(a, astnodes.Load, ...EXTRA);
         }
@@ -2595,7 +2660,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // group: '(' (yield_expr | named_expression) ')' | invalid_group
         let a, invalid_group, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(7)) && (a = this._tmp_99()) && (literal_1 = this.expect(8))) {
+        if ((literal = this.expect(7 /* '(' */)) && (a = this._tmp_99()) && (literal_1 = this.expect(8 /* ')' */))) {
             return a;
         }
         this._mark = mark;
@@ -2614,11 +2679,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let cut = false;
         const mark = this._mark;
         if (
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             (a = this.named_expression()) &&
             (cut = true) &&
             (b = this.for_if_clauses()) &&
-            (literal_1 = this.expect(8))
+            (literal_1 = this.expect(8 /* ')' */))
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.GeneratorExp(a, b, ...EXTRA);
@@ -2638,7 +2703,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // set: '{' star_named_expressions '}'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(25)) && (a = this.star_named_expressions()) && (literal_1 = this.expect(26))) {
+        if (
+            (literal = this.expect(25 /* '{' */)) &&
+            (a = this.star_named_expressions()) &&
+            (literal_1 = this.expect(26 /* '}' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Set(a, ...EXTRA);
         }
@@ -2654,11 +2723,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let cut = false;
         const mark = this._mark;
         if (
-            (literal = this.expect(25)) &&
+            (literal = this.expect(25 /* '{' */)) &&
             (a = this.named_expression()) &&
             (cut = true) &&
             (b = this.for_if_clauses()) &&
-            (literal_1 = this.expect(26))
+            (literal_1 = this.expect(26 /* '}' */))
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.SetComp(a, b, ...EXTRA);
@@ -2678,7 +2747,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // dict: '{' double_starred_kvpairs? '}'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(25)) && ((a = this.double_starred_kvpairs()), 1) && (literal_1 = this.expect(26))) {
+        if (
+            (literal = this.expect(25 /* '{' */)) &&
+            ((a = this.double_starred_kvpairs()), 1) &&
+            (literal_1 = this.expect(26 /* '}' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Dict(CHECK(pegen.get_keys(this, a)), CHECK(pegen.get_values(this, a)), ...EXTRA);
         }
@@ -2693,10 +2766,10 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, b, invalid_dict_comprehension, literal, literal_1;
         const mark = this._mark;
         if (
-            (literal = this.expect(25)) &&
+            (literal = this.expect(25 /* '{' */)) &&
             (a = this.kvpair()) &&
             (b = this.for_if_clauses()) &&
-            (literal_1 = this.expect(26))
+            (literal_1 = this.expect(26 /* '}' */))
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.DictComp(a.key, a.value, b, ...EXTRA);
@@ -2715,7 +2788,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // double_starred_kvpairs: ','.double_starred_kvpair+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_100()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this._gather_100()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -2728,7 +2801,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // double_starred_kvpair: '**' bitwise_or | kvpair
         let a, kvpair, literal;
         const mark = this._mark;
-        if ((literal = this.expect(35)) && (a = this.bitwise_or())) {
+        if ((literal = this.expect(35 /* '**' */)) && (a = this.bitwise_or())) {
             return new KeyValuePair(null, a);
         }
         this._mark = mark;
@@ -2745,7 +2818,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // kvpair: expression ':' expression
         let a, b, literal;
         const mark = this._mark;
-        if ((a = this.expression()) && (literal = this.expect(11)) && (b = this.expression())) {
+        if ((a = this.expression()) && (literal = this.expect(11 /* ':' */)) && (b = this.expression())) {
             return new KeyValuePair(a, b);
         }
         this._mark = mark;
@@ -2773,7 +2846,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let cut = false;
         const mark = this._mark;
         if (
-            (async = this.expect(56)) &&
+            (async = this.expect(56 /* 'ASYNC' */)) &&
             (keyword = this.expect("for")) &&
             (a = this.star_targets()) &&
             (keyword_1 = this.expect("in")) &&
@@ -2829,7 +2902,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // arguments_: args ','? &')' | invalid_arguments
         let a, invalid_arguments, opt;
         const mark = this._mark;
-        if ((a = this.args()) && ((opt = this.expect(12)), 1) && this.positive_lookahead(this.expect, 8)) {
+        if (
+            (a = this.args()) &&
+            ((opt = this.expect(12 /* ',' */)), 1) &&
+            this.positive_lookahead(this.expect, 8 /* ')' */)
+        ) {
             return a;
         }
         this._mark = mark;
@@ -2870,7 +2947,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // kwargs: ','.kwarg_or_starred+ ',' ','.kwarg_or_double_starred+ | ','.kwarg_or_starred+ | ','.kwarg_or_double_starred+
         let _gather_112, _gather_114, a, b, literal;
         const mark = this._mark;
-        if ((a = this._gather_108()) && (literal = this.expect(12)) && (b = this._gather_110())) {
+        if ((a = this._gather_108()) && (literal = this.expect(12 /* ',' */)) && (b = this._gather_110())) {
             return pegen.join_sequences(this, a, b);
         }
         this._mark = mark;
@@ -2891,7 +2968,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // starred_expression: '*' expression
         let a, literal;
         const mark = this._mark;
-        if ((literal = this.expect(16)) && (a = this.expression())) {
+        if ((literal = this.expect(16 /* '*' */)) && (a = this.expression())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Starred(a, astnodes.Load, ...EXTRA);
         }
@@ -2905,7 +2982,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // kwarg_or_starred: NAME '=' expression | starred_expression | invalid_kwarg
         let a, b, invalid_kwarg, literal;
         const mark = this._mark;
-        if ((a = this.name()) && (literal = this.expect(22)) && (b = this.expression())) {
+        if ((a = this.name()) && (literal = this.expect(22 /* '=' */)) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
             return new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
         }
@@ -2927,12 +3004,12 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // kwarg_or_double_starred: NAME '=' expression | '**' expression | invalid_kwarg
         let a, b, invalid_kwarg, literal;
         const mark = this._mark;
-        if ((a = this.name()) && (literal = this.expect(22)) && (b = this.expression())) {
+        if ((a = this.name()) && (literal = this.expect(22 /* '=' */)) && (b = this.expression())) {
             const EXTRA = this.extra(mark);
             return new KeywordOrStarred(CHECK(new astnodes.keyword(a.id, b, ...EXTRA)), true);
         }
         this._mark = mark;
-        if ((literal = this.expect(35)) && (a = this.expression())) {
+        if ((literal = this.expect(35 /* '**' */)) && (a = this.expression())) {
             const EXTRA = this.extra(mark);
             return new KeywordOrStarred(CHECK(new astnodes.keyword(null, a, ...EXTRA)), true);
         }
@@ -2950,11 +3027,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_targets: star_target !',' | star_target ((',' star_target))* ','?
         let a, b, opt;
         const mark = this._mark;
-        if ((a = this.star_target()) && this.negative_lookahead(this.expect, 12)) {
+        if ((a = this.star_target()) && this.negative_lookahead(this.expect, 12 /* ',' */)) {
             return a;
         }
         this._mark = mark;
-        if ((a = this.star_target()) && (b = this._loop0_116()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this.star_target()) && (b = this._loop0_116()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Store, ...EXTRA);
         }
@@ -2968,7 +3045,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_targets_list_seq: ','.star_target+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_117()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this._gather_117()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -2981,11 +3058,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_targets_tuple_seq: star_target ((',' star_target))+ ','? | star_target ','
         let a, b, literal, opt;
         const mark = this._mark;
-        if ((a = this.star_target()) && (b = this._loop1_119()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this.star_target()) && (b = this._loop1_119()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return pegen.seq_insert_in_front(this, a, b);
         }
         this._mark = mark;
-        if ((a = this.star_target()) && (literal = this.expect(12))) {
+        if ((a = this.star_target()) && (literal = this.expect(12 /* ',' */))) {
             return pegen.singleton_seq(this, a);
         }
         this._mark = mark;
@@ -2998,7 +3075,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // star_target: '*' (!'*' star_target) | target_with_star_atom
         let a, literal, target_with_star_atom;
         const mark = this._mark;
-        if ((literal = this.expect(16)) && (a = this._tmp_120())) {
+        if ((literal = this.expect(16 /* '*' */)) && (a = this._tmp_120())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Starred(
                 CHECK(pegen.set_expr_context(this, a, astnodes.Store)),
@@ -3022,7 +3099,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(23)) &&
+            (literal = this.expect(23 /* '.' */)) &&
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
@@ -3032,9 +3109,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (b = this.slices()) &&
-            (literal_1 = this.expect(10)) &&
+            (literal_1 = this.expect(10 /* ']' */)) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
             const EXTRA = this.extra(mark);
@@ -3058,16 +3135,28 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && (a = this.target_with_star_atom()) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            (a = this.target_with_star_atom()) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && ((a = this.star_targets_tuple_seq()), 1) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            ((a = this.star_targets_tuple_seq()), 1) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(a, astnodes.Store, ...EXTRA);
         }
         this._mark = mark;
-        if ((literal = this.expect(9)) && ((a = this.star_targets_list_seq()), 1) && (literal_1 = this.expect(10))) {
+        if (
+            (literal = this.expect(9 /* '[' */)) &&
+            ((a = this.star_targets_list_seq()), 1) &&
+            (literal_1 = this.expect(10 /* ']' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.List(a, astnodes.Store, ...EXTRA);
         }
@@ -3089,7 +3178,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && (a = this.single_target()) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            (a = this.single_target()) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return a;
         }
         this._mark = mark;
@@ -3104,7 +3197,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(23)) &&
+            (literal = this.expect(23 /* '.' */)) &&
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
@@ -3114,9 +3207,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (b = this.slices()) &&
-            (literal_1 = this.expect(10)) &&
+            (literal_1 = this.expect(10 /* ']' */)) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
             const EXTRA = this.extra(mark);
@@ -3132,7 +3225,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // del_targets: ','.del_target+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_121()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this._gather_121()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -3147,7 +3240,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(23)) &&
+            (literal = this.expect(23 /* '.' */)) &&
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
@@ -3157,9 +3250,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (b = this.slices()) &&
-            (literal_1 = this.expect(10)) &&
+            (literal_1 = this.expect(10 /* ']' */)) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
             const EXTRA = this.extra(mark);
@@ -3183,16 +3276,28 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return pegen.set_expr_context(this, a, astnodes.Del);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && (a = this.del_target()) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            (a = this.del_target()) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return pegen.set_expr_context(this, a, astnodes.Del);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && ((a = this.del_targets()), 1) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            ((a = this.del_targets()), 1) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(a, astnodes.Del, ...EXTRA);
         }
         this._mark = mark;
-        if ((literal = this.expect(9)) && ((a = this.del_targets()), 1) && (literal_1 = this.expect(10))) {
+        if (
+            (literal = this.expect(9 /* '[' */)) &&
+            ((a = this.del_targets()), 1) &&
+            (literal_1 = this.expect(10 /* ']' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.List(a, astnodes.Del, ...EXTRA);
         }
@@ -3206,7 +3311,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // targets: ','.target+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_123()) && ((opt = this.expect(12)), 1)) {
+        if ((a = this._gather_123()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -3221,7 +3326,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(23)) &&
+            (literal = this.expect(23 /* '.' */)) &&
             (b = this.name()) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
@@ -3231,9 +3336,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (b = this.slices()) &&
-            (literal_1 = this.expect(10)) &&
+            (literal_1 = this.expect(10 /* ']' */)) &&
             this.negative_lookahead(this.t_lookahead)
         ) {
             const EXTRA = this.extra(mark);
@@ -3255,7 +3360,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(23)) &&
+            (literal = this.expect(23 /* '.' */)) &&
             (b = this.name()) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
@@ -3265,9 +3370,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(9)) &&
+            (literal = this.expect(9 /* '[' */)) &&
             (b = this.slices()) &&
-            (literal_1 = this.expect(10)) &&
+            (literal_1 = this.expect(10 /* ']' */)) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
             const EXTRA = this.extra(mark);
@@ -3281,9 +3386,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.t_primary()) &&
-            (literal = this.expect(7)) &&
+            (literal = this.expect(7 /* '(' */)) &&
             ((b = this.arguments_()), 1) &&
-            (literal_1 = this.expect(8)) &&
+            (literal_1 = this.expect(8 /* ')' */)) &&
             this.positive_lookahead(this.t_lookahead)
         ) {
             const EXTRA = this.extra(mark);
@@ -3303,15 +3408,15 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // t_lookahead: '(' | '[' | '.'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(7))) {
+        if ((literal = this.expect(7 /* '(' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(9))) {
+        if ((literal = this.expect(9 /* '[' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(23))) {
+        if ((literal = this.expect(23 /* '.' */))) {
             return literal;
         }
         this._mark = mark;
@@ -3328,16 +3433,24 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && (a = this.target()) && (literal_1 = this.expect(8))) {
+        if ((literal = this.expect(7 /* '(' */)) && (a = this.target()) && (literal_1 = this.expect(8 /* ')' */))) {
             return pegen.set_expr_context(this, a, astnodes.Store);
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && ((b = this.targets()), 1) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            ((b = this.targets()), 1) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(b, astnodes.Store, ...EXTRA);
         }
         this._mark = mark;
-        if ((literal = this.expect(9)) && ((b = this.targets()), 1) && (literal_1 = this.expect(10))) {
+        if (
+            (literal = this.expect(9 /* '[' */)) &&
+            ((b = this.targets()), 1) &&
+            (literal_1 = this.expect(10 /* ']' */))
+        ) {
             const EXTRA = this.extra(mark);
             return new astnodes.List(b, astnodes.Store, ...EXTRA);
         }
@@ -3351,14 +3464,14 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_arguments: args ',' '*' | expression for_if_clauses ',' [args | expression for_if_clauses] | args for_if_clauses | args ',' expression for_if_clauses | args ',' args
         let a, args, for_if_clauses, literal, literal_1, opt;
         const mark = this._mark;
-        if ((args = this.args()) && (literal = this.expect(12)) && (literal_1 = this.expect(16))) {
+        if ((args = this.args()) && (literal = this.expect(12 /* ',' */)) && (literal_1 = this.expect(16 /* '*' */))) {
             return this.raise_error(pySyntaxError, "iterable argument unpacking follows keyword argument unpacking");
         }
         this._mark = mark;
         if (
             (a = this.expression()) &&
             (for_if_clauses = this.for_if_clauses()) &&
-            (literal = this.expect(12)) &&
+            (literal = this.expect(12 /* ',' */)) &&
             ((opt = this._tmp_125()), 1)
         ) {
             return this.raise_error_known_location(
@@ -3375,7 +3488,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (args = this.args()) &&
-            (literal = this.expect(12)) &&
+            (literal = this.expect(12 /* ',' */)) &&
             (a = this.expression()) &&
             (for_if_clauses = this.for_if_clauses())
         ) {
@@ -3387,7 +3500,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             );
         }
         this._mark = mark;
-        if ((a = this.args()) && (literal = this.expect(12)) && (args = this.args())) {
+        if ((a = this.args()) && (literal = this.expect(12 /* ',' */)) && (args = this.args())) {
             return pegen.arguments_parsing_error(this, a);
         }
         this._mark = mark;
@@ -3400,7 +3513,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_kwarg: expression '='
         let a, literal;
         const mark = this._mark;
-        if ((a = this.expression()) && (literal = this.expect(22))) {
+        if ((a = this.expression()) && (literal = this.expect(22 /* '=' */))) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3418,7 +3531,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_named_expression: expression ':=' expression
         let a, expression, literal;
         const mark = this._mark;
-        if ((a = this.expression()) && (literal = this.expect(53)) && (expression = this.expression())) {
+        if ((a = this.expression()) && (literal = this.expect(53 /* ':=' */)) && (expression = this.expression())) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3439,7 +3552,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (a = this.invalid_ann_assign_target()) &&
-            (literal = this.expect(11)) &&
+            (literal = this.expect(11 /* ':' */)) &&
             (expression = this.expression())
         ) {
             return this.raise_error_known_location(
@@ -3453,9 +3566,9 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         this._mark = mark;
         if (
             (a = this.star_named_expression()) &&
-            (literal = this.expect(12)) &&
+            (literal = this.expect(12 /* ',' */)) &&
             (_loop0_126 = this._loop0_126()) &&
-            (literal_1 = this.expect(11)) &&
+            (literal_1 = this.expect(11 /* ':' */)) &&
             (expression = this.expression())
         ) {
             return this.raise_error_known_location(
@@ -3466,7 +3579,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             );
         }
         this._mark = mark;
-        if ((a = this.expression()) && (literal = this.expect(11)) && (expression = this.expression())) {
+        if ((a = this.expression()) && (literal = this.expect(11 /* ':' */)) && (expression = this.expression())) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3475,11 +3588,15 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             );
         }
         this._mark = mark;
-        if ((_loop0_127 = this._loop0_127()) && (a = this.star_expressions()) && (literal = this.expect(22))) {
+        if (
+            (_loop0_127 = this._loop0_127()) &&
+            (a = this.star_expressions()) &&
+            (literal = this.expect(22 /* '=' */))
+        ) {
             return this.raise_error_invalid_target(STAR_TARGETS, a);
         }
         this._mark = mark;
-        if ((_loop0_128 = this._loop0_128()) && (a = this.yield_expr()) && (literal = this.expect(22))) {
+        if ((_loop0_128 = this._loop0_128()) && (a = this.yield_expr()) && (literal = this.expect(22 /* '=' */))) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3515,7 +3632,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return tuple;
         }
         this._mark = mark;
-        if ((literal = this.expect(7)) && (a = this.invalid_ann_assign_target()) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            (a = this.invalid_ann_assign_target()) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return a;
         }
         this._mark = mark;
@@ -3541,7 +3662,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_block: NEWLINE !INDENT
         let newline;
         const mark = this._mark;
-        if ((newline = this.expect(4)) && this.negative_lookahead(this.expect, 5)) {
+        if ((newline = this.expect(4 /* 'NEWLINE' */)) && this.negative_lookahead(this.expect, 5 /* 'INDENT' */)) {
             return this.raise_error(pyIndentationError, "expected an indented block");
         }
         this._mark = mark;
@@ -3554,7 +3675,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_primary: primary '{'
         let a, primary;
         const mark = this._mark;
-        if ((primary = this.primary()) && (a = this.expect(25))) {
+        if ((primary = this.primary()) && (a = this.expect(25 /* '{' */))) {
             return this.raise_error_known_location(pySyntaxError, a.lineno, a.col_offset + 1, "invalid syntax");
         }
         this._mark = mark;
@@ -3590,11 +3711,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let a, bitwise_or, for_if_clauses, literal, literal_1;
         const mark = this._mark;
         if (
-            (literal = this.expect(25)) &&
-            (a = this.expect(35)) &&
+            (literal = this.expect(25 /* '{' */)) &&
+            (a = this.expect(35 /* '**' */)) &&
             (bitwise_or = this.bitwise_or()) &&
             (for_if_clauses = this.for_if_clauses()) &&
-            (literal_1 = this.expect(26))
+            (literal_1 = this.expect(26 /* '}' */))
         ) {
             return this.raise_error_known_location(
                 pySyntaxError,
@@ -3647,11 +3768,15 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_star_etc: '*' (')' | ',' (')' | '**')) | '*' ',' TYPE_COMMENT
         let _tmp_135, literal, literal_1, type_comment;
         const mark = this._mark;
-        if ((literal = this.expect(16)) && (_tmp_135 = this._tmp_135())) {
+        if ((literal = this.expect(16 /* '*' */)) && (_tmp_135 = this._tmp_135())) {
             return this.raise_error(pySyntaxError, "named arguments must follow bare *");
         }
         this._mark = mark;
-        if ((literal = this.expect(16)) && (literal_1 = this.expect(12)) && (type_comment = this.expect(58))) {
+        if (
+            (literal = this.expect(16 /* '*' */)) &&
+            (literal_1 = this.expect(12 /* ',' */)) &&
+            (type_comment = this.expect(58 /* 'TYPE_COMMENT' */))
+        ) {
             return this.raise_error(pySyntaxError, "bare * has associated type comment");
         }
         this._mark = mark;
@@ -3664,7 +3789,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_lambda_star_etc: '*' (':' | ',' (':' | '**'))
         let _tmp_136, literal;
         const mark = this._mark;
-        if ((literal = this.expect(16)) && (_tmp_136 = this._tmp_136())) {
+        if ((literal = this.expect(16 /* '*' */)) && (_tmp_136 = this._tmp_136())) {
             return this.raise_error(pySyntaxError, "named arguments must follow bare *");
         }
         this._mark = mark;
@@ -3678,11 +3803,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let indent, newline, newline_1, type_comment, type_comment_1;
         const mark = this._mark;
         if (
-            (type_comment = this.expect(58)) &&
-            (newline = this.expect(4)) &&
-            (type_comment_1 = this.expect(58)) &&
-            (newline_1 = this.expect(4)) &&
-            (indent = this.expect(5))
+            (type_comment = this.expect(58 /* 'TYPE_COMMENT' */)) &&
+            (newline = this.expect(4 /* 'NEWLINE' */)) &&
+            (type_comment_1 = this.expect(58 /* 'TYPE_COMMENT' */)) &&
+            (newline_1 = this.expect(4 /* 'NEWLINE' */)) &&
+            (indent = this.expect(5 /* 'INDENT' */))
         ) {
             return this.raise_error(pySyntaxError, "Cannot have two type comments on def");
         }
@@ -3709,7 +3834,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_for_target: ASYNC? 'for' star_expressions
         let a, keyword, opt;
         const mark = this._mark;
-        if (((opt = this.expect(56)), 1) && (keyword = this.expect("for")) && (a = this.star_expressions())) {
+        if (
+            ((opt = this.expect(56 /* 'ASYNC' */)), 1) &&
+            (keyword = this.expect("for")) &&
+            (a = this.star_expressions())
+        ) {
             return this.raise_error_invalid_target(FOR_TARGETS, a);
         }
         this._mark = mark;
@@ -3722,7 +3851,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_group: '(' starred_expression ')'
         let a, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(7)) && (a = this.starred_expression()) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            (a = this.starred_expression()) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3740,7 +3873,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // invalid_import_from_targets: import_from_as_names ','
         let import_from_as_names, literal;
         const mark = this._mark;
-        if ((import_from_as_names = this.import_from_as_names()) && (literal = this.expect(12))) {
+        if ((import_from_as_names = this.import_from_as_names()) && (literal = this.expect(12 /* ',' */))) {
             return this.raise_error(pySyntaxError, "trailing comma not allowed without surrounding parentheses");
         }
         this._mark = mark;
@@ -3754,7 +3887,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let newline;
         const children = [];
         let mark = this._mark;
-        while ((newline = this.expect(4))) {
+        while ((newline = this.expect(4 /* 'NEWLINE' */))) {
             children.push(newline);
             mark = this._mark;
         }
@@ -3769,7 +3902,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let newline;
         const children = [];
         let mark = this._mark;
-        while ((newline = this.expect(4))) {
+        while ((newline = this.expect(4 /* 'NEWLINE' */))) {
             children.push(newline);
             mark = this._mark;
         }
@@ -3784,7 +3917,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.expression())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.expression())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -3812,7 +3945,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.expression())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.expression())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -3840,7 +3973,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.expression())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.expression())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -3868,7 +4001,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.expression())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.expression())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -3911,7 +4044,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(13)) && (elem = this.small_stmt())) {
+        while ((literal = this.expect(13 /* ';' */)) && (elem = this.small_stmt())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -3959,11 +4092,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return keyword;
         }
         this._mark = mark;
-        if ((literal = this.expect(49))) {
+        if ((literal = this.expect(49 /* '@' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((async = this.expect(56))) {
+        if ((async = this.expect(56 /* 'ASYNC' */))) {
             return async;
         }
         this._mark = mark;
@@ -3980,7 +4113,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return keyword;
         }
         this._mark = mark;
-        if ((literal = this.expect(49))) {
+        if ((literal = this.expect(49 /* '@' */))) {
             return literal;
         }
         this._mark = mark;
@@ -3997,7 +4130,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return keyword;
         }
         this._mark = mark;
-        if ((async = this.expect(56))) {
+        if ((async = this.expect(56 /* 'ASYNC' */))) {
             return async;
         }
         this._mark = mark;
@@ -4014,7 +4147,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return keyword;
         }
         this._mark = mark;
-        if ((async = this.expect(56))) {
+        if ((async = this.expect(56 /* 'ASYNC' */))) {
             return async;
         }
         this._mark = mark;
@@ -4027,7 +4160,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_19: '=' annotated_rhs
         let d, literal;
         const mark = this._mark;
-        if ((literal = this.expect(22)) && (d = this.annotated_rhs())) {
+        if ((literal = this.expect(22 /* '=' */)) && (d = this.annotated_rhs())) {
             return d;
         }
         this._mark = mark;
@@ -4040,7 +4173,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_20: '(' single_target ')' | single_subscript_attribute_target
         let b, literal, literal_1, single_subscript_attribute_target;
         const mark = this._mark;
-        if ((literal = this.expect(7)) && (b = this.single_target()) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            (b = this.single_target()) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return b;
         }
         this._mark = mark;
@@ -4057,7 +4194,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_21: '=' annotated_rhs
         let d, literal;
         const mark = this._mark;
-        if ((literal = this.expect(22)) && (d = this.annotated_rhs())) {
+        if ((literal = this.expect(22 /* '=' */)) && (d = this.annotated_rhs())) {
             return d;
         }
         this._mark = mark;
@@ -4120,7 +4257,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.name())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.name())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4148,7 +4285,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.name())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.name())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4175,7 +4312,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_29: ',' expression
         let literal, z;
         const mark = this._mark;
-        if ((literal = this.expect(12)) && (z = this.expression())) {
+        if ((literal = this.expect(12 /* ',' */)) && (z = this.expression())) {
             return z;
         }
         this._mark = mark;
@@ -4188,11 +4325,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_30: ';' | NEWLINE
         let literal, newline;
         const mark = this._mark;
-        if ((literal = this.expect(13))) {
+        if ((literal = this.expect(13 /* ';' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((newline = this.expect(4))) {
+        if ((newline = this.expect(4 /* 'NEWLINE' */))) {
             return newline;
         }
         this._mark = mark;
@@ -4236,7 +4373,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.import_from_as_name())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.import_from_as_name())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4277,7 +4414,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.dotted_as_name())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.dotted_as_name())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4318,7 +4455,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.with_item())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.with_item())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4346,7 +4483,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.with_item())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.with_item())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4374,7 +4511,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.with_item())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.with_item())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4402,7 +4539,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.with_item())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.with_item())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -4429,15 +4566,15 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_47: ',' | ')' | ':'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(12))) {
+        if ((literal = this.expect(12 /* ',' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(8))) {
+        if ((literal = this.expect(8 /* ')' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(11))) {
+        if ((literal = this.expect(11 /* ':' */))) {
             return literal;
         }
         this._mark = mark;
@@ -4491,7 +4628,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_51: '->' expression
         let literal, z;
         const mark = this._mark;
-        if ((literal = this.expect(51)) && (z = this.expression())) {
+        if ((literal = this.expect(51 /* '->' */)) && (z = this.expression())) {
             return z;
         }
         this._mark = mark;
@@ -4504,7 +4641,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_52: '->' expression
         let literal, z;
         const mark = this._mark;
-        if ((literal = this.expect(51)) && (z = this.expression())) {
+        if ((literal = this.expect(51 /* '->' */)) && (z = this.expression())) {
             return z;
         }
         this._mark = mark;
@@ -4517,7 +4654,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_53: NEWLINE INDENT
         let indent, newline;
         const mark = this._mark;
-        if ((newline = this.expect(4)) && (indent = this.expect(5))) {
+        if ((newline = this.expect(4 /* 'NEWLINE' */)) && (indent = this.expect(5 /* 'INDENT' */))) {
             return [newline, indent];
         }
         this._mark = mark;
@@ -4755,7 +4892,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_69: '(' arguments_? ')'
         let literal, literal_1, z;
         const mark = this._mark;
-        if ((literal = this.expect(7)) && ((z = this.arguments_()), 1) && (literal_1 = this.expect(8))) {
+        if (
+            (literal = this.expect(7 /* '(' */)) &&
+            ((z = this.arguments_()), 1) &&
+            (literal_1 = this.expect(8 /* ')' */))
+        ) {
             return z;
         }
         this._mark = mark;
@@ -4784,7 +4925,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.star_named_expression())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.star_named_expression())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5082,7 +5223,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.slice())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.slice())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5109,7 +5250,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_93: ':' expression?
         let d, literal;
         const mark = this._mark;
-        if ((literal = this.expect(11)) && ((d = this.expression()), 1)) {
+        if ((literal = this.expect(11 /* ':' */)) && ((d = this.expression()), 1)) {
             return d;
         }
         this._mark = mark;
@@ -5202,7 +5343,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         const mark = this._mark;
         if (
             (y = this.star_named_expression()) &&
-            (literal = this.expect(12)) &&
+            (literal = this.expect(12 /* ',' */)) &&
             ((z = this.star_named_expressions()), 1)
         ) {
             return pegen.seq_insert_in_front(this, y, z);
@@ -5235,7 +5376,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.double_starred_kvpair())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.double_starred_kvpair())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5308,7 +5449,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this._tmp_147())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this._tmp_147())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5335,7 +5476,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_107: ',' kwargs
         let k, literal;
         const mark = this._mark;
-        if ((literal = this.expect(12)) && (k = this.kwargs())) {
+        if ((literal = this.expect(12 /* ',' */)) && (k = this.kwargs())) {
             return k;
         }
         this._mark = mark;
@@ -5349,7 +5490,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.kwarg_or_starred())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_starred())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5377,7 +5518,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.kwarg_or_double_starred())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_double_starred())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5405,7 +5546,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.kwarg_or_starred())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_starred())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5433,7 +5574,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.kwarg_or_double_starred())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_double_starred())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5476,7 +5617,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.star_target())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.star_target())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5518,7 +5659,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_120: !'*' star_target
         let star_target;
         const mark = this._mark;
-        if (this.negative_lookahead(this.expect, 16) && (star_target = this.star_target())) {
+        if (this.negative_lookahead(this.expect, 16 /* '*' */) && (star_target = this.star_target())) {
             return star_target;
         }
         this._mark = mark;
@@ -5532,7 +5673,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.del_target())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.del_target())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5560,7 +5701,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         let elem, literal;
         const children = [];
         let mark = this._mark;
-        while ((literal = this.expect(12)) && (elem = this.target())) {
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.target())) {
             children.push(elem);
             mark = this._mark;
         }
@@ -5666,15 +5807,15 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_130: '[' | '(' | '{'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(9))) {
+        if ((literal = this.expect(9 /* '[' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(7))) {
+        if ((literal = this.expect(7 /* '(' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(25))) {
+        if ((literal = this.expect(25 /* '{' */))) {
             return literal;
         }
         this._mark = mark;
@@ -5751,11 +5892,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_135: ')' | ',' (')' | '**')
         let _tmp_154, literal;
         const mark = this._mark;
-        if ((literal = this.expect(8))) {
+        if ((literal = this.expect(8 /* ')' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(12)) && (_tmp_154 = this._tmp_154())) {
+        if ((literal = this.expect(12 /* ',' */)) && (_tmp_154 = this._tmp_154())) {
             return [literal, _tmp_154];
         }
         this._mark = mark;
@@ -5768,11 +5909,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_136: ':' | ',' (':' | '**')
         let _tmp_155, literal;
         const mark = this._mark;
-        if ((literal = this.expect(11))) {
+        if ((literal = this.expect(11 /* ':' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(12)) && (_tmp_155 = this._tmp_155())) {
+        if ((literal = this.expect(12 /* ',' */)) && (_tmp_155 = this._tmp_155())) {
             return [literal, _tmp_155];
         }
         this._mark = mark;
@@ -5785,7 +5926,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_137: star_targets '='
         let literal, z;
         const mark = this._mark;
-        if ((z = this.star_targets()) && (literal = this.expect(22))) {
+        if ((z = this.star_targets()) && (literal = this.expect(22 /* '=' */))) {
             return z;
         }
         this._mark = mark;
@@ -5798,11 +5939,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_138: '.' | '...'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(23))) {
+        if ((literal = this.expect(23 /* '.' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(52))) {
+        if ((literal = this.expect(52 /* '...' */))) {
             return literal;
         }
         this._mark = mark;
@@ -5815,11 +5956,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_139: '.' | '...'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(23))) {
+        if ((literal = this.expect(23 /* '.' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(52))) {
+        if ((literal = this.expect(52 /* '...' */))) {
             return literal;
         }
         this._mark = mark;
@@ -5832,7 +5973,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_140: '@' named_expression NEWLINE
         let f, literal, newline;
         const mark = this._mark;
-        if ((literal = this.expect(49)) && (f = this.named_expression()) && (newline = this.expect(4))) {
+        if (
+            (literal = this.expect(49 /* '@' */)) &&
+            (f = this.named_expression()) &&
+            (newline = this.expect(4 /* 'NEWLINE' */))
+        ) {
             return f;
         }
         this._mark = mark;
@@ -5845,7 +5990,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_141: ',' star_expression
         let c, literal;
         const mark = this._mark;
-        if ((literal = this.expect(12)) && (c = this.star_expression())) {
+        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_expression())) {
             return c;
         }
         this._mark = mark;
@@ -5858,7 +6003,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_142: ',' expression
         let c, literal;
         const mark = this._mark;
-        if ((literal = this.expect(12)) && (c = this.expression())) {
+        if ((literal = this.expect(12 /* ',' */)) && (c = this.expression())) {
             return c;
         }
         this._mark = mark;
@@ -5927,7 +6072,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             return starred_expression;
         }
         this._mark = mark;
-        if ((named_expression = this.named_expression()) && this.negative_lookahead(this.expect, 22)) {
+        if ((named_expression = this.named_expression()) && this.negative_lookahead(this.expect, 22 /* '=' */)) {
             return named_expression;
         }
         this._mark = mark;
@@ -5940,7 +6085,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_148: ',' star_target
         let c, literal;
         const mark = this._mark;
-        if ((literal = this.expect(12)) && (c = this.star_target())) {
+        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_target())) {
             return c;
         }
         this._mark = mark;
@@ -5953,7 +6098,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_149: ',' star_target
         let c, literal;
         const mark = this._mark;
-        if ((literal = this.expect(12)) && (c = this.star_target())) {
+        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_target())) {
             return c;
         }
         this._mark = mark;
@@ -5966,7 +6111,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_150: star_targets '='
         let literal, star_targets;
         const mark = this._mark;
-        if ((star_targets = this.star_targets()) && (literal = this.expect(22))) {
+        if ((star_targets = this.star_targets()) && (literal = this.expect(22 /* '=' */))) {
             return [star_targets, literal];
         }
         this._mark = mark;
@@ -5979,7 +6124,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_151: star_targets '='
         let literal, star_targets;
         const mark = this._mark;
-        if ((star_targets = this.star_targets()) && (literal = this.expect(22))) {
+        if ((star_targets = this.star_targets()) && (literal = this.expect(22 /* '=' */))) {
             return [star_targets, literal];
         }
         this._mark = mark;
@@ -6022,11 +6167,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_154: ')' | '**'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(8))) {
+        if ((literal = this.expect(8 /* ')' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(35))) {
+        if ((literal = this.expect(35 /* '**' */))) {
             return literal;
         }
         this._mark = mark;
@@ -6039,11 +6184,11 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         // _tmp_155: ':' | '**'
         let literal;
         const mark = this._mark;
-        if ((literal = this.expect(11))) {
+        if ((literal = this.expect(11 /* ':' */))) {
             return literal;
         }
         this._mark = mark;
-        if ((literal = this.expect(35))) {
+        if ((literal = this.expect(35 /* '**' */))) {
             return literal;
         }
         this._mark = mark;
