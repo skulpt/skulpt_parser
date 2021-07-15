@@ -1,6 +1,6 @@
 // deno-lint-ignore-file camelcase
 import { w } from "../util/unicode.ts";
-import { isIdentifier } from "../util/str_helpers.ts";
+import { initialIsIdentifier } from "../util/str_helpers.ts";
 import { tokens, EXACT_TOKEN_TYPES } from "./token.ts";
 import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
 
@@ -38,8 +38,8 @@ function regexEscape(string: string): string {
     return string && reHasRegExpChar.test(string) ? string.replace(reRegExpChar, "\\$&") : string;
 }
 
-const group = (...choices: string[]): string => "(" + choices.join("|") + ")";
-const any = (...choices: string[]): string => group(...choices) + "*";
+const capturegroup = (...choices: string[]): string => "(" + choices.join("|") + ")";
+const group = (...choices: string[]): string => "(?:" + choices.join("|") + ")";
 const maybe = (...choices: string[]): string => group(...choices) + "?";
 
 function rstrip(input: string, what: string): string {
@@ -53,8 +53,7 @@ function rstrip(input: string, what: string): string {
 }
 
 const Whitespace = "[ \\f\\t]*";
-const Comment_ = "#[^\\r\\n]*";
-const _Ignore = Whitespace + any("\\\\\\r?\\n" + Whitespace) + maybe(Comment_);
+const Comment = "#[^\\r\\n]*";
 const Name = "[" + w + "]+";
 
 const Exponent = "[eE][-+]?[0-9](?:_?[0-9])*";
@@ -64,39 +63,37 @@ export const Floatnumber = group(Pointfloat, Expfloat);
 const Imagnumber = group("[0-9](?:_?[0-9])*[jJ]", Floatnumber + "[jJ]");
 
 // Return the empty string, plus all of the valid string prefixes.
-function _all_string_prefixes(): string[] {
-    return [
-        "",
-        "FR",
-        "RF",
-        "Br",
-        "BR",
-        "Fr",
-        "r",
-        "B",
-        "R",
-        "b",
-        "bR",
-        "f",
-        "rb",
-        "rB",
-        "F",
-        "Rf",
-        "U",
-        "rF",
-        "u",
-        "RB",
-        "br",
-        "fR",
-        "fr",
-        "rf",
-        "Rb",
-    ];
-}
+const _all_string_prefixes = [
+    "",
+    "FR",
+    "RF",
+    "Br",
+    "BR",
+    "Fr",
+    "r",
+    "B",
+    "R",
+    "b",
+    "bR",
+    "f",
+    "rb",
+    "rB",
+    "F",
+    "Rf",
+    "U",
+    "rF",
+    "u",
+    "RB",
+    "br",
+    "fR",
+    "fr",
+    "rf",
+    "Rb",
+];
 
 // Note that since _all_string_prefixes includes the empty string,
 //  StringPrefix can be the empty string (making it optional).
-const StringPrefix = group(..._all_string_prefixes());
+const StringPrefix = group(..._all_string_prefixes);
 
 // these regexes differ from python because .exec doesn't do the
 // same thing as .match in python. It's more like .search.
@@ -112,17 +109,11 @@ const Single3 = "^[^'\\\\]*(?:(?:\\\\.|'(?!''))[^'\\\\]*)*'''";
 // Tail end of """ string.
 const Double3 = '^[^"\\\\]*(?:(?:\\\\.|"(?!""))[^"\\\\]*)*"""';
 const Triple = group(StringPrefix + "'''", StringPrefix + '"""');
-// Single-line ' or " string.
-const String_ = group(
-    StringPrefix + "'[^\\n'\\\\]*(?:\\\\.[^\\n'\\\\]*)*'",
-    StringPrefix + '"[^\\n"\\\\]*(?:\\\\.[^\\n"\\\\]*)*"'
-);
 
 // Sorting in reverse order puts the long operators before their prefixes.
 // Otherwise if = came before ==, == would get recognized as two instances
 // of =.
-
-const EXACT_TOKENS_SORTED = Object.keys(EXACT_TOKEN_TYPES).sort();
+const EXACT_TOKENS_SORTED = [...EXACT_TOKEN_TYPES.keys()].sort();
 const Special = group(...EXACT_TOKENS_SORTED.reverse().map((t) => regexEscape(t)));
 const Funny = group("\\r?\\n", Special);
 
@@ -130,13 +121,13 @@ const ContStr = group(
     StringPrefix + "'[^\\n'\\\\]*(?:\\\\.[^\\n'\\\\]*)*" + group("'", "\\\\\\r?\\n"),
     StringPrefix + '"[^\\n"\\\\]*(?:\\\\.[^\\n"\\\\]*)*' + group('"', "\\\\\\r?\\n")
 );
-const PseudoExtras = group("\\\\\\r?\\n|$", Comment_, Triple);
+const PseudoExtras = group("\\\\\\r?\\n|$", Comment, Triple);
 
 // For a given string prefix plus quotes, endpats maps it to a regex
 //  to match the remainder of that string. _prefix can be empty, for
 //  a normal single or triple quoted string (with no prefix).
 const endpats: { [endpat: string]: RegExp } = {};
-const prefixes = _all_string_prefixes();
+const prefixes = _all_string_prefixes;
 for (const _prefix of prefixes) {
     endpats[_prefix + "'"] = new RegExp(Single);
     endpats[_prefix + '"'] = new RegExp(Double);
@@ -163,7 +154,7 @@ const Octnumber = "0[oO](?:_?[0-7])+";
 const Decnumber = "(?:0(?:_?0)*|[1-9](?:_?[0-9])*)";
 const Intnumber = group(Hexnumber, Binnumber, Octnumber, Decnumber);
 const Number_ = group(Imagnumber, Floatnumber, Intnumber);
-const PseudoToken = Whitespace + group(PseudoExtras, Number_, Funny, ContStr, Name);
+const PseudoToken = Whitespace + capturegroup(PseudoExtras, Number_, Funny, ContStr, Name);
 
 const PseudoTokenRegexp = new RegExp(PseudoToken);
 
@@ -184,7 +175,6 @@ export function generate_tokens(
 
 /** We largely ignore the encoding here. In python the readline might be a bytes iterator */
 function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile): IterableIterator<TokenInfo> {
-    const numchars = "0123456789";
     let lnum = 0,
         parenlev = 0,
         continued = 0,
@@ -192,11 +182,8 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
         needcont = 0,
         contline: null | string = null,
         indents: number[] = [0],
-        capos: null | string = null,
         endprog = / /g, // keep type checker happy (endprog gets used before assignment)
-        strstart: position = [0, 0], // keep type checker happy (strstart gets used before assignment)
-        end: number,
-        pseudomatch: RegExpExecArray | null;
+        strstart: position = [0, 0]; // keep type checker happy (strstart gets used before assignment)
 
     // since we don't do this with bytes this is not used
     // if (encoding != null) {
@@ -225,7 +212,6 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
         lnum += 1;
         let pos = 0;
         const max = line.length;
-        let endmatch: RegExpExecArray | null;
 
         if (contstr) {
             // continued string
@@ -235,9 +221,9 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                 throw new pySyntaxError("EOF in multi-line string", [filename, ...strstart, lastline]);
             }
             endprog.lastIndex = 0;
-            endmatch = endprog.exec(line);
-            if (endmatch) {
-                pos = end = endmatch[0].length;
+            const endmatch = endprog.exec(line);
+            if (endmatch !== null) {
+                const end = (pos = endmatch[0].length);
                 yield new TokenInfo(
                     tokens.STRING,
                     contstr + line.substring(0, end),
@@ -276,11 +262,12 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
             let column = 0;
             while (pos < max) {
                 // measure leading whitespace
-                if (line[pos] === " ") {
+                const curr = line[pos];
+                if (curr === " ") {
                     column += 1;
-                } else if (line[pos] === "\t") {
+                } else if (curr === "\t") {
                     column = Math.floor(column / tabsize + 1) * tabsize;
-                } else if (line[pos] === "\f") {
+                } else if (curr === "\f") {
                     column = 0;
                 } else {
                     break;
@@ -292,9 +279,10 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                 break;
             }
 
-            if ("#\r\n".includes(line[pos])) {
+            const curr = line[pos];
+            if (curr === "#" || curr === "\r" || curr === "\n") {
                 // skip comments or blank lines
-                if (line[pos] === "#") {
+                if (curr === "#") {
                     const commentoken = rstrip(line.substring(pos), "\r\n");
                     yield new TokenInfo(
                         tokens.COMMENT,
@@ -344,13 +332,14 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
             // js regexes don't return any info about matches, other than the
             // content. we'd like to put a \w+ before pseudomatch, but then we
             // can't get any data
-            capos = line.charAt(pos);
+            let capos = line[pos];
             while (capos === " " || capos === "\f" || capos === "\t") {
-                pos += 1;
-                capos = line.charAt(pos);
+                capos = line[++pos];
             }
 
-            pseudomatch = PseudoTokenRegexp.exec(line.substring(pos));
+            const pseudomatch = PseudoTokenRegexp.exec(line.substring(pos));
+            let maybeQuote = false;
+
             if (pseudomatch !== null) {
                 // scan for tokens
                 const start = pos;
@@ -365,11 +354,20 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                 let token = line.substring(start, end);
                 const initial = line[start];
                 if (
-                    numchars.includes(initial) || // ordinary number
-                    (initial === "." && token !== "." && token !== "...")
+                    (initial === "." && token !== "." && token !== "...") ||
+                    initial === "0" ||
+                    initial === "1" ||
+                    initial === "2" ||
+                    initial === "3" ||
+                    initial === "4" ||
+                    initial === "5" ||
+                    initial === "6" ||
+                    initial === "7" ||
+                    initial === "8" ||
+                    initial === "9"
                 ) {
                     yield new TokenInfo(tokens.NUMBER, token, spos, epos, line);
-                } else if ("\r\n".includes(initial)) {
+                } else if (initial === "\r" || initial === "\n") {
                     if (parenlev > 0) {
                         yield new TokenInfo(tokens.NL, token, spos, epos, line);
                     } else {
@@ -378,10 +376,23 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                 } else if (initial === "#") {
                     //assert not token.endswith("\n")
                     yield new TokenInfo(tokens.COMMENT, token, spos, epos, line);
-                } else if (triple_quoted.has(token)) {
+                } else if (
+                    token === "'''" ||
+                    token === '"""' ||
+                    ((maybeQuote =
+                        initial === "f" ||
+                        initial === "r" ||
+                        initial === "b" ||
+                        initial === "u" ||
+                        initial === "F" ||
+                        initial === "R" ||
+                        initial === "B" ||
+                        initial === "U") &&
+                        triple_quoted.has(token))
+                ) {
                     endprog = endpats[token];
-                    endmatch = endprog.exec(line.substring(pos));
-                    if (endmatch) {
+                    const endmatch = endprog.exec(line.substring(pos));
+                    if (endmatch !== null) {
                         // all on one line
                         pos = endmatch[0].length + pos;
                         token = line.substring(start, pos);
@@ -403,9 +414,10 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     // Also note that single quote checking must come after
                     //  triple quote checking (above).
                 } else if (
-                    single_quoted.has(initial) ||
-                    single_quoted.has(token.substring(0, 2)) ||
-                    single_quoted.has(token.substring(0, 3))
+                    initial === "'" ||
+                    initial === '"' ||
+                    (maybeQuote &&
+                        (single_quoted.has(token.substring(0, 2)) || single_quoted.has(token.substring(0, 3))))
                 ) {
                     if (token[token.length - 1] === "\n") {
                         // continued string
@@ -434,19 +446,21 @@ function* _tokenize(readline: IterableIterator<string>, filename = UnknownFile):
                     } else {
                         yield new TokenInfo(tokens.NAME, token, spos, epos, line);
                     }
-                } else if (isIdentifier(initial)) {
+                } else if (maybeQuote || initialIsIdentifier(initial)) {
+                    // if maybeQuote is true at this stage
+                    // then initial must be one of the string identifiers
                     // ordinary name
                     yield new TokenInfo(tokens.NAME, token, spos, epos, line);
                 } else if (initial === "\\") {
                     // continued stmt
                     continued = 1;
                 } else {
-                    if ("([{".includes(initial)) {
+                    if (initial === "(" || initial === "[" || initial === "{") {
                         parenlev += 1;
-                    } else if (")]}".includes(initial)) {
+                    } else if (initial === ")" || initial === "]" || initial === "}") {
                         parenlev -= 1;
                     }
-                    const type = EXACT_TOKEN_TYPES[token] || tokens.OP;
+                    const type = EXACT_TOKEN_TYPES.get(token) || tokens.OP;
                     yield new TokenInfo(type, token, spos, epos, line);
                 }
             } else {
