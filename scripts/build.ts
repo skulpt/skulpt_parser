@@ -3,7 +3,7 @@ import { esbuild } from "../deps.ts";
 // deno run -A scripts/build.ts
 
 let result = await esbuild.build({
-    entryPoints: ["scripts/bench.ts"],
+    entryPoints: ["src/mod.ts"],
     bundle: true,
     format: "esm",
     outfile: "dist/bundle.min.js",
@@ -13,7 +13,7 @@ let result = await esbuild.build({
 console.log("result:", result);
 
 result = await esbuild.build({
-    entryPoints: ["scripts/bench.ts"],
+    entryPoints: ["src/mod.ts"],
     bundle: true,
     format: "esm",
     outfile: "dist/bundle.js",
