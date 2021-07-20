@@ -40,6 +40,25 @@ import {
     Delete,
     Assign,
     AnnAssign,
+    AsyncFor,
+    AsyncWith,
+    AsyncFunctionDef,
+    With,
+    Expr,
+    Nonlocal,
+    Global,
+    Assert,
+    Try,
+    Raise,
+    If,
+    While,
+    For,
+    AugAssign,
+    Import,
+    alias,
+    ImportFrom,
+    withitem,
+    ExceptHandler,
 } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
@@ -414,15 +433,16 @@ function _Py_Mangle(privateobj: string | null, ident: string) {
     return `_${stripped}${ident}`;
 }
 
-class SymbolTable {
+export class SymbolTable {
     filename: string;
     cur: SymbolTableScope | null = null;
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
-    global: { [name: string]: number } | null = null;
+    global: { [name: string]: number } = {};
     curClass: string | null = null;
     tmpname = 0;
-    stss: { [thing: number]: any } = {};
+
+    stss: { [thing: number]: SymbolTableScope } = {};
 
     constructor(filename: string) {
         this.filename = filename;
@@ -991,6 +1011,52 @@ class SymbolTable {
         return this.cur.getSymbol(mangled);
     }
 
+    visitAlias(a: alias) {
+        /* Compute store_name, the name actually bound by the import
+           operation.  It is different than a->name when a->name is a
+           dotted package name (e.g. spam.eggs)
+        */
+        const name = a.asname == null ? a.name : a.asname;
+        const dot = name.indexOf(".");
+        let store_name = null;
+
+        if (dot !== -1) {
+            store_name = name.substring(0, dot);
+        } else {
+            store_name = name;
+        }
+        if (name !== "*") {
+            this.addDef(store_name, SYMTAB_CONSTS.DEF_IMPORT);
+        } else {
+            assert(this.cur);
+            if (this.cur.blockType !== ModuleBlock) {
+                throw new pySyntaxError("import * only allowed at module level", [
+                    this.filename,
+                    this.cur.lineno,
+                    this.cur.colOffset,
+                    "",
+                ]);
+            }
+        }
+    }
+
+    visitWithItem(item: withitem) {
+        this.visitExpr(item.context_expr);
+        if (item.optional_vars) {
+            this.visitExpr(item.optional_vars);
+        }
+    }
+
+    visitExcepthandler(eh: ExceptHandler) {
+        if (eh.type) {
+            this.visitExpr(eh.type);
+        }
+        if (eh.name) {
+            this.addDef(eh.name, SYMTAB_CONSTS.DEF_LOCAL);
+        }
+        this.SEQ(this.visitStmt, eh.body);
+    }
+
     visitStmt(s: stmt) {
         assert(s !== undefined, "visitStmt called with undefined");
         switch (s._kind) {
@@ -1086,105 +1152,192 @@ class SymbolTable {
                 }
                 break;
             }
+            case ASTKind.AugAssign: {
+                const augAssign = s as AugAssign;
 
-            // case Sk.astnodes.AugAssign:
-            //     this.visitExpr(s.target);
-            //     this.visitExpr(s.value);
-            //     break;
-            // case Sk.astnodes.Print:
-            //     if (s.dest) {
-            //         this.visitExpr(s.dest);
-            //     }
-            //     this.SEQExpr(s.values);
-            //     break;
-            // case Sk.astnodes.For:
-            //     this.visitExpr(s.target);
-            //     this.visitExpr(s.iter);
-            //     this.SEQStmt(s.body);
-            //     if (s.orelse) {
-            //         this.SEQStmt(s.orelse);
-            //     }
-            //     break;
-            // case Sk.astnodes.While:
-            //     this.visitExpr(s.test);
-            //     this.SEQStmt(s.body);
-            //     if (s.orelse) {
-            //         this.SEQStmt(s.orelse);
-            //     }
-            //     break;
-            // case Sk.astnodes.If:
-            //     this.visitExpr(s.test);
-            //     this.SEQStmt(s.body);
-            //     if (s.orelse) {
-            //         this.SEQStmt(s.orelse);
-            //     }
-            //     break;
-            // case Sk.astnodes.Raise:
-            //     if (s.exc) {
-            //         this.visitExpr(s.exc);
-            //         // Our hacked AST supports both Python 2 (inst, tback)
-            //         // and Python 3 (cause) versions of the Raise statement
-            //         if (s.inst) {
-            //             this.visitExpr(s.inst);
-            //             if (s.tback) {
-            //                 this.visitExpr(s.tback);
-            //             }
-            //         }
-            //         if (s.cause) {
-            //             this.visitExpr(s.cause);
-            //         }
-            //     }
-            //     break;
-            // case Sk.astnodes.Assert:
-            //     this.visitExpr(s.test);
-            //     if (s.msg) {
-            //         this.visitExpr(s.msg);
-            //     }
-            //     break;
-            // case Sk.astnodes.Import:
-            // case Sk.astnodes.ImportFrom:
-            //     this.visitAlias(s.names, s.lineno);
-            //     break;
-            // case Sk.astnodes.Global:
-            //     nameslen = s.names.length;
-            //     for (i = 0; i < nameslen; ++i) {
-            //         name = Sk.mangleName(this.curClass, s.names[i]).v;
-            //         name = Sk.fixReserved(name);
-            //         cur = this.cur.symFlags[name];
-            //         if (cur & (DEF_LOCAL | USE)) {
-            //             if (cur & DEF_LOCAL) {
-            //                 throw new Sk.builtin.SyntaxError("name '" + name + "' is assigned to before global declaration", this.filename, s.lineno);
-            //             }
-            //             else {
-            //                 throw new Sk.builtin.SyntaxError("name '" + name + "' is used prior to global declaration", this.filename, s.lineno);
-            //             }
-            //         }
-            //         this.addDef(new Sk.builtin.str(name), DEF_GLOBAL, s.lineno);
-            //     }
-            //     break;
-            // case Sk.astnodes.Expr:
-            //     this.visitExpr(s.value);
-            //     break;
-            // case Sk.astnodes.Pass:
-            // case Sk.astnodes.Break:
-            // case Sk.astnodes.Continue:
-            // case Sk.astnodes.Debugger:
-            //     // nothing
-            //     break;
-            // case Sk.astnodes.With:
-            //     VISIT_SEQ(this.visit_withitem.bind(this), s.items);
-            //     VISIT_SEQ(this.visitStmt.bind(this), s.body);
-            //     break;
+                this.visitExpr(augAssign.target);
+                this.visitExpr(augAssign.value);
+                break;
+            }
+            case ASTKind.For: {
+                const for_ = s as For;
 
-            // case Sk.astnodes.Try:
-            //     this.SEQStmt(s.body);
-            //     this.visitExcepthandlers(s.handlers)
-            //     this.SEQStmt(s.orelse);
-            //     this.SEQStmt(s.finalbody);
-            //     break;
+                this.visitExpr(for_.target);
+                this.visitExpr(for_.iter);
+                this.SEQ(this.visitStmt, for_.body);
+                if (for_.orelse) this.SEQ(this.visitStmt, for_.orelse);
+                break;
+            }
+            case ASTKind.While: {
+                const while_ = s as While;
 
-            // default:
-            //     Sk.asserts.fail("Unhandled type " + s.constructor.name + " in visitStmt");
+                this.visitExpr(while_.test);
+                this.SEQ(this.visitStmt, while_.body);
+                if (while_.orelse) this.SEQ(this.visitStmt, while_.orelse);
+                break;
+            }
+            case ASTKind.If: {
+                const if_ = s as If;
+
+                /* XXX if 0: and lookup_yield() hacks */
+                this.visitExpr(if_.test);
+                this.SEQ(this.visitStmt, if_.body);
+                if (if_.orelse) this.SEQ(this.visitStmt, if_.orelse);
+                break;
+            }
+            case ASTKind.Raise: {
+                const raise = s as Raise;
+
+                if (raise.exc) {
+                    this.visitExpr(raise.exc);
+                    if (raise.cause) {
+                        this.visitExpr(raise.cause);
+                    }
+                }
+                break;
+            }
+            case ASTKind.Try: {
+                const try_ = s as Try;
+
+                this.SEQ(this.visitStmt, try_.body);
+                this.SEQ(this.visitStmt, try_.orelse);
+                this.SEQ(this.visitExcepthandler, try_.handlers as ExceptHandler[]); // @stu this is odd.
+                this.SEQ(this.visitStmt, try_.finalbody);
+                break;
+            }
+            case ASTKind.Assert: {
+                const assert = s as Assert;
+                this.visitExpr(assert.test);
+                if (assert.msg) {
+                    this.visitExpr(assert.msg);
+                }
+                break;
+            }
+            case ASTKind.Import: {
+                const import_ = s as Import;
+                this.SEQ(this.visitAlias, import_.names);
+                break;
+            }
+            case ASTKind.ImportFrom: {
+                const importFrom = s as ImportFrom;
+                this.SEQ(this.visitAlias, importFrom.names);
+                break;
+            }
+            case ASTKind.Global: {
+                const global = s as Global;
+
+                for (const name of global.names) {
+                    const cur = this.lookup(name);
+                    if (
+                        cur &
+                        (SYMTAB_CONSTS.DEF_PARAM |
+                            SYMTAB_CONSTS.DEF_LOCAL |
+                            SYMTAB_CONSTS.USE |
+                            SYMTAB_CONSTS.DEF_ANNOT)
+                    ) {
+                        let msg = "";
+                        if (cur & SYMTAB_CONSTS.DEF_PARAM) {
+                            msg = `name '${name}' is parameter and global`;
+                        } else if (cur & SYMTAB_CONSTS.USE) {
+                            msg = `name '${name}' is used prior to global declaration`;
+                        } else if (cur & SYMTAB_CONSTS.DEF_ANNOT) {
+                            msg = `annotated name '${name}' can't be global`;
+                        } else {
+                            msg = `name '${name}' is assigned to before global declaration`;
+                        }
+
+                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset, ""]);
+                    }
+                    this.addDef(name, SYMTAB_CONSTS.DEF_GLOBAL);
+                    this.recordDirective(name, s.lineno, s.col_offset);
+                }
+                break;
+            }
+            case ASTKind.Nonlocal: {
+                const nonlolal = s as Nonlocal;
+
+                for (const name of nonlolal.names) {
+                    const cur = this.lookup(name);
+                    if (
+                        cur &
+                        (SYMTAB_CONSTS.DEF_PARAM |
+                            SYMTAB_CONSTS.DEF_LOCAL |
+                            SYMTAB_CONSTS.USE |
+                            SYMTAB_CONSTS.DEF_ANNOT)
+                    ) {
+                        let msg = "";
+                        if (cur & SYMTAB_CONSTS.DEF_PARAM) {
+                            msg = `name '${name}' is parameter and nonlocal`;
+                        } else if (cur & SYMTAB_CONSTS.USE) {
+                            msg = `name '${name}' is used prior to nonlocal declaration`;
+                        } else if (cur & SYMTAB_CONSTS.DEF_ANNOT) {
+                            msg = `annotated name '${name}' can't be nonlocal`;
+                        } else {
+                            msg = `name '${name}' is assigned to before nonlocal declaration`;
+                        }
+
+                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset, ""]);
+                    }
+                    this.addDef(name, SYMTAB_CONSTS.DEF_NONLOCAL);
+                    this.recordDirective(name, s.lineno, s.col_offset);
+                }
+                break;
+            }
+            case ASTKind.Expr: {
+                this.visitExpr((s as Expr).value);
+                break;
+            }
+            case ASTKind.Pass:
+            case ASTKind.Break:
+            case ASTKind.Continue:
+                /* nothing to do here */
+                break;
+            case ASTKind.With: {
+                const with_ = s as With;
+                this.SEQ(this.visitWithItem, with_.items);
+                this.SEQ(this.visitStmt, with_.body);
+                break;
+            }
+            case ASTKind.AsyncFunctionDef: {
+                assert(this.cur);
+                const asyncFunctionDef = s as AsyncFunctionDef;
+
+                this.addDef(asyncFunctionDef.name, SYMTAB_CONSTS.DEF_LOCAL);
+                if (asyncFunctionDef.args.defaults) {
+                    this.SEQ(this.visitExpr, asyncFunctionDef.args.defaults);
+                }
+                if (asyncFunctionDef.args.kw_defaults) {
+                    this.SEQ(this.visitExpr, asyncFunctionDef.args.kw_defaults);
+                }
+                this.visitAnnotations(asyncFunctionDef.args, asyncFunctionDef.returns);
+
+                if (asyncFunctionDef.decorator_list) this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
+
+                this.enterBlock(asyncFunctionDef.name, FunctionBlock, asyncFunctionDef, s.lineno, s.col_offset);
+
+                this.cur.coroutine = true;
+
+                this.visitArguments(asyncFunctionDef.args);
+                this.SEQ(this.visitStmt, asyncFunctionDef.body);
+                this.exitBlock();
+                break;
+            }
+            case ASTKind.AsyncWith: {
+                const asyncWith = s as AsyncWith;
+                this.SEQ(this.visitWithItem, asyncWith.items);
+                this.SEQ(this.visitStmt, asyncWith.body);
+                break;
+            }
+            case ASTKind.AsyncFor: {
+                const asyncFor = s as AsyncFor;
+                this.visitExpr(asyncFor.target);
+                this.visitExpr(asyncFor.iter);
+                this.SEQ(this.visitStmt, asyncFor.body);
+                if (asyncFor.orelse) this.SEQ(this.visitStmt, asyncFor.orelse);
+                break;
+            }
+            default:
+                assert(false, "Unhandled type " + s.constructor.name + " in visitStmt");
         }
     }
 }
