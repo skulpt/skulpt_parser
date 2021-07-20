@@ -382,6 +382,7 @@ def main(asdlfile, outputfile):
 
     f = open(outputfile, "w")
 
+    f.write("// Copyright (c) 2021 the Skulpt Project\n// SPDX-License-Identifier: MIT")
     f.write(auto_gen_msg)
     f.write("/* module that holds all nodes */\n")
     f.write("// deno-lint-ignore-file camelcase\n\n")

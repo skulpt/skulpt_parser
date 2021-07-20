@@ -1,3 +1,5 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
 import { tokenizerFromFile, tokenizerFromString } from "../tokenize/mod.ts";
 import { GeneratedParser } from "./generated_parser.ts";
 import { StartRule } from "./pegen_types.ts";

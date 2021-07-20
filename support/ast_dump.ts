@@ -1,3 +1,5 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
 // deno-lint-ignore-file camelcase
 import { AST } from "../src/ast/astnodes.ts";
 import type { pyConstant } from "../src/ast/constants.ts";

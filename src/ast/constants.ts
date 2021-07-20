@@ -1,3 +1,5 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
 import { assert } from "../parser/pegen.ts";
 
 // deno-lint-ignore no-explicit-any

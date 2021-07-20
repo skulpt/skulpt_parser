@@ -1,3 +1,5 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
 import { pyComplex, pyFloat, pyInt } from "../ast/constants.ts";
 import { Floatnumber } from "../tokenize/tokenize.ts";
 declare global {

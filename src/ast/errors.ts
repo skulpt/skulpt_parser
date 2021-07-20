@@ -1,3 +1,5 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
 type filename = string;
 type lineno = number;
 type offset = number;
