@@ -36,6 +36,10 @@ import {
     ListComp,
     SetComp,
     DictComp,
+    Return,
+    Delete,
+    Assign,
+    AnnAssign,
 } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
@@ -84,10 +88,10 @@ class Symbol_ {
     __name: string;
     __flags: number;
     __scope: number;
-    __namespaces: any[] | null = null;
-    __module_scope: boolean = false;
+    __namespaces: SymbolTableScope[] | null = null;
+    __module_scope = false;
 
-    constructor(name: string, flags: number, namespaces: any[] | null = null, module_scope = false) {
+    constructor(name: string, flags: number, namespaces: SymbolTableScope[] | null = null, module_scope = false) {
         this.__name = name;
         this.__flags = flags;
         this.__scope = (flags >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK; // like PyST_GetScope()
@@ -112,7 +116,7 @@ class Symbol_ {
     }
 
     is_global() {
-        /* Return *True* if the sysmbol is global. */
+        /* Return *True* if the symbol is global. */
         return !!(
             this.__scope in [SYMTAB_CONSTS.GLOBAL_IMPLICIT, SYMTAB_CONSTS.GLOBAL_EXPLICIT] ||
             (this.__module_scope && !!(this.__flags & SYMTAB_CONSTS.DEF_BOUND))
@@ -195,22 +199,23 @@ class Symbol_ {
 var astScopeCounter = 0;
 
 class SymbolTableScope {
-    symFlags: { [flag: string]: any };
     name: string;
-    varnames: any;
+    varnames: string[];
     children: SymbolTableScope[];
     blockType: BlockTypes;
     isNested = false;
     hasFree: boolean;
-    childHasFree: any;
-    generator: any;
+    childHasFree: boolean;
+    generator: boolean;
     varargs: boolean;
-    varkeywords: any;
-    returnsValue: any;
+    varkeywords: boolean;
+    returnsValue: boolean;
     lineno: number;
-    col_offset: number;
-    table: any;
-    symbols: any;
+    colOffset: number;
+    endLineno: number | null | undefined;
+    endColOffset: number | null | undefined;
+    table: SymbolTable;
+    symbols: { [name: string]: number };
     _funcLocals: string[] | null = null;
     _funcParams: string[] | null = null;
     _funcGlobals: string[] | null = null;
@@ -228,11 +233,10 @@ class SymbolTableScope {
         type: BlockTypes,
         ast: AST,
         lineno: number,
-        col_offset: number,
-        end_lineno?: number | null,
-        end_col_offset?: number | null
+        colOffset: number,
+        endLineno?: number | null,
+        endColOffset?: number | null
     ) {
-        this.symFlags = {};
         this.name = name;
         this.varnames = [];
         this.children = [];
@@ -247,7 +251,9 @@ class SymbolTableScope {
         this.returnsValue = false;
 
         this.lineno = lineno;
-        this.col_offset = col_offset;
+        this.colOffset = colOffset;
+        this.endLineno = endLineno;
+        this.endColOffset = endColOffset;
 
         this.table = table;
 
@@ -288,48 +294,32 @@ class SymbolTableScope {
         });
     }
 
-    getSymbol(name: string): Symbol_ {
-        return this.lookup(name);
+    getSymbol(name: string): number {
+        return this.symbols[name];
     }
 
     lookup(name: string): Symbol_ {
-        let sym;
-        if (!(name in this.symbols)) {
-            const flags = this.symFlags[name];
-            const namespaces = this.__check_children(name);
-            sym = this.symbols[name] = new Symbol_(name, flags, namespaces);
-        } else {
-            sym = this.symbols[name];
-        }
-        return sym;
+        return new Symbol_(name, this.symbols[name], this.__check_children(name));
+        // let sym;
+        // if (!(name in this.symbols)) {
+        //     const flags = this.symFlags[name];
+        //     const namespaces = this.__check_children(name);
+        //     sym = this.symbols[name] = new Symbol_(name, flags, namespaces);
+        // } else {
+        //     sym = this.symbols[name];
+        // }
+        // return sym;
     }
 
-    __check_children(name: string): any[] {
+    __check_children(name: string): SymbolTableScope[] {
         //print("  check_children:", name);
-        var child;
-        var i;
-        var ret = [];
-        for (i = 0; i < this.children.length; ++i) {
-            child = this.children[i];
-            if (child.name === name) {
-                ret.push(child);
-            }
-        }
-        return ret;
+        return this.children.filter((c) => c.name === name);
     }
 
-    _identsMatching(f: (flag: number) => boolean) {
-        var k;
-        var ret = [];
-        for (k in this.symFlags) {
-            if (k in this.symFlags) {
-                if (f(this.symFlags[k])) {
-                    ret.push(k);
-                }
-            }
-        }
-        ret.sort();
-        return ret;
+    _identsMatching(f: (flag: number) => boolean): string[] {
+        return Object.entries(this.symbols)
+            .filter(([_, v]) => f(v))
+            .map(([k, _]) => k);
     }
 
     get_parameters(): string[] {
@@ -389,7 +379,7 @@ class SymbolTableScope {
     get_scope(name: string): number {
         //print("getScope");
         //for (var k in this.symFlags) print(k);
-        var v = this.symFlags[name];
+        var v = this.symbols[name];
         if (v === undefined) {
             return 0;
         }
@@ -427,9 +417,9 @@ function _Py_Mangle(privateobj: string | null, ident: string) {
 class SymbolTable {
     filename: string;
     cur: SymbolTableScope | null = null;
-    top: any | null = null;
+    top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
-    global: any | null = null;
+    global: { [name: string]: number } | null = null;
     curClass: string | null = null;
     tmpname = 0;
     stss: { [thing: number]: any } = {};
@@ -461,7 +451,7 @@ class SymbolTable {
                 throw new pySyntaxError("duplicate argument '" + name + "' in function definition", [
                     this.filename,
                     cur_ste.lineno,
-                    cur_ste.col_offset,
+                    cur_ste.colOffset,
                     "",
                 ]);
             }
@@ -480,7 +470,7 @@ class SymbolTable {
                 // @stu no end line and end coloffset in syntax err??
                 throw new pySyntaxError(
                     `comprehension inner loop cannot rebind assignment expression target '${name}'`,
-                    [this.filename, cur_ste.lineno, cur_ste.col_offset, ""]
+                    [this.filename, cur_ste.lineno, cur_ste.colOffset, ""]
                 );
             }
             val |= SYMTAB_CONSTS.DEF_COMP_ITER;
@@ -542,7 +532,7 @@ class SymbolTable {
              */
             if (ste.comprehension) {
                 const target_in_scope = ste.getSymbol(target_name);
-                if (target_in_scope.is_comprehension()) {
+                if (target_in_scope & SYMTAB_CONSTS.DEF_COMP_ITER) {
                     throw new pySyntaxError(
                         `assignment expression cannot rebind comprehension iteration variable '${target_name}'`,
                         ["", 0, 0, ""]
@@ -554,7 +544,7 @@ class SymbolTable {
             /* If we find a FunctionBlock entry, add as GLOBAL/LOCAL or NONLOCAL/LOCAL */
             if (ste.blockType === FunctionBlock) {
                 const target_in_scope = ste.getSymbol(target_name);
-                if (target_in_scope.is_global()) {
+                if (target_in_scope & SYMTAB_CONSTS.DEF_GLOBAL) {
                     this.addDef(target_name, SYMTAB_CONSTS.DEF_GLOBAL);
                 } else {
                     this.addDef(target_name, SYMTAB_CONSTS.DEF_NONLOCAL);
@@ -606,6 +596,7 @@ class SymbolTable {
         end_lineno?: number | null,
         end_col_offset?: number | null
     ) {
+        assert(this.cur);
         const ste = new SymbolTableScope(this, name, block, ast, lineno, col_offset, end_lineno, end_col_offset);
         this.stack.push(ste);
         const prev = this.cur;
@@ -626,7 +617,7 @@ class SymbolTable {
         }
 
         if (block === ModuleBlock) {
-            this.global = this.cur?.symbols;
+            this.global = this.cur.symbols;
         }
 
         if (prev) {
@@ -994,6 +985,12 @@ class SymbolTable {
         }
     }
 
+    lookup(id: string) {
+        assert(this.cur);
+        const mangled = _Py_Mangle(this.private, id);
+        return this.cur.getSymbol(mangled);
+    }
+
     visitStmt(s: stmt) {
         assert(s !== undefined, "visitStmt called with undefined");
         switch (s._kind) {
@@ -1037,43 +1034,59 @@ class SymbolTable {
                 this.exitBlock();
                 break;
             }
-            // case Sk.astnodes.Return:
-            //     if (s.value) {
-            //         this.visitExpr(s.value);
-            //         this.cur.returnsValue = true;
-            //     }
-            //     break;
-            // case Sk.astnodes.Delete:
-            //     this.SEQExpr(s.targets);
-            //     break;
-            // case Sk.astnodes.Assign:
-            //     this.SEQExpr(s.targets);
-            //     this.visitExpr(s.value);
-            //     break;
-            // case Sk.astnodes.AnnAssign:
-            //     if (s.target.constructor == Sk.astnodes.Name) {
-            //         e_name = s.target;
-            //         name = Sk.mangleName(this.curClass, e_name.id).v;
-            //         name = Sk.fixReserved(name);
-            //         cur = this.cur.symFlags[name];
-            //         if ((cur & (DEF_GLOBAL | DEF_NONLOCAL) )
-            //             && (this.global != this.cur.symFlags) // TODO
-            //             && (s.simple)) {
-            //             throw new Sk.builtin.SyntaxError("annotated name '"+ name +"' can't be global", this.filename, s.lineno);
-            //         }
-            //         if (s.simple) {
-            //             this.addDef(new Sk.builtin.str(name), DEF_ANNOT | DEF_LOCAL, s.lineno);
-            //         } else if (s.value) {
-            //             this.addDef(new Sk.builtin.str(name), DEF_LOCAL, s.lineno);
-            //         }
-            //     } else {
-            //         this.visitExpr(s.target);
-            //     }
-            //     this.visitExpr(s.annotation);
-            //     if (s.value) {
-            //         this.visitExpr(s.value);
-            //     }
-            //     break;
+            case ASTKind.Return: {
+                assert(this.cur);
+                const return_ = s as Return;
+                if (return_.value) {
+                    this.visitExpr(return_.value);
+                    this.cur.returnsValue = true;
+                }
+                break;
+            }
+            case ASTKind.Delete:
+                this.SEQ(this.visitExpr, (s as Delete).targets);
+                break;
+            case ASTKind.Assign: {
+                const assign = s as Assign;
+                this.SEQ(this.visitExpr, assign.targets);
+                this.visitExpr(assign.value);
+                break;
+            }
+            case ASTKind.AnnAssign: {
+                const annAssign = s as AnnAssign;
+                if (annAssign.target._kind === ASTKind.Name) {
+                    assert(this.cur);
+                    const eName = annAssign.target as Name;
+                    const cur = this.lookup(eName.id);
+                    if (
+                        cur & (SYMTAB_CONSTS.DEF_GLOBAL | SYMTAB_CONSTS.DEF_NONLOCAL) &&
+                        this.cur.symbols !== this.global &&
+                        annAssign.simple
+                    ) {
+                        throw new pySyntaxError(
+                            cur & SYMTAB_CONSTS.DEF_GLOBAL
+                                ? `annotated name '${eName.id}' can't be global`
+                                : `annotated name '${eName.id}' can't be nonlocal`,
+                            [this.filename, s.lineno, s.col_offset, ""]
+                        );
+                    }
+
+                    if (annAssign.simple) {
+                        this.addDef(eName.id, SYMTAB_CONSTS.DEF_ANNOT | SYMTAB_CONSTS.DEF_LOCAL);
+                    } else if (annAssign.value) {
+                        this.addDef(eName.id, SYMTAB_CONSTS.DEF_LOCAL);
+                    }
+                } else {
+                    this.visitExpr(annAssign.target);
+                }
+
+                this.visitExpr(annAssign.annotation);
+                if (annAssign.value) {
+                    this.visitExpr(annAssign.value);
+                }
+                break;
+            }
+
             // case Sk.astnodes.AugAssign:
             //     this.visitExpr(s.target);
             //     this.visitExpr(s.value);
@@ -1176,118 +1189,6 @@ class SymbolTable {
     }
 }
 
-// SymbolTable.prototype.SEQStmt = function (nodes) {
-//     var val;
-//     var i;
-//     var len;
-//     if (nodes !== null) {
-//        assert(Sk.isArrayLike(nodes), "SEQ: nodes isn't array? got " + nodes.toString());
-//         len = nodes.length;
-//         for (i = 0; i < len; ++i) {
-//             val = nodes[i];
-//             if (val) {
-//                 this.visitStmt(val);
-//             }
-//         }
-//     }
-// };
-
-// SymbolTable.prototype.visitParams = function (args, toplevel) {
-//     var arg;
-//     var i;
-//     for (i = 0; i < args.length; ++i) {
-//         arg = args[i];
-//         if (arg.constructor === Sk.astnodes.arg) {
-//             // TODO arguments are more complicated in Python 3...
-//             this.addDef(arg.arg, DEF_PARAM, arg.lineno);
-//         }
-//         else {
-//             // Tuple isn't supported
-//             throw new Sk.builtin.SyntaxError("invalid expression in parameter list", this.filename);
-//         }
-//     }
-// };
-
-// SymbolTable.prototype.visitAnnotations = function (a, returns) {
-//     if (a.posonlyargs) {
-//         this.visitArgAnnotations(a.posonlyargs);
-//     }
-//     if (a.args) {
-//         this.visitArgAnnotations(a.args);
-//     }
-//     if (a.vararg && a.vararg.annotation) {
-//         this.visitExpr(a.vararg.annotation);
-//     }
-//     if (a.kwarg && a.kwarg.annotation) {
-//         this.visitExpr(a.kwarg.annotation);
-//     }
-//     if (a.kwonlyargs) {
-//         this.visitArgAnnotations(a.kwonlyargs);
-//     }
-//     if (returns) {
-//         this.visitExpr(returns);
-//     }
-// };
-
-// SymbolTable.prototype.visitArgAnnotations = function (args) {
-//     for (let i = 0; i < args.length; i++) {
-//         const arg = args[i];
-//         if (arg.annotation) {
-//             this.visitExpr(arg.annotation);
-//         }
-//     }
-// };
-
-// SymbolTable.prototype.visitArguments = function (a, lineno) {
-//     if (a.args) {
-//         this.visitParams(a.args, true);
-//     }
-//     if (a.kwonlyargs) {
-//         this.visitParams(a.kwonlyargs, true);
-//     }
-//     if (a.vararg) {
-//         this.addDef(a.vararg.arg, DEF_PARAM, lineno);
-//         this.cur.varargs = true;
-//     }
-//     if (a.kwarg) {
-//         this.addDef(a.kwarg.arg, DEF_PARAM, lineno);
-//         this.cur.varkeywords = true;
-//     }
-// };
-
-// SymbolTable.prototype.newTmpname = function (lineno) {
-//     this.addDef(new Sk.builtin.str("_[" + (++this.tmpname) + "]"), DEF_LOCAL, lineno);
-// };
-
-// SymbolTable.prototype.addDef = function (name, flag, lineno) {
-//     var fromGlobal;
-//     var val;
-//     var mangled = Sk.mangleName(this.curClass, name).v;
-//     mangled = Sk.fixReserved(mangled);
-//     val = this.cur.symFlags[mangled];
-//     if (val !== undefined) {
-//         if ((flag & DEF_PARAM) && (val & DEF_PARAM)) {
-//             throw new Sk.builtin.SyntaxError("duplicate argument '" + name.v + "' in function definition", this.filename, lineno);
-//         }
-//         val |= flag;
-//     }
-//     else {
-//         val = flag;
-//     }
-//     this.cur.symFlags[mangled] = val;
-//     if (flag & DEF_PARAM) {
-//         this.cur.varnames.push(mangled);
-//     }
-//     else if (flag & DEF_GLOBAL) {
-//         val = flag;
-//         fromGlobal = this.global[mangled];
-//         if (fromGlobal !== undefined) {
-//             val |= fromGlobal;
-//         }
-//         this.global[mangled] = val;
-//     }
-// };
-
 // SymbolTable.prototype.visitSlice = function (s) {
 //     var i;
 //     switch (s.constructor) {
@@ -1315,324 +1216,12 @@ class SymbolTable {
 //     }
 // };
 
-// SymbolTable.prototype.visitStmt = function (s) {
-//     var cur;
-//     var name;
-//     var i;
-//     var nameslen;
-//     var tmp;
-//     var e_name;
-//    assert(s !== undefined, "visitStmt called with undefined");
-//     switch (s.constructor) {
-//         case Sk.astnodes.FunctionDef:
-//             this.addDef(s.name, DEF_LOCAL, s.lineno);
-//             if (s.args.defaults) {
-//                 this.SEQExpr(s.args.defaults);
-//             }
-//             if (s.decorator_list) {
-//                 this.SEQExpr(s.decorator_list);
-//             }
-//             this.visitAnnotations(s.args, s.returns);
-//             this.enterBlock(s.name.v, FunctionBlock, s, s.lineno);
-//             this.visitArguments(s.args, s.lineno);
-//             this.SEQStmt(s.body);
-//             this.exitBlock();
-//             break;
-//         case Sk.astnodes.ClassDef:
-//             this.addDef(s.name, DEF_LOCAL, s.lineno);
-//             this.SEQExpr(s.bases);
-//             if (s.decorator_list) {
-//                 this.SEQExpr(s.decorator_list);
-//             }
-//             this.enterBlock(s.name.v, ClassBlock, s, s.lineno);
-//             tmp = this.curClass;
-//             this.curClass = s.name;
-//             this.SEQStmt(s.body);
-//             this.exitBlock();
-//             break;
-//         case Sk.astnodes.Return:
-//             if (s.value) {
-//                 this.visitExpr(s.value);
-//                 this.cur.returnsValue = true;
-//             }
-//             break;
-//         case Sk.astnodes.Delete:
-//             this.SEQExpr(s.targets);
-//             break;
-//         case Sk.astnodes.Assign:
-//             this.SEQExpr(s.targets);
-//             this.visitExpr(s.value);
-//             break;
-//         case Sk.astnodes.AnnAssign:
-//             if (s.target.constructor == Sk.astnodes.Name) {
-//                 e_name = s.target;
-//                 name = Sk.mangleName(this.curClass, e_name.id).v;
-//                 name = Sk.fixReserved(name);
-//                 cur = this.cur.symFlags[name];
-//                 if ((cur & (DEF_GLOBAL | DEF_NONLOCAL) )
-//                     && (this.global != this.cur.symFlags) // TODO
-//                     && (s.simple)) {
-//                     throw new Sk.builtin.SyntaxError("annotated name '"+ name +"' can't be global", this.filename, s.lineno);
-//                 }
-//                 if (s.simple) {
-//                     this.addDef(new Sk.builtin.str(name), DEF_ANNOT | DEF_LOCAL, s.lineno);
-//                 } else if (s.value) {
-//                     this.addDef(new Sk.builtin.str(name), DEF_LOCAL, s.lineno);
-//                 }
-//             } else {
-//                 this.visitExpr(s.target);
-//             }
-//             this.visitExpr(s.annotation);
-//             if (s.value) {
-//                 this.visitExpr(s.value);
-//             }
-//             break;
-//         case Sk.astnodes.AugAssign:
-//             this.visitExpr(s.target);
-//             this.visitExpr(s.value);
-//             break;
-//         case Sk.astnodes.Print:
-//             if (s.dest) {
-//                 this.visitExpr(s.dest);
-//             }
-//             this.SEQExpr(s.values);
-//             break;
-//         case Sk.astnodes.For:
-//             this.visitExpr(s.target);
-//             this.visitExpr(s.iter);
-//             this.SEQStmt(s.body);
-//             if (s.orelse) {
-//                 this.SEQStmt(s.orelse);
-//             }
-//             break;
-//         case Sk.astnodes.While:
-//             this.visitExpr(s.test);
-//             this.SEQStmt(s.body);
-//             if (s.orelse) {
-//                 this.SEQStmt(s.orelse);
-//             }
-//             break;
-//         case Sk.astnodes.If:
-//             this.visitExpr(s.test);
-//             this.SEQStmt(s.body);
-//             if (s.orelse) {
-//                 this.SEQStmt(s.orelse);
-//             }
-//             break;
-//         case Sk.astnodes.Raise:
-//             if (s.exc) {
-//                 this.visitExpr(s.exc);
-//                 // Our hacked AST supports both Python 2 (inst, tback)
-//                 // and Python 3 (cause) versions of the Raise statement
-//                 if (s.inst) {
-//                     this.visitExpr(s.inst);
-//                     if (s.tback) {
-//                         this.visitExpr(s.tback);
-//                     }
-//                 }
-//                 if (s.cause) {
-//                     this.visitExpr(s.cause);
-//                 }
-//             }
-//             break;
-//         case Sk.astnodes.Assert:
-//             this.visitExpr(s.test);
-//             if (s.msg) {
-//                 this.visitExpr(s.msg);
-//             }
-//             break;
-//         case Sk.astnodes.Import:
-//         case Sk.astnodes.ImportFrom:
-//             this.visitAlias(s.names, s.lineno);
-//             break;
-//         case Sk.astnodes.Global:
-//             nameslen = s.names.length;
-//             for (i = 0; i < nameslen; ++i) {
-//                 name = Sk.mangleName(this.curClass, s.names[i]).v;
-//                 name = Sk.fixReserved(name);
-//                 cur = this.cur.symFlags[name];
-//                 if (cur & (DEF_LOCAL | USE)) {
-//                     if (cur & DEF_LOCAL) {
-//                         throw new Sk.builtin.SyntaxError("name '" + name + "' is assigned to before global declaration", this.filename, s.lineno);
-//                     }
-//                     else {
-//                         throw new Sk.builtin.SyntaxError("name '" + name + "' is used prior to global declaration", this.filename, s.lineno);
-//                     }
-//                 }
-//                 this.addDef(new Sk.builtin.str(name), DEF_GLOBAL, s.lineno);
-//             }
-//             break;
-//         case Sk.astnodes.Expr:
-//             this.visitExpr(s.value);
-//             break;
-//         case Sk.astnodes.Pass:
-//         case Sk.astnodes.Break:
-//         case Sk.astnodes.Continue:
-//         case Sk.astnodes.Debugger:
-//             // nothing
-//             break;
-//         case Sk.astnodes.With:
-//             VISIT_SEQ(this.visit_withitem.bind(this), s.items);
-//             VISIT_SEQ(this.visitStmt.bind(this), s.body);
-//             break;
-
-//         case Sk.astnodes.Try:
-//             this.SEQStmt(s.body);
-//             this.visitExcepthandlers(s.handlers)
-//             this.SEQStmt(s.orelse);
-//             this.SEQStmt(s.finalbody);
-//             break;
-
-//         default:
-//             Sk.asserts.fail("Unhandled type " + s.constructor.name + " in visitStmt");
-//     }
-// };
-
 // SymbolTable.prototype.visit_withitem = function(item) {
 //     this.visitExpr(item.context_expr);
 //     if (item.optional_vars) {
 //         this.visitExpr(item.optional_vars);
 //     }
 // }
-
-// function VISIT_SEQ(visitFunc, seq) {
-//     var i;
-//     for (i = 0; i < seq.length; i++) {
-//         var elt = seq[i];
-//         visitFunc(elt)
-//     }
-// }
-
-// SymbolTable.prototype.visitExpr = function (e) {
-//     var i;
-//    assert(e !== undefined, "visitExpr called with undefined");
-//     // console.log("  e: ", e.constructor.name);
-//     switch (e.constructor) {
-//         case Sk.astnodes.BoolOp:
-//             this.SEQExpr(e.values);
-//             break;
-//         case Sk.astnodes.BinOp:
-//             this.visitExpr(e.left);
-//             this.visitExpr(e.right);
-//             break;
-//         case Sk.astnodes.UnaryOp:
-//             this.visitExpr(e.operand);
-//             break;
-//         case Sk.astnodes.Lambda:
-//             this.addDef(new Sk.builtin.str("lambda"), DEF_LOCAL, e.lineno);
-//             if (e.args.defaults) {
-//                 this.SEQExpr(e.args.defaults);
-//             }
-//             this.enterBlock("lambda", FunctionBlock, e, e.lineno);
-//             this.visitArguments(e.args, e.lineno);
-//             this.visitExpr(e.body);
-//             this.exitBlock();
-//             break;
-//         case Sk.astnodes.IfExp:
-//             this.visitExpr(e.test);
-//             this.visitExpr(e.body);
-//             this.visitExpr(e.orelse);
-//             break;
-//         case Sk.astnodes.Dict:
-//             this.SEQExpr(e.keys);
-//             this.SEQExpr(e.values);
-//             break;
-//         case Sk.astnodes.DictComp:
-//         case Sk.astnodes.SetComp:
-//             this.visitComprehension(e.generators, 0);
-//             break;
-//         case Sk.astnodes.ListComp:
-//             this.newTmpname(e.lineno);
-//             this.visitExpr(e.elt);
-//             this.visitComprehension(e.generators, 0);
-//             break;
-//         case Sk.astnodes.GeneratorExp:
-//             this.visitGenexp(e);
-//             break;
-//         case Sk.astnodes.YieldFrom:
-//         case Sk.astnodes.Yield:
-//             if (e.value) {
-//                 this.visitExpr(e.value);
-//             }
-//             this.cur.generator = true;
-//             if (this.cur.returnsValue) {
-//                 throw new Sk.builtin.SyntaxError("'return' with argument inside generator", this.filename);
-//             }
-//             break;
-//         case Sk.astnodes.Compare:
-//             this.visitExpr(e.left);
-//             this.SEQExpr(e.comparators);
-//             break;
-//         case Sk.astnodes.Call:
-//             this.visitExpr(e.func);
-//             if (e.args) {
-//                 for (let a of e.args) {
-//                     if (a.constructor === Sk.astnodes.Starred) {
-//                         this.visitExpr(a.value);
-//                     } else {
-//                         this.visitExpr(a);
-//                     }
-//                 }
-//             }
-//             if (e.keywords) {
-//                 for (let k of e.keywords) {
-//                     this.visitExpr(k.value);
-//                 }
-//             }
-//             break;
-//         case Sk.astnodes.Num:
-//         case Sk.astnodes.Str:
-//         case Sk.astnodes.Bytes:
-//             break;
-//         case Sk.astnodes.JoinedStr:
-//             for (let s of e.values) {
-//                 this.visitExpr(s);
-//             }
-//             break;
-//         case Sk.astnodes.FormattedValue:
-//             this.visitExpr(e.value);
-//             if (e.format_spec) {
-//                 this.visitExpr(e.format_spec);
-//             }
-//             break;
-//         case Sk.astnodes.Attribute:
-//             this.visitExpr(e.value);
-//             break;
-//         case Sk.astnodes.Subscript:
-//             this.visitExpr(e.value);
-//             this.visitSlice(e.slice);
-//             break;
-//         case Sk.astnodes.Name:
-//             this.addDef(e.id, e.ctx === Sk.astnodes.Load ? USE : DEF_LOCAL, e.lineno);
-//             break;
-//         case Sk.astnodes.NameConstant:
-//             break;
-//         case Sk.astnodes.List:
-//         case Sk.astnodes.Tuple:
-//         case Sk.astnodes.Set:
-//             this.SEQExpr(e.elts);
-//             break;
-//         case Sk.astnodes.Starred:
-//             this.visitExpr(e.value);
-//             break;
-//         case Sk.astnodes.Ellipsis:
-//             break;
-//         default:
-//             Sk.asserts.fail("Unhandled type " + e.constructor.name + " in visitExpr");
-//     }
-// };
-
-// SymbolTable.prototype.visitComprehension = function (lcs, startAt) {
-//     var lc;
-//     var i;
-//     var len = lcs.length;
-//     for (i = startAt; i < len; ++i) {
-//         lc = lcs[i];
-//         this.visitExpr(lc.target);
-//         this.visitExpr(lc.iter);
-//         this.SEQExpr(lc.ifs);
-//     }
-// };
 
 // SymbolTable.prototype.visitAlias = function (names, lineno) {
 //     /* Compute store_name, the name actually bound by the import
@@ -1661,20 +1250,6 @@ class SymbolTable {
 //             }
 //         }
 //     }
-// };
-
-// SymbolTable.prototype.visitGenexp = function (e) {
-//     var outermost = e.generators[0];
-//     // outermost is evaled in current scope
-//     this.visitExpr(outermost.iter);
-//     this.enterBlock("genexpr", FunctionBlock, e, e.lineno);
-//     this.cur.generator = true;
-//     this.addDef(new Sk.builtin.str(".0"), DEF_PARAM, e.lineno);
-//     this.visitExpr(outermost.target);
-//     this.SEQExpr(outermost.ifs);
-//     this.visitComprehension(e.generators, 1);
-//     this.visitExpr(e.elt);
-//     this.exitBlock();
 // };
 
 // SymbolTable.prototype.visitExcepthandlers = function (handlers) {
