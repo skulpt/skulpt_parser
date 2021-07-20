@@ -7,12 +7,90 @@ import { pyConstant } from "./constants.ts";
 /** @todo should identifier be a python type? */
 export type identifier = string;
 export type constant = pyConstant;
-
+export enum ASTKind {
+    mod = 0,
+    Module = 1,
+    Interactive = 2,
+    Expression = 3,
+    FunctionType = 4,
+    stmt = 5,
+    FunctionDef = 6,
+    AsyncFunctionDef = 7,
+    ClassDef = 8,
+    Return = 9,
+    Delete = 10,
+    Assign = 11,
+    AugAssign = 12,
+    AnnAssign = 13,
+    For = 14,
+    AsyncFor = 15,
+    While = 16,
+    If = 17,
+    With = 18,
+    AsyncWith = 19,
+    Raise = 20,
+    Try = 21,
+    Assert = 22,
+    Import = 23,
+    ImportFrom = 24,
+    Global = 25,
+    Nonlocal = 26,
+    Expr = 27,
+    Pass = 28,
+    Break = 29,
+    Continue = 30,
+    Debugger = 31,
+    expr = 32,
+    BoolOp = 33,
+    NamedExpr = 34,
+    BinOp = 35,
+    UnaryOp = 36,
+    Lambda = 37,
+    IfExp = 38,
+    Dict = 39,
+    Set = 40,
+    ListComp = 41,
+    SetComp = 42,
+    DictComp = 43,
+    GeneratorExp = 44,
+    Await = 45,
+    Yield = 46,
+    YieldFrom = 47,
+    Compare = 48,
+    Call = 49,
+    FormattedValue = 50,
+    JoinedStr = 51,
+    Constant = 52,
+    Attribute = 53,
+    Subscript = 54,
+    Starred = 55,
+    Name = 56,
+    List = 57,
+    Tuple = 58,
+    Slice = 59,
+    expr_context = 60,
+    boolop = 61,
+    operator = 62,
+    unaryop = 63,
+    cmpop = 64,
+    comprehension = 65,
+    excepthandler = 66,
+    ExceptHandler = 67,
+    arguments_ = 68,
+    arg = 69,
+    keyword = 70,
+    alias = 71,
+    withitem = 72,
+    type_ignore = 73,
+    TypeIgnore = 74,
+}
 /** base class for all AST nodes */
 export interface AST {
     _fields: string[];
     _attributes: string[];
     _enum: boolean;
+    _kind: ASTKind;
+    scopeId: number;
 }
 
 export class AST {
@@ -248,6 +326,7 @@ export class Module extends mod {
     }
 }
 Module.prototype._fields = ["body", "type_ignores"];
+Module.prototype._kind = ASTKind.Module;
 
 export class Interactive extends mod {
     static _name = "Interactive";
@@ -258,6 +337,7 @@ export class Interactive extends mod {
     }
 }
 Interactive.prototype._fields = ["body"];
+Interactive.prototype._kind = ASTKind.Interactive;
 
 export class Expression extends mod {
     static _name = "Expression";
@@ -268,6 +348,7 @@ export class Expression extends mod {
     }
 }
 Expression.prototype._fields = ["body"];
+Expression.prototype._kind = ASTKind.Expression;
 
 export class FunctionType extends mod {
     static _name = "FunctionType";
@@ -280,6 +361,7 @@ export class FunctionType extends mod {
     }
 }
 FunctionType.prototype._fields = ["argtypes", "returns"];
+FunctionType.prototype._kind = ASTKind.FunctionType;
 
 /* ----- stmt ----- */
 export class stmt extends AST {
@@ -354,6 +436,7 @@ export class FunctionDef extends stmt {
     }
 }
 FunctionDef.prototype._fields = ["name", "args", "body", "decorator_list", "returns", "type_comment"];
+FunctionDef.prototype._kind = ASTKind.FunctionDef;
 
 export class AsyncFunctionDef extends stmt {
     static _name = "AsyncFunctionDef";
@@ -382,6 +465,7 @@ export class AsyncFunctionDef extends stmt {
     }
 }
 AsyncFunctionDef.prototype._fields = ["name", "args", "body", "decorator_list", "returns", "type_comment"];
+AsyncFunctionDef.prototype._kind = ASTKind.AsyncFunctionDef;
 
 export class ClassDef extends stmt {
     static _name = "ClassDef";
@@ -407,6 +491,7 @@ export class ClassDef extends stmt {
     }
 }
 ClassDef.prototype._fields = ["name", "bases", "keywords", "body", "decorator_list"];
+ClassDef.prototype._kind = ASTKind.ClassDef;
 
 export class Return extends stmt {
     static _name = "Return";
@@ -417,6 +502,7 @@ export class Return extends stmt {
     }
 }
 Return.prototype._fields = ["value"];
+Return.prototype._kind = ASTKind.Return;
 
 export class Delete extends stmt {
     static _name = "Delete";
@@ -427,6 +513,7 @@ export class Delete extends stmt {
     }
 }
 Delete.prototype._fields = ["targets"];
+Delete.prototype._kind = ASTKind.Delete;
 
 export class Assign extends stmt {
     static _name = "Assign";
@@ -441,6 +528,7 @@ export class Assign extends stmt {
     }
 }
 Assign.prototype._fields = ["targets", "value", "type_comment"];
+Assign.prototype._kind = ASTKind.Assign;
 
 export class AugAssign extends stmt {
     static _name = "AugAssign";
@@ -455,6 +543,7 @@ export class AugAssign extends stmt {
     }
 }
 AugAssign.prototype._fields = ["target", "op", "value"];
+AugAssign.prototype._kind = ASTKind.AugAssign;
 
 export class AnnAssign extends stmt {
     static _name = "AnnAssign";
@@ -471,6 +560,7 @@ export class AnnAssign extends stmt {
     }
 }
 AnnAssign.prototype._fields = ["target", "annotation", "value", "simple"];
+AnnAssign.prototype._kind = ASTKind.AnnAssign;
 
 export class For extends stmt {
     static _name = "For";
@@ -496,6 +586,7 @@ export class For extends stmt {
     }
 }
 For.prototype._fields = ["target", "iter", "body", "orelse", "type_comment"];
+For.prototype._kind = ASTKind.For;
 
 export class AsyncFor extends stmt {
     static _name = "AsyncFor";
@@ -521,6 +612,7 @@ export class AsyncFor extends stmt {
     }
 }
 AsyncFor.prototype._fields = ["target", "iter", "body", "orelse", "type_comment"];
+AsyncFor.prototype._kind = ASTKind.AsyncFor;
 
 export class While extends stmt {
     static _name = "While";
@@ -535,6 +627,7 @@ export class While extends stmt {
     }
 }
 While.prototype._fields = ["test", "body", "orelse"];
+While.prototype._kind = ASTKind.While;
 
 export class If extends stmt {
     static _name = "If";
@@ -549,6 +642,7 @@ export class If extends stmt {
     }
 }
 If.prototype._fields = ["test", "body", "orelse"];
+If.prototype._kind = ASTKind.If;
 
 export class With extends stmt {
     static _name = "With";
@@ -563,6 +657,7 @@ export class With extends stmt {
     }
 }
 With.prototype._fields = ["items", "body", "type_comment"];
+With.prototype._kind = ASTKind.With;
 
 export class AsyncWith extends stmt {
     static _name = "AsyncWith";
@@ -577,6 +672,7 @@ export class AsyncWith extends stmt {
     }
 }
 AsyncWith.prototype._fields = ["items", "body", "type_comment"];
+AsyncWith.prototype._kind = ASTKind.AsyncWith;
 
 export class Raise extends stmt {
     static _name = "Raise";
@@ -589,6 +685,7 @@ export class Raise extends stmt {
     }
 }
 Raise.prototype._fields = ["exc", "cause"];
+Raise.prototype._kind = ASTKind.Raise;
 
 export class Try extends stmt {
     static _name = "Try";
@@ -611,6 +708,7 @@ export class Try extends stmt {
     }
 }
 Try.prototype._fields = ["body", "handlers", "orelse", "finalbody"];
+Try.prototype._kind = ASTKind.Try;
 
 export class Assert extends stmt {
     static _name = "Assert";
@@ -623,6 +721,7 @@ export class Assert extends stmt {
     }
 }
 Assert.prototype._fields = ["test", "msg"];
+Assert.prototype._kind = ASTKind.Assert;
 
 export class Import extends stmt {
     static _name = "Import";
@@ -633,6 +732,7 @@ export class Import extends stmt {
     }
 }
 Import.prototype._fields = ["names"];
+Import.prototype._kind = ASTKind.Import;
 
 export class ImportFrom extends stmt {
     static _name = "ImportFrom";
@@ -647,6 +747,7 @@ export class ImportFrom extends stmt {
     }
 }
 ImportFrom.prototype._fields = ["module", "names", "level"];
+ImportFrom.prototype._kind = ASTKind.ImportFrom;
 
 export class Global extends stmt {
     static _name = "Global";
@@ -657,6 +758,7 @@ export class Global extends stmt {
     }
 }
 Global.prototype._fields = ["names"];
+Global.prototype._kind = ASTKind.Global;
 
 export class Nonlocal extends stmt {
     static _name = "Nonlocal";
@@ -667,6 +769,7 @@ export class Nonlocal extends stmt {
     }
 }
 Nonlocal.prototype._fields = ["names"];
+Nonlocal.prototype._kind = ASTKind.Nonlocal;
 
 export class Expr extends stmt {
     static _name = "Expr";
@@ -677,6 +780,7 @@ export class Expr extends stmt {
     }
 }
 Expr.prototype._fields = ["value"];
+Expr.prototype._kind = ASTKind.Expr;
 
 export class Pass extends stmt {
     static _name = "Pass";
@@ -685,6 +789,7 @@ export class Pass extends stmt {
     }
 }
 Pass.prototype._fields = [];
+Pass.prototype._kind = ASTKind.Pass;
 
 export class Break extends stmt {
     static _name = "Break";
@@ -693,6 +798,7 @@ export class Break extends stmt {
     }
 }
 Break.prototype._fields = [];
+Break.prototype._kind = ASTKind.Break;
 
 export class Continue extends stmt {
     static _name = "Continue";
@@ -701,6 +807,7 @@ export class Continue extends stmt {
     }
 }
 Continue.prototype._fields = [];
+Continue.prototype._kind = ASTKind.Continue;
 
 export class Debugger extends stmt {
     static _name = "Debugger";
@@ -709,6 +816,7 @@ export class Debugger extends stmt {
     }
 }
 Debugger.prototype._fields = [];
+Debugger.prototype._kind = ASTKind.Debugger;
 
 /* ----- expr ----- */
 export class expr extends AST {
@@ -768,6 +876,7 @@ export class BoolOp extends expr {
     }
 }
 BoolOp.prototype._fields = ["op", "values"];
+BoolOp.prototype._kind = ASTKind.BoolOp;
 
 export class NamedExpr extends expr {
     static _name = "NamedExpr";
@@ -780,6 +889,7 @@ export class NamedExpr extends expr {
     }
 }
 NamedExpr.prototype._fields = ["target", "value"];
+NamedExpr.prototype._kind = ASTKind.NamedExpr;
 
 export class BinOp extends expr {
     static _name = "BinOp";
@@ -794,6 +904,7 @@ export class BinOp extends expr {
     }
 }
 BinOp.prototype._fields = ["left", "op", "right"];
+BinOp.prototype._kind = ASTKind.BinOp;
 
 export class UnaryOp extends expr {
     static _name = "UnaryOp";
@@ -806,6 +917,7 @@ export class UnaryOp extends expr {
     }
 }
 UnaryOp.prototype._fields = ["op", "operand"];
+UnaryOp.prototype._kind = ASTKind.UnaryOp;
 
 export class Lambda extends expr {
     static _name = "Lambda";
@@ -818,6 +930,7 @@ export class Lambda extends expr {
     }
 }
 Lambda.prototype._fields = ["args", "body"];
+Lambda.prototype._kind = ASTKind.Lambda;
 
 export class IfExp extends expr {
     static _name = "IfExp";
@@ -832,6 +945,7 @@ export class IfExp extends expr {
     }
 }
 IfExp.prototype._fields = ["test", "body", "orelse"];
+IfExp.prototype._kind = ASTKind.IfExp;
 
 export class Dict extends expr {
     static _name = "Dict";
@@ -844,6 +958,7 @@ export class Dict extends expr {
     }
 }
 Dict.prototype._fields = ["keys", "values"];
+Dict.prototype._kind = ASTKind.Dict;
 
 export class Set extends expr {
     static _name = "Set";
@@ -854,6 +969,7 @@ export class Set extends expr {
     }
 }
 Set.prototype._fields = ["elts"];
+Set.prototype._kind = ASTKind.Set;
 
 export class ListComp extends expr {
     static _name = "ListComp";
@@ -866,6 +982,7 @@ export class ListComp extends expr {
     }
 }
 ListComp.prototype._fields = ["elt", "generators"];
+ListComp.prototype._kind = ASTKind.ListComp;
 
 export class SetComp extends expr {
     static _name = "SetComp";
@@ -878,6 +995,7 @@ export class SetComp extends expr {
     }
 }
 SetComp.prototype._fields = ["elt", "generators"];
+SetComp.prototype._kind = ASTKind.SetComp;
 
 export class DictComp extends expr {
     static _name = "DictComp";
@@ -892,6 +1010,7 @@ export class DictComp extends expr {
     }
 }
 DictComp.prototype._fields = ["key", "value", "generators"];
+DictComp.prototype._kind = ASTKind.DictComp;
 
 export class GeneratorExp extends expr {
     static _name = "GeneratorExp";
@@ -904,6 +1023,7 @@ export class GeneratorExp extends expr {
     }
 }
 GeneratorExp.prototype._fields = ["elt", "generators"];
+GeneratorExp.prototype._kind = ASTKind.GeneratorExp;
 
 export class Await extends expr {
     static _name = "Await";
@@ -914,6 +1034,7 @@ export class Await extends expr {
     }
 }
 Await.prototype._fields = ["value"];
+Await.prototype._kind = ASTKind.Await;
 
 export class Yield extends expr {
     static _name = "Yield";
@@ -924,6 +1045,7 @@ export class Yield extends expr {
     }
 }
 Yield.prototype._fields = ["value"];
+Yield.prototype._kind = ASTKind.Yield;
 
 export class YieldFrom extends expr {
     static _name = "YieldFrom";
@@ -934,6 +1056,7 @@ export class YieldFrom extends expr {
     }
 }
 YieldFrom.prototype._fields = ["value"];
+YieldFrom.prototype._kind = ASTKind.YieldFrom;
 
 export class Compare extends expr {
     static _name = "Compare";
@@ -948,6 +1071,7 @@ export class Compare extends expr {
     }
 }
 Compare.prototype._fields = ["left", "ops", "comparators"];
+Compare.prototype._kind = ASTKind.Compare;
 
 export class Call extends expr {
     static _name = "Call";
@@ -962,6 +1086,7 @@ export class Call extends expr {
     }
 }
 Call.prototype._fields = ["func", "args", "keywords"];
+Call.prototype._kind = ASTKind.Call;
 
 export class FormattedValue extends expr {
     static _name = "FormattedValue";
@@ -976,6 +1101,7 @@ export class FormattedValue extends expr {
     }
 }
 FormattedValue.prototype._fields = ["value", "conversion", "format_spec"];
+FormattedValue.prototype._kind = ASTKind.FormattedValue;
 
 export class JoinedStr extends expr {
     static _name = "JoinedStr";
@@ -986,6 +1112,7 @@ export class JoinedStr extends expr {
     }
 }
 JoinedStr.prototype._fields = ["values"];
+JoinedStr.prototype._kind = ASTKind.JoinedStr;
 
 export class Constant extends expr {
     static _name = "Constant";
@@ -998,6 +1125,7 @@ export class Constant extends expr {
     }
 }
 Constant.prototype._fields = ["value", "kind"];
+Constant.prototype._kind = ASTKind.Constant;
 
 export class Attribute extends expr {
     static _name = "Attribute";
@@ -1012,6 +1140,7 @@ export class Attribute extends expr {
     }
 }
 Attribute.prototype._fields = ["value", "attr", "ctx"];
+Attribute.prototype._kind = ASTKind.Attribute;
 
 export class Subscript extends expr {
     static _name = "Subscript";
@@ -1026,6 +1155,7 @@ export class Subscript extends expr {
     }
 }
 Subscript.prototype._fields = ["value", "slice", "ctx"];
+Subscript.prototype._kind = ASTKind.Subscript;
 
 export class Starred extends expr {
     static _name = "Starred";
@@ -1038,6 +1168,7 @@ export class Starred extends expr {
     }
 }
 Starred.prototype._fields = ["value", "ctx"];
+Starred.prototype._kind = ASTKind.Starred;
 
 export class Name extends expr {
     static _name = "Name";
@@ -1050,6 +1181,7 @@ export class Name extends expr {
     }
 }
 Name.prototype._fields = ["id", "ctx"];
+Name.prototype._kind = ASTKind.Name;
 
 export class List extends expr {
     static _name = "List";
@@ -1062,6 +1194,7 @@ export class List extends expr {
     }
 }
 List.prototype._fields = ["elts", "ctx"];
+List.prototype._kind = ASTKind.List;
 
 export class Tuple extends expr {
     static _name = "Tuple";
@@ -1074,6 +1207,7 @@ export class Tuple extends expr {
     }
 }
 Tuple.prototype._fields = ["elts", "ctx"];
+Tuple.prototype._kind = ASTKind.Tuple;
 
 export class Slice extends expr {
     static _name = "Slice";
@@ -1088,6 +1222,7 @@ export class Slice extends expr {
     }
 }
 Slice.prototype._fields = ["lower", "upper", "step"];
+Slice.prototype._kind = ASTKind.Slice;
 
 /* ----- comprehension ----- */
 export class comprehension extends AST {
@@ -1105,6 +1240,7 @@ export class comprehension extends AST {
     }
 }
 comprehension.prototype._fields = ["target", "iter", "ifs", "is_async"];
+comprehension.prototype._kind = ASTKind.comprehension;
 
 /* ----- excepthandler ----- */
 export class excepthandler extends AST {
@@ -1138,6 +1274,7 @@ export class ExceptHandler extends excepthandler {
     }
 }
 ExceptHandler.prototype._fields = ["type", "name", "body"];
+ExceptHandler.prototype._kind = ASTKind.ExceptHandler;
 
 /* ----- arguments_ ----- */
 export class arguments_ extends AST {
@@ -1169,6 +1306,7 @@ export class arguments_ extends AST {
     }
 }
 arguments_.prototype._fields = ["posonlyargs", "args", "vararg", "kwonlyargs", "kw_defaults", "kwarg", "defaults"];
+arguments_.prototype._kind = ASTKind.arguments_;
 
 /* ----- arg ----- */
 export class arg extends AST {
@@ -1200,6 +1338,7 @@ export class arg extends AST {
     }
 }
 arg.prototype._fields = ["arg", "annotation", "type_comment"];
+arg.prototype._kind = ASTKind.arg;
 arg.prototype._attributes = _attrs;
 
 /* ----- keyword ----- */
@@ -1229,6 +1368,7 @@ export class keyword extends AST {
     }
 }
 keyword.prototype._fields = ["arg", "value"];
+keyword.prototype._kind = ASTKind.keyword;
 keyword.prototype._attributes = _attrs;
 
 /* ----- alias ----- */
@@ -1243,6 +1383,7 @@ export class alias extends AST {
     }
 }
 alias.prototype._fields = ["name", "asname"];
+alias.prototype._kind = ASTKind.alias;
 
 /* ----- withitem ----- */
 export class withitem extends AST {
@@ -1256,6 +1397,7 @@ export class withitem extends AST {
     }
 }
 withitem.prototype._fields = ["context_expr", "optional_vars"];
+withitem.prototype._kind = ASTKind.withitem;
 
 /* ----- type_ignore ----- */
 export class type_ignore extends AST {
@@ -1275,3 +1417,4 @@ export class TypeIgnore extends type_ignore {
     }
 }
 TypeIgnore.prototype._fields = ["lineno", "tag"];
+TypeIgnore.prototype._kind = ASTKind.TypeIgnore;

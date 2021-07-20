@@ -117,6 +117,28 @@ class EmitVisitor(asdl.VisitorBase):
         self.emit("", 0)
 
 
+class KindsVisitor(EmitVisitor):
+    kind_num = 0
+
+    def visitModule(self, mod):
+        for dfn in mod.dfns:
+            self.visit(dfn)
+
+    def visitType(self, type, depth=0):
+        self.emit(f"{type.name}={self.kind_num},", depth=depth + 1)
+        self.kind_num += 1
+        self.visit(type.value, type.name, depth)
+
+    def visitSum(self, sum, name, depth):
+        if not is_simple(sum):
+            for t in sum.types:
+                self.visit(t, name, sum.attributes)
+
+    def visitConstructor(self, cons, type, attrs):
+        self.emit(f"{cons.name}={self.kind_num},", depth=1)
+        self.kind_num += 1
+
+
 class TypeDefVisitor(EmitVisitor):
     def visitModule(self, mod):
         for dfn in mod.dfns:
@@ -283,6 +305,7 @@ class FunctionVisitor(PrototypeVisitor):
         # could instead use
         # get _fields () {return ['arg0', 'arg1'];}
         emit(f"{name}.prototype._fields = {arg_names};")
+        emit(f"{name}.prototype._kind = ASTKind.{name}")
         if not union and attrs:
             emit(f"{name}.prototype._attributes = _attrs;")
         emit("")
@@ -370,6 +393,11 @@ export type constant = pyConstant;
 """
     )
 
+    f.write("export enum ASTKind {")
+    k = KindsVisitor(f)
+    k.visit(mod)
+    f.write("}")
+
     f.write(
         """
 /** base class for all AST nodes */
@@ -377,6 +405,8 @@ export interface AST {
     _fields: string[];
     _attributes: string[];
     _enum: boolean;
+    _kind: ASTKind;
+    scopeId: number;
 }
 
 export class AST {
