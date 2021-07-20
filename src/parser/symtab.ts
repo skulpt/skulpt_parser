@@ -59,6 +59,10 @@ import {
     ImportFrom,
     withitem,
     ExceptHandler,
+    mod,
+    Module,
+    Expression,
+    Interactive,
 } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
@@ -72,7 +76,15 @@ export type ClassBlock = "class";
 export const AnnotationBlock = "annotation";
 export type AnnotationBlock = "annotation";
 
+type Set_<T> = globalThis.Set<T>;
+
 type BlockTypes = ModuleBlock | FunctionBlock | ClassBlock | AnnotationBlock;
+
+function append<T>(left: Set_<T>, right: Set_<T>) {
+    for (const v of right.values()) {
+        left.add(v);
+    }
+}
 
 export enum SYMTAB_CONSTS {
     DEF_GLOBAL = 1 /* global stmt */,
@@ -444,7 +456,7 @@ export class SymbolTable {
 
     stss: { [thing: number]: SymbolTableScope } = {};
 
-    constructor(filename: string) {
+    constructor(filename: string, future: never) {
         this.filename = filename;
     }
 
@@ -1340,90 +1352,126 @@ export class SymbolTable {
                 assert(false, "Unhandled type " + s.constructor.name + " in visitStmt");
         }
     }
+
+    analyze() {
+        assert(this.top);
+        const free = new window.Set<string>();
+        const global = new window.Set<string>();
+        this.analyzeBlock(this.top, null, free, global);
+    }
+
+    analyzeBlock(ste: SymbolTableScope, bound: Set_<string> | null, free: Set_<string>, global: Set_<string>) {
+        const local = new globalThis.Set(); /* collect new names bound in block */
+
+        const scopes = {}; /* collect scopes defined for each name */
+
+        /* Allocate new global and bound variable dictionaries.  These
+        dictionaries hold the names visible in nested blocks.  For
+        ClassBlocks, the bound and global names are initialized
+        before analyzing names, because class bindings aren't
+        visible in methods.  For other blocks, they are initialized
+        after names are analyzed.
+        */
+
+        /* TODO(jhylton): Package these dicts in a struct so that we
+        can write reasonable helper functions?
+        */
+        const newglobal = new globalThis.Set<string>();
+        const newfree = new globalThis.Set<string>();
+        const newbound = new globalThis.Set<string>();
+
+        /* Class namespace has no effect on names visible in
+        nested functions, so populate the global and bound
+        sets to be passed to child blocks before analyzing
+        this one.
+        */
+        if (ste.blockType == ClassBlock) {
+            /* Pass down known globals */
+            append(newglobal, global);
+
+            /* Pass down previously bound symbols */
+            if (bound) {
+                append(newbound, bound);
+            }
+        }
+
+        for (const [name, flags] of Object.entries(ste.symbols)) {
+            this.analyze_name(ste, scopes, name, flags, bound, local, free, global);
+        }
+
+        /* Populate global and bound sets to be passed to children. */
+        if (ste.blockType !== ClassBlock) {
+            /* Add function locals to bound set */
+            if (ste.blockType === FunctionBlock) {
+                append(newbound, local);
+            }
+            /* Pass down previously bound symbols */
+            if (bound) {
+                append(newbound, bound);
+            }
+            /* Pass down known globals */
+            append(newglobal, global);
+        } else {
+            /* Special-case __class__ */
+            newbound.add("__class__");
+        }
+
+        /* Recursively call analyze_child_block() on each child block.
+        newbound, newglobal now contain the names visible in
+        nested blocks.  The free variables in the children will
+        be collected in allfree.
+        */
+        const allfree = new globalThis.Set<string>();
+        for (const entry of ste.children) {
+            this.analyze_child_block(entry, newbound, newfree, newglobal, allfree);
+            if (entry.hasFree || entry.childHasFree) {
+                ste.childHasFree = true;
+            }
+        }
+
+        append(newfree, allfree);
+
+        /* Check if any local variables must be converted to cell variables */
+        if (ste.blockType === FunctionBlock) {
+            this.analyze_cells(scopes, newfree);
+        } else if (ste.blockType === ClassBlock) {
+            ste.drop_class_free(newfree);
+        }
+
+        /* Records the results of the analysis in the symbol table entry */
+        ste.update_symbols(ste.symbols, scopes, bound, newfree, ste.blockType === ClassBlock);
+
+        append(free, newfree);
+    }
 }
 
-// SymbolTable.prototype.visitSlice = function (s) {
-//     var i;
-//     switch (s.constructor) {
-//         case Sk.astnodes.Slice:
-//             if (s.lower) {
-//                 this.visitExpr(s.lower);
-//             }
-//             if (s.upper) {
-//                 this.visitExpr(s.upper);
-//             }
-//             if (s.step) {
-//                 this.visitExpr(s.step);
-//             }
-//             break;
-//         case Sk.astnodes.ExtSlice:
-//             for (i = 0; i < s.dims.length; ++i) {
-//                 this.visitSlice(s.dims[i]);
-//             }
-//             break;
-//         case Sk.astnodes.Index:
-//             this.visitExpr(s.value);
-//             break;
-//         case Sk.astnodes.Ellipsis:
-//             break;
-//     }
-// };
+export function BuildSymbolTable(mod: mod, filename: string, future: never): SymbolTable {
+    const st = new SymbolTable(filename, future);
+    /* Make the initial symbol information gathering pass */
+    st.enterBlock("top", ModuleBlock, mod, 0, 0);
+    st.top = st.cur;
+    switch (mod._kind) {
+        case ASTKind.Module: {
+            st.SEQ(st.visitStmt, (mod as Module).body);
+            break;
+        }
+        case ASTKind.Expression: {
+            st.visitExpr((mod as Expression).body);
+            break;
+        }
+        case ASTKind.Interactive: {
+            st.SEQ(st.visitStmt, (mod as Interactive).body);
+            break;
+        }
+        case ASTKind.FunctionType:
+            throw new Error("this compiler does not handle FunctionTypes");
+    }
+    st.exitBlock();
+    /* Make the second symbol analysis pass */
+    st.analyze();
 
-// SymbolTable.prototype.visit_withitem = function(item) {
-//     this.visitExpr(item.context_expr);
-//     if (item.optional_vars) {
-//         this.visitExpr(item.optional_vars);
-//     }
-// }
-
-// SymbolTable.prototype.visitAlias = function (names, lineno) {
-//     /* Compute store_name, the name actually bound by the import
-//      operation.  It is diferent than a->name when a->name is a
-//      dotted package name (e.g. spam.eggs)
-//      */
-//     var dot;
-//     var storename;
-//     var name;
-//     var a;
-//     var i;
-//     for (i = 0; i < names.length; ++i) {
-//         a = names[i];
-//         name = a.asname === null ? a.name.v : a.asname.v;
-//         storename = name;
-//         dot = name.indexOf(".");
-//         if (dot !== -1) {
-//             storename = name.substr(0, dot);
-//         }
-//         if (name !== "*") {
-//             this.addDef(new Sk.builtin.str(storename), DEF_IMPORT, lineno);
-//         }
-//         else {
-//             if (this.cur.blockType !== ModuleBlock) {
-//                 throw new Sk.builtin.SyntaxError("import * only allowed at module level", this.filename);
-//             }
-//         }
-//     }
-// };
-
-// SymbolTable.prototype.visitExcepthandlers = function (handlers) {
-//     var i, eh;
-//     for (i = 0; eh = handlers[i]; ++i) {
-//         if (eh.type) {
-//             this.visitExpr(eh.type);
-//         }
-//         if (eh.name) {
-//             this.visitExpr(eh.name);
-//         }
-//         this.SEQStmt(eh.body);
-//     }
-// };
-
-// function _dictUpdate (a, b) {
-//     var kb;
-//     for (kb in b) {
-//         a[kb] = b[kb];
-//     }
-// }
+    return st;
+}
 
 // SymbolTable.prototype.analyzeBlock = function (ste, bound, free, global) {
 //     var c;
@@ -1688,6 +1736,3 @@ export class SymbolTable {
 //     };
 //     return getIdents(st.top, "");
 // };
-
-// Sk.exportSymbol("Sk.symboltable", Sk.symboltable);
-// Sk.exportSymbol("Sk.dumpSymtab", Sk.dumpSymtab);
