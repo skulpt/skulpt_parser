@@ -12,7 +12,7 @@ import {
     stmt,
     UnaryOp,
     IfExp,
-    Set,
+    Set as Set_,
     Dict,
     arguments_,
     Yield,
@@ -76,11 +76,9 @@ export type ClassBlock = "class";
 export const AnnotationBlock = "annotation";
 export type AnnotationBlock = "annotation";
 
-type Set_<T> = globalThis.Set<T>;
-
 type BlockTypes = ModuleBlock | FunctionBlock | ClassBlock | AnnotationBlock;
 
-function append<T>(left: Set_<T>, right: Set_<T>) {
+function append<T>(left: Set<T>, right: Set<T>) {
     for (const v of right.values()) {
         left.add(v);
     }
@@ -159,7 +157,7 @@ class Symbol_ {
     }
 
     is_declared_global() {
-        return !!(this.__scope == SYMTAB_CONSTS.GLOBAL_EXPLICIT);
+        return !!(this.__scope === SYMTAB_CONSTS.GLOBAL_EXPLICIT);
     }
 
     is_local() {
@@ -175,7 +173,7 @@ class Symbol_ {
     }
 
     is_free() {
-        return !!(this.__scope == SYMTAB_CONSTS.FREE);
+        return !!(this.__scope === SYMTAB_CONSTS.FREE);
     }
 
     is_imported() {
@@ -218,7 +216,7 @@ class Symbol_ {
         Raises ValueError if the name is bound to multiple namespaces.
         */
 
-        if (this.__namespaces?.length != 1) {
+        if (this.__namespaces?.length !== 1) {
             throw Error("name is bound to multiple namespaces");
             // todo: This should be a value error maybe
         }
@@ -241,6 +239,7 @@ class SymbolTableScope {
     varargs: boolean;
     varkeywords: boolean;
     returnsValue: boolean;
+    filename: string;
     lineno: number;
     colOffset: number;
     endLineno: number | null | undefined;
@@ -257,12 +256,14 @@ class SymbolTableScope {
     comprehension = false;
     directives: [string, number, number][] | null = null;
     coroutine = false;
+    needs_class_closure = false;
 
     constructor(
         table: SymbolTable,
         name: string,
         type: BlockTypes,
         ast: AST,
+        filename: string,
         lineno: number,
         colOffset: number,
         endLineno?: number | null,
@@ -281,6 +282,7 @@ class SymbolTableScope {
         this.varkeywords = false;
         this.returnsValue = false;
 
+        this.filename = filename;
         this.lineno = lineno;
         this.colOffset = colOffset;
         this.endLineno = endLineno;
@@ -354,7 +356,7 @@ class SymbolTableScope {
     }
 
     get_parameters(): string[] {
-        assert(this.get_type() == "function", "get_parameters only valid for function scopes");
+        assert(this.get_type() === "function", "get_parameters only valid for function scopes");
         if (!this._funcParams) {
             this._funcParams = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_PARAM));
         }
@@ -362,7 +364,7 @@ class SymbolTableScope {
     }
 
     get_locals(): string[] {
-        assert(this.get_type() == "function", "get_locals only valid for function scopes");
+        assert(this.get_type() === "function", "get_locals only valid for function scopes");
         if (!this._funcLocals) {
             this._funcLocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_BOUND));
         }
@@ -370,22 +372,22 @@ class SymbolTableScope {
     }
 
     get_globals(): string[] {
-        assert(this.get_type() == "function", "get_globals only valid for function scopes");
+        assert(this.get_type() === "function", "get_globals only valid for function scopes");
         if (!this._funcGlobals) {
             this._funcGlobals = this._identsMatching(function (x) {
                 var masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
-                return masked == SYMTAB_CONSTS.GLOBAL_IMPLICIT || masked == SYMTAB_CONSTS.GLOBAL_EXPLICIT;
+                return masked === SYMTAB_CONSTS.GLOBAL_IMPLICIT || masked === SYMTAB_CONSTS.GLOBAL_EXPLICIT;
             });
         }
         return this._funcGlobals;
     }
 
     get_frees() {
-        assert(this.get_type() == "function", "get_frees only valid for function scopes");
+        assert(this.get_type() === "function", "get_frees only valid for function scopes");
         if (!this._funcFrees) {
             this._funcFrees = this._identsMatching(function (x) {
                 var masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
-                return masked == SYMTAB_CONSTS.FREE;
+                return masked === SYMTAB_CONSTS.FREE;
             });
         }
         return this._funcFrees;
@@ -394,7 +396,7 @@ class SymbolTableScope {
     get_methods() {
         var i;
         var all;
-        assert(this.get_type() == "class", "get_methods only valid for class scopes");
+        assert(this.get_type() === "class", "get_methods only valid for class scopes");
         if (!this._classMethods) {
             // todo; uniq?
             all = [];
@@ -416,6 +418,253 @@ class SymbolTableScope {
         }
         return (v >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
     }
+
+    dropClassFree(free: Set<string>) {
+        free.delete("__class__");
+
+        this.needs_class_closure = true;
+    }
+
+    errorAtDirective(name: string, errorMessage: string): never {
+        assert(this.directives);
+        for (const [directiveName, lineno, colOffset] of this.directives) {
+            if (directiveName === name) {
+                throw new pySyntaxError(errorMessage, [this.filename, lineno, colOffset, ""]);
+            }
+        }
+
+        throw new Error("BUG: internal directive bookkeeping broken");
+    }
+
+    /* Decide on scope of name, given flags.
+    The namespace dictionaries may be modified to record information
+    about the new name.  For example, a new global will add an entry to
+    global.  A name that was global can be changed to local.
+    */
+    analyzeName(
+        scopes: { [name: string]: number },
+        name: string,
+        flags: number,
+        bound: Set<string> | null,
+        local: Set<string>,
+        free: Set<string>,
+        global: Set<string>
+    ) {
+        if (flags & SYMTAB_CONSTS.DEF_GLOBAL) {
+            if (flags & SYMTAB_CONSTS.DEF_NONLOCAL) {
+                this.errorAtDirective(name, `name '${name}' is nonlocal and global`);
+            }
+            scopes[name] = SYMTAB_CONSTS.GLOBAL_EXPLICIT;
+            global.add(name);
+            if (bound) {
+                bound.delete(name);
+            }
+            return;
+        }
+
+        if (flags & SYMTAB_CONSTS.DEF_NONLOCAL) {
+            if (bound === null) {
+                this.errorAtDirective(name, "nonlocal declaration not allowed at module level");
+            }
+            if (bound.has(name)) {
+                this.errorAtDirective(name, `no binding for nonlocal '${name}' found`);
+            }
+            scopes[name] = SYMTAB_CONSTS.FREE;
+            this.hasFree = true;
+            free.add(name);
+            return;
+        }
+
+        if (flags & SYMTAB_CONSTS.DEF_BOUND) {
+            scopes[name] = SYMTAB_CONSTS.LOCAL;
+            local.add(name);
+            global.delete(name);
+            return;
+        }
+
+        /* If an enclosing block has a binding for this name, it
+        is a free variable rather than a global variable.
+        Note that having a non-NULL bound implies that the block
+        is nested.
+        */
+        if (bound && bound.has(name)) {
+            scopes[name] = SYMTAB_CONSTS.FREE;
+            this.hasFree = true;
+            free.add(name);
+            return;
+        }
+
+        /* If a parent has a global statement, then call it global
+        explicit?  It could also be global implicit.
+        */
+        if (global.has(name)) {
+            scopes[name] = SYMTAB_CONSTS.GLOBAL_IMPLICIT;
+            return;
+        }
+
+        if (this.isNested) {
+            this.hasFree = true;
+        }
+
+        scopes[name] = SYMTAB_CONSTS.GLOBAL_IMPLICIT;
+    }
+
+    analyzeChildBlock(bound: Set<string>, free: Set<string>, global: Set<string>, childFree: Set<string>) {
+        /* Copy the bound and global dictionaries.
+        These dictionaries are used by all blocks enclosed by the
+        current block.  The analyze_block() call modifies these
+        dictionaries.
+        */
+        const tempBound = new Set(bound);
+        const tempFree = new Set(free);
+        const tempGlobal = new Set(global);
+
+        this.analyzeBlock(tempBound, tempFree, tempGlobal);
+
+        append(childFree, tempFree);
+    }
+
+    analyzeCells(scopes: { [name: string]: number }, free: Set<string>) {
+        for (const [name, scope] of Object.entries(scopes)) {
+            if (scope != SYMTAB_CONSTS.LOCAL) {
+                continue;
+            }
+
+            if (!free.has(name)) {
+                continue;
+            }
+            /* Replace LOCAL with CELL for this name, and remove
+            from free. It is safe to replace the value of name
+            in the dict, because it will not cause a resize.
+            */
+            scopes[name] = SYMTAB_CONSTS.CELL;
+            free.delete(name);
+        }
+    }
+
+    updateSymbols(
+        scopes: { [name: string]: number },
+        bound: Set<string> | null,
+        free: Set<string>,
+        classFlag: boolean
+    ) {
+        /* Update scope information for all symbols in this scope */
+        for (let [name, flags] of Object.entries(this.symbols)) {
+            flags |= scopes[name] << SYMTAB_CONSTS.SCOPE_OFFSET;
+            this.symbols[name] = flags;
+        }
+
+        /* Record not yet resolved free variables from children (if any) */
+        const vFree = SYMTAB_CONSTS.FREE << SYMTAB_CONSTS.SCOPE_OFFSET;
+
+        for (const name in free) {
+            const v = this.symbols[name];
+
+            /* Handle symbol that already exists in this scope */
+            if (v) {
+                /* Handle a free variable in a method of
+                   the class that has the same name as a local
+                   or global in the class scope.
+                */
+                if (classFlag && v & (SYMTAB_CONSTS.DEF_BOUND | SYMTAB_CONSTS.DEF_GLOBAL)) {
+                    const flags = v | SYMTAB_CONSTS.DEF_FREE_CLASS;
+                    this.symbols[name] = flags;
+                }
+                /* It's a cell, or already free in this scope */
+                continue;
+            }
+            /* Handle global symbol */
+            if (bound && !bound.has(name)) {
+                continue; /* it's a global */
+            }
+            /* Propagate new free symbol up the lexical stack */
+            this.symbols[name] = vFree;
+        }
+    }
+
+    analyzeBlock(bound: Set<string> | null, free: Set<string>, global: Set<string>) {
+        const local = new Set<string>(); /* collect new names bound in block */
+
+        const scopes = {}; /* collect scopes defined for each name */
+
+        /* Allocate new global and bound variable dictionaries.  These
+        dictionaries hold the names visible in nested blocks.  For
+        ClassBlocks, the bound and global names are initialized
+        before analyzing names, because class bindings aren't
+        visible in methods.  For other blocks, they are initialized
+        after names are analyzed.
+        */
+
+        /* TODO(jhylton): Package these dicts in a struct so that we
+        can write reasonable helper functions?
+        */
+        const newglobal = new Set<string>();
+        const newfree = new Set<string>();
+        const newbound = new Set<string>();
+
+        /* Class namespace has no effect on names visible in
+        nested functions, so populate the global and bound
+        sets to be passed to child blocks before analyzing
+        this one.
+        */
+        if (this.blockType === ClassBlock) {
+            /* Pass down known globals */
+            append(newglobal, global);
+
+            /* Pass down previously bound symbols */
+            if (bound) {
+                append(newbound, bound);
+            }
+        }
+
+        for (const [name, flags] of Object.entries(this.symbols)) {
+            this.analyzeName(scopes, name, flags, bound, local, free, global);
+        }
+
+        /* Populate global and bound sets to be passed to children. */
+        if (this.blockType !== ClassBlock) {
+            /* Add function locals to bound set */
+            if (this.blockType === FunctionBlock) {
+                append(newbound, local);
+            }
+            /* Pass down previously bound symbols */
+            if (bound) {
+                append(newbound, bound);
+            }
+            /* Pass down known globals */
+            append(newglobal, global);
+        } else {
+            /* Special-case __class__ */
+            newbound.add("__class__");
+        }
+
+        /* Recursively call analyze_child_block() on each child block.
+        newbound, newglobal now contain the names visible in
+        nested blocks.  The free variables in the children will
+        be collected in allfree.
+        */
+        const allfree = new Set<string>();
+        for (const entry of this.children) {
+            entry.analyzeChildBlock(newbound, newfree, newglobal, allfree);
+            if (entry.hasFree || entry.childHasFree) {
+                this.childHasFree = true;
+            }
+        }
+
+        append(newfree, allfree);
+
+        /* Check if any local variables must be converted to cell variables */
+        if (this.blockType === FunctionBlock) {
+            this.analyzeCells(scopes, newfree);
+        } else if (this.blockType === ClassBlock) {
+            this.dropClassFree(newfree);
+        }
+
+        /* Records the results of the analysis in the symbol table entry */
+        this.updateSymbols(scopes, bound, newfree, this.blockType === ClassBlock);
+
+        append(free, newfree);
+    }
 }
 
 function _Py_Mangle(privateobj: string | null, ident: string) {
@@ -431,7 +680,7 @@ function _Py_Mangle(privateobj: string | null, ident: string) {
           TODO(jhylton): Decide whether we want to support
           mangling of the module name, e.g. __M.X.
        */
-    if (ident.endsWith("__") || ident.indexOf(".") != -1) {
+    if (ident.endsWith("__") || ident.indexOf(".") !== -1) {
         return ident; /* Don't mangle __whatever__ */
     }
 
@@ -629,7 +878,17 @@ export class SymbolTable {
         end_col_offset?: number | null
     ) {
         assert(this.cur);
-        const ste = new SymbolTableScope(this, name, block, ast, lineno, col_offset, end_lineno, end_col_offset);
+        const ste = new SymbolTableScope(
+            this,
+            name,
+            block,
+            ast,
+            this.filename,
+            lineno,
+            col_offset,
+            end_lineno,
+            end_col_offset
+        );
         this.stack.push(ste);
         const prev = this.cur;
 
@@ -822,7 +1081,7 @@ export class SymbolTable {
                 break;
             }
             case ASTKind.Set:
-                this.SEQ(this.visitExpr, (e as Set).elts);
+                this.SEQ(this.visitExpr, (e as Set_).elts);
                 break;
             case ASTKind.GeneratorExp:
                 this.visitGenexp(e as GeneratorExp);
@@ -914,7 +1173,7 @@ export class SymbolTable {
                 const name = e as Name;
                 this.addDef(name.id, name.ctx === Load ? SYMTAB_CONSTS.USE : SYMTAB_CONSTS.DEF_LOCAL);
                 /* Special-case super: it counts as a use of __class__ */
-                if (name.ctx == Load && this.cur.blockType === FunctionBlock && name.id === "super") {
+                if (name.ctx === Load && this.cur.blockType === FunctionBlock && name.id === "super") {
                     this.addDef("__class__", SYMTAB_CONSTS.USE);
                 }
                 break;
@@ -1028,7 +1287,7 @@ export class SymbolTable {
            operation.  It is different than a->name when a->name is a
            dotted package name (e.g. spam.eggs)
         */
-        const name = a.asname == null ? a.name : a.asname;
+        const name = a.asname === null ? a.name : a.asname;
         const dot = name.indexOf(".");
         let store_name = null;
 
@@ -1355,93 +1614,9 @@ export class SymbolTable {
 
     analyze() {
         assert(this.top);
-        const free = new window.Set<string>();
-        const global = new window.Set<string>();
-        this.analyzeBlock(this.top, null, free, global);
-    }
-
-    analyzeBlock(ste: SymbolTableScope, bound: Set_<string> | null, free: Set_<string>, global: Set_<string>) {
-        const local = new globalThis.Set(); /* collect new names bound in block */
-
-        const scopes = {}; /* collect scopes defined for each name */
-
-        /* Allocate new global and bound variable dictionaries.  These
-        dictionaries hold the names visible in nested blocks.  For
-        ClassBlocks, the bound and global names are initialized
-        before analyzing names, because class bindings aren't
-        visible in methods.  For other blocks, they are initialized
-        after names are analyzed.
-        */
-
-        /* TODO(jhylton): Package these dicts in a struct so that we
-        can write reasonable helper functions?
-        */
-        const newglobal = new globalThis.Set<string>();
-        const newfree = new globalThis.Set<string>();
-        const newbound = new globalThis.Set<string>();
-
-        /* Class namespace has no effect on names visible in
-        nested functions, so populate the global and bound
-        sets to be passed to child blocks before analyzing
-        this one.
-        */
-        if (ste.blockType == ClassBlock) {
-            /* Pass down known globals */
-            append(newglobal, global);
-
-            /* Pass down previously bound symbols */
-            if (bound) {
-                append(newbound, bound);
-            }
-        }
-
-        for (const [name, flags] of Object.entries(ste.symbols)) {
-            this.analyze_name(ste, scopes, name, flags, bound, local, free, global);
-        }
-
-        /* Populate global and bound sets to be passed to children. */
-        if (ste.blockType !== ClassBlock) {
-            /* Add function locals to bound set */
-            if (ste.blockType === FunctionBlock) {
-                append(newbound, local);
-            }
-            /* Pass down previously bound symbols */
-            if (bound) {
-                append(newbound, bound);
-            }
-            /* Pass down known globals */
-            append(newglobal, global);
-        } else {
-            /* Special-case __class__ */
-            newbound.add("__class__");
-        }
-
-        /* Recursively call analyze_child_block() on each child block.
-        newbound, newglobal now contain the names visible in
-        nested blocks.  The free variables in the children will
-        be collected in allfree.
-        */
-        const allfree = new globalThis.Set<string>();
-        for (const entry of ste.children) {
-            this.analyze_child_block(entry, newbound, newfree, newglobal, allfree);
-            if (entry.hasFree || entry.childHasFree) {
-                ste.childHasFree = true;
-            }
-        }
-
-        append(newfree, allfree);
-
-        /* Check if any local variables must be converted to cell variables */
-        if (ste.blockType === FunctionBlock) {
-            this.analyze_cells(scopes, newfree);
-        } else if (ste.blockType === ClassBlock) {
-            ste.drop_class_free(newfree);
-        }
-
-        /* Records the results of the analysis in the symbol table entry */
-        ste.update_symbols(ste.symbols, scopes, bound, newfree, ste.blockType === ClassBlock);
-
-        append(free, newfree);
+        const free = new Set<string>();
+        const global = new Set<string>();
+        this.top.analyzeBlock(null, free, global);
     }
 }
 
@@ -1472,198 +1647,6 @@ export function BuildSymbolTable(mod: mod, filename: string, future: never): Sym
 
     return st;
 }
-
-// SymbolTable.prototype.analyzeBlock = function (ste, bound, free, global) {
-//     var c;
-//     var i;
-//     var childlen;
-//     var allfree;
-//     var flags;
-//     var name;
-//     var local = {};
-//     var scope = {};
-//     var newglobal = {};
-//     var newbound = {};
-//     var newfree = {};
-
-//     if (ste.blockType == ClassBlock) {
-//         _dictUpdate(newglobal, global);
-//         if (bound) {
-//             _dictUpdate(newbound, bound);
-//         }
-//     }
-
-//     for (name in ste.symFlags) {
-//         flags = ste.symFlags[name];
-//         this.analyzeName(ste, scope, name, flags, bound, local, free, global);
-//     }
-
-//     if (ste.blockType !== ClassBlock) {
-//         if (ste.blockType === FunctionBlock) {
-//             _dictUpdate(newbound, local);
-//         }
-//         if (bound) {
-//             _dictUpdate(newbound, bound);
-//         }
-//         _dictUpdate(newglobal, global);
-//     }
-
-//     allfree = {};
-//     childlen = ste.children.length;
-//     for (i = 0; i < childlen; ++i) {
-//         c = ste.children[i];
-//         this.analyzeChildBlock(c, newbound, newfree, newglobal, allfree);
-//         if (c.hasFree || c.childHasFree) {
-//             ste.childHasFree = true;
-//         }
-//     }
-
-//     _dictUpdate(newfree, allfree);
-//     if (ste.blockType === FunctionBlock) {
-//         this.analyzeCells(scope, newfree);
-//     }
-//     let discoveredFree = this.updateSymbols(ste.symFlags, scope, bound, newfree, ste.blockType === ClassBlock);
-//     ste.hasFree = ste.hasFree || discoveredFree;
-
-//     _dictUpdate(free, newfree);
-// };
-
-// SymbolTable.prototype.analyzeChildBlock = function (entry, bound, free, global, childFree) {
-//     var tempGlobal;
-//     var tempFree;
-//     var tempBound = {};
-//     _dictUpdate(tempBound, bound);
-//     tempFree = {};
-//     _dictUpdate(tempFree, free);
-//     tempGlobal = {};
-//     _dictUpdate(tempGlobal, global);
-
-//     this.analyzeBlock(entry, tempBound, tempFree, tempGlobal);
-//     _dictUpdate(childFree, tempFree);
-// };
-
-// SymbolTable.prototype.analyzeCells = function (scope, free) {
-//     var flags;
-//     var name;
-//     for (name in scope) {
-//         flags = scope[name];
-//         if (flags !== LOCAL) {
-//             continue;
-//         }
-//         if (free[name] === undefined) {
-//             continue;
-//         }
-//         scope[name] = CELL;
-//         delete free[name];
-//     }
-// };
-
-// /**
-//  * store scope info back into the st symbols dict. symbols is modified,
-//  * others are not.
-//  */
-// SymbolTable.prototype.updateSymbols = function (symbols, scope, bound, free, classflag) {
-//     var i;
-//     var o;
-//     var pos;
-//     var freeValue;
-//     var w;
-//     var flags;
-//     var name;
-//     var discoveredFree = false;
-//     for (name in symbols) {
-//         flags = symbols[name];
-//         w = scope[name];
-//         flags |= w << SCOPE_OFF;
-//         symbols[name] = flags;
-//     }
-
-//     freeValue = FREE << SCOPE_OFF;
-//     pos = 0;
-//     for (name in free) {
-//         o = symbols[name];
-//         if (o !== undefined) {
-//             // it could be a free variable in a method of the class that has
-//             // the same name as a local or global in the class scope
-//             if (classflag && (o & (DEF_BOUND | DEF_GLOBAL))) {
-//                 i = o | DEF_FREE_CLASS;
-//                 symbols[name] = i;
-//             }
-//             // else it's not free, probably a cell
-//             continue;
-//         }
-//         if (bound[name] === undefined) {
-//             continue;
-//         }
-//         symbols[name] = freeValue;
-//         discoveredFree = true;
-//     }
-//     return discoveredFree;
-// };
-
-// SymbolTable.prototype.analyzeName = function (ste, dict, name, flags, bound, local, free, global) {
-//     if (flags & DEF_GLOBAL) {
-//         if (flags & DEF_PARAM) {
-//             throw new Sk.builtin.SyntaxError("name '" + name + "' is local and global", this.filename, ste.lineno);
-//         }
-//         dict[name] = GLOBAL_EXPLICIT;
-//         global[name] = null;
-//         if (bound && bound[name] !== undefined) {
-//             delete bound[name];
-//         }
-//         return;
-//     }
-//     if (flags & DEF_BOUND) {
-//         dict[name] = LOCAL;
-//         local[name] = null;
-//         delete global[name];
-//         return;
-//     }
-
-//     if (bound && bound[name] !== undefined) {
-//         dict[name] = FREE;
-//         ste.hasFree = true;
-//         free[name] = null;
-//     }
-//     else if (global && global[name] !== undefined) {
-//         dict[name] = GLOBAL_IMPLICIT;
-//     }
-//     else {
-//         if (ste.isNested) {
-//             ste.hasFree = true;
-//         }
-//         dict[name] = GLOBAL_IMPLICIT;
-//     }
-// };
-
-// SymbolTable.prototype.analyze = function () {
-//     var free = {};
-//     var global = {};
-//     this.analyzeBlock(this.top, null, free, global);
-// };
-
-// /**
-//  * @param {Object} ast
-//  * @param {string} filename
-//  */
-// Sk.symboltable = function (ast, filename) {
-//     var i;
-//     var ret = new SymbolTable(filename);
-
-//     ret.enterBlock("top", ModuleBlock, ast, 0);
-//     ret.top = ret.cur;
-
-//     //print(Sk.astDump(ast));
-//     for (i = 0; i < ast.body.length; ++i) {
-//         ret.visitStmt(ast.body[i]);
-//     }
-
-//     ret.exitBlock();
-
-//     ret.analyze();
-
-//     return ret;
-// };
 
 // Sk.dumpSymtab = function (st) {
 //     var pyBoolStr = function (b) {
