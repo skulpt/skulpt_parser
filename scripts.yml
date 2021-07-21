@@ -54,6 +54,13 @@ scripts:
             - read
             - run
 
+    symtable:
+        desc: takes in a filename or number as the first argument. To add logging generate a verbose parser.
+        cmd: deno run scripts/symtable.ts
+        allow:
+            - read
+            - run
+
     parse_str:
         desc: takes in a string as the first argument. Creates a temp file and the calls vr parse
         cmd: deno run scripts/parse_str.ts
