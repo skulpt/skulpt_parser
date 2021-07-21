@@ -118,15 +118,12 @@ class EmitVisitor(asdl.VisitorBase):
 
 
 class KindsVisitor(EmitVisitor):
-    kind_num = 0
-
     def visitModule(self, mod):
         for dfn in mod.dfns:
             self.visit(dfn)
 
     def visitType(self, type, depth=0):
-        self.emit(f"{type.name}={self.kind_num},", depth=depth + 1)
-        self.kind_num += 1
+        self.emit(f"{type.name},", depth=depth + 1)
         self.visit(type.value, type.name, depth)
 
     def visitSum(self, sum, name, depth):
@@ -135,8 +132,7 @@ class KindsVisitor(EmitVisitor):
                 self.visit(t, name, sum.attributes)
 
     def visitConstructor(self, cons, type, attrs):
-        self.emit(f"{cons.name}={self.kind_num},", depth=1)
-        self.kind_num += 1
+        self.emit(f"{cons.name},", depth=1)
 
 
 class TypeDefVisitor(EmitVisitor):
