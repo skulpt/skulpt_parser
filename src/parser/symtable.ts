@@ -1026,12 +1026,6 @@ export class SymbolTable {
     }
 
     visitExpr(e: expr) {
-        // @stu todo maybe?
-        // if (++st->recursion_depth > st->recursion_limit) {
-        //     PyErr_SetString(PyExc_RecursionError,
-        //                     "maximum recursion depth exceeded during compilation");
-        //     VISIT_QUIT(st, 0);
-        // }
         switch (e._kind) {
             case ASTKind.NamedExpr:
                 this.handleNamedExpr(e as NamedExpr);
