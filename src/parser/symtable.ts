@@ -1,6 +1,5 @@
-import {
+import type {
     AST,
-    ASTKind,
     BinOp,
     BoolOp,
     ClassDef,
@@ -25,7 +24,6 @@ import {
     Attribute,
     Subscript,
     Starred,
-    Load,
     Slice,
     List,
     Tuple,
@@ -64,6 +62,7 @@ import {
     Expression,
     Interactive,
 } from "../ast/astnodes.ts";
+import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
 
