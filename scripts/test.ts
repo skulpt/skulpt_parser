@@ -42,4 +42,6 @@ const cmd = Deno.run({
     cmd: ["deno", "test", "--allow-read", "--allow-run", "--allow-env", ...extra],
 });
 
-await cmd.status();
+const result = await cmd.status();
+
+Deno.exit(result.code);
