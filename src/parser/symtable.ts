@@ -772,7 +772,7 @@ export class SymbolTable {
     SEQTail<T>(visitor: (elem: T) => void, nodes: T[], start: number) {
         for (const node of nodes.slice(start)) {
             if (node) {
-                visitor(node);
+                visitor.call(this, node);
             }
         }
     }
@@ -781,7 +781,7 @@ export class SymbolTable {
         assert(Array.isArray(nodes), "SEQ: nodes isn't array? got " + nodes.toString());
         for (const node of nodes) {
             if (node) {
-                visitor(node);
+                visitor.call(this, node);
             }
         }
     }
@@ -963,8 +963,8 @@ export class SymbolTable {
         this.cur.comp_iter_target = false;
 
         /* Visit the rest of the comprehension body */
-        this.SEQ(this.visitExpr.bind(this), outermost.ifs);
-        this.SEQTail(this.visitComprehension.bind(this), generators, 1);
+        this.SEQ(this.visitExpr, outermost.ifs);
+        this.SEQTail(this.visitComprehension, generators, 1);
         if (value) {
             this.visitExpr(value);
         }
@@ -1020,7 +1020,7 @@ export class SymbolTable {
         this.cur.comp_iter_expr++;
         this.visitExpr(lc.iter);
         this.cur.comp_iter_expr--;
-        this.SEQ(this.visitExpr.bind(this), lc.ifs);
+        this.SEQ(this.visitExpr, lc.ifs);
         if (lc.is_async) {
             this.cur.coroutine = true;
         }
@@ -1032,7 +1032,7 @@ export class SymbolTable {
                 this.handleNamedExpr(e as NamedExpr);
                 break;
             case ASTKind.BoolOp:
-                this.SEQ(this.visitExpr.bind(this), (e as BoolOp).values);
+                this.SEQ(this.visitExpr, (e as BoolOp).values);
                 break;
             case ASTKind.BinOp: {
                 const binOp = e as BinOp;
@@ -1046,10 +1046,10 @@ export class SymbolTable {
             case ASTKind.Lambda: {
                 const lambda = e as Lambda;
                 if (lambda.args.defaults) {
-                    this.SEQ(this.visitExpr.bind(this), lambda.args.defaults);
+                    this.SEQ(this.visitExpr, lambda.args.defaults);
                 }
                 if (lambda.args.kw_defaults) {
-                    this.SEQ(this.visitExpr.bind(this), lambda.args.kw_defaults);
+                    this.SEQ(this.visitExpr, lambda.args.kw_defaults);
                 }
                 this.enterBlock(
                     "lambda",
@@ -1074,12 +1074,12 @@ export class SymbolTable {
             }
             case ASTKind.Dict: {
                 const dict = e as Dict;
-                this.SEQ(this.visitExpr.bind(this), dict.keys);
-                this.SEQ(this.visitExpr.bind(this), dict.values);
+                this.SEQ(this.visitExpr, dict.keys);
+                this.SEQ(this.visitExpr, dict.values);
                 break;
             }
             case ASTKind.Set:
-                this.SEQ(this.visitExpr.bind(this), (e as Set_).elts);
+                this.SEQ(this.visitExpr, (e as Set_).elts);
                 break;
             case ASTKind.GeneratorExp:
                 this.visitGenexp(e as GeneratorExp);
@@ -1115,14 +1115,14 @@ export class SymbolTable {
             case ASTKind.Compare: {
                 const compare = e as Compare;
                 this.visitExpr(compare.left);
-                this.SEQ(this.visitExpr.bind(this), compare.comparators);
+                this.SEQ(this.visitExpr, compare.comparators);
                 break;
             }
             case ASTKind.Call: {
                 const call = e as Call;
                 this.visitExpr(call.func);
-                this.SEQ(this.visitExpr.bind(this), call.args);
-                this.SEQ(this.visitExpr.bind(this), call.keywords);
+                this.SEQ(this.visitExpr, call.args);
+                this.SEQ(this.visitExpr, call.keywords);
                 break;
             }
             case ASTKind.FormattedValue: {
@@ -1134,7 +1134,7 @@ export class SymbolTable {
                 break;
             }
             case ASTKind.JoinedStr: {
-                this.SEQ(this.visitExpr.bind(this), (e as JoinedStr).values);
+                this.SEQ(this.visitExpr, (e as JoinedStr).values);
                 break;
             }
             case ASTKind.Constant:
@@ -1178,10 +1178,10 @@ export class SymbolTable {
             }
             /* child nodes of List and Tuple will have expr_context set */
             case ASTKind.List:
-                this.SEQ(this.visitExpr.bind(this), (e as List).elts);
+                this.SEQ(this.visitExpr, (e as List).elts);
                 break;
             case ASTKind.Tuple:
-                this.SEQ(this.visitExpr.bind(this), (e as Tuple).elts);
+                this.SEQ(this.visitExpr, (e as Tuple).elts);
                 break;
         }
     }
@@ -1323,7 +1323,7 @@ export class SymbolTable {
         if (eh.name) {
             this.addDef(eh.name, SYMTAB_CONSTS.DEF_LOCAL);
         }
-        this.SEQ(this.visitStmt.bind(this), eh.body);
+        this.SEQ(this.visitStmt, eh.body);
     }
 
     visitStmt(s: stmt) {
@@ -1333,25 +1333,25 @@ export class SymbolTable {
                 const funcDef = s as FunctionDef;
                 this.addDef(funcDef.name, SYMTAB_CONSTS.DEF_LOCAL);
                 if (funcDef.args.defaults) {
-                    this.SEQ(this.visitExpr.bind(this), funcDef.args.defaults);
+                    this.SEQ(this.visitExpr, funcDef.args.defaults);
                 }
                 if (funcDef.decorator_list) {
-                    this.SEQ(this.visitExpr.bind(this), funcDef.decorator_list);
+                    this.SEQ(this.visitExpr, funcDef.decorator_list);
                 }
                 this.visitAnnotations(funcDef.args, funcDef.returns);
                 this.enterBlock(funcDef.name, BlockType.FunctionBlock, s, s.lineno, s.col_offset);
                 this.visitArguments(funcDef.args);
-                this.SEQ(this.visitStmt.bind(this), funcDef.body);
+                this.SEQ(this.visitStmt, funcDef.body);
                 this.exitBlock();
                 break;
             }
             case ASTKind.ClassDef: {
                 const classDef = s as ClassDef;
                 this.addDef(classDef.name, SYMTAB_CONSTS.DEF_LOCAL);
-                this.SEQ(this.visitExpr.bind(this), classDef.bases);
-                this.SEQ(this.visitKeyword.bind(this), classDef.keywords);
+                this.SEQ(this.visitExpr, classDef.bases);
+                this.SEQ(this.visitKeyword, classDef.keywords);
                 if (classDef.decorator_list) {
-                    this.SEQ(this.visitExpr.bind(this), classDef.decorator_list);
+                    this.SEQ(this.visitExpr, classDef.decorator_list);
                 }
                 this.enterBlock(
                     classDef.name,
@@ -1364,7 +1364,7 @@ export class SymbolTable {
                 );
                 const tmp = this.curClass;
                 this.curClass = classDef.name;
-                this.SEQ(this.visitStmt.bind(this), classDef.body);
+                this.SEQ(this.visitStmt, classDef.body);
                 this.curClass = tmp;
                 this.exitBlock();
                 break;
@@ -1379,11 +1379,11 @@ export class SymbolTable {
                 break;
             }
             case ASTKind.Delete:
-                this.SEQ(this.visitExpr.bind(this), (s as Delete).targets);
+                this.SEQ(this.visitExpr, (s as Delete).targets);
                 break;
             case ASTKind.Assign: {
                 const assign = s as Assign;
-                this.SEQ(this.visitExpr.bind(this), assign.targets);
+                this.SEQ(this.visitExpr, assign.targets);
                 this.visitExpr(assign.value);
                 break;
             }
@@ -1433,16 +1433,16 @@ export class SymbolTable {
 
                 this.visitExpr(for_.target);
                 this.visitExpr(for_.iter);
-                this.SEQ(this.visitStmt.bind(this), for_.body);
-                if (for_.orelse) this.SEQ(this.visitStmt.bind(this), for_.orelse);
+                this.SEQ(this.visitStmt, for_.body);
+                if (for_.orelse) this.SEQ(this.visitStmt, for_.orelse);
                 break;
             }
             case ASTKind.While: {
                 const while_ = s as While;
 
                 this.visitExpr(while_.test);
-                this.SEQ(this.visitStmt.bind(this), while_.body);
-                if (while_.orelse) this.SEQ(this.visitStmt.bind(this), while_.orelse);
+                this.SEQ(this.visitStmt, while_.body);
+                if (while_.orelse) this.SEQ(this.visitStmt, while_.orelse);
                 break;
             }
             case ASTKind.If: {
@@ -1450,8 +1450,8 @@ export class SymbolTable {
 
                 /* XXX if 0: and lookup_yield() hacks */
                 this.visitExpr(if_.test);
-                this.SEQ(this.visitStmt.bind(this), if_.body);
-                if (if_.orelse) this.SEQ(this.visitStmt.bind(this), if_.orelse);
+                this.SEQ(this.visitStmt, if_.body);
+                if (if_.orelse) this.SEQ(this.visitStmt, if_.orelse);
                 break;
             }
             case ASTKind.Raise: {
@@ -1468,10 +1468,10 @@ export class SymbolTable {
             case ASTKind.Try: {
                 const try_ = s as Try;
 
-                this.SEQ(this.visitStmt.bind(this), try_.body);
-                this.SEQ(this.visitStmt.bind(this), try_.orelse);
-                this.SEQ(this.visitExcepthandler.bind(this), try_.handlers as ExceptHandler[]); // @stu this is odd.
-                this.SEQ(this.visitStmt.bind(this), try_.finalbody);
+                this.SEQ(this.visitStmt, try_.body);
+                this.SEQ(this.visitStmt, try_.orelse);
+                this.SEQ(this.visitExcepthandler, try_.handlers as ExceptHandler[]); // @stu this is odd.
+                this.SEQ(this.visitStmt, try_.finalbody);
                 break;
             }
             case ASTKind.Assert: {
@@ -1484,12 +1484,12 @@ export class SymbolTable {
             }
             case ASTKind.Import: {
                 const import_ = s as Import;
-                this.SEQ(this.visitAlias.bind(this), import_.names);
+                this.SEQ(this.visitAlias, import_.names);
                 break;
             }
             case ASTKind.ImportFrom: {
                 const importFrom = s as ImportFrom;
-                this.SEQ(this.visitAlias.bind(this), importFrom.names);
+                this.SEQ(this.visitAlias, importFrom.names);
                 break;
             }
             case ASTKind.Global: {
@@ -1563,8 +1563,8 @@ export class SymbolTable {
                 break;
             case ASTKind.With: {
                 const with_ = s as With;
-                this.SEQ(this.visitWithItem.bind(this), with_.items);
-                this.SEQ(this.visitStmt.bind(this), with_.body);
+                this.SEQ(this.visitWithItem, with_.items);
+                this.SEQ(this.visitStmt, with_.body);
                 break;
             }
             case ASTKind.AsyncFunctionDef: {
@@ -1573,15 +1573,14 @@ export class SymbolTable {
 
                 this.addDef(asyncFunctionDef.name, SYMTAB_CONSTS.DEF_LOCAL);
                 if (asyncFunctionDef.args.defaults) {
-                    this.SEQ(this.visitExpr.bind(this), asyncFunctionDef.args.defaults);
+                    this.SEQ(this.visitExpr, asyncFunctionDef.args.defaults);
                 }
                 if (asyncFunctionDef.args.kw_defaults) {
-                    this.SEQ(this.visitExpr.bind(this), asyncFunctionDef.args.kw_defaults);
+                    this.SEQ(this.visitExpr, asyncFunctionDef.args.kw_defaults);
                 }
                 this.visitAnnotations(asyncFunctionDef.args, asyncFunctionDef.returns);
 
-                if (asyncFunctionDef.decorator_list)
-                    this.SEQ(this.visitExpr.bind(this), asyncFunctionDef.decorator_list);
+                if (asyncFunctionDef.decorator_list) this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
 
                 this.enterBlock(
                     asyncFunctionDef.name,
@@ -1594,22 +1593,22 @@ export class SymbolTable {
                 this.cur.coroutine = true;
 
                 this.visitArguments(asyncFunctionDef.args);
-                this.SEQ(this.visitStmt.bind(this), asyncFunctionDef.body);
+                this.SEQ(this.visitStmt, asyncFunctionDef.body);
                 this.exitBlock();
                 break;
             }
             case ASTKind.AsyncWith: {
                 const asyncWith = s as AsyncWith;
-                this.SEQ(this.visitWithItem.bind(this), asyncWith.items);
-                this.SEQ(this.visitStmt.bind(this), asyncWith.body);
+                this.SEQ(this.visitWithItem, asyncWith.items);
+                this.SEQ(this.visitStmt, asyncWith.body);
                 break;
             }
             case ASTKind.AsyncFor: {
                 const asyncFor = s as AsyncFor;
                 this.visitExpr(asyncFor.target);
                 this.visitExpr(asyncFor.iter);
-                this.SEQ(this.visitStmt.bind(this), asyncFor.body);
-                if (asyncFor.orelse) this.SEQ(this.visitStmt.bind(this), asyncFor.orelse);
+                this.SEQ(this.visitStmt, asyncFor.body);
+                if (asyncFor.orelse) this.SEQ(this.visitStmt, asyncFor.orelse);
                 break;
             }
             default:
@@ -1632,7 +1631,7 @@ export function buildSymbolTable(mod: mod, filename: string, future: any): Symbo
     st.top = st.cur;
     switch (mod._kind) {
         case ASTKind.Module: {
-            st.SEQ(st.visitStmt.bind(st), (mod as Module).body);
+            st.SEQ(st.visitStmt, (mod as Module).body);
             break;
         }
         case ASTKind.Expression: {
@@ -1640,7 +1639,7 @@ export function buildSymbolTable(mod: mod, filename: string, future: any): Symbo
             break;
         }
         case ASTKind.Interactive: {
-            st.SEQ(st.visitStmt.bind(st), (mod as Interactive).body);
+            st.SEQ(st.visitStmt, (mod as Interactive).body);
             break;
         }
         case ASTKind.FunctionType:
