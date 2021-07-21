@@ -84,6 +84,8 @@ function append<T>(left: Set<T>, right: Set<T>) {
     }
 }
 
+const LEADING_UNDERSCORE_REGEX = /^_+/;
+
 export enum SYMTAB_CONSTS {
     DEF_GLOBAL = 1 /* global stmt */,
     DEF_LOCAL = 2 /* assignment in code block */,
@@ -120,12 +122,12 @@ class Symbol_ {
     __namespaces: SymbolTableScope[] | null = null;
     __module_scope = false;
 
-    constructor(name: string, flags: number, namespaces: SymbolTableScope[] | null = null, module_scope = false) {
+    constructor(name: string, flags: number, namespaces: SymbolTableScope[] | null = null, moduleScope = false) {
         this.__name = name;
         this.__flags = flags;
         this.__scope = (flags >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK; // like PyST_GetScope()
         this.__namespaces = namespaces || [];
-        this.__module_scope = module_scope;
+        this.__module_scope = moduleScope;
     }
 
     get [Symbol.toStringTag]() {
@@ -667,7 +669,7 @@ class SymbolTableScope {
     }
 }
 
-function _Py_Mangle(privateobj: string | null, ident: string) {
+function mangle(privateobj: string | null, ident: string) {
     /* Name mangling: __private becomes _classname__private.
        This is independent from how the name is used. */
     if (privateobj === null /* !PyUnicode_Check(privateobj) || */ || !ident.startsWith("__")) {
@@ -685,7 +687,7 @@ function _Py_Mangle(privateobj: string | null, ident: string) {
     }
 
     /* Strip leading underscores from class name */
-    const stripped = privateobj.replace(/^_+/, "");
+    const stripped = privateobj.replace(LEADING_UNDERSCORE_REGEX, "");
     if (stripped.length === 0) {
         return ident; /* Don't mangle if class is just underscores */
     }
@@ -705,7 +707,7 @@ export class SymbolTable {
 
     stss: { [thing: number]: SymbolTableScope } = {};
 
-    constructor(filename: string, future: never) {
+    constructor(filename: string, _future: never) {
         this.filename = filename;
     }
 
@@ -722,17 +724,17 @@ export class SymbolTable {
     }
 
     addDef(name: string, flag: SYMTAB_CONSTS, ste: SymbolTableScope | null = null) {
-        const cur_ste = ste || this.cur;
-        assert(cur_ste !== null, "need to know what we're operating on");
+        const curSte = ste || this.cur;
+        assert(curSte !== null, "need to know what we're operating on");
 
-        const mangled = _Py_Mangle(this.private, name);
-        let val = cur_ste.symbols[mangled];
+        const mangled = mangle(this.private, name);
+        let val = curSte.symbols[mangled];
         if (val !== undefined) {
             if (flag & SYMTAB_CONSTS.DEF_PARAM && val & SYMTAB_CONSTS.DEF_PARAM) {
                 throw new pySyntaxError("duplicate argument '" + name + "' in function definition", [
                     this.filename,
-                    cur_ste.lineno,
-                    cur_ste.colOffset,
+                    curSte.lineno,
+                    curSte.colOffset,
                     "",
                 ]);
             }
@@ -741,7 +743,7 @@ export class SymbolTable {
             val = flag;
         }
 
-        if (cur_ste.comp_iter_target) {
+        if (curSte.comp_iter_target) {
             /* This name is an iteration variable in a comprehension,
              * so check for a binding conflict with any named expressions.
              * Otherwise, mark it as an iteration variable so subsequent
@@ -751,16 +753,16 @@ export class SymbolTable {
                 // @stu no end line and end coloffset in syntax err??
                 throw new pySyntaxError(
                     `comprehension inner loop cannot rebind assignment expression target '${name}'`,
-                    [this.filename, cur_ste.lineno, cur_ste.colOffset, ""]
+                    [this.filename, curSte.lineno, curSte.colOffset, ""]
                 );
             }
             val |= SYMTAB_CONSTS.DEF_COMP_ITER;
         }
 
-        cur_ste.symbols[mangled] = val;
+        curSte.symbols[mangled] = val;
 
         if (flag & SYMTAB_CONSTS.DEF_PARAM) {
-            cur_ste.varnames.push(mangled);
+            curSte.varnames.push(mangled);
         } else if (flag & SYMTAB_CONSTS.DEF_GLOBAL) {
             val = flag;
             const fromGlobal = this.global[mangled];
@@ -788,23 +790,23 @@ export class SymbolTable {
         }
     }
 
-    recordDirective(name: string, lineno: number, col_offset: number) {
+    recordDirective(name: string, lineno: number, colOffset: number) {
         assert(this.cur !== null);
 
         if (!this.cur.directives) {
             this.cur.directives = [];
         }
 
-        const mangled = _Py_Mangle(this.private, name);
+        const mangled = mangle(this.private, name);
 
-        this.cur.directives.push([mangled, lineno, col_offset]);
+        this.cur.directives.push([mangled, lineno, colOffset]);
     }
 
     extendNamedexprScope(e: Name) {
         assert(this.stack);
         assert(e._kind === ASTKind.Name);
 
-        const target_name = e.id;
+        const targetName = e.id;
 
         /* Iterate over the stack in reverse and add to the nearest adequate scope */
         for (const ste of this.stack) {
@@ -812,11 +814,11 @@ export class SymbolTable {
              * binding conflict with iteration variables, otherwise skip it
              */
             if (ste.comprehension) {
-                const target_in_scope = ste.getSymbol(target_name);
-                if (target_in_scope & SYMTAB_CONSTS.DEF_COMP_ITER) {
+                const targetInScope = ste.getSymbol(targetName);
+                if (targetInScope & SYMTAB_CONSTS.DEF_COMP_ITER) {
                     throw new pySyntaxError(
-                        `assignment expression cannot rebind comprehension iteration variable '${target_name}'`,
-                        ["", 0, 0, ""]
+                        `assignment expression cannot rebind comprehension iteration variable '${targetName}'`,
+                        [this.filename, e.lineno, e.col_offset, ""]
                     );
                 }
                 continue;
@@ -824,20 +826,20 @@ export class SymbolTable {
 
             /* If we find a FunctionBlock entry, add as GLOBAL/LOCAL or NONLOCAL/LOCAL */
             if (ste.blockType === FunctionBlock) {
-                const target_in_scope = ste.getSymbol(target_name);
-                if (target_in_scope & SYMTAB_CONSTS.DEF_GLOBAL) {
-                    this.addDef(target_name, SYMTAB_CONSTS.DEF_GLOBAL);
+                const targetInScope = ste.getSymbol(targetName);
+                if (targetInScope & SYMTAB_CONSTS.DEF_GLOBAL) {
+                    this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL);
                 } else {
-                    this.addDef(target_name, SYMTAB_CONSTS.DEF_NONLOCAL);
+                    this.addDef(targetName, SYMTAB_CONSTS.DEF_NONLOCAL);
                 }
-                this.recordDirective(target_name, e.lineno, e.col_offset);
-                return this.addDef(target_name, SYMTAB_CONSTS.DEF_LOCAL, ste);
+                this.recordDirective(targetName, e.lineno, e.col_offset);
+                return this.addDef(targetName, SYMTAB_CONSTS.DEF_LOCAL, ste);
             }
             /* If we find a ModuleBlock entry, add as GLOBAL */
             if (ste.blockType === ModuleBlock) {
-                this.addDef(target_name, SYMTAB_CONSTS.DEF_GLOBAL);
-                this.recordDirective(target_name, e.lineno, e.col_offset);
-                return this.addDef(target_name, SYMTAB_CONSTS.DEF_GLOBAL, ste);
+                this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL);
+                this.recordDirective(targetName, e.lineno, e.col_offset);
+                return this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL, ste);
             }
             /* Disallow usage in ClassBlock */
             if (ste.blockType === ClassBlock) {
@@ -858,7 +860,12 @@ export class SymbolTable {
         assert(this.cur !== null, "need current scope for namedExpr");
         if (this.cur.comp_iter_expr > 0) {
             // @todo -- needs line number etc
-            throw new pySyntaxError("Assignment isn't allowed in a comprehension iterable expression", ["", 0, 0, ""]);
+            throw new pySyntaxError("Assignment isn't allowed in a comprehension iterable expression", [
+                this.filename,
+                e.lineno,
+                e.col_offset,
+                "",
+            ]);
         }
         if (this.cur.comprehension) {
             /* Inside a comprehension body, so find the right target scope */
@@ -873,9 +880,9 @@ export class SymbolTable {
         block: BlockTypes,
         ast: AST,
         lineno: number,
-        col_offset: number,
-        end_lineno?: number | null,
-        end_col_offset?: number | null
+        colOffset: number,
+        endLineno?: number | null,
+        endColOffset?: number | null
     ) {
         assert(this.cur);
         const ste = new SymbolTableScope(
@@ -885,9 +892,9 @@ export class SymbolTable {
             ast,
             this.filename,
             lineno,
-            col_offset,
-            end_lineno,
-            end_col_offset
+            colOffset,
+            endLineno,
+            endColOffset
         );
         this.stack.push(ste);
         const prev = this.cur;
@@ -1278,26 +1285,26 @@ export class SymbolTable {
 
     lookup(id: string) {
         assert(this.cur);
-        const mangled = _Py_Mangle(this.private, id);
+        const mangled = mangle(this.private, id);
         return this.cur.getSymbol(mangled);
     }
 
     visitAlias(a: alias) {
-        /* Compute store_name, the name actually bound by the import
+        /* Compute storeName, the name actually bound by the import
            operation.  It is different than a->name when a->name is a
            dotted package name (e.g. spam.eggs)
         */
         const name = a.asname === null ? a.name : a.asname;
         const dot = name.indexOf(".");
-        let store_name = null;
+        let storeName = null;
 
         if (dot !== -1) {
-            store_name = name.substring(0, dot);
+            storeName = name.substring(0, dot);
         } else {
-            store_name = name;
+            storeName = name;
         }
         if (name !== "*") {
-            this.addDef(store_name, SYMTAB_CONSTS.DEF_IMPORT);
+            this.addDef(storeName, SYMTAB_CONSTS.DEF_IMPORT);
         } else {
             assert(this.cur);
             if (this.cur.blockType !== ModuleBlock) {
