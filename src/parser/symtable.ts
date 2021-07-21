@@ -700,7 +700,7 @@ export class SymbolTable {
     curClass: string | null = null;
     tmpname = 0;
 
-    stss: { [thing: number]: SymbolTableScope } = {};
+    stss: { [scopeId: number]: SymbolTableScope } = {};
 
     constructor(filename: string, _future: any) {
         this.filename = filename;
@@ -1469,7 +1469,10 @@ export class SymbolTable {
 
                 this.SEQ(this.visitStmt, try_.body);
                 this.SEQ(this.visitStmt, try_.orelse);
-                this.SEQ(this.visitExcepthandler, try_.handlers as ExceptHandler[]); // @stu this is odd.
+                this.SEQ(
+                    this.visitExcepthandler,
+                    try_.handlers as ExceptHandler[]
+                ); /** @todo Update adsl to make `handlers` of type ExceptHandler[] */
                 this.SEQ(this.visitStmt, try_.finalbody);
                 break;
             }
