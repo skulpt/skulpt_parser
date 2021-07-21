@@ -67,16 +67,12 @@ import {
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
 
-export const ModuleBlock = "module";
-export type ModuleBlock = "module";
-export const FunctionBlock = "function";
-export type FunctionBlock = "function";
-export const ClassBlock = "class";
-export type ClassBlock = "class";
-export const AnnotationBlock = "annotation";
-export type AnnotationBlock = "annotation";
-
-type BlockTypes = ModuleBlock | FunctionBlock | ClassBlock | AnnotationBlock;
+enum BlockType {
+    ModuleBlock = "module",
+    FunctionBlock = "function",
+    ClassBlock = "class",
+    AnnotationBlock = "annotation",
+}
 
 function append<T>(left: Set<T>, right: Set<T>) {
     for (const v of right.values()) {
@@ -233,7 +229,7 @@ class SymbolTableScope {
     name: string;
     varnames: string[];
     children: SymbolTableScope[];
-    blockType: BlockTypes;
+    blockType: BlockType;
     isNested = false;
     hasFree: boolean;
     childHasFree: boolean;
@@ -263,7 +259,7 @@ class SymbolTableScope {
     constructor(
         table: SymbolTable,
         name: string,
-        type: BlockTypes,
+        type: BlockType,
         ast: AST,
         filename: string,
         lineno: number,
@@ -292,7 +288,7 @@ class SymbolTableScope {
 
         this.table = table;
 
-        if (table.cur && (table.cur.isNested || table.cur.blockType === FunctionBlock)) {
+        if (table.cur && (table.cur.isNested || table.cur.blockType === BlockType.FunctionBlock)) {
             this.isNested = true;
         }
 
@@ -591,7 +587,7 @@ class SymbolTableScope {
 
         /* Allocate new global and bound variable dictionaries.  These
         dictionaries hold the names visible in nested blocks.  For
-        ClassBlocks, the bound and global names are initialized
+        BlockType.ClassBlocks, the bound and global names are initialized
         before analyzing names, because class bindings aren't
         visible in methods.  For other blocks, they are initialized
         after names are analyzed.
@@ -609,7 +605,7 @@ class SymbolTableScope {
         sets to be passed to child blocks before analyzing
         this one.
         */
-        if (this.blockType === ClassBlock) {
+        if (this.blockType === BlockType.ClassBlock) {
             /* Pass down known globals */
             append(newglobal, global);
 
@@ -624,9 +620,9 @@ class SymbolTableScope {
         }
 
         /* Populate global and bound sets to be passed to children. */
-        if (this.blockType !== ClassBlock) {
+        if (this.blockType !== BlockType.ClassBlock) {
             /* Add function locals to bound set */
-            if (this.blockType === FunctionBlock) {
+            if (this.blockType === BlockType.FunctionBlock) {
                 append(newbound, local);
             }
             /* Pass down previously bound symbols */
@@ -656,14 +652,14 @@ class SymbolTableScope {
         append(newfree, allfree);
 
         /* Check if any local variables must be converted to cell variables */
-        if (this.blockType === FunctionBlock) {
+        if (this.blockType === BlockType.FunctionBlock) {
             this.analyzeCells(scopes, newfree);
-        } else if (this.blockType === ClassBlock) {
+        } else if (this.blockType === BlockType.ClassBlock) {
             this.dropClassFree(newfree);
         }
 
         /* Records the results of the analysis in the symbol table entry */
-        this.updateSymbols(scopes, bound, newfree, this.blockType === ClassBlock);
+        this.updateSymbols(scopes, bound, newfree, this.blockType === BlockType.ClassBlock);
 
         append(free, newfree);
     }
@@ -824,8 +820,8 @@ export class SymbolTable {
                 continue;
             }
 
-            /* If we find a FunctionBlock entry, add as GLOBAL/LOCAL or NONLOCAL/LOCAL */
-            if (ste.blockType === FunctionBlock) {
+            /* If we find a BlockType.FunctionBlock entry, add as GLOBAL/LOCAL or NONLOCAL/LOCAL */
+            if (ste.blockType === BlockType.FunctionBlock) {
                 const targetInScope = ste.getSymbol(targetName);
                 if (targetInScope & SYMTAB_CONSTS.DEF_GLOBAL) {
                     this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL);
@@ -835,14 +831,14 @@ export class SymbolTable {
                 this.recordDirective(targetName, e.lineno, e.col_offset);
                 return this.addDef(targetName, SYMTAB_CONSTS.DEF_LOCAL, ste);
             }
-            /* If we find a ModuleBlock entry, add as GLOBAL */
-            if (ste.blockType === ModuleBlock) {
+            /* If we find a BlockType.ModuleBlock entry, add as GLOBAL */
+            if (ste.blockType === BlockType.ModuleBlock) {
                 this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL);
                 this.recordDirective(targetName, e.lineno, e.col_offset);
                 return this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL, ste);
             }
-            /* Disallow usage in ClassBlock */
-            if (ste.blockType === ClassBlock) {
+            /* Disallow usage in BlockType.ClassBlock */
+            if (ste.blockType === BlockType.ClassBlock) {
                 throw new pySyntaxError(
                     "assignment expression within a comprehension cannot be used in a class body",
                     [this.filename, e.lineno, e.col_offset, ""]
@@ -852,7 +848,7 @@ export class SymbolTable {
 
         assert(
             0,
-            "We should always find either a FunctionBlock, ModuleBlock or ClassBlock and should never fall to this case"
+            "We should always find either a BlockType.FunctionBlock, BlockType.ModuleBlock or BlockType.ClassBlock and should never fall to this case"
         );
     }
 
@@ -877,7 +873,7 @@ export class SymbolTable {
 
     enterBlock(
         name: string,
-        block: BlockTypes,
+        block: BlockType,
         ast: AST,
         lineno: number,
         colOffset: number,
@@ -910,11 +906,11 @@ export class SymbolTable {
         /* Annotation blocks shouldn't have any affect on the symbol table since in
          * the compilation stage, they will all be transformed to strings. They are
          * only created if future 'annotations' feature is activated. */
-        if (block === AnnotationBlock) {
+        if (block === BlockType.AnnotationBlock) {
             return;
         }
 
-        if (block === ModuleBlock) {
+        if (block === BlockType.ModuleBlock) {
             this.global = this.cur.symbols;
         }
 
@@ -949,7 +945,7 @@ export class SymbolTable {
         this.visitExpr(outermost.iter);
 
         /* Create comprehension scope for the rest */
-        this.enterBlock(scopeName, FunctionBlock, e, e.lineno, e.col_offset, e.end_lineno, e.end_col_offset);
+        this.enterBlock(scopeName, BlockType.FunctionBlock, e, e.lineno, e.col_offset, e.end_lineno, e.end_col_offset);
 
         if (outermost.is_async) {
             this.cur.coroutine = true;
@@ -1062,7 +1058,7 @@ export class SymbolTable {
                 }
                 this.enterBlock(
                     "lambda",
-                    FunctionBlock,
+                    BlockType.FunctionBlock,
                     lambda,
                     e.lineno,
                     e.col_offset,
@@ -1180,7 +1176,7 @@ export class SymbolTable {
                 const name = e as Name;
                 this.addDef(name.id, name.ctx === Load ? SYMTAB_CONSTS.USE : SYMTAB_CONSTS.DEF_LOCAL);
                 /* Special-case super: it counts as a use of __class__ */
-                if (name.ctx === Load && this.cur.blockType === FunctionBlock && name.id === "super") {
+                if (name.ctx === Load && this.cur.blockType === BlockType.FunctionBlock && name.id === "super") {
                     this.addDef("__class__", SYMTAB_CONSTS.USE);
                 }
                 break;
@@ -1307,7 +1303,7 @@ export class SymbolTable {
             this.addDef(storeName, SYMTAB_CONSTS.DEF_IMPORT);
         } else {
             assert(this.cur);
-            if (this.cur.blockType !== ModuleBlock) {
+            if (this.cur.blockType !== BlockType.ModuleBlock) {
                 throw new pySyntaxError("import * only allowed at module level", [
                     this.filename,
                     this.cur.lineno,
@@ -1348,7 +1344,7 @@ export class SymbolTable {
                     this.SEQ(this.visitExpr, funcDef.decorator_list);
                 }
                 this.visitAnnotations(funcDef.args, funcDef.returns);
-                this.enterBlock(funcDef.name, FunctionBlock, s, s.lineno, s.col_offset);
+                this.enterBlock(funcDef.name, BlockType.FunctionBlock, s, s.lineno, s.col_offset);
                 this.visitArguments(funcDef.args);
                 this.SEQ(this.visitStmt, funcDef.body);
                 this.exitBlock();
@@ -1364,7 +1360,7 @@ export class SymbolTable {
                 }
                 this.enterBlock(
                     classDef.name,
-                    ClassBlock,
+                    BlockType.ClassBlock,
                     classDef,
                     classDef.lineno,
                     classDef.col_offset,
@@ -1591,7 +1587,13 @@ export class SymbolTable {
 
                 if (asyncFunctionDef.decorator_list) this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
 
-                this.enterBlock(asyncFunctionDef.name, FunctionBlock, asyncFunctionDef, s.lineno, s.col_offset);
+                this.enterBlock(
+                    asyncFunctionDef.name,
+                    BlockType.FunctionBlock,
+                    asyncFunctionDef,
+                    s.lineno,
+                    s.col_offset
+                );
 
                 this.cur.coroutine = true;
 
@@ -1630,7 +1632,7 @@ export class SymbolTable {
 export function BuildSymbolTable(mod: mod, filename: string, future: never): SymbolTable {
     const st = new SymbolTable(filename, future);
     /* Make the initial symbol information gathering pass */
-    st.enterBlock("top", ModuleBlock, mod, 0, 0);
+    st.enterBlock("top", BlockType.ModuleBlock, mod, 0, 0);
     st.top = st.cur;
     switch (mod._kind) {
         case ASTKind.Module: {
