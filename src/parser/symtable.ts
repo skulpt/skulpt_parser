@@ -145,7 +145,7 @@ class Symbol_ {
     is_global() {
         /* Return *True* if the symbol is global. */
         return !!(
-            this.__scope in [SYMTAB_CONSTS.GLOBAL_IMPLICIT, SYMTAB_CONSTS.GLOBAL_EXPLICIT] ||
+            [SYMTAB_CONSTS.GLOBAL_IMPLICIT, SYMTAB_CONSTS.GLOBAL_EXPLICIT].includes(this.__scope) ||
             (this.__module_scope && !!(this.__flags & SYMTAB_CONSTS.DEF_BOUND))
         );
     }
@@ -161,7 +161,7 @@ class Symbol_ {
     is_local() {
         /* Return *True* if the symbol is local. */
         return !!(
-            this.__scope in [SYMTAB_CONSTS.LOCAL, SYMTAB_CONSTS.CELL] ||
+            [SYMTAB_CONSTS.LOCAL, SYMTAB_CONSTS.CELL].includes(this.__scope) ||
             (this.__module_scope && this.__flags & SYMTAB_CONSTS.DEF_BOUND)
         );
     }
