@@ -7,7 +7,7 @@ repos:
           - id: trailing-whitespace
             exclude: grammar.patch
     - repo: https://github.com/psf/black
-      rev: 21.6b0 # Replace by any tag/version: https://github.com/psf/black/tags
+      rev: 21.7b0 # Replace by any tag/version: https://github.com/psf/black/tags
       hooks:
           - id: black
             args: # arguments to configure black
