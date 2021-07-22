@@ -10,9 +10,9 @@ const argv = parse(Deno.args, {
     alias: { mode: "m", no_compare: "nc" },
 });
 
-const { _: args, mode, no_compare: noCompare, ignore_attrs: ignoreAttrs } = argv;
+const { _: args, mode, no_compare: _noCompare, ignore_attrs: ignoreAttrs } = argv;
 
-const options = { indent: 2, include_attributes: !ignoreAttrs };
+const _options = { indent: 2, include_attributes: !ignoreAttrs };
 
 console.assert(args.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
 

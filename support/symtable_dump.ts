@@ -27,6 +27,7 @@ function tableToDict(table: SymbolTableScope): Table {
         name: table.get_name(),
         lineno: table.get_lineno(),
         nested: table.is_nested(),
+        // deno-lint-ignore camelcase
         has_children: table.has_children(),
         children: table.get_children().map((c) => tableToDict(c)),
     };
