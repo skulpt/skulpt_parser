@@ -906,8 +906,9 @@ export class SymbolTable {
                 }
                 this.visitAnnotations(asyncFunctionDef.args, asyncFunctionDef.returns);
 
-                if (asyncFunctionDef.decorator_list.length !== 0)
+                if (asyncFunctionDef.decorator_list.length !== 0) {
                     this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
+                }
 
                 this.enterBlock(
                     asyncFunctionDef.name,
@@ -935,7 +936,9 @@ export class SymbolTable {
                 this.visitExpr(asyncFor.target);
                 this.visitExpr(asyncFor.iter);
                 this.SEQ(this.visitStmt, asyncFor.body);
-                if (asyncFor.orelse.length !== 0) this.SEQ(this.visitStmt, asyncFor.orelse);
+                if (asyncFor.orelse.length !== 0) {
+                    this.SEQ(this.visitStmt, asyncFor.orelse);
+                }
                 break;
             }
             default:
