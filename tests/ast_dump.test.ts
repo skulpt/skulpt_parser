@@ -1,6 +1,6 @@
 import * as astnodes from "../src/ast/astnodes.ts";
 import { pyFloat, pyInt, pyTrue, pyFalse, pyNone, pyStr } from "../src/ast/constants.ts";
-import { dump } from "../src/ast/dump.ts";
+import { dump } from "../support/ast_dump.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 // replace with assertEquals when string comparison is better.
 import { assertEqualsString } from "../support/diff.ts";

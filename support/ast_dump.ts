@@ -1,8 +1,8 @@
 // deno-lint-ignore-file camelcase
-import { AST } from "./astnodes.ts";
-import type { pyConstant } from "./constants.ts";
+import { AST } from "../src/ast/astnodes.ts";
+import type { pyConstant } from "../src/ast/constants.ts";
 
-type nodeType = AST | boolean | string | null | pyConstant;
+type nodeType = AST | boolean | string | null | pyConstant | number;
 interface dumpOptions {
     indent?: string | null | number;
     annotate_fields?: boolean;

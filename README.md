@@ -28,8 +28,10 @@
   - _parses a python file and logs the generated ast vs the python ast_
 - `vr parse_str <code string> [--nc --no_comapre] [--mode=exec]`
   - _parses a python file and logs the generated ast vs the python ast_
+- `vr symtable <filename|number>`
+  - _parses the file and created a symbol table for that ast and prints it_
 - `vr test <shortname> [-f --fail-fast] [-v]`
-  - _run a test - shortnames: `pypeg`, `parse`, `dump`_
+  - _run a test - shortnames: `pypeg`, `parse`, `dump`, `symtable`_
 
 ### Debugging/Pofiling
 

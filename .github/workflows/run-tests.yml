@@ -70,15 +70,52 @@ jobs:
             - name: run tests
               id: run-tests
               run: |
-                  vr test parse > results
-                  echo "::set-output name=results::$(cat results | grep "test result" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?(;[0-9]{1,2})?)?[mGK]//g")"
-            - uses: actions/github-script@v4
-              if: github.event_name == 'pull_request'
+                  vr test parse
+            #       vr test parse > results
+            #       echo "::set-output name=results::$(cat results | grep "test result" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?(;[0-9]{1,2})?)?[mGK]//g")"
+            # - uses: actions/github-script@v4
+            #   if: github.event_name == 'pull_request'
+            #   with:
+            #       script: |
+            #           github.issues.createComment({
+            #             issue_number: context.issue.number,
+            #             owner: context.repo.owner,
+            #             repo: context.repo.repo,
+            #             body: '${{steps.run-tests.outputs.results}}'
+            #           })
+    run-pypeg-tests:
+        runs-on: ubuntu-latest
+        outputs:
+            tests: ${{ steps.run-tests.outputs.test }}
+        steps:
+            - uses: denoland/setup-deno@v1
               with:
-                  script: |
-                      github.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: '${{steps.run-tests.outputs.results}}'
-                      })
+                  deno-version: v1.x
+            - uses: jurassiscripts/setup-velociraptor@v1
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9.5"
+            - uses: actions/checkout@master
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
+            - name: run tests
+              id: run-tests
+              run: |
+                  vr test pypeg
+    run-symtable-tests:
+        runs-on: ubuntu-latest
+        outputs:
+            tests: ${{ steps.run-tests.outputs.test }}
+        steps:
+            - uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+            - uses: jurassiscripts/setup-velociraptor@v1
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9.5"
+            - uses: actions/checkout@master
+            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
+            - name: run tests
+              id: run-tests
+              run: |
+                  vr test symtable
