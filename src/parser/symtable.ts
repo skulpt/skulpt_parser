@@ -222,7 +222,7 @@ class Symbol_ {
     }
 }
 
-var astScopeCounter = 0;
+let astScopeCounter = 0;
 
 class SymbolTableScope {
     name: string;
@@ -372,7 +372,7 @@ class SymbolTableScope {
         assert(this.get_type() === "function", "get_globals only valid for function scopes");
         if (!this._funcGlobals) {
             this._funcGlobals = this._identsMatching(function (x) {
-                var masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
+                const masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
                 return masked === SYMTAB_CONSTS.GLOBAL_IMPLICIT || masked === SYMTAB_CONSTS.GLOBAL_EXPLICIT;
             });
         }
@@ -383,7 +383,7 @@ class SymbolTableScope {
         assert(this.get_type() === "function", "get_frees only valid for function scopes");
         if (!this._funcFrees) {
             this._funcFrees = this._identsMatching(function (x) {
-                var masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
+                const masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
                 return masked === SYMTAB_CONSTS.FREE;
             });
         }
@@ -391,13 +391,11 @@ class SymbolTableScope {
     }
 
     get_methods() {
-        var i;
-        var all;
         assert(this.get_type() === "class", "get_methods only valid for class scopes");
         if (!this._classMethods) {
             // todo; uniq?
-            all = [];
-            for (i = 0; i < this.children.length; ++i) {
+            const all = [];
+            for (let i = 0; i < this.children.length; ++i) {
                 all.push(this.children[i].name);
             }
             all.sort();
@@ -407,9 +405,7 @@ class SymbolTableScope {
     }
 
     get_scope(name: string): number {
-        //print("getScope");
-        //for (var k in this.symFlags) print(k);
-        var v = this.symbols[name];
+        const v = this.symbols[name];
         if (v === undefined) {
             return 0;
         }
@@ -702,6 +698,7 @@ export class SymbolTable {
 
     stss: { [thing: number]: SymbolTableScope } = {};
 
+    // deno-lint-ignore no-explicit-any
     constructor(filename: string, _future: any) {
         this.filename = filename;
     }
@@ -711,9 +708,8 @@ export class SymbolTable {
     }
 
     getStsForAst(ast: AST) {
-        var v;
         assert(ast.scopeId !== undefined, "ast wasn't added to st?");
-        v = this.stss[ast.scopeId];
+        const v = this.stss[ast.scopeId];
         assert(v !== undefined, "unknown sym tab entry");
         return v;
     }
@@ -745,7 +741,6 @@ export class SymbolTable {
              * named expressions can check for conflicts.
              */
             if (val & (SYMTAB_CONSTS.DEF_GLOBAL | SYMTAB_CONSTS.DEF_NONLOCAL)) {
-                // @stu no end line and end coloffset in syntax err??
                 throw new pySyntaxError(
                     `comprehension inner loop cannot rebind assignment expression target '${name}'`,
                     [this.filename, curSte.lineno, curSte.colOffset, ""]
@@ -769,7 +764,8 @@ export class SymbolTable {
     }
 
     SEQTail<T>(visitor: (elem: T) => void, nodes: T[], start: number) {
-        for (const node of nodes.slice(start)) {
+        for (let i = start; i < nodes.length; i++) {
+            const node = nodes[i];
             if (node) {
                 visitor.call(this, node);
             }
@@ -1623,6 +1619,7 @@ export class SymbolTable {
     }
 }
 
+// deno-lint-ignore no-explicit-any
 export function buildSymbolTable(mod: mod, filename: string, future: any): SymbolTable {
     const st = new SymbolTable(filename, future);
     /* Make the initial symbol information gathering pass */
