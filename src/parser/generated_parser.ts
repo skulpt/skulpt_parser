@@ -2708,7 +2708,7 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
             (literal_1 = this.expect(26 /* '}' */))
         ) {
             const EXTRA = this.extra(mark);
-            return new astnodes.Set(a, ...EXTRA);
+            return new astnodes.Set_(a, ...EXTRA);
         }
         this._mark = mark;
 

@@ -48,7 +48,7 @@ export enum ASTKind {
     Lambda,
     IfExp,
     Dict,
-    Set,
+    Set_,
     ListComp,
     SetComp,
     DictComp,
@@ -844,7 +844,7 @@ export type exprKind =
     | typeof Lambda
     | typeof IfExp
     | typeof Dict
-    | typeof Set
+    | typeof Set_
     | typeof ListComp
     | typeof SetComp
     | typeof DictComp
@@ -960,7 +960,7 @@ export class Dict extends expr {
 Dict.prototype._fields = ["keys", "values"];
 Dict.prototype._kind = ASTKind.Dict;
 
-export class Set extends expr {
+export class Set_ extends expr {
     static _name = "Set";
     elts: expr[];
     constructor(elts: expr[] | null, ...attrs: Attrs) {
@@ -968,8 +968,8 @@ export class Set extends expr {
         this.elts = elts || [];
     }
 }
-Set.prototype._fields = ["elts"];
-Set.prototype._kind = ASTKind.Set;
+Set_.prototype._fields = ["elts"];
+Set_.prototype._kind = ASTKind.Set_;
 
 export class ListComp extends expr {
     static _name = "ListComp";

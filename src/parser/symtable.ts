@@ -11,7 +11,7 @@ import type {
     stmt,
     UnaryOp,
     IfExp,
-    Set as Set_,
+    Set_,
     Dict,
     arguments_,
     Yield,
@@ -1077,7 +1077,7 @@ export class SymbolTable {
                 this.SEQ(this.visitExpr, dict.values);
                 break;
             }
-            case ASTKind.Set:
+            case ASTKind.Set_:
                 this.SEQ(this.visitExpr, (e as Set_).elts);
                 break;
             case ASTKind.GeneratorExp:
