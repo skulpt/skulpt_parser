@@ -11,7 +11,6 @@ import {
     Call,
     Load,
     Constant,
-    exprKind,
     arguments_,
     arg,
     keyword,
@@ -23,26 +22,11 @@ import {
     Subscript,
     List,
     Tuple,
-    Lambda,
-    BoolOp,
-    BinOp,
-    UnaryOp,
-    GeneratorExp,
-    Yield,
-    YieldFrom,
-    Await,
-    ListComp,
-    SetComp,
-    DictComp,
-    Dict,
     JoinedStr,
-    FormattedValue,
     Compare,
-    IfExp,
-    NamedExpr,
-    Set as Set_,
     cmpop,
     In,
+    ASTKind,
 } from "../ast/astnodes.ts";
 import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../ast/constants.ts";
 import { pySyntaxError } from "../ast/errors.ts";
@@ -108,42 +92,42 @@ export function _create_dummy_identifier(p: Parser): string {
 
 export function get_expr_name(e: expr): string {
     assert(e != null);
-    switch (e.constructor as exprKind) {
-        case Attribute:
-        case Subscript:
-        case Starred:
-        case Name:
-        case List:
-        case Tuple:
-        case Lambda:
+    switch (e._kind) {
+        case ASTKind.Attribute:
+        case ASTKind.Subscript:
+        case ASTKind.Starred:
+        case ASTKind.Name:
+        case ASTKind.List:
+        case ASTKind.Tuple:
+        case ASTKind.Lambda:
             return e[Symbol.toStringTag].toLowerCase();
-        case Call:
+        case ASTKind.Call:
             return "function call";
-        case BoolOp:
-        case BinOp:
-        case UnaryOp:
+        case ASTKind.BoolOp:
+        case ASTKind.BinOp:
+        case ASTKind.UnaryOp:
             return "operator";
-        case GeneratorExp:
+        case ASTKind.GeneratorExp:
             return "generator expression";
-        case Yield:
-        case YieldFrom:
+        case ASTKind.Yield:
+        case ASTKind.YieldFrom:
             return "yield expression";
-        case Await:
+        case ASTKind.Await:
             return "await expression";
-        case ListComp:
+        case ASTKind.ListComp:
             return "list comprehension";
-        case SetComp:
+        case ASTKind.SetComp:
             return "set comprehension";
-        case DictComp:
+        case ASTKind.DictComp:
             return "dict comprehension";
-        case Dict:
+        case ASTKind.Dict:
             return "dict display";
-        case Set_:
+        case ASTKind.Set_:
             return "set display";
-        case JoinedStr:
-        case FormattedValue:
+        case ASTKind.JoinedStr:
+        case ASTKind.FormattedValue:
             return "f-string expression";
-        case Constant: {
+        case ASTKind.Constant: {
             const value = (e as Constant).value;
             switch (value) {
                 case pyNone:
@@ -155,11 +139,11 @@ export function get_expr_name(e: expr): string {
                     return "literal";
             }
         }
-        case Compare:
+        case ASTKind.Compare:
             return "comparison";
-        case IfExp:
+        case ASTKind.IfExp:
             return "conditional expression";
-        case NamedExpr:
+        case ASTKind.NamedExpr:
             return "named expression";
         default:
             throw new Error("unexpected expression in assignment");
@@ -289,23 +273,23 @@ function _set_starred_context(p: Parser, e: Starred, ctx: expr_context): Starred
 export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
     assert(expr !== null);
     let newExpr: expr;
-    switch (e.constructor as exprKind) {
-        case Name:
+    switch (e._kind) {
+        case ASTKind.Name:
             newExpr = _set_name_context(p, e as Name, ctx);
             break;
-        case Tuple:
+        case ASTKind.Tuple:
             newExpr = _set_tuple_context(p, e as Tuple, ctx);
             break;
-        case List:
+        case ASTKind.List:
             newExpr = _set_list_context(p, e as List, ctx);
             break;
-        case Subscript:
+        case ASTKind.Subscript:
             newExpr = _set_subscript_context(p, e as Subscript, ctx);
             break;
-        case Attribute:
+        case ASTKind.Attribute:
             newExpr = _set_attribute_context(p, e as Attribute, ctx);
             break;
-        case Starred:
+        case ASTKind.Starred:
             newExpr = _set_starred_context(p, e as Starred, ctx);
             break;
         default:
@@ -432,7 +416,8 @@ export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef
     fdef: T
 ): T extends FunctionDef ? FunctionDef : AsyncFunctionDef {
     assert(fdef !== null);
-    return new (fdef.constructor as typeof FunctionDef | typeof AsyncFunctionDef)(
+    const NodeType = fdef._kind === ASTKind.FunctionDef ? FunctionDef : AsyncFunctionDef;
+    return new NodeType(
         fdef.name,
         fdef.args,
         fdef.body,
@@ -551,14 +536,14 @@ export function get_invalid_target(e: expr | null, targets_type: TARGETS_TYPE): 
         return null;
     }
 
-    switch (e.constructor as exprKind) {
-        case List:
+    switch (e._kind) {
+        case ASTKind.List:
             return _visit_container(e as List);
-        case Tuple:
+        case ASTKind.Tuple:
             return _visit_container(e as Tuple);
-        case Starred:
+        case ASTKind.Starred:
             return get_invalid_target((e as Starred).value, targets_type);
-        case Compare:
+        case ASTKind.Compare:
             // This is needed, because the `a in b` in `for a in b` gets parsed
             // as a comparison, and so we need to search the left side of the comparison
             // for invalid targets.\
@@ -570,9 +555,9 @@ export function get_invalid_target(e: expr | null, targets_type: TARGETS_TYPE): 
                 return null;
             }
             return e;
-        case Name:
-        case Subscript:
-        case Attribute:
+        case ASTKind.Name:
+        case ASTKind.Subscript:
+        case ASTKind.Attribute:
             return null;
         default:
             return e;
