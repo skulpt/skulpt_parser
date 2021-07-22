@@ -28,6 +28,7 @@ function tableToDict(table: SymbolTableScope): Table {
         lineno: table.get_lineno(),
         nested: table.is_nested(),
         has_children: table.has_children(),
+        children: table.get_children().map((c) => tableToDict(c)),
     };
 
     if (table.get_type() === BlockType.FunctionBlock) {

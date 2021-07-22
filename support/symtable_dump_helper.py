@@ -37,6 +37,7 @@ def table_to_dict(table: SymbolTable) -> Mapping[str, Union[str, int, bool]]:
         "lineno": table.get_lineno(),
         "nested": table.is_nested(),
         "has_children": table.has_children(),
+        "children": [table_to_dict(c) for c in table.get_children()],
     }
 
     if table.get_type() == "function":

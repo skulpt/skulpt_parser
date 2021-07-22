@@ -197,8 +197,7 @@ export class Symbol_ {
         objects, like an int or list, that does not introduce a new
         namespace.
         */
-
-        return !!this.__namespaces;
+        return this.__namespaces !== null && this.__namespaces.length > 0;
     }
 
     get_namespaces() {
@@ -319,6 +318,10 @@ export class SymbolTableScope {
         return !!(this.children && this.children.length > 0);
     }
 
+    get_children() {
+        return this.children || [];
+    }
+
     get_identifiers() {
         return this._identsMatching(function () {
             return true;
@@ -365,9 +368,10 @@ export class SymbolTableScope {
     }
 
     get_locals(): string[] {
-        assert(this.get_type() === "function", "get_locals only valid for function scopes");
-        if (!this._funcLocals) {
-            this._funcLocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_BOUND));
+        if (this._funcLocals === null) {
+            const locs = [SYMTAB_CONSTS.LOCAL, SYMTAB_CONSTS.CELL];
+            const test = (x: number) => locs.includes((x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK);
+            this._funcLocals = this._identsMatching(test);
         }
         return this._funcLocals;
     }
@@ -405,7 +409,9 @@ export class SymbolTableScope {
         assert(this.get_type() === "class", "get_methods only valid for class scopes");
         if (!this._classMethods) {
             if (this.children) {
-                this._classMethods = this.children.map((c) => c.name).sort();
+                this._classMethods = this.children.map((c) => c.name);
+            } else {
+                this._classMethods = [];
             }
         }
         return this._classMethods;
@@ -499,6 +505,7 @@ export class SymbolTableScope {
         /* If a parent has a global statement, then call it global
         explicit?  It could also be global implicit.
         */
+
         if (global.has(name)) {
             scopes[name] = SYMTAB_CONSTS.GLOBAL_IMPLICIT;
             return;
@@ -931,7 +938,8 @@ export class SymbolTable {
     exitBlock() {
         this.cur = null;
         if (this.stack.length > 0) {
-            this.cur = this.stack.pop() || null;
+            this.stack.pop();
+            this.cur = this.stack[this.stack.length - 1] || null;
         }
     }
 
@@ -1077,7 +1085,7 @@ export class SymbolTable {
                 const ifExp = e as IfExp;
                 this.visitExpr(ifExp.test);
                 this.visitExpr(ifExp.body);
-                this.visitExpr(ifExp.body);
+                this.visitExpr(ifExp.orelse);
                 break;
             }
             case ASTKind.Dict: {
@@ -1128,9 +1136,10 @@ export class SymbolTable {
             }
             case ASTKind.Call: {
                 const call = e as Call;
+                console.log("call args", call.args);
                 this.visitExpr(call.func);
                 this.SEQ(this.visitExpr, call.args);
-                this.SEQ(this.visitExpr, call.keywords);
+                this.SEQ(this.visitKeyword, call.keywords);
                 break;
             }
             case ASTKind.FormattedValue: {
@@ -1662,75 +1671,3 @@ export function buildSymbolTable(mod: mod, filename: string, future: any): Symbo
 
     return st;
 }
-
-// Sk.dumpSymtab = function (st) {
-//     var pyBoolStr = function (b) {
-//         return b ? "True" : "False";
-//     }
-//     var pyList = function (l) {
-//         var i;
-//         var ret = [];
-//         for (i = 0; i < l.length; ++i) {
-//             ret.push(new Sk.builtin.str(l[i])["$r"]().v);
-//         }
-//         return "[" + ret.join(", ") + "]";
-//     };
-//     var getIdents = function (obj, indent) {
-//         var ns;
-//         var j;
-//         var sub;
-//         var nsslen;
-//         var nss;
-//         var info;
-//         var i;
-//         var objidentslen;
-//         var objidents;
-//         var ret;
-//         if (indent === undefined) {
-//             indent = "";
-//         }
-//         ret = "";
-//         ret += indent + "Sym_type: " + obj.get_type() + "\n";
-//         ret += indent + "Sym_name: " + obj.get_name() + "\n";
-//         ret += indent + "Sym_lineno: " + obj.get_lineno() + "\n";
-//         ret += indent + "Sym_nested: " + pyBoolStr(obj.is_nested()) + "\n";
-//         ret += indent + "Sym_haschildren: " + pyBoolStr(obj.has_children()) + "\n";
-//         if (obj.get_type() === "class") {
-//             ret += indent + "Class_methods: " + pyList(obj.get_methods()) + "\n";
-//         }
-//         else if (obj.get_type() === "function") {
-//             ret += indent + "Func_params: " + pyList(obj.get_parameters()) + "\n";
-//             ret += indent + "Func_locals: " + pyList(obj.get_locals()) + "\n";
-//             ret += indent + "Func_globals: " + pyList(obj.get_globals()) + "\n";
-//             ret += indent + "Func_frees: " + pyList(obj.get_frees()) + "\n";
-//         }
-//         ret += indent + "-- Identifiers --\n";
-//         objidents = obj.get_identifiers();
-//         objidentslen = objidents.length;
-//         for (i = 0; i < objidentslen; ++i) {
-//             info = obj.lookup(objidents[i]);
-//             ret += indent + "name: " + info.get_name() + "\n";
-//             ret += indent + "  is_referenced: " + pyBoolStr(info.is_referenced()) + "\n";
-//             ret += indent + "  is_imported: " + pyBoolStr(info.is_imported()) + "\n";
-//             ret += indent + "  is_parameter: " + pyBoolStr(info.is_parameter()) + "\n";
-//             ret += indent + "  is_global: " + pyBoolStr(info.is_global()) + "\n";
-//             ret += indent + "  is_declared_global: " + pyBoolStr(info.is_declared_global()) + "\n";
-//             ret += indent + "  is_local: " + pyBoolStr(info.is_local()) + "\n";
-//             ret += indent + "  is_free: " + pyBoolStr(info.is_free()) + "\n";
-//             ret += indent + "  is_assigned: " + pyBoolStr(info.is_assigned()) + "\n";
-//             ret += indent + "  is_namespace: " + pyBoolStr(info.is_namespace()) + "\n";
-//             nss = info.get_namespaces();
-//             nsslen = nss.length;
-//             ret += indent + "  namespaces: [\n";
-//             sub = [];
-//             for (j = 0; j < nsslen; ++j) {
-//                 ns = nss[j];
-//                 sub.push(getIdents(ns, indent + "    "));
-//             }
-//             ret += sub.join("\n");
-//             ret += indent + "  ]\n";
-//         }
-//         return ret;
-//     };
-//     return getIdents(st.top, "");
-// };
