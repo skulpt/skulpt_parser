@@ -860,7 +860,6 @@ export class SymbolTable {
     handleNamedExpr(e: NamedExpr) {
         assert(this.cur !== null, "need current scope for namedExpr");
         if (this.cur.comp_iter_expr > 0) {
-            /** @todo -- needs line number etc */
             throw new pySyntaxError("Assignment isn't allowed in a comprehension iterable expression", [
                 this.filename,
                 e.lineno,
