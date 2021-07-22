@@ -1136,7 +1136,6 @@ export class SymbolTable {
             }
             case ASTKind.Call: {
                 const call = e as Call;
-                console.log("call args", call.args);
                 this.visitExpr(call.func);
                 this.SEQ(this.visitExpr, call.args);
                 this.SEQ(this.visitKeyword, call.keywords);
