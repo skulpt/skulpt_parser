@@ -1,5 +1,5 @@
 // deno-lint-ignore-file camelcase
-import { dump } from "../src/ast/dump.ts";
+import { dump } from "../support/ast_dump.ts";
 import { Colors, parse } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";

@@ -66,7 +66,7 @@ import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
 
-enum BlockType {
+export enum BlockType {
     ModuleBlock = "module",
     FunctionBlock = "function",
     ClassBlock = "class",
@@ -110,7 +110,7 @@ export enum SYMTAB_CONSTS {
     GENERATOR_EXPRESSION = 2,
 }
 
-class Symbol_ {
+export class Symbol_ {
     __name: string;
     __flags: number;
     __scope: number;
@@ -121,7 +121,7 @@ class Symbol_ {
         this.__name = name;
         this.__flags = flags;
         this.__scope = (flags >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK; // like PyST_GetScope()
-        this.__namespaces = namespaces || [];
+        this.__namespaces = namespaces;
         this.__module_scope = moduleScope;
     }
 
@@ -197,8 +197,7 @@ class Symbol_ {
         objects, like an int or list, that does not introduce a new
         namespace.
         */
-
-        return !!this.__namespaces;
+        return this.__namespaces !== null && this.__namespaces.length > 0;
     }
 
     get_namespaces() {
@@ -224,10 +223,10 @@ class Symbol_ {
 
 let astScopeCounter = 0;
 
-class SymbolTableScope {
+export class SymbolTableScope {
     name: string;
     varnames: string[];
-    children: SymbolTableScope[];
+    children: SymbolTableScope[] | null;
     blockType: BlockType;
     isNested = false;
     hasFree: boolean;
@@ -246,6 +245,7 @@ class SymbolTableScope {
     _funcLocals: string[] | null = null;
     _funcParams: string[] | null = null;
     _funcGlobals: string[] | null = null;
+    _funcNonlocals: string[] | null = null;
     _funcFrees: string[] | null = null;
     _classMethods: string[] | null = null;
     comp_iter_expr = 0;
@@ -268,7 +268,7 @@ class SymbolTableScope {
     ) {
         this.name = name;
         this.varnames = [];
-        this.children = [];
+        this.children = null;
         this.blockType = type;
 
         this.isNested = false;
@@ -315,7 +315,11 @@ class SymbolTableScope {
     }
 
     has_children() {
-        return this.children.length > 0;
+        return !!(this.children && this.children.length > 0);
+    }
+
+    get_children() {
+        return this.children || [];
     }
 
     get_identifiers() {
@@ -329,7 +333,7 @@ class SymbolTableScope {
     }
 
     lookup(name: string): Symbol_ {
-        return new Symbol_(name, this.symbols[name], this.__check_children(name));
+        return new Symbol_(name, this.symbols[name], this.__check_children(name), this.name === "top");
         // let sym;
         // if (!(name in this.symbols)) {
         //     const flags = this.symFlags[name];
@@ -341,9 +345,12 @@ class SymbolTableScope {
         // return sym;
     }
 
-    __check_children(name: string): SymbolTableScope[] {
-        //print("  check_children:", name);
-        return this.children.filter((c) => c.name === name);
+    __check_children(name: string): SymbolTableScope[] | null {
+        if (this.children) {
+            return this.children.filter((c) => c.name === name);
+        }
+
+        return null;
     }
 
     _identsMatching(f: (flag: number) => boolean): string[] {
@@ -361,9 +368,10 @@ class SymbolTableScope {
     }
 
     get_locals(): string[] {
-        assert(this.get_type() === "function", "get_locals only valid for function scopes");
-        if (!this._funcLocals) {
-            this._funcLocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_BOUND));
+        if (this._funcLocals === null) {
+            const locs = [SYMTAB_CONSTS.LOCAL, SYMTAB_CONSTS.CELL];
+            const test = (x: number) => locs.includes((x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK);
+            this._funcLocals = this._identsMatching(test);
         }
         return this._funcLocals;
     }
@@ -377,6 +385,13 @@ class SymbolTableScope {
             });
         }
         return this._funcGlobals;
+    }
+
+    get_nonlocals() {
+        if (!this._funcNonlocals) {
+            this._funcNonlocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_NONLOCAL));
+        }
+        return this._funcNonlocals;
     }
 
     get_frees() {
@@ -393,13 +408,11 @@ class SymbolTableScope {
     get_methods() {
         assert(this.get_type() === "class", "get_methods only valid for class scopes");
         if (!this._classMethods) {
-            // todo; uniq?
-            const all = [];
-            for (let i = 0; i < this.children.length; ++i) {
-                all.push(this.children[i].name);
+            if (this.children) {
+                this._classMethods = this.children.map((c) => c.name);
+            } else {
+                this._classMethods = [];
             }
-            all.sort();
-            this._classMethods = all;
         }
         return this._classMethods;
     }
@@ -490,6 +503,7 @@ class SymbolTableScope {
         /* If a parent has a global statement, then call it global
         explicit?  It could also be global implicit.
         */
+
         if (global.has(name)) {
             scopes[name] = SYMTAB_CONSTS.GLOBAL_IMPLICIT;
             return;
@@ -637,7 +651,7 @@ class SymbolTableScope {
         be collected in allfree.
         */
         const allfree = new Set<string>();
-        for (const entry of this.children) {
+        for (const entry of this.children || []) {
             entry.analyzeChildBlock(newbound, newfree, newglobal, allfree);
             if (entry.hasFree || entry.childHasFree) {
                 this.childHasFree = true;
@@ -696,7 +710,7 @@ export class SymbolTable {
     curClass: string | null = null;
     tmpname = 0;
 
-    stss: { [thing: number]: SymbolTableScope } = {};
+    stss: { [scopeId: number]: SymbolTableScope } = {};
 
     // deno-lint-ignore no-explicit-any
     constructor(filename: string, _future: any) {
@@ -911,14 +925,19 @@ export class SymbolTable {
         }
 
         if (prev) {
-            prev.children.push(ste);
+            if (prev.children) {
+                prev.children.push(ste);
+            } else {
+                prev.children = [ste];
+            }
         }
     }
 
     exitBlock() {
         this.cur = null;
         if (this.stack.length > 0) {
-            this.cur = this.stack.pop() || null;
+            this.stack.pop();
+            this.cur = this.stack[this.stack.length - 1] || null;
         }
     }
 
@@ -1064,7 +1083,7 @@ export class SymbolTable {
                 const ifExp = e as IfExp;
                 this.visitExpr(ifExp.test);
                 this.visitExpr(ifExp.body);
-                this.visitExpr(ifExp.body);
+                this.visitExpr(ifExp.orelse);
                 break;
             }
             case ASTKind.Dict: {
@@ -1117,7 +1136,7 @@ export class SymbolTable {
                 const call = e as Call;
                 this.visitExpr(call.func);
                 this.SEQ(this.visitExpr, call.args);
-                this.SEQ(this.visitExpr, call.keywords);
+                this.SEQ(this.visitKeyword, call.keywords);
                 break;
             }
             case ASTKind.FormattedValue: {
@@ -1465,7 +1484,10 @@ export class SymbolTable {
 
                 this.SEQ(this.visitStmt, try_.body);
                 this.SEQ(this.visitStmt, try_.orelse);
-                this.SEQ(this.visitExcepthandler, try_.handlers as ExceptHandler[]); // @stu this is odd.
+                this.SEQ(
+                    this.visitExcepthandler,
+                    try_.handlers as ExceptHandler[]
+                ); /** @todo Update adsl to make `handlers` of type ExceptHandler[] */
                 this.SEQ(this.visitStmt, try_.finalbody);
                 break;
             }
@@ -1647,75 +1669,3 @@ export function buildSymbolTable(mod: mod, filename: string, future: any): Symbo
 
     return st;
 }
-
-// Sk.dumpSymtab = function (st) {
-//     var pyBoolStr = function (b) {
-//         return b ? "True" : "False";
-//     }
-//     var pyList = function (l) {
-//         var i;
-//         var ret = [];
-//         for (i = 0; i < l.length; ++i) {
-//             ret.push(new Sk.builtin.str(l[i])["$r"]().v);
-//         }
-//         return "[" + ret.join(", ") + "]";
-//     };
-//     var getIdents = function (obj, indent) {
-//         var ns;
-//         var j;
-//         var sub;
-//         var nsslen;
-//         var nss;
-//         var info;
-//         var i;
-//         var objidentslen;
-//         var objidents;
-//         var ret;
-//         if (indent === undefined) {
-//             indent = "";
-//         }
-//         ret = "";
-//         ret += indent + "Sym_type: " + obj.get_type() + "\n";
-//         ret += indent + "Sym_name: " + obj.get_name() + "\n";
-//         ret += indent + "Sym_lineno: " + obj.get_lineno() + "\n";
-//         ret += indent + "Sym_nested: " + pyBoolStr(obj.is_nested()) + "\n";
-//         ret += indent + "Sym_haschildren: " + pyBoolStr(obj.has_children()) + "\n";
-//         if (obj.get_type() === "class") {
-//             ret += indent + "Class_methods: " + pyList(obj.get_methods()) + "\n";
-//         }
-//         else if (obj.get_type() === "function") {
-//             ret += indent + "Func_params: " + pyList(obj.get_parameters()) + "\n";
-//             ret += indent + "Func_locals: " + pyList(obj.get_locals()) + "\n";
-//             ret += indent + "Func_globals: " + pyList(obj.get_globals()) + "\n";
-//             ret += indent + "Func_frees: " + pyList(obj.get_frees()) + "\n";
-//         }
-//         ret += indent + "-- Identifiers --\n";
-//         objidents = obj.get_identifiers();
-//         objidentslen = objidents.length;
-//         for (i = 0; i < objidentslen; ++i) {
-//             info = obj.lookup(objidents[i]);
-//             ret += indent + "name: " + info.get_name() + "\n";
-//             ret += indent + "  is_referenced: " + pyBoolStr(info.is_referenced()) + "\n";
-//             ret += indent + "  is_imported: " + pyBoolStr(info.is_imported()) + "\n";
-//             ret += indent + "  is_parameter: " + pyBoolStr(info.is_parameter()) + "\n";
-//             ret += indent + "  is_global: " + pyBoolStr(info.is_global()) + "\n";
-//             ret += indent + "  is_declared_global: " + pyBoolStr(info.is_declared_global()) + "\n";
-//             ret += indent + "  is_local: " + pyBoolStr(info.is_local()) + "\n";
-//             ret += indent + "  is_free: " + pyBoolStr(info.is_free()) + "\n";
-//             ret += indent + "  is_assigned: " + pyBoolStr(info.is_assigned()) + "\n";
-//             ret += indent + "  is_namespace: " + pyBoolStr(info.is_namespace()) + "\n";
-//             nss = info.get_namespaces();
-//             nsslen = nss.length;
-//             ret += indent + "  namespaces: [\n";
-//             sub = [];
-//             for (j = 0; j < nsslen; ++j) {
-//                 ns = nss[j];
-//                 sub.push(getIdents(ns, indent + "    "));
-//             }
-//             ret += sub.join("\n");
-//             ret += indent + "  ]\n";
-//         }
-//         return ret;
-//     };
-//     return getIdents(st.top, "");
-// };
