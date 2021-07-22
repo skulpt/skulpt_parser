@@ -66,7 +66,7 @@ import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "./pegen.ts";
 
-enum BlockType {
+export enum BlockType {
     ModuleBlock = "module",
     FunctionBlock = "function",
     ClassBlock = "class",
@@ -110,7 +110,7 @@ export enum SYMTAB_CONSTS {
     GENERATOR_EXPRESSION = 2,
 }
 
-class Symbol_ {
+export class Symbol_ {
     __name: string;
     __flags: number;
     __scope: number;
@@ -121,7 +121,7 @@ class Symbol_ {
         this.__name = name;
         this.__flags = flags;
         this.__scope = (flags >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK; // like PyST_GetScope()
-        this.__namespaces = namespaces || [];
+        this.__namespaces = namespaces;
         this.__module_scope = moduleScope;
     }
 
@@ -224,10 +224,10 @@ class Symbol_ {
 
 var astScopeCounter = 0;
 
-class SymbolTableScope {
+export class SymbolTableScope {
     name: string;
     varnames: string[];
-    children: SymbolTableScope[];
+    children: SymbolTableScope[] | null;
     blockType: BlockType;
     isNested = false;
     hasFree: boolean;
@@ -246,6 +246,7 @@ class SymbolTableScope {
     _funcLocals: string[] | null = null;
     _funcParams: string[] | null = null;
     _funcGlobals: string[] | null = null;
+    _funcNonlocals: string[] | null = null;
     _funcFrees: string[] | null = null;
     _classMethods: string[] | null = null;
     comp_iter_expr = 0;
@@ -268,7 +269,7 @@ class SymbolTableScope {
     ) {
         this.name = name;
         this.varnames = [];
-        this.children = [];
+        this.children = null;
         this.blockType = type;
 
         this.isNested = false;
@@ -315,7 +316,7 @@ class SymbolTableScope {
     }
 
     has_children() {
-        return this.children.length > 0;
+        return !!(this.children && this.children.length > 0);
     }
 
     get_identifiers() {
@@ -341,9 +342,12 @@ class SymbolTableScope {
         // return sym;
     }
 
-    __check_children(name: string): SymbolTableScope[] {
-        //print("  check_children:", name);
-        return this.children.filter((c) => c.name === name);
+    __check_children(name: string): SymbolTableScope[] | null {
+        if (this.children) {
+            return this.children.filter((c) => c.name === name);
+        }
+
+        return null;
     }
 
     _identsMatching(f: (flag: number) => boolean): string[] {
@@ -379,6 +383,13 @@ class SymbolTableScope {
         return this._funcGlobals;
     }
 
+    get_nonlocals() {
+        if (!this._funcNonlocals) {
+            this._funcNonlocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_NONLOCAL));
+        }
+        return this._funcNonlocals;
+    }
+
     get_frees() {
         assert(this.get_type() === "function", "get_frees only valid for function scopes");
         if (!this._funcFrees) {
@@ -391,17 +402,11 @@ class SymbolTableScope {
     }
 
     get_methods() {
-        var i;
-        var all;
         assert(this.get_type() === "class", "get_methods only valid for class scopes");
         if (!this._classMethods) {
-            // todo; uniq?
-            all = [];
-            for (i = 0; i < this.children.length; ++i) {
-                all.push(this.children[i].name);
+            if (this.children) {
+                this._classMethods = this.children.map((c) => c.name).sort();
             }
-            all.sort();
-            this._classMethods = all;
         }
         return this._classMethods;
     }
@@ -641,7 +646,7 @@ class SymbolTableScope {
         be collected in allfree.
         */
         const allfree = new Set<string>();
-        for (const entry of this.children) {
+        for (const entry of this.children || []) {
             entry.analyzeChildBlock(newbound, newfree, newglobal, allfree);
             if (entry.hasFree || entry.childHasFree) {
                 this.childHasFree = true;
@@ -915,7 +920,11 @@ export class SymbolTable {
         }
 
         if (prev) {
-            prev.children.push(ste);
+            if (prev.children) {
+                prev.children.push(ste);
+            } else {
+                prev.children = [ste];
+            }
         }
     }
 

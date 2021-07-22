@@ -9,8 +9,8 @@ switch (test) {
     case "parse":
         extra.push("tests/parse.test.ts");
         break;
-    case "pypeg":
-        await Deno.run({
+    case "pypeg": {
+        const res = await Deno.run({
             cmd: [
                 "python",
                 "-m",
@@ -19,8 +19,12 @@ switch (test) {
                 ...Deno.args.filter((arg) => arg !== "pypeg"),
             ],
         }).status();
-        Deno.exit();
+        Deno.exit(res.code);
         break; // just to keep ts happy
+    }
+    case "symtable":
+        extra.push("tests/symtable.tests.ts");
+        break;
     /** @todo the default should be to do nothing here and run all the tests */
     case "dump":
     default:
