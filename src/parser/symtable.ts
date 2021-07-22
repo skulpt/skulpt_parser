@@ -330,7 +330,7 @@ export class SymbolTableScope {
     }
 
     lookup(name: string): Symbol_ {
-        return new Symbol_(name, this.symbols[name], this.__check_children(name));
+        return new Symbol_(name, this.symbols[name], this.__check_children(name), this.name === "top");
         // let sym;
         // if (!(name in this.symbols)) {
         //     const flags = this.symFlags[name];
