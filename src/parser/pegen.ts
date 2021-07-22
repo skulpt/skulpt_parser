@@ -60,7 +60,7 @@ export function assert(expr: unknown, msg = ""): asserts expr {
 }
 
 /** see pegen.h for implementation */
-export function NEW_TYPE_COMMENT(p: Parser, tc: TokenInfo | null): string | null {
+export function NEW_TYPE_COMMENT(_p: Parser, tc: TokenInfo | null): string | null {
     if (tc === null) {
         return null;
     }
@@ -72,7 +72,7 @@ export function new_type_comment(s: string | null): string | null {
     return s;
 }
 
-export function add_type_comment_to_arg(p: Parser, a: arg, tc: TokenInfo | null): arg {
+export function add_type_comment_to_arg(_p: Parser, a: arg, tc: TokenInfo | null): arg {
     if (tc === null) {
         return a;
     }
@@ -86,7 +86,7 @@ export function new_identifier(/*p: Parser, */ n: string): string {
     return n;
 }
 
-export function _create_dummy_identifier(p: Parser): string {
+export function _create_dummy_identifier(_p: Parser): string {
     return new_identifier("");
 }
 
@@ -161,12 +161,12 @@ export interface NameTokenInfo extends TokenInfo {
 }
 
 /** @todo */
-export function interactive_exit(p: Parser) {
+export function interactive_exit(_p: Parser) {
     return null;
 }
 
 /* Creates a single-element asdl_seq* that contains a */
-export function singleton_seq<A>(p: Parser, a: A): A[] {
+export function singleton_seq<A>(_p: Parser, a: A): A[] {
     return [a];
 }
 
@@ -182,7 +182,7 @@ export function seq_insert_in_front<T>(p: Parser, a: T, seq: T[] | null): T[] {
 }
 
 /* Creates a copy of seq and appends a to it */
-export function seq_append_to_end(p: Parser, seq: expr[] | null, a: expr): expr[] {
+export function seq_append_to_end(_p: Parser, seq: expr[] | null, a: expr): expr[] {
     assert(a !== null);
     if (seq === null) {
         return [a];
@@ -191,12 +191,12 @@ export function seq_append_to_end(p: Parser, seq: expr[] | null, a: expr): expr[
 }
 
 /* Flattens an asdl_seq* of asdl_seq*s */
-export function seq_flatten<A>(p: Parser, seqs: A[][]): A[] {
+export function seq_flatten<A>(_p: Parser, seqs: A[][]): A[] {
     return seqs.flat();
 }
 
 /* Creates a new name of the form <first_name>.<second_name> */
-export function join_names_with_dot(p: Parser, first_name: Name, second_name: Name): Name {
+export function join_names_with_dot(_p: Parser, first_name: Name, second_name: Name): Name {
     const first_identifier = first_name.id;
     const second_identifier = second_name.id;
     /** @todo if we make these pyStrings we'll have to change this */
@@ -222,21 +222,21 @@ export function seq_count_dots(seq: TokenInfo[]): number {
 }
 
 /* Creates an alias with '*' as the identifier name */
-export function alias_for_star(p: Parser): alias {
+export function alias_for_star(_p: Parser): alias {
     /** @todo should we inline this? */
     return new alias("*", null);
 }
 
 /* Creates a new asdl_seq* with the identifiers of all the names in seq */
-export function map_names_to_ids(p: Parser, seq: Name[]): string[] {
+export function map_names_to_ids(_p: Parser, seq: Name[]): string[] {
     return seq.map((e) => e.id);
 }
 
-export function get_cmpops(p: Parser, seq: CmpopExprPair[]): cmpop[] {
+export function get_cmpops(_p: Parser, seq: CmpopExprPair[]): cmpop[] {
     return seq.map((pair) => pair.cmpop);
 }
 
-export function get_exprs(p: Parser, seq: CmpopExprPair[]): expr[] {
+export function get_exprs(_p: Parser, seq: CmpopExprPair[]): expr[] {
     return seq.map((pair) => pair.expr);
 }
 
@@ -245,7 +245,7 @@ function _set_seq_context(p: Parser, seq: expr[], ctx: expr_context) {
     return seq.map((e) => set_expr_context(p, e, ctx));
 }
 
-function _set_name_context(p: Parser, e: Name, ctx: expr_context): Name {
+function _set_name_context(_p: Parser, e: Name, ctx: expr_context): Name {
     return new Name(e.id, ctx, ...EXTRA_EXPR(e));
 }
 
@@ -257,11 +257,11 @@ function _set_list_context(p: Parser, e: List, ctx: expr_context): List {
     return new List(_set_seq_context(p, e.elts, ctx), ctx, ...EXTRA_EXPR(e));
 }
 
-function _set_subscript_context(p: Parser, e: Subscript, ctx: expr_context): Subscript {
+function _set_subscript_context(_p: Parser, e: Subscript, ctx: expr_context): Subscript {
     return new Subscript(e.value, e.slice, ctx, ...EXTRA_EXPR(e));
 }
 
-function _set_attribute_context(p: Parser, e: Attribute, ctx: expr_context): Attribute {
+function _set_attribute_context(_p: Parser, e: Attribute, ctx: expr_context): Attribute {
     return new Attribute(e.value, e.attr, ctx, ...EXTRA_EXPR(e));
 }
 
@@ -299,7 +299,7 @@ export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
 }
 
 /* Extracts all keys from an asdl_seq* of KeyValuePair*'s */
-export function get_keys(p: Parser, seq: KeyValuePair[] | null): (expr | null)[] {
+export function get_keys(_p: Parser, seq: KeyValuePair[] | null): (expr | null)[] {
     if (seq === null) {
         return [];
     }
@@ -308,7 +308,7 @@ export function get_keys(p: Parser, seq: KeyValuePair[] | null): (expr | null)[]
 }
 
 /* Extracts all values from an asdl_seq* of KeyValuePair*'s */
-export function get_values(p: Parser, seq: KeyValuePair[] | null): expr[] {
+export function get_values(_p: Parser, seq: KeyValuePair[] | null): expr[] {
     if (seq === null) {
         return [];
     }
@@ -322,11 +322,11 @@ export function name_default_pair<V>(p: Parser, arg: arg, value: V, tc: TokenInf
     return new NameDefaultPair<V>(a, value);
 }
 
-export function join_sequences(p: Parser, a: KeywordOrStarred[], b: KeywordOrStarred[]): KeywordOrStarred[] {
+export function join_sequences(_p: Parser, a: KeywordOrStarred[], b: KeywordOrStarred[]): KeywordOrStarred[] {
     return a.concat(b);
 }
 
-export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | null): arg[] {
+export function get_names(_p: Parser, names_with_defaults: NameDefaultPair[] | null): arg[] {
     if (names_with_defaults === null) {
         return [];
     }
@@ -337,7 +337,7 @@ export function get_names(p: Parser, names_with_defaults: NameDefaultPair[] | nu
 type exprOrNull<T> = T extends NameDefaultPair<infer R> ? (R extends expr ? R : expr | null) : expr | null;
 
 export function get_defaults<T extends NameDefaultPair<exprOrNull<T>>>(
-    p: Parser,
+    _p: Parser,
     names_with_defaults: T[]
 ): exprOrNull<T>[] {
     return names_with_defaults.map((pair) => pair.value);
@@ -405,13 +405,13 @@ export function make_arguments(
 }
 
 /* Constructs an empty arguments_ty object, that gets used when a function accepts no arguments. */
-export function empty_arguments(p: Parser): arguments_ {
+export function empty_arguments(_p: Parser): arguments_ {
     return new arguments_([], [], null, [], [], null, []);
 }
 
 /* Construct a FunctionDef equivalent to function_def, but with decorators */
 export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef>(
-    p: Parser,
+    _p: Parser,
     decorators: expr[],
     fdef: T
 ): T extends FunctionDef ? FunctionDef : AsyncFunctionDef {
@@ -432,7 +432,7 @@ export function function_def_decorators<T extends FunctionDef | AsyncFunctionDef
 }
 
 /* Construct a ClassDef equivalent to class_def, but with decorators */
-export function class_def_decorators(p: Parser, decorators: expr[], class_def: ClassDef): ClassDef {
+export function class_def_decorators(_p: Parser, decorators: expr[], class_def: ClassDef): ClassDef {
     assert(class_def !== null);
     return new ClassDef(
         class_def.name,
@@ -464,12 +464,12 @@ function isStarred(kw: KeywordOrStarred): kw is KeywordOrStarred<false> {
 }
 
 /* Extract the starred expressions of an asdl_seq* of KeywordOrStarred*s */
-export function seq_extract_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): Starred[] {
+export function seq_extract_starred_exprs(_p: Parser, kwargs: KeywordOrStarred[]): Starred[] {
     return kwargs.filter(isStarred).map((kw) => kw.element);
 }
 
 /* Return a new asdl_seq* with only the keywords in kwargs */
-export function seq_delete_starred_exprs(p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
+export function seq_delete_starred_exprs(_p: Parser, kwargs: KeywordOrStarred[]): keyword[] {
     return kwargs.filter(isKeyword).map((kw) => kw.element);
 }
 
@@ -516,7 +516,7 @@ export function concatenate_strings(p: Parser, tokens: TokenInfo[]): JoinedStr |
     return fstringParser.finish();
 }
 
-export function make_module(p: Parser, a: stmt[] | null): Module {
+export function make_module(_p: Parser, a: stmt[] | null): Module {
     // Ingoring the #type: ignore comment mangling here
     return new Module(a ?? [], []);
 }
