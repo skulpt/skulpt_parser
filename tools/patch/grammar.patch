@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..bfc512dd83 100644
+index 64e205e7fd..3c3af29e52 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -767,7 +767,7 @@ index 64e205e7fd..bfc512dd83 100644
 -set[expr_ty]: '{' a=star_named_expressions '}' { _Py_Set(a, EXTRA) }
 -setcomp[expr_ty]:
 -    | '{' a=named_expression ~ b=for_if_clauses '}' { _Py_SetComp(a, b, EXTRA) }
-+set[expr]: '{' a=star_named_expressions '}' { new astnodes.Set(a, ...EXTRA) }
++set[expr]: '{' a=star_named_expressions '}' { new astnodes.Set_(a, ...EXTRA) }
 +setcomp[expr]:
 +    | '{' a=named_expression ~ b=for_if_clauses '}' { new astnodes.SetComp(a, b, ...EXTRA) }
      | invalid_comprehension

@@ -365,7 +365,13 @@ def main(asdlfile, outputfile):
     auto_gen_msg = common_msg % argv0
     with open(asdlfile, "r") as file:
         # @TODO this would be replaces by an asdl patch
-        lines = file.read().replace("arguments", "arguments_").replace("Continue", "Continue | Debugger")
+        lines = (
+            file.read()
+            .replace("arguments", "arguments_")
+            .replace("Set", "Set_")
+            .replace("Set_Comp", "SetComp")
+            .replace("Continue", "Continue | Debugger")
+        )
     with open("temp.asdl", "w") as f:
         f.write(lines)
 
