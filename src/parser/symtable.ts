@@ -1443,7 +1443,9 @@ export class SymbolTable {
                 this.visitExpr(for_.target);
                 this.visitExpr(for_.iter);
                 this.SEQ(this.visitStmt, for_.body);
-                if (for_.orelse.length !== 0) this.SEQ(this.visitStmt, for_.orelse);
+                if (for_.orelse.length !== 0) {
+                    this.SEQ(this.visitStmt, for_.orelse);
+                }
                 break;
             }
             case ASTKind.While: {
@@ -1451,7 +1453,9 @@ export class SymbolTable {
 
                 this.visitExpr(while_.test);
                 this.SEQ(this.visitStmt, while_.body);
-                if (while_.orelse.length !== 0) this.SEQ(this.visitStmt, while_.orelse);
+                if (while_.orelse.length !== 0) {
+                    this.SEQ(this.visitStmt, while_.orelse);
+                }
                 break;
             }
             case ASTKind.If: {
@@ -1460,7 +1464,9 @@ export class SymbolTable {
                 /* XXX if 0: and lookup_yield() hacks */
                 this.visitExpr(if_.test);
                 this.SEQ(this.visitStmt, if_.body);
-                if (if_.orelse.length !== 0) this.SEQ(this.visitStmt, if_.orelse);
+                if (if_.orelse.length !== 0) {
+                    this.SEQ(this.visitStmt, if_.orelse);
+                }
                 break;
             }
             case ASTKind.Raise: {
