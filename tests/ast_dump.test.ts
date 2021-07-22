@@ -6,6 +6,8 @@ import { getPyAstDump } from "../support/py_ast_dump.ts";
 import { assertEqualsString } from "../support/diff.ts";
 import { runTests } from "./run_tests_helper.ts";
 
+const unEscape = { n: "\n", r: "\r", t: "\t", "\\": "\\", "'": "'", '"': '"' };
+
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
 async function convertToTs(content: string): Promise<string> {
     let pyAstDump = await getPyAstDump(content, { indent: 4, include_attributes: true, js: true });
@@ -32,7 +34,12 @@ async function convertToTs(content: string): Promise<string> {
         )
         // use bigint for dumping
         .replace(/new astnodes.Constant\(\n(\s+\-?[0-9]+)/g, (_m, m1) => `new astnodes.Constant(\nnew pyInt(${m1}n)`)
-        .replace(/new astnodes.Constant\(\n(\s+['"].*['"])/g, (_m, m1) => `new astnodes.Constant(\nnew pyStr(${m1})`);
+        .replace(/new astnodes.Constant\(\n(\s+['"].*(['"]))/g, (_m, m1: string, quote: string) => {
+            // the inverse of the pyStr.toString() method
+            const toUnescape = new RegExp(`\\\\([\\n\\r\\\\\t${quote}])`, "g");
+            m1 = m1.replace(toUnescape, (_m, m1) => unEscape[m1 as keyof typeof unEscape]);
+            return `new astnodes.Constant(\nnew pyStr(${m1})`;
+        });
     // we might also need to make id a string constant or maybe just make pyStr a js string
     return pyAstDump;
 }
