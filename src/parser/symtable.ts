@@ -73,8 +73,8 @@ export enum BlockType {
     AnnotationBlock = "annotation",
 }
 
-function append<T>(left: Set<T>, right: Set<T>) {
-    for (const v of right.values()) {
+function inplaceMerge<T>(left: Set<T>, right: Set<T>) {
+    for (const v of right) {
         left.add(v);
     }
 }
@@ -361,7 +361,7 @@ export class SymbolTableScope {
 
     get_parameters(): string[] {
         assert(this.get_type() === "function", "get_parameters only valid for function scopes");
-        if (!this._funcParams) {
+        if (this._funcParams === null) {
             this._funcParams = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_PARAM));
         }
         return this._funcParams;
@@ -378,7 +378,7 @@ export class SymbolTableScope {
 
     get_globals(): string[] {
         assert(this.get_type() === "function", "get_globals only valid for function scopes");
-        if (!this._funcGlobals) {
+        if (this._funcGlobals === null) {
             this._funcGlobals = this._identsMatching(function (x) {
                 const masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
                 return masked === SYMTAB_CONSTS.GLOBAL_IMPLICIT || masked === SYMTAB_CONSTS.GLOBAL_EXPLICIT;
@@ -387,16 +387,16 @@ export class SymbolTableScope {
         return this._funcGlobals;
     }
 
-    get_nonlocals() {
-        if (!this._funcNonlocals) {
+    get_nonlocals(): string[] {
+        if (this._funcNonlocals === null) {
             this._funcNonlocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_NONLOCAL));
         }
         return this._funcNonlocals;
     }
 
-    get_frees() {
+    get_frees(): string[] {
         assert(this.get_type() === "function", "get_frees only valid for function scopes");
-        if (!this._funcFrees) {
+        if (this._funcFrees === null) {
             this._funcFrees = this._identsMatching(function (x) {
                 const masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
                 return masked === SYMTAB_CONSTS.FREE;
@@ -407,12 +407,8 @@ export class SymbolTableScope {
 
     get_methods() {
         assert(this.get_type() === "class", "get_methods only valid for class scopes");
-        if (!this._classMethods) {
-            if (this.children) {
-                this._classMethods = this.children.map((c) => c.name);
-            } else {
-                this._classMethods = [];
-            }
+        if (this._classMethods === null) {
+            this._classMethods = this.children?.map((c) => c.name) ?? [];
         }
         return this._classMethods;
     }
@@ -528,12 +524,12 @@ export class SymbolTableScope {
 
         this.analyzeBlock(tempBound, tempFree, tempGlobal);
 
-        append(childFree, tempFree);
+        inplaceMerge(childFree, tempFree);
     }
 
     analyzeCells(scopes: { [name: string]: number }, free: Set<string>) {
         for (const [name, scope] of Object.entries(scopes)) {
-            if (scope != SYMTAB_CONSTS.LOCAL) {
+            if (scope !== SYMTAB_CONSTS.LOCAL) {
                 continue;
             }
 
@@ -616,11 +612,11 @@ export class SymbolTableScope {
         */
         if (this.blockType === BlockType.ClassBlock) {
             /* Pass down known globals */
-            append(newglobal, global);
+            inplaceMerge(newglobal, global);
 
             /* Pass down previously bound symbols */
             if (bound) {
-                append(newbound, bound);
+                inplaceMerge(newbound, bound);
             }
         }
 
@@ -632,14 +628,14 @@ export class SymbolTableScope {
         if (this.blockType !== BlockType.ClassBlock) {
             /* Add function locals to bound set */
             if (this.blockType === BlockType.FunctionBlock) {
-                append(newbound, local);
+                inplaceMerge(newbound, local);
             }
             /* Pass down previously bound symbols */
             if (bound) {
-                append(newbound, bound);
+                inplaceMerge(newbound, bound);
             }
             /* Pass down known globals */
-            append(newglobal, global);
+            inplaceMerge(newglobal, global);
         } else {
             /* Special-case __class__ */
             newbound.add("__class__");
@@ -658,7 +654,7 @@ export class SymbolTableScope {
             }
         }
 
-        append(newfree, allfree);
+        inplaceMerge(newfree, allfree);
 
         /* Check if any local variables must be converted to cell variables */
         if (this.blockType === BlockType.FunctionBlock) {
@@ -670,7 +666,7 @@ export class SymbolTableScope {
         /* Records the results of the analysis in the symbol table entry */
         this.updateSymbols(scopes, bound, newfree, this.blockType === BlockType.ClassBlock);
 
-        append(free, newfree);
+        inplaceMerge(free, newfree);
     }
 }
 
@@ -687,7 +683,7 @@ function mangle(privateobj: string | null, ident: string) {
           TODO(jhylton): Decide whether we want to support
           mangling of the module name, e.g. __M.X.
        */
-    if (ident.endsWith("__") || ident.indexOf(".") !== -1) {
+    if (ident.endsWith("__") || ident.includes(".")) {
         return ident; /* Don't mangle __whatever__ */
     }
 
@@ -798,7 +794,7 @@ export class SymbolTable {
     recordDirective(name: string, lineno: number, colOffset: number) {
         assert(this.cur !== null);
 
-        if (!this.cur.directives) {
+        if (this.cur.directives === null) {
             this.cur.directives = [];
         }
 
@@ -864,7 +860,7 @@ export class SymbolTable {
     handleNamedExpr(e: NamedExpr) {
         assert(this.cur !== null, "need current scope for namedExpr");
         if (this.cur.comp_iter_expr > 0) {
-            // @todo -- needs line number etc
+            /** @todo -- needs line number etc */
             throw new pySyntaxError("Assignment isn't allowed in a comprehension iterable expression", [
                 this.filename,
                 e.lineno,
@@ -1059,10 +1055,10 @@ export class SymbolTable {
                 break;
             case ASTKind.Lambda: {
                 const lambda = e as Lambda;
-                if (lambda.args.defaults) {
+                if (lambda.args.defaults.length !== 0) {
                     this.SEQ(this.visitExpr, lambda.args.defaults);
                 }
-                if (lambda.args.kw_defaults) {
+                if (lambda.args.kw_defaults.length !== 0) {
                     this.SEQ(this.visitExpr, lambda.args.kw_defaults);
                 }
                 this.enterBlock(
@@ -1265,10 +1261,10 @@ export class SymbolTable {
         //                           o->end_col_offset)) {
         //     VISIT_QUIT(st, 0);
         // }
-        if (a.posonlyargs) {
+        if (a.posonlyargs.length !== 0) {
             this.visitArgannotations(a.posonlyargs);
         }
-        if (a.args) {
+        if (a.args.length !== 0) {
             this.visitArgannotations(a.args);
         }
         if (a.vararg && a.vararg.annotation) {
@@ -1277,7 +1273,7 @@ export class SymbolTable {
         if (a.kwarg && a.kwarg.annotation) {
             this.visitExpr(a.kwarg.annotation);
         }
-        if (a.kwonlyargs) {
+        if (a.kwonlyargs.length !== 0) {
             this.visitArgannotations(a.kwonlyargs);
         }
         // if (future_annotations && !symtable_exit_block(st)) {
@@ -1299,9 +1295,9 @@ export class SymbolTable {
            operation.  It is different than a->name when a->name is a
            dotted package name (e.g. spam.eggs)
         */
-        const name = a.asname === null ? a.name : a.asname;
+        const name = a.asname ?? a.name;
         const dot = name.indexOf(".");
-        let storeName = null;
+        let storeName: string;
 
         if (dot !== -1) {
             storeName = name.substring(0, dot);
@@ -1346,10 +1342,10 @@ export class SymbolTable {
             case ASTKind.FunctionDef: {
                 const funcDef = s as FunctionDef;
                 this.addDef(funcDef.name, SYMTAB_CONSTS.DEF_LOCAL);
-                if (funcDef.args.defaults) {
+                if (funcDef.args.defaults.length !== 0) {
                     this.SEQ(this.visitExpr, funcDef.args.defaults);
                 }
-                if (funcDef.decorator_list) {
+                if (funcDef.decorator_list.length !== 0) {
                     this.SEQ(this.visitExpr, funcDef.decorator_list);
                 }
                 this.visitAnnotations(funcDef.args, funcDef.returns);
@@ -1364,7 +1360,7 @@ export class SymbolTable {
                 this.addDef(classDef.name, SYMTAB_CONSTS.DEF_LOCAL);
                 this.SEQ(this.visitExpr, classDef.bases);
                 this.SEQ(this.visitKeyword, classDef.keywords);
-                if (classDef.decorator_list) {
+                if (classDef.decorator_list.length !== 0) {
                     this.SEQ(this.visitExpr, classDef.decorator_list);
                 }
                 this.enterBlock(
@@ -1448,7 +1444,7 @@ export class SymbolTable {
                 this.visitExpr(for_.target);
                 this.visitExpr(for_.iter);
                 this.SEQ(this.visitStmt, for_.body);
-                if (for_.orelse) this.SEQ(this.visitStmt, for_.orelse);
+                if (for_.orelse.length !== 0) this.SEQ(this.visitStmt, for_.orelse);
                 break;
             }
             case ASTKind.While: {
@@ -1456,7 +1452,7 @@ export class SymbolTable {
 
                 this.visitExpr(while_.test);
                 this.SEQ(this.visitStmt, while_.body);
-                if (while_.orelse) this.SEQ(this.visitStmt, while_.orelse);
+                if (while_.orelse.length !== 0) this.SEQ(this.visitStmt, while_.orelse);
                 break;
             }
             case ASTKind.If: {
@@ -1465,7 +1461,7 @@ export class SymbolTable {
                 /* XXX if 0: and lookup_yield() hacks */
                 this.visitExpr(if_.test);
                 this.SEQ(this.visitStmt, if_.body);
-                if (if_.orelse) this.SEQ(this.visitStmt, if_.orelse);
+                if (if_.orelse.length !== 0) this.SEQ(this.visitStmt, if_.orelse);
                 break;
             }
             case ASTKind.Raise: {
@@ -1589,15 +1585,16 @@ export class SymbolTable {
                 const asyncFunctionDef = s as AsyncFunctionDef;
 
                 this.addDef(asyncFunctionDef.name, SYMTAB_CONSTS.DEF_LOCAL);
-                if (asyncFunctionDef.args.defaults) {
+                if (asyncFunctionDef.args.defaults.length !== 0) {
                     this.SEQ(this.visitExpr, asyncFunctionDef.args.defaults);
                 }
-                if (asyncFunctionDef.args.kw_defaults) {
+                if (asyncFunctionDef.args.kw_defaults.length !== 0) {
                     this.SEQ(this.visitExpr, asyncFunctionDef.args.kw_defaults);
                 }
                 this.visitAnnotations(asyncFunctionDef.args, asyncFunctionDef.returns);
 
-                if (asyncFunctionDef.decorator_list) this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
+                if (asyncFunctionDef.decorator_list.length !== 0)
+                    this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
 
                 this.enterBlock(
                     asyncFunctionDef.name,
@@ -1625,7 +1622,7 @@ export class SymbolTable {
                 this.visitExpr(asyncFor.target);
                 this.visitExpr(asyncFor.iter);
                 this.SEQ(this.visitStmt, asyncFor.body);
-                if (asyncFor.orelse) this.SEQ(this.visitStmt, asyncFor.orelse);
+                if (asyncFor.orelse.length !== 0) this.SEQ(this.visitStmt, asyncFor.orelse);
                 break;
             }
             default:
