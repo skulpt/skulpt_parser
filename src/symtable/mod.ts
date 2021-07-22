@@ -3,7 +3,9 @@ import { ASTKind } from "../ast/astnodes.ts";
 import { SymbolTable } from "./SymbolTable.ts";
 import { BlockType } from "./util.ts";
 
-export { SymbolTable };
+export { SymbolTable, BlockType };
+export type { Symbol_ } from "./Symbol.ts";
+export type { SymbolTableScope } from "./SymbolTableScope.ts";
 
 // deno-lint-ignore no-explicit-any
 export function buildSymbolTable(mod: mod, filename: string, future: any): SymbolTable {
