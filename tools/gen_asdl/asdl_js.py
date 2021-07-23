@@ -399,7 +399,7 @@ export type constant = pyConstant;
 """
     )
 
-    f.write("export enum ASTKind {")
+    f.write("export const enum ASTKind {")
     k = KindsVisitor(f)
     k.visit(mod)
     f.write("}")

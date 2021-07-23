@@ -1,7 +1,7 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-export enum BlockType {
+export const enum BlockType {
     ModuleBlock = "module",
     FunctionBlock = "function",
     ClassBlock = "class",
@@ -16,7 +16,7 @@ export function inplaceMerge<T>(left: Set<T>, right: Set<T>) {
 
 const LEADING_UNDERSCORE_REGEX = /^_+/;
 
-export enum SYMTAB_CONSTS {
+export const enum SYMTAB_CONSTS {
     DEF_GLOBAL = 1 /* global stmt */,
     DEF_LOCAL = 2 /* assignment in code block */,
     DEF_PARAM = 2 << 1 /* formal parameter */,

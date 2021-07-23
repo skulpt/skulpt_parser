@@ -10,7 +10,7 @@ import { pyConstant } from "./constants.ts";
 /** @todo should identifier be a python type? */
 export type identifier = string;
 export type constant = pyConstant;
-export enum ASTKind {
+export const enum ASTKind {
     mod,
     Module,
     Interactive,
