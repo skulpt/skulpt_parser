@@ -302,9 +302,9 @@ class PythonParserGenerator(ParserGenerator, GrammarVisitor):
             self.print(subheader.format(filename=filename))
         self.print(
             """
-type ParseResult<T> = T extends typeof StartRule.FSTRING_INPUT | typeof StartRule.EVAL_INPUT ? expr : mod;
+type ParseResult<T> = T extends StartRule.FSTRING_INPUT | StartRule.EVAL_INPUT ? expr : mod;
 
-export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> extends Parser {
+export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends Parser {
     start_rule: StartRule;
     flags: number;
 
@@ -356,7 +356,8 @@ export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> 
         self.print("export const KEYWORDS = new Set([")
         with self.indent():
             for name in self.callmakervisitor.keyword_cache:
-                self.print(f'"{name}",')
+                if name != "print":
+                    self.print(f'"{name}",')
         self.print("]);")
         self.print()
 
