@@ -119,8 +119,6 @@ export class expr_context extends AST {
 }
 expr_context.prototype._enum = true;
 
-export type expr_contextKind = typeof expr_context | typeof LoadType | typeof StoreType | typeof DelType;
-
 export class LoadType extends expr_context {
     static _name = "Load";
 }
@@ -140,8 +138,6 @@ export class boolop extends AST {
 }
 boolop.prototype._enum = true;
 
-export type boolopKind = typeof boolop | typeof AndType | typeof OrType;
-
 export class AndType extends boolop {
     static _name = "And";
 }
@@ -156,22 +152,6 @@ export class operator extends AST {
     static _name = "operator";
 }
 operator.prototype._enum = true;
-
-export type operatorKind =
-    | typeof operator
-    | typeof AddType
-    | typeof SubType
-    | typeof MultType
-    | typeof MatMultType
-    | typeof DivType
-    | typeof ModType
-    | typeof PowType
-    | typeof LShiftType
-    | typeof RShiftType
-    | typeof BitOrType
-    | typeof BitXorType
-    | typeof BitAndType
-    | typeof FloorDivType;
 
 export class AddType extends operator {
     static _name = "Add";
@@ -232,8 +212,6 @@ export class unaryop extends AST {
 }
 unaryop.prototype._enum = true;
 
-export type unaryopKind = typeof unaryop | typeof InvertType | typeof NotType | typeof UAddType | typeof USubType;
-
 export class InvertType extends unaryop {
     static _name = "Invert";
 }
@@ -256,19 +234,6 @@ export class cmpop extends AST {
     static _name = "cmpop";
 }
 cmpop.prototype._enum = true;
-
-export type cmpopKind =
-    | typeof cmpop
-    | typeof EqType
-    | typeof NotEqType
-    | typeof LtType
-    | typeof LtEType
-    | typeof GtType
-    | typeof GtEType
-    | typeof IsType
-    | typeof IsNotType
-    | typeof InType
-    | typeof NotInType;
 
 export class EqType extends cmpop {
     static _name = "Eq";
@@ -315,8 +280,6 @@ export const NotIn = new NotInType();
 export class mod extends AST {
     static _name = "mod";
 }
-
-export type modKind = typeof mod | typeof Module | typeof Interactive | typeof Expression | typeof FunctionType;
 
 export class Module extends mod {
     static _name = "Module";
@@ -382,35 +345,6 @@ export class stmt extends AST {
     }
 }
 stmt.prototype._attributes = _attrs;
-
-export type stmtKind =
-    | typeof stmt
-    | typeof FunctionDef
-    | typeof AsyncFunctionDef
-    | typeof ClassDef
-    | typeof Return
-    | typeof Delete
-    | typeof Assign
-    | typeof AugAssign
-    | typeof AnnAssign
-    | typeof For
-    | typeof AsyncFor
-    | typeof While
-    | typeof If
-    | typeof With
-    | typeof AsyncWith
-    | typeof Raise
-    | typeof Try
-    | typeof Assert
-    | typeof Import
-    | typeof ImportFrom
-    | typeof Global
-    | typeof Nonlocal
-    | typeof Expr
-    | typeof Pass
-    | typeof Break
-    | typeof Continue
-    | typeof Debugger;
 
 export class FunctionDef extends stmt {
     static _name = "FunctionDef";
@@ -838,36 +772,6 @@ export class expr extends AST {
 }
 expr.prototype._attributes = _attrs;
 
-export type exprKind =
-    | typeof expr
-    | typeof BoolOp
-    | typeof NamedExpr
-    | typeof BinOp
-    | typeof UnaryOp
-    | typeof Lambda
-    | typeof IfExp
-    | typeof Dict
-    | typeof Set_
-    | typeof ListComp
-    | typeof SetComp
-    | typeof DictComp
-    | typeof GeneratorExp
-    | typeof Await
-    | typeof Yield
-    | typeof YieldFrom
-    | typeof Compare
-    | typeof Call
-    | typeof FormattedValue
-    | typeof JoinedStr
-    | typeof Constant
-    | typeof Attribute
-    | typeof Subscript
-    | typeof Starred
-    | typeof Name
-    | typeof List
-    | typeof Tuple
-    | typeof Slice;
-
 export class BoolOp extends expr {
     static _name = "BoolOp";
     op: boolop;
@@ -1262,8 +1166,6 @@ export class excepthandler extends AST {
 }
 excepthandler.prototype._attributes = _attrs;
 
-export type excepthandlerKind = typeof excepthandler | typeof ExceptHandler;
-
 export class ExceptHandler extends excepthandler {
     static _name = "ExceptHandler";
     type: expr | null;
@@ -1406,8 +1308,6 @@ withitem.prototype._kind = ASTKind.withitem;
 export class type_ignore extends AST {
     static _name = "type_ignore";
 }
-
-export type type_ignoreKind = typeof type_ignore | typeof TypeIgnore;
 
 export class TypeIgnore extends type_ignore {
     static _name = "TypeIgnore";

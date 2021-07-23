@@ -3,33 +3,27 @@
 
 // deno-lint-ignore-file camelcase no-fallthrough
 
+import type { Attrs, expr_context, expr, stmt, keyword, JoinedStr, Compare, cmpop } from "../ast/astnodes.ts";
+
 import {
-    Attrs,
+    alias,
+    arg,
+    arguments_,
+    ASTKind,
+    AsyncFunctionDef,
+    Attribute,
+    Call,
     ClassDef,
-    expr_context,
-    expr,
+    Constant,
+    FunctionDef,
+    In,
+    List,
+    Load,
     Module,
     Name,
-    stmt,
-    Call,
-    Load,
-    Constant,
-    arguments_,
-    arg,
-    keyword,
-    FunctionDef,
-    AsyncFunctionDef,
     Starred,
-    alias,
-    Attribute,
     Subscript,
-    List,
     Tuple,
-    JoinedStr,
-    Compare,
-    cmpop,
-    In,
-    ASTKind,
 } from "../ast/astnodes.ts";
 import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../ast/constants.ts";
 import { pySyntaxError } from "../ast/errors.ts";
@@ -274,7 +268,7 @@ function _set_starred_context(p: Parser, e: Starred, ctx: expr_context): Starred
 
 /* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
 export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
-    assert(expr !== null);
+    assert(e !== null);
     let newExpr: expr;
     switch (e._kind) {
         case ASTKind.Name:
