@@ -116,9 +116,9 @@ const Triple = group(StringPrefix + "'''", StringPrefix + '"""');
 // Sorting in reverse order puts the long operators before their prefixes.
 // Otherwise if = came before ==, == would get recognized as two instances
 // of =.
-const EXACT_TOKENS_SORTED = [...EXACT_TOKEN_TYPES.keys()].sort();
-const Special = group(...EXACT_TOKENS_SORTED.reverse().map((t) => regexEscape(t)));
-const Funny = group("\\r?\\n", Special);
+let EXACT_TOKENS_SORTED = [...EXACT_TOKEN_TYPES.keys()].sort();
+let Special = group(...EXACT_TOKENS_SORTED.reverse().map((t) => regexEscape(t)));
+let Funny = group("\\r?\\n", Special);
 
 const ContStr = group(
     StringPrefix + "'[^\\n'\\\\]*(?:\\\\.[^\\n'\\\\]*)*" + group("'", "\\\\\\r?\\n"),
@@ -151,15 +151,37 @@ for (const t of prefixes) {
 
 const tabsize = 8;
 
-const Hexnumber = "0[xX](?:_?[0-9a-fA-F])+";
-const Binnumber = "0[bB](?:_?[01])+";
-const Octnumber = "0[oO](?:_?[0-7])+";
-const Decnumber = "(?:0(?:_?0)*|[1-9](?:_?[0-9])*)";
-const Intnumber = group(Hexnumber, Binnumber, Octnumber, Decnumber);
-const Number_ = group(Imagnumber, Floatnumber, Intnumber);
-const PseudoToken = Whitespace + capturegroup(PseudoExtras, Number_, Funny, ContStr, Name);
+let Hexnumber = "0[xX](?:_?[0-9a-fA-F])+";
+let Binnumber = "0[bB](?:_?[01])+";
+let Octnumber = "0[oO](?:_?[0-7])+";
+let Decnumber = "(?:0(?:_?0)*|[1-9](?:_?[0-9])*)";
+let Intnumber = group(Hexnumber, Binnumber, Octnumber, Decnumber);
+let Number_ = group(Imagnumber, Floatnumber, Intnumber);
+let PseudoToken = Whitespace + capturegroup(PseudoExtras, Number_, Funny, ContStr, Name);
 
-const PseudoTokenRegexp = new RegExp(PseudoToken);
+let PseudoTokenRegexp = new RegExp(PseudoToken);
+
+export function _switchVersion(py3: boolean) {
+    if (py3) {
+        EXACT_TOKEN_TYPES.delete("<>");
+    } else {
+        EXACT_TOKEN_TYPES.set("<>", EXACT_TOKEN_TYPES.get("!=") as tokens);
+    }
+
+    EXACT_TOKENS_SORTED = [...EXACT_TOKEN_TYPES.keys()].sort();
+    Special = group(...EXACT_TOKENS_SORTED.reverse().map((t) => regexEscape(t)));
+    Funny = group("\\r?\\n", Special);
+
+    const LSuffix = py3 ? "" : "[Ll]?";
+    Hexnumber = "0[xX](?:_?[0-9a-fA-F])+" + LSuffix;
+    Binnumber = "0[bB](?:_?[01])+" + LSuffix;
+    Octnumber = `0[oO]${py3 ? "" : "?"}(?:_?[0-7])+` + LSuffix; // SilentOctal in py2 mode
+    Decnumber = "(?:0(?:_?0)*|[1-9](?:_?[0-9])*)" + LSuffix;
+    Intnumber = group(Hexnumber, Binnumber, Octnumber, Decnumber);
+    Number_ = group(Imagnumber, Floatnumber, Intnumber);
+    PseudoToken = Whitespace + capturegroup(PseudoExtras, Number_, Funny, ContStr, Name);
+    PseudoTokenRegexp = new RegExp(PseudoToken);
+}
 
 const UnknownFile = "<unknown>";
 

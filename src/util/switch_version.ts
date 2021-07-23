@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { KEYWORDS } from "../parser/generated_parser.ts";
+import { _switchVersion as switchTokens } from "../tokenize/tokenize.ts";
 
 const versionInfo = { python3: true };
 
@@ -14,19 +15,11 @@ export function switchVersion(python3 = true) {
         // no need to switch
         return;
     }
-    /**
-     * @todo - helper function to switch somethings to py2
-     *
-     * py2
-     * include L suffix for long literals
-     * include silentOctals
-     * include <> operator in tokens
-     */
-
     if (python3) {
         KEYWORDS.delete("print");
     } else {
         KEYWORDS.add("print");
     }
+    switchTokens(python3);
     versionInfo.python3 = python3;
 }
