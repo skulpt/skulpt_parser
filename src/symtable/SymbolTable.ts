@@ -6,14 +6,14 @@ import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "../util/assert.ts";
 import { SymbolTableScope } from "./SymbolTableScope.ts";
-import { SYMTAB_CONSTS, mangle, BlockType, FlagMap } from "./util.ts";
+import { SYMTAB_CONSTS, mangle, BlockType, NameToFlag } from "./util.ts";
 
 export class SymbolTable {
     filename: string;
     cur: SymbolTableScope | null = null;
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
-    global: FlagMap = {};
+    global: NameToFlag = {};
     private: string | null = null;
     blocks = new Map<astnode.AST, SymbolTableScope>();
 
@@ -126,7 +126,6 @@ export class SymbolTable {
             /* If we find a BlockType.FunctionBlock entry, add as astnode.GLOBAL/LOCAL or NONLOCAL/LOCAL */
             if (ste.blockType === BlockType.FunctionBlock) {
                 const targetInScope = ste.getSymbol(targetName);
-                console.log(targetName, targetInScope);
                 if (targetInScope & SYMTAB_CONSTS.DEF_GLOBAL) {
                     this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL);
                 } else {

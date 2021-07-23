@@ -4,7 +4,7 @@ import { buildSymbolTable, SymbolTableScope } from "../src/symtable/mod.ts";
 
 import { runParserFromString } from "../src/parser/parse.ts";
 import { runTests } from "./run_tests_helper.ts";
-import { assert, assertEquals, assertThrows } from "https://deno.land/std@0.99.0/testing/asserts.ts";
+import { assert, assertEquals, assertThrows } from "../deps.ts";
 
 async function doTest(source: string) {
     const pyDump = await getPySymTableDump(source);

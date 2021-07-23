@@ -6,7 +6,7 @@ import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "../util/assert.ts";
 import type { SymbolTable } from "./SymbolTable.ts";
 import { Symbol_ } from "./Symbol.ts";
-import { BlockType, SYMTAB_CONSTS, inplaceMerge, FlagMap } from "./util.ts";
+import { BlockType, SYMTAB_CONSTS, inplaceMerge, NameToFlag } from "./util.ts";
 
 type Directive = [string, number, number];
 
@@ -34,7 +34,7 @@ export class SymbolTableScope {
     comprehension = false;
     coroutine = false;
     needsClassClosure = false;
-    symbols: FlagMap = {};
+    symbols: NameToFlag = {};
     symbolObjectCache = new Map<string, Symbol_>();
     _funcLocals: string[] | null = null;
     _funcParams: string[] | null = null;
@@ -96,9 +96,7 @@ export class SymbolTableScope {
     }
 
     get_identifiers() {
-        return this.identsMatching(function () {
-            return true;
-        });
+        return this.identsMatching(() => true);
     }
 
     getSymbol(name: string): number {
@@ -111,16 +109,16 @@ export class SymbolTableScope {
             return this.symbolObjectCache.get(name)!;
         }
 
-        if (!(name in this.symbols)) {
+        const flag = this.symbols[name];
+        if (flag === undefined) {
             throw new Error(`symbol ('${name}') not found!`);
         }
 
-        this.symbolObjectCache.set(
-            name,
-            new Symbol_(name, this.symbols[name], this.checkChildren(name), this.name === "top")
-        );
+        const symbol = new Symbol_(name, this.symbols[name], this.checkChildren(name), this.name === "top");
 
-        return this.symbolObjectCache.get(name)!;
+        this.symbolObjectCache.set(name, symbol);
+
+        return symbol;
     }
 
     get_symbols() {
@@ -230,7 +228,7 @@ export class SymbolTableScope {
     global.  A name that was global can be changed to local.
     */
     analyzeName(
-        scopes: FlagMap,
+        scopes: NameToFlag,
         name: string,
         flags: number,
         bound: Set<string> | null,
@@ -313,7 +311,7 @@ export class SymbolTableScope {
         inplaceMerge(childFree, tempFree);
     }
 
-    analyzeCells(scopes: FlagMap, free: Set<string>) {
+    analyzeCells(scopes: NameToFlag, free: Set<string>) {
         for (const [name, scope] of Object.entries(scopes)) {
             if (scope !== SYMTAB_CONSTS.LOCAL) {
                 continue;
@@ -331,7 +329,7 @@ export class SymbolTableScope {
         }
     }
 
-    updateSymbols(scopes: FlagMap, bound: Set<string> | null, free: Set<string>, classFlag: boolean) {
+    updateSymbols(scopes: NameToFlag, bound: Set<string> | null, free: Set<string>, classFlag: boolean) {
         /* Update scope information for all symbols in this scope */
         for (let [name, flags] of Object.entries(this.symbols)) {
             flags |= scopes[name] << SYMTAB_CONSTS.SCOPE_OFFSET;
@@ -341,7 +339,7 @@ export class SymbolTableScope {
         /* Record not yet resolved free variables from children (if any) */
         const vFree = SYMTAB_CONSTS.FREE << SYMTAB_CONSTS.SCOPE_OFFSET;
 
-        for (const name in free) {
+        for (const name of free) {
             const v = this.symbols[name];
 
             /* Handle symbol that already exists in this scope */
