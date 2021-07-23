@@ -29,6 +29,7 @@ import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../ast/constants.t
 import { pySyntaxError } from "../ast/errors.ts";
 import { DOT, ELLIPSIS } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
+import { assert } from "../util/assert.ts";
 import type { Parser } from "./parser.ts";
 import { FstringParser, parsestr } from "./parse_string.ts";
 import {
@@ -41,20 +42,6 @@ import {
     StarEtc,
     TARGETS_TYPE,
 } from "./pegen_types.ts";
-
-export class InternalAssertionError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "AssertionError";
-    }
-}
-
-/** Make an assertion, if not `true`, then throw. */
-export function assert(expr: unknown, msg = ""): asserts expr {
-    if (!expr) {
-        throw new InternalAssertionError(msg);
-    }
-}
 
 /** see pegen.h for implementation */
 export function NEW_TYPE_COMMENT(_p: Parser, tc: TokenInfo | null): string | null {
@@ -143,7 +130,7 @@ export function get_expr_name(e: expr): string {
         case ASTKind.NamedExpr:
             return "named expression";
         default:
-            throw new Error("unexpected expression in assignment");
+            throw new TypeError("unexpected expression in assignment");
     }
 }
 

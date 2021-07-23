@@ -9,7 +9,7 @@ import { tokenizerFromString } from "../tokenize/mod.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { GeneratedParser } from "./generated_parser.ts";
 import { Parser } from "./parser.ts";
-import { assert } from "./pegen.ts";
+import { assert } from "../util/assert.ts";
 import { StartRule } from "./pegen_types.ts";
 
 // deno-lint-ignore no-control-regex
