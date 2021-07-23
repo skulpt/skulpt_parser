@@ -242,7 +242,7 @@ Deno.test("test_filename_correct", () => {
         assert(false, "no SyntaxError for '" + brokencode + "'");
     }
     checkfilename("def f(x): foo)(", 14); // parse-time
-    checkfilename("def f(x): global x", 10); // symtable-build-time
+    checkfilename("def f(x): global x", 11); // symtable-build-time
     // symtable.symtable("pass", b"spam", "exec")
     // with assertWarns(DeprecationWarning), \
     //         assertRaises(TypeError):

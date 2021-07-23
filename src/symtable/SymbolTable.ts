@@ -39,7 +39,7 @@ export class SymbolTable {
                 throw new pySyntaxError("duplicate argument '" + name + "' in function definition", [
                     this.filename,
                     curSte.lineno,
-                    curSte.colOffset,
+                    curSte.colOffset + 1,
                     "",
                 ]);
             }
@@ -57,7 +57,7 @@ export class SymbolTable {
             if (val & (SYMTAB_CONSTS.DEF_GLOBAL | SYMTAB_CONSTS.DEF_NONLOCAL)) {
                 throw new pySyntaxError(
                     `comprehension inner loop cannot rebind assignment expression target '${name}'`,
-                    [this.filename, curSte.lineno, curSte.colOffset, ""]
+                    [this.filename, curSte.lineno, curSte.colOffset + 1, ""]
                 );
             }
             val |= SYMTAB_CONSTS.DEF_COMP_ITER;
@@ -288,7 +288,7 @@ export class SymbolTable {
                     : e._kind === ASTKind.DictComp
                     ? "'yield' inside dict comprehension"
                     : "'yield' inside generator expression",
-                [this.filename, e.lineno, e.col_offset, ""]
+                [this.filename, e.lineno, e.col_offset + 1, ""]
             );
         }
 
@@ -610,7 +610,7 @@ export class SymbolTable {
                 throw new pySyntaxError("import * only allowed at module level", [
                     this.filename,
                     this.cur.lineno,
-                    this.cur.colOffset,
+                    this.cur.colOffset + 1,
                     "",
                 ]);
             }
@@ -710,7 +710,7 @@ export class SymbolTable {
                             cur & SYMTAB_CONSTS.DEF_GLOBAL
                                 ? `annotated name '${eName.id}' can't be global`
                                 : `annotated name '${eName.id}' can't be nonlocal`,
-                            [this.filename, s.lineno, s.col_offset, ""]
+                            [this.filename, s.lineno, s.col_offset + 1, ""]
                         );
                     }
 
@@ -832,7 +832,7 @@ export class SymbolTable {
                             msg = `name '${name}' is assigned to before global declaration`;
                         }
 
-                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset, ""]);
+                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset + 1, ""]);
                     }
                     this.addDef(name, SYMTAB_CONSTS.DEF_GLOBAL);
                     this.recordDirective(name, s.lineno, s.col_offset);
@@ -862,7 +862,7 @@ export class SymbolTable {
                             msg = `name '${name}' is assigned to before nonlocal declaration`;
                         }
 
-                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset, ""]);
+                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset + 1, ""]);
                     }
                     this.addDef(name, SYMTAB_CONSTS.DEF_NONLOCAL);
                     this.recordDirective(name, s.lineno, s.col_offset);

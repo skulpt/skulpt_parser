@@ -217,7 +217,7 @@ export class SymbolTableScope {
         assert(this.directives);
         for (const [directiveName, lineno, colOffset] of this.directives) {
             if (directiveName === name) {
-                throw new pySyntaxError(errorMessage, [this.filename, lineno, colOffset, ""]);
+                throw new pySyntaxError(errorMessage, [this.filename, lineno, colOffset + 1, ""]);
             }
         }
 
