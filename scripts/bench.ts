@@ -11,7 +11,9 @@
  * deno run -A dist/bundle.min.js tmp.txt
  */
 import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
+import type { expr, mod } from "../src/ast/astnodes.ts";
 import { runParserFromString } from "../src/parser/parse.ts";
+import { buildSymbolTable } from "../src/symtable/mod.ts";
 import { readString } from "../src/tokenize/readline.ts";
 import { tokenize } from "../src/tokenize/tokenize.ts";
 
@@ -32,7 +34,7 @@ const text = Deno.readTextFileSync(filename);
 
 bench({
     name: "parse",
-    runs: 50,
+    runs: 200,
     func(b): void {
         b.start();
         runParserFromString(text);
@@ -42,7 +44,7 @@ bench({
 
 bench({
     name: "tokenize",
-    runs: 50,
+    runs: 200,
     func(b): void {
         b.start();
         [...tokenize(readString(text), filename)];
@@ -50,8 +52,25 @@ bench({
     },
 });
 
+let astSym: mod | expr;
+
+bench({
+    name: "symtable",
+    runs: 200,
+    func(b): void {
+        astSym ??= runParserFromString(text);
+        b.start();
+        buildSymbolTable(astSym, filename);
+        b.stop();
+    },
+});
+
 runBenchmarks({ only: /parse/ }, (p) => {
     if (p.running && p.running.measuredRunsMs.length) {
         console.log(p.running.measuredRunsMs[p.running.measuredRunsMs.length - 1], "ms");
+    } else if (p.results.length) {
+        const res = p.results[0].measuredRunsMs;
+        res.sort((a, b) => a - b);
+        console.log(res[0], res[res.length - 1]);
     }
 });

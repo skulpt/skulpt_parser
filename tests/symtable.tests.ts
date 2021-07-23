@@ -9,7 +9,7 @@ import { assertEquals } from "https://deno.land/std@0.99.0/testing/asserts.ts";
 async function doTest(source: string) {
     const pyDump = await getPySymTableDump(source);
     const jsAST = runParserFromString(source);
-    const symtable = dump(buildSymbolTable(jsAST, "<string>", "exec"));
+    const symtable = dump(buildSymbolTable(jsAST));
 
     assertEquals(symtable, JSON.parse(pyDump));
 }

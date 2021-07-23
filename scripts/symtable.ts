@@ -17,7 +17,7 @@ const { _: args, no_compare: noCompare } = argv;
 
 const filename = getFileNameOrRunTest(args);
 const ast = runParserFromFile(filename);
-const symbolTable = buildSymbolTable(ast, filename, null);
+const symbolTable = buildSymbolTable(ast, filename);
 
 if (noCompare) {
     console.log(symbolTable);
