@@ -111,11 +111,24 @@ export class SymbolTableScope {
             return this.symbolObjectCache.get(name)!;
         }
 
+        if (!(name in this.symbols)) {
+            throw new Error(`symbol ('${name}') not found!`);
+        }
+
         this.symbolObjectCache.set(
             name,
             new Symbol_(name, this.symbols[name], this.checkChildren(name), this.name === "top")
         );
+
         return this.symbolObjectCache.get(name)!;
+    }
+
+    get_symbols() {
+        /*
+        Return a list of *Symbol* instances for
+        names in the table.
+        */
+        return this.get_identifiers().map((ident) => this.lookup(ident));
     }
 
     private checkChildren(name: string): SymbolTableScope[] | null {
@@ -241,7 +254,7 @@ export class SymbolTableScope {
             if (bound === null) {
                 this.errorAtDirective(name, "nonlocal declaration not allowed at module level");
             }
-            if (bound.has(name)) {
+            if (!bound.has(name)) {
                 this.errorAtDirective(name, `no binding for nonlocal '${name}' found`);
             }
             scopes[name] = SYMTAB_CONSTS.FREE;

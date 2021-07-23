@@ -14,17 +14,12 @@ export class SymbolTable {
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
     global: FlagMap = {};
-    curClass: string | null = null;
-    tmpname = 0;
+    private: string | null = null;
     blocks = new Map<astnode.AST, SymbolTableScope>();
 
     // deno-lint-ignore no-explicit-any
     constructor(filename: string, _future: any) {
         this.filename = filename;
-    }
-
-    get private() {
-        return this.curClass;
     }
 
     lookupScope(ast: astnode.AST) {
@@ -131,6 +126,7 @@ export class SymbolTable {
             /* If we find a BlockType.FunctionBlock entry, add as astnode.GLOBAL/LOCAL or NONLOCAL/LOCAL */
             if (ste.blockType === BlockType.FunctionBlock) {
                 const targetInScope = ste.getSymbol(targetName);
+                console.log(targetName, targetInScope);
                 if (targetInScope & SYMTAB_CONSTS.DEF_GLOBAL) {
                     this.addDef(targetName, SYMTAB_CONSTS.DEF_GLOBAL);
                 } else {
@@ -674,10 +670,10 @@ export class SymbolTable {
                     classDef.end_lineno,
                     classDef.end_col_offset
                 );
-                const tmp = this.curClass;
-                this.curClass = classDef.name;
+                const tmp = this.private;
+                this.private = classDef.name;
                 this.SEQ(this.visitStmt, classDef.body);
-                this.curClass = tmp;
+                this.private = tmp;
                 this.exitBlock();
                 break;
             }

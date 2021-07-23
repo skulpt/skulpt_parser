@@ -37,7 +37,7 @@ switch (test) {
         break; // just to keep ts happy
     }
     case "symtable":
-        extra.push("tests/symtable.tests.ts");
+        extra.push("tests/symtable.test.ts");
         break;
     case "dump":
         extra.push("tests/ast_dump.test.ts");
