@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 export enum BlockType {
     ModuleBlock = "module",
     FunctionBlock = "function",

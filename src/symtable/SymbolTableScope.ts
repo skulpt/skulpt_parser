@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import type { AST } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "../parser/pegen.ts";

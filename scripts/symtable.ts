@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file camelcase
 import { Colors, parse } from "../deps.ts";
 import { runParserFromFile } from "../src/parser/parse.ts";

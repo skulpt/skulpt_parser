@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import { esbuild } from "../deps.ts";
 // import * as esbuild from "esbuild";
 // deno run -A scripts/build.ts

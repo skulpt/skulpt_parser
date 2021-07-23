@@ -5,6 +5,7 @@ import { assertEqualsString } from "../support/diff.ts";
 import { runParserFromString } from "../src/parser/parse.ts";
 import { runTests } from "./run_tests_helper.ts";
 
+// deno-lint-ignore camelcase
 const options = { indent: 2, include_attributes: true };
 
 async function doTest(source: string) {

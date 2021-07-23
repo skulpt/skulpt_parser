@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 /*
 Actual values adapted from https://github.com/slevithan/xregexp/blob/master/tools/output/categories.js
 */

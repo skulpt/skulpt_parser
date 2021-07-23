@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import { parse } from "../deps.ts";
 
 const args = parse(Deno.args, { boolean: ["f"], alias: { f: "fail-fast" } });

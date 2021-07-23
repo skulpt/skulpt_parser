@@ -23,3 +23,13 @@ repos:
       rev: v2.3.2 # Use the sha or tag you want to point at
       hooks:
           - id: prettier
+
+    - repo: https://github.com/Lucas-C/pre-commit-hooks
+      rev: v1.1.10
+      hooks:
+          - id: insert-license
+            files: "^(src|scripts)/.*ts$"
+            args:
+                - --detect-license-in-X-top-lines=2
+                - --comment-style
+                - // # defaults to: #

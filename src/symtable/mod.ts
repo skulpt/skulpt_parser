@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import type { Module, Expression, Interactive, mod } from "../ast/astnodes.ts";
 import { ASTKind } from "../ast/astnodes.ts";
 import { SymbolTable } from "./SymbolTable.ts";

@@ -382,6 +382,10 @@ def main(asdlfile, outputfile):
 
     f = open(outputfile, "w")
 
+    with open("./LICENSE.txt", "r") as license:
+        license_prelude = "".join(f"// {line}" for line in license.readlines()) + "\n"
+
+    f.write(license_prelude)
     f.write(auto_gen_msg)
     f.write("/* module that holds all nodes */\n")
     f.write("// deno-lint-ignore-file camelcase\n\n")

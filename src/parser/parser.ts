@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file camelcase
 import { DEDENT, ENDMARKER, INDENT, NAME, NEWLINE, NUMBER, STRING } from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";

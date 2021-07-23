@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import { Colors, parse } from "../deps.ts";
 
 const argv = parse(Deno.args, { string: "_" });

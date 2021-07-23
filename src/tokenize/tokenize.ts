@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file camelcase
 import { w } from "../util/unicode.ts";
 import { initialIsIdentifier } from "../util/str_helpers.ts";

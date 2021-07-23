@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file camelcase
 import { arg, Attrs, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
 
