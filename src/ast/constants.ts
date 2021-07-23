@@ -18,15 +18,15 @@ export const enum ConstantType {
 // deno-lint-ignore no-explicit-any
 export abstract class pyConstant<V = any> {
     abstract type: ConstantType;
-    _v: V;
+    raw: V;
     constructor(v: V) {
-        this._v = v;
+        this.raw = v;
     }
     toString(): string {
-        return String(this._v);
+        return String(this.raw);
     }
     valueOf(): V {
-        return this._v;
+        return this.raw;
     }
 }
 
@@ -44,7 +44,7 @@ function _stringRepr(v: string): string {
 export class pyStr extends pyConstant<string> {
     type = ConstantType.str;
     toString() {
-        return _stringRepr(this._v);
+        return _stringRepr(this.raw);
     }
 }
 
@@ -57,14 +57,14 @@ export class pyInt extends pyConstant<number | bigint> {
 export class pyLong extends pyConstant<number | bigint> {
     type = ConstantType.long;
     toString() {
-        return this._v.toString() + "L";
+        return this.raw.toString() + "L";
     }
 }
 
 export class pyFloat extends pyConstant<number> {
     type = ConstantType.float;
     toString() {
-        const v = this._v;
+        const v = this.raw;
         if ((v > 0 && v < 0.0001) || (v < 0 && v > -0.0001)) {
             return v.toExponential().replace(/(e[-+])([1-9])$/, "$10$2");
         } else {
@@ -82,14 +82,14 @@ export class pyComplex extends pyConstant<{ real: number; imag: number }> {
         super({ real, imag });
     }
     toString() {
-        return this._v.imag + "j";
+        return this.raw.imag + "j";
     }
 }
 
 export class pyBytes extends pyConstant<Uint8Array> {
     type = ConstantType.bytes;
     toString() {
-        return "b" + _stringRepr(new TextDecoder().decode(this._v));
+        return "b" + _stringRepr(new TextDecoder().decode(this.raw));
     }
 }
 
@@ -103,7 +103,7 @@ export class pyNoneType extends pyConstant<null> {
 export class pyBool extends pyConstant<boolean> {
     type = ConstantType.bool;
     toString() {
-        return this._v ? "True" : "False";
+        return this.raw ? "True" : "False";
     }
 }
 
