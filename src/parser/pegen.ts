@@ -1,5 +1,6 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file camelcase no-fallthrough
 
 import {

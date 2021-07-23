@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import type * as astnode from "../ast/astnodes.ts";
 import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";

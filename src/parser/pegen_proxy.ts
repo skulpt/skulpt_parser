@@ -1,5 +1,6 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file no-explicit-any
 import { Colors } from "../../deps.ts";
 import * as pegenReal from "./pegen.ts";

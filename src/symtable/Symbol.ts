@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 import { SymbolTableScope } from "./SymbolTableScope.ts";
 import { SYMTAB_CONSTS } from "./util.ts";
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
+
 const splitLines = /^.*$/gm;
 
 /** takes in a string and retuns a generator that yields each line with the \n character */

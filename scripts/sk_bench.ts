@@ -1,3 +1,6 @@
+// Copyright (c) 2021 the Skulpt Project
+// SPDX-License-Identifier: MIT
+
 /** deno run -A --unstable scripts/sk_bench.ts tmp.txt */
 import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
 // don't make this part of the deps.ts because it's unstable and means an unstable flag everywher

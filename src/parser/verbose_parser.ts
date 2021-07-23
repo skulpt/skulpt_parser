@@ -1,5 +1,6 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
+
 import { tokens } from "../tokenize/token.ts";
 import type { Tokenizer } from "../tokenize/Tokenizer.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";

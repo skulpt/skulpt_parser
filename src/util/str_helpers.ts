@@ -1,5 +1,6 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
+
 // deno-lint-ignore-file camelcase
 import { Ll, Lm, Lo, Lt, Lu, Nl } from "./unicode.ts";
 
