@@ -92,7 +92,6 @@ export interface AST {
     _attributes: string[];
     _enum: boolean;
     _kind: ASTKind;
-    scopeId: number;
 }
 
 export class AST {

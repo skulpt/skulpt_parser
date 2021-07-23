@@ -6,41 +6,43 @@ import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "../util/assert.ts";
 import type { SymbolTable } from "./SymbolTable.ts";
 import { Symbol_ } from "./Symbol.ts";
-import { BlockType, SYMTAB_CONSTS, inplaceMerge } from "./util.ts";
+import { BlockType, SYMTAB_CONSTS, inplaceMerge, NameToFlag } from "./util.ts";
 
-let astScopeCounter = 0;
+type Directive = [string, number, number];
 
 export class SymbolTableScope {
+    table: SymbolTable;
     name: string;
-    varnames: string[];
-    children: SymbolTableScope[] | null;
     blockType: BlockType;
-    isNested = false;
-    hasFree: boolean;
-    childHasFree: boolean;
-    generator: boolean;
-    varargs: boolean;
-    varkeywords: boolean;
-    returnsValue: boolean;
     filename: string;
     lineno: number;
     colOffset: number;
     endLineno: number | null | undefined;
     endColOffset: number | null | undefined;
-    table: SymbolTable;
-    symbols: { [name: string]: number };
+
+    children: SymbolTableScope[] | null = null;
+    varnames: string[] = [];
+    isNested = false;
+    hasFree = false;
+    childHasFree = false; // true if child block has free vars including free refs to globals
+    generator = false;
+    varargs = false;
+    varkeywords = false;
+    returnsValue = false;
+    compIterExpr = 0;
+    compIterTarget = false;
+    comprehension = false;
+    coroutine = false;
+    needsClassClosure = false;
+    symbols: NameToFlag = {};
+    symbolObjectCache = new Map<string, Symbol_>();
     _funcLocals: string[] | null = null;
     _funcParams: string[] | null = null;
     _funcGlobals: string[] | null = null;
     _funcNonlocals: string[] | null = null;
     _funcFrees: string[] | null = null;
     _classMethods: string[] | null = null;
-    comp_iter_expr = 0;
-    comp_iter_target = false;
-    comprehension = false;
-    directives: [string, number, number][] | null = null;
-    coroutine = false;
-    needs_class_closure = false;
+    directives: Directive[] = [];
 
     constructor(
         table: SymbolTable,
@@ -53,36 +55,20 @@ export class SymbolTableScope {
         endLineno?: number | null,
         endColOffset?: number | null
     ) {
+        this.table = table;
         this.name = name;
-        this.varnames = [];
-        this.children = null;
         this.blockType = type;
-
-        this.isNested = false;
-        this.hasFree = false;
-        this.childHasFree = false; // true if child block has free vars including free refs to globals
-        this.generator = false;
-        this.varargs = false;
-        this.varkeywords = false;
-        this.returnsValue = false;
-
         this.filename = filename;
         this.lineno = lineno;
         this.colOffset = colOffset;
         this.endLineno = endLineno;
         this.endColOffset = endColOffset;
 
-        this.table = table;
-
         if (table.cur && (table.cur.isNested || table.cur.blockType === BlockType.FunctionBlock)) {
             this.isNested = true;
         }
 
-        ast.scopeId = astScopeCounter++;
-        table.stss[ast.scopeId] = this;
-
-        // cache of Symbols for returning to other parts of code
-        this.symbols = {};
+        table.blocks.set(ast, this);
     }
 
     get_type() {
@@ -110,9 +96,7 @@ export class SymbolTableScope {
     }
 
     get_identifiers() {
-        return this._identsMatching(function () {
-            return true;
-        });
+        return this.identsMatching(() => true);
     }
 
     getSymbol(name: string): number {
@@ -120,19 +104,32 @@ export class SymbolTableScope {
     }
 
     lookup(name: string): Symbol_ {
-        return new Symbol_(name, this.symbols[name], this.__check_children(name), this.name === "top");
-        // let sym;
-        // if (!(name in this.symbols)) {
-        //     const flags = this.symFlags[name];
-        //     const namespaces = this.__check_children(name);
-        //     sym = this.symbols[name] = new Symbol_(name, flags, namespaces);
-        // } else {
-        //     sym = this.symbols[name];
-        // }
-        // return sym;
+        // return new Symbol_(name, this.symbols[name], this.checkChildren(name), this.name === "top");
+        if (this.symbolObjectCache.has(name)) {
+            return this.symbolObjectCache.get(name)!;
+        }
+
+        const flag = this.symbols[name];
+        if (flag === undefined) {
+            throw new Error(`symbol ('${name}') not found!`);
+        }
+
+        const symbol = new Symbol_(name, this.symbols[name], this.checkChildren(name), this.name === "top");
+
+        this.symbolObjectCache.set(name, symbol);
+
+        return symbol;
     }
 
-    __check_children(name: string): SymbolTableScope[] | null {
+    get_symbols() {
+        /*
+        Return a list of *Symbol* instances for
+        names in the table.
+        */
+        return this.get_identifiers().map((ident) => this.lookup(ident));
+    }
+
+    private checkChildren(name: string): SymbolTableScope[] | null {
         if (this.children) {
             return this.children.filter((c) => c.name === name);
         }
@@ -140,7 +137,7 @@ export class SymbolTableScope {
         return null;
     }
 
-    _identsMatching(f: (flag: number) => boolean): string[] {
+    private identsMatching(f: (flag: number) => boolean): string[] {
         return Object.entries(this.symbols)
             .filter(([_, v]) => f(v))
             .map(([k, _]) => k);
@@ -149,7 +146,7 @@ export class SymbolTableScope {
     get_parameters(): string[] {
         assert(this.get_type() === "function", "get_parameters only valid for function scopes");
         if (this._funcParams === null) {
-            this._funcParams = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_PARAM));
+            this._funcParams = this.identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_PARAM));
         }
         return this._funcParams;
     }
@@ -158,7 +155,7 @@ export class SymbolTableScope {
         if (this._funcLocals === null) {
             const locs = [SYMTAB_CONSTS.LOCAL, SYMTAB_CONSTS.CELL];
             const test = (x: number) => locs.includes((x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK);
-            this._funcLocals = this._identsMatching(test);
+            this._funcLocals = this.identsMatching(test);
         }
         return this._funcLocals;
     }
@@ -166,7 +163,7 @@ export class SymbolTableScope {
     get_globals(): string[] {
         assert(this.get_type() === "function", "get_globals only valid for function scopes");
         if (this._funcGlobals === null) {
-            this._funcGlobals = this._identsMatching(function (x) {
+            this._funcGlobals = this.identsMatching(function (x) {
                 const masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
                 return masked === SYMTAB_CONSTS.GLOBAL_IMPLICIT || masked === SYMTAB_CONSTS.GLOBAL_EXPLICIT;
             });
@@ -176,7 +173,7 @@ export class SymbolTableScope {
 
     get_nonlocals(): string[] {
         if (this._funcNonlocals === null) {
-            this._funcNonlocals = this._identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_NONLOCAL));
+            this._funcNonlocals = this.identsMatching((x) => !!(x & SYMTAB_CONSTS.DEF_NONLOCAL));
         }
         return this._funcNonlocals;
     }
@@ -184,7 +181,7 @@ export class SymbolTableScope {
     get_frees(): string[] {
         assert(this.get_type() === "function", "get_frees only valid for function scopes");
         if (this._funcFrees === null) {
-            this._funcFrees = this._identsMatching(function (x) {
+            this._funcFrees = this.identsMatching(function (x) {
                 const masked = (x >> SYMTAB_CONSTS.SCOPE_OFFSET) & SYMTAB_CONSTS.SCOPE_MASK;
                 return masked === SYMTAB_CONSTS.FREE;
             });
@@ -211,14 +208,14 @@ export class SymbolTableScope {
     dropClassFree(free: Set<string>) {
         free.delete("__class__");
 
-        this.needs_class_closure = true;
+        this.needsClassClosure = true;
     }
 
     errorAtDirective(name: string, errorMessage: string): never {
         assert(this.directives);
         for (const [directiveName, lineno, colOffset] of this.directives) {
             if (directiveName === name) {
-                throw new pySyntaxError(errorMessage, [this.filename, lineno, colOffset, ""]);
+                throw new pySyntaxError(errorMessage, [this.filename, lineno, colOffset + 1, ""]);
             }
         }
 
@@ -231,7 +228,7 @@ export class SymbolTableScope {
     global.  A name that was global can be changed to local.
     */
     analyzeName(
-        scopes: { [name: string]: number },
+        scopes: NameToFlag,
         name: string,
         flags: number,
         bound: Set<string> | null,
@@ -255,7 +252,7 @@ export class SymbolTableScope {
             if (bound === null) {
                 this.errorAtDirective(name, "nonlocal declaration not allowed at module level");
             }
-            if (bound.has(name)) {
+            if (!bound.has(name)) {
                 this.errorAtDirective(name, `no binding for nonlocal '${name}' found`);
             }
             scopes[name] = SYMTAB_CONSTS.FREE;
@@ -314,7 +311,7 @@ export class SymbolTableScope {
         inplaceMerge(childFree, tempFree);
     }
 
-    analyzeCells(scopes: { [name: string]: number }, free: Set<string>) {
+    analyzeCells(scopes: NameToFlag, free: Set<string>) {
         for (const [name, scope] of Object.entries(scopes)) {
             if (scope !== SYMTAB_CONSTS.LOCAL) {
                 continue;
@@ -332,12 +329,7 @@ export class SymbolTableScope {
         }
     }
 
-    updateSymbols(
-        scopes: { [name: string]: number },
-        bound: Set<string> | null,
-        free: Set<string>,
-        classFlag: boolean
-    ) {
+    updateSymbols(scopes: NameToFlag, bound: Set<string> | null, free: Set<string>, classFlag: boolean) {
         /* Update scope information for all symbols in this scope */
         for (let [name, flags] of Object.entries(this.symbols)) {
             flags |= scopes[name] << SYMTAB_CONSTS.SCOPE_OFFSET;
@@ -347,7 +339,7 @@ export class SymbolTableScope {
         /* Record not yet resolved free variables from children (if any) */
         const vFree = SYMTAB_CONSTS.FREE << SYMTAB_CONSTS.SCOPE_OFFSET;
 
-        for (const name in free) {
+        for (const name of free) {
             const v = this.symbols[name];
 
             /* Handle symbol that already exists in this scope */

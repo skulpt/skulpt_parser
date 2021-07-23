@@ -1,6 +1,8 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
+export type NameToFlag = { [name: string]: number };
+
 export const enum BlockType {
     ModuleBlock = "module",
     FunctionBlock = "function",

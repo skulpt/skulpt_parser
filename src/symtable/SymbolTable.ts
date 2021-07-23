@@ -6,31 +6,24 @@ import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "../util/assert.ts";
 import { SymbolTableScope } from "./SymbolTableScope.ts";
-import { SYMTAB_CONSTS, mangle, BlockType } from "./util.ts";
+import { SYMTAB_CONSTS, mangle, BlockType, NameToFlag } from "./util.ts";
 
 export class SymbolTable {
     filename: string;
     cur: SymbolTableScope | null = null;
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
-    global: { [name: string]: number } = {};
-    curClass: string | null = null;
-    tmpname = 0;
-
-    stss: { [scopeId: number]: SymbolTableScope } = {};
+    global: NameToFlag = {};
+    private: string | null = null;
+    blocks = new Map<astnode.AST, SymbolTableScope>();
 
     // deno-lint-ignore no-explicit-any
     constructor(filename: string, _future: any) {
         this.filename = filename;
     }
 
-    get private() {
-        return this.curClass;
-    }
-
-    getStsForAst(ast: astnode.AST) {
-        assert(ast.scopeId !== undefined, "ast wasn't added to st?");
-        const v = this.stss[ast.scopeId];
+    lookupScope(ast: astnode.AST) {
+        const v = this.blocks.get(ast);
         assert(v !== undefined, "unknown sym tab entry");
         return v;
     }
@@ -46,7 +39,7 @@ export class SymbolTable {
                 throw new pySyntaxError("duplicate argument '" + name + "' in function definition", [
                     this.filename,
                     curSte.lineno,
-                    curSte.colOffset,
+                    curSte.colOffset + 1,
                     "",
                 ]);
             }
@@ -55,7 +48,7 @@ export class SymbolTable {
             val = flag;
         }
 
-        if (curSte.comp_iter_target) {
+        if (curSte.compIterTarget) {
             /* This name is an iteration variable in a comprehension,
              * so check for a binding conflict with any named expressions.
              * Otherwise, mark it as an iteration variable so subsequent
@@ -64,7 +57,7 @@ export class SymbolTable {
             if (val & (SYMTAB_CONSTS.DEF_GLOBAL | SYMTAB_CONSTS.DEF_NONLOCAL)) {
                 throw new pySyntaxError(
                     `comprehension inner loop cannot rebind assignment expression target '${name}'`,
-                    [this.filename, curSte.lineno, curSte.colOffset, ""]
+                    [this.filename, curSte.lineno, curSte.colOffset + 1, ""]
                 );
             }
             val |= SYMTAB_CONSTS.DEF_COMP_ITER;
@@ -105,13 +98,7 @@ export class SymbolTable {
     recordDirective(name: string, lineno: number, colOffset: number) {
         assert(this.cur !== null);
 
-        if (this.cur.directives === null) {
-            this.cur.directives = [];
-        }
-
-        const mangled = mangle(this.private, name);
-
-        this.cur.directives.push([mangled, lineno, colOffset]);
+        this.cur.directives.push([mangle(this.private, name), lineno, colOffset]);
     }
 
     extendNamedexprScope(e: astnode.Name) {
@@ -170,7 +157,7 @@ export class SymbolTable {
 
     handleNamedExpr(e: astnode.NamedExpr) {
         assert(this.cur !== null, "need current scope for namedExpr");
-        if (this.cur.comp_iter_expr > 0) {
+        if (this.cur.compIterExpr > 0) {
             throw new pySyntaxError("Assignment isn't allowed in a comprehension iterable expression", [
                 this.filename,
                 e.lineno,
@@ -214,7 +201,7 @@ export class SymbolTable {
          * a nested comprehension or a lambda expression.
          */
         if (prev) {
-            ste.comp_iter_expr = prev.comp_iter_expr;
+            ste.compIterExpr = prev.compIterExpr;
         }
 
         this.cur = ste;
@@ -262,7 +249,7 @@ export class SymbolTable {
         const isGenerator = e._kind === ASTKind.GeneratorExp;
         const outermost = generators[0];
         /* Outermost iterator is evaluated in current scope */
-        this.cur.comp_iter_expr++;
+        this.cur.compIterExpr++;
         this.visitExpr(outermost.iter);
 
         /* Create comprehension scope for the rest */
@@ -278,9 +265,9 @@ export class SymbolTable {
         this.implicitArg(0);
 
         /* Visit iteration variable target, and mark them as such */
-        this.cur.comp_iter_target = true;
+        this.cur.compIterTarget = true;
         this.visitExpr(outermost.target);
-        this.cur.comp_iter_target = false;
+        this.cur.compIterTarget = false;
 
         /* Visit the rest of the comprehension body */
         this.SEQ(this.visitExpr, outermost.ifs);
@@ -300,7 +287,7 @@ export class SymbolTable {
                     : e._kind === ASTKind.DictComp
                     ? "'yield' inside dict comprehension"
                     : "'yield' inside generator expression",
-                [this.filename, e.lineno, e.col_offset, ""]
+                [this.filename, e.lineno, e.col_offset + 1, ""]
             );
         }
 
@@ -334,12 +321,12 @@ export class SymbolTable {
 
     visitComprehension(lc: astnode.comprehension) {
         assert(this.cur);
-        this.cur.comp_iter_target = true;
+        this.cur.compIterTarget = true;
         this.visitExpr(lc.target);
-        this.cur.comp_iter_target = false;
-        this.cur.comp_iter_expr++;
+        this.cur.compIterTarget = false;
+        this.cur.compIterExpr++;
         this.visitExpr(lc.iter);
-        this.cur.comp_iter_expr--;
+        this.cur.compIterExpr--;
         this.SEQ(this.visitExpr, lc.ifs);
         if (lc.is_async) {
             this.cur.coroutine = true;
@@ -622,7 +609,7 @@ export class SymbolTable {
                 throw new pySyntaxError("import * only allowed at module level", [
                     this.filename,
                     this.cur.lineno,
-                    this.cur.colOffset,
+                    this.cur.colOffset + 1,
                     "",
                 ]);
             }
@@ -682,10 +669,10 @@ export class SymbolTable {
                     classDef.end_lineno,
                     classDef.end_col_offset
                 );
-                const tmp = this.curClass;
-                this.curClass = classDef.name;
+                const tmp = this.private;
+                this.private = classDef.name;
                 this.SEQ(this.visitStmt, classDef.body);
-                this.curClass = tmp;
+                this.private = tmp;
                 this.exitBlock();
                 break;
             }
@@ -722,7 +709,7 @@ export class SymbolTable {
                             cur & SYMTAB_CONSTS.DEF_GLOBAL
                                 ? `annotated name '${eName.id}' can't be global`
                                 : `annotated name '${eName.id}' can't be nonlocal`,
-                            [this.filename, s.lineno, s.col_offset, ""]
+                            [this.filename, s.lineno, s.col_offset + 1, ""]
                         );
                     }
 
@@ -844,7 +831,7 @@ export class SymbolTable {
                             msg = `name '${name}' is assigned to before global declaration`;
                         }
 
-                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset, ""]);
+                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset + 1, ""]);
                     }
                     this.addDef(name, SYMTAB_CONSTS.DEF_GLOBAL);
                     this.recordDirective(name, s.lineno, s.col_offset);
@@ -874,7 +861,7 @@ export class SymbolTable {
                             msg = `name '${name}' is assigned to before nonlocal declaration`;
                         }
 
-                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset, ""]);
+                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset + 1, ""]);
                     }
                     this.addDef(name, SYMTAB_CONSTS.DEF_NONLOCAL);
                     this.recordDirective(name, s.lineno, s.col_offset);
