@@ -1,6 +1,6 @@
 import { dump } from "../support/symtable_dump.ts";
 import { getPySymTableDump } from "../support/py_symtable_dump.ts";
-import { buildSymbolTable } from "../src/parser/symtable.ts";
+import { buildSymbolTable } from "../src/symtable/mod.ts";
 
 import { runParserFromString } from "../src/parser/parse.ts";
 import { runTests } from "./run_tests_helper.ts";
