@@ -2,7 +2,7 @@
 import { Colors, parse } from "../deps.ts";
 import { runParserFromFile } from "../src/parser/parse.ts";
 import type { expr, mod } from "../src/ast/astnodes.ts";
-import { buildSymbolTable, SymbolTable } from "../src/parser/symtable.ts";
+import { buildSymbolTable, SymbolTable } from "../src/symtable/mod.ts";
 
 const argv = parse(Deno.args, {
     default: { mode: "exec" } /** @todo this doesn't get passed to the python script */,
