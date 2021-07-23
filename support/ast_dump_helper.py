@@ -13,10 +13,12 @@ parser.add_argument(
     required=False,
     help="are we generating js sanitized version",
 )
+parser.add_argument("--mode", type=str, default="exec", required=False, help="mode")
 
 args = parser.parse_args()
+mode = args.mode
 
-parsed = ast.parse(args.content)
+parsed = ast.parse(args.content, mode=mode)
 indent = args.indent if args.indent != -1 else None
 
 

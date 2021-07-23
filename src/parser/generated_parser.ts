@@ -58,9 +58,9 @@ function CHECK_NULL_ALLOWED<R>(result: R) {
     return result;
 }
 
-type ParseResult<T> = T extends typeof StartRule.FSTRING_INPUT | typeof StartRule.EVAL_INPUT ? expr : mod;
+type ParseResult<T> = T extends StartRule.FSTRING_INPUT | StartRule.EVAL_INPUT ? expr : mod;
 
-export class GeneratedParser<T extends StartRule = typeof StartRule.FILE_INPUT> extends Parser {
+export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends Parser {
     start_rule: StartRule;
     flags: number;
 

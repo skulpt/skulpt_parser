@@ -1,12 +1,23 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-import { parse } from "../deps.ts";
+import { AssertionError, Colors, parse } from "../deps.ts";
 
 const args = parse(Deno.args, { boolean: ["f"], alias: { f: "fail-fast" } });
 const test = args._[0];
 
 const extra = [];
+const validShortnames = ["parse", "pypeg", "symtable", "dump"];
+if (!validShortnames.includes(test as string)) {
+    throw new AssertionError(
+        Colors.bgRed(
+            Colors.white(
+                "Unrecognised shortname for 'vr test', expected one of " +
+                    [...validShortnames].map((name) => `'${name}'`).join(", ")
+            )
+        )
+    );
+}
 
 switch (test) {
     case "parse":
@@ -28,9 +39,7 @@ switch (test) {
     case "symtable":
         extra.push("tests/symtable.tests.ts");
         break;
-    /** @todo the default should be to do nothing here and run all the tests */
     case "dump":
-    default:
         extra.push("tests/ast_dump.test.ts");
         break;
 }

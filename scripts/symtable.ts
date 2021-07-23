@@ -1,54 +1,28 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-// deno-lint-ignore-file camelcase
-import { Colors, parse } from "../deps.ts";
+import { parse } from "../deps.ts";
 import { runParserFromFile } from "../src/parser/parse.ts";
-import type { expr, mod } from "../src/ast/astnodes.ts";
-import { buildSymbolTable, SymbolTable } from "../src/symtable/mod.ts";
+import { buildSymbolTable } from "../src/symtable/mod.ts";
+import { getPySymTableDump } from "../support/py_symtable_dump.ts";
+import { dump } from "../support/symtable_dump.ts";
+import { doCompare, getFileNameOrRunTest } from "./helpers.ts";
 
 const argv = parse(Deno.args, {
-    default: { mode: "exec" } /** @todo this doesn't get passed to the python script */,
-    boolean: ["no_compare", "ignore_attrs"],
-    alias: { mode: "m", no_compare: "nc" },
+    boolean: ["no_compare"],
+    alias: { no_compare: "nc" },
 });
 
-const { _: args, mode, no_compare: _noCompare, ignore_attrs: ignoreAttrs } = argv;
+const { _: args, no_compare: noCompare } = argv;
 
-const _options = { indent: 2, include_attributes: !ignoreAttrs };
+const filename = getFileNameOrRunTest(args);
+const ast = runParserFromFile(filename);
+const symbolTable = buildSymbolTable(ast, filename);
 
-console.assert(args.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pass filename as argument "))));
-
-const filearg = args[0];
-
-let filename: string;
-if (typeof filearg === "number") {
-    filename = `run-tests/t${filearg.toString().padStart(3, "0")}.py`;
-} else {
-    filename = filearg;
+if (noCompare) {
+    console.log(symbolTable);
+    Deno.exit();
 }
 
-let ast: mod | expr | null = null;
-try {
-    ast = runParserFromFile(filename, mode);
-} catch (e) {
-    // include the traceback in our output
-    if (e.traceback) {
-        e.message = e.message + "\n" + e.traceback;
-    }
-    throw e;
-}
-
-let symbolTable: SymbolTable;
-
-try {
-    symbolTable = buildSymbolTable(ast, filename, null);
-} catch (e) {
-    // include the traceback in our output
-    if (e.traceback) {
-        e.message = e.message + "\n" + e.traceback;
-    }
-    throw e;
-}
-
-console.log(symbolTable);
+const jsDump = JSON.stringify(dump(symbolTable), null, 2);
+doCompare(jsDump, filename, getPySymTableDump);

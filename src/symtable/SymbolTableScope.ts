@@ -3,7 +3,7 @@
 
 import type { AST } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
-import { assert } from "../parser/pegen.ts";
+import { assert } from "../util/assert.ts";
 import type { SymbolTable } from "./SymbolTable.ts";
 import { Symbol_ } from "./Symbol.ts";
 import { BlockType, SYMTAB_CONSTS, inplaceMerge } from "./util.ts";

@@ -3,38 +3,33 @@
 
 // deno-lint-ignore-file camelcase no-fallthrough
 
+import type { Attrs, expr_context, expr, stmt, keyword, JoinedStr, Compare, cmpop } from "../ast/astnodes.ts";
+
 import {
-    Attrs,
+    alias,
+    arg,
+    arguments_,
+    ASTKind,
+    AsyncFunctionDef,
+    Attribute,
+    Call,
     ClassDef,
-    expr_context,
-    expr,
+    Constant,
+    FunctionDef,
+    In,
+    List,
+    Load,
     Module,
     Name,
-    stmt,
-    Call,
-    Load,
-    Constant,
-    arguments_,
-    arg,
-    keyword,
-    FunctionDef,
-    AsyncFunctionDef,
     Starred,
-    alias,
-    Attribute,
     Subscript,
-    List,
     Tuple,
-    JoinedStr,
-    Compare,
-    cmpop,
-    In,
-    ASTKind,
 } from "../ast/astnodes.ts";
 import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../ast/constants.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { DOT, ELLIPSIS } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
+import { assert } from "../util/assert.ts";
 import type { Parser } from "./parser.ts";
 import { FstringParser, parsestr } from "./parse_string.ts";
 import {
@@ -47,20 +42,6 @@ import {
     StarEtc,
     TARGETS_TYPE,
 } from "./pegen_types.ts";
-
-export class InternalAssertionError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "AssertionError";
-    }
-}
-
-/** Make an assertion, if not `true`, then throw. */
-export function assert(expr: unknown, msg = ""): asserts expr {
-    if (!expr) {
-        throw new InternalAssertionError(msg);
-    }
-}
 
 /** see pegen.h for implementation */
 export function NEW_TYPE_COMMENT(_p: Parser, tc: TokenInfo | null): string | null {
@@ -149,13 +130,16 @@ export function get_expr_name(e: expr): string {
         case ASTKind.NamedExpr:
             return "named expression";
         default:
-            throw new Error("unexpected expression in assignment");
+            throw new TypeError("unexpected expression in assignment");
     }
 }
 
 export function dummy_name(p: Parser): Name {
-    // we don't care about caching yet, but it's a smart move when we're
-    // creating big ol python string objects for this dummy thing everytime
+    /**
+     * @todo
+     * we don't care about caching yet, but it's a smart move when we're
+     * creating big ol python string objects for this dummy thing everytime
+     */
     return new Name(_create_dummy_identifier(p), Load, 1, 0, 1, 0);
 }
 
@@ -202,7 +186,6 @@ export function seq_flatten<A>(_p: Parser, seqs: A[][]): A[] {
 export function join_names_with_dot(_p: Parser, first_name: Name, second_name: Name): Name {
     const first_identifier = first_name.id;
     const second_identifier = second_name.id;
-    /** @todo if we make these pyStrings we'll have to change this */
     return new Name(first_identifier + "." + second_identifier, Load, ...EXTRA_EXPR(first_name, second_name));
 }
 
@@ -274,7 +257,7 @@ function _set_starred_context(p: Parser, e: Starred, ctx: expr_context): Starred
 
 /* Creates an `expr_ty` equivalent to `expr` but with `ctx` as context */
 export function set_expr_context(p: Parser, e: expr, ctx: expr_context): expr {
-    assert(expr !== null);
+    assert(e !== null);
     let newExpr: expr;
     switch (e._kind) {
         case ASTKind.Name:
@@ -495,7 +478,6 @@ export function concatenate_strings(p: Parser, tokens: TokenInfo[]): JoinedStr |
         bytesmode = this_bytesmode;
         if (fmode) {
             fstringParser.concatFstring(s, 0, s.length, rawmode, 0, t);
-            /** @todo */
         } else if (bytesmode) {
             bytestr += s;
         } else {

@@ -109,13 +109,6 @@ class EmitVisitor(asdl.VisitorBase):
     def emit_tp_name(self, name):
         self.emit(f'static _name = "{clean_name(name)}";', 1, 0)
 
-    def emit_kind_typeofs(self, name, types):
-        kinds = "export type " + name + "Kind = typeof " + name
-        for t in types:
-            kinds += " | typeof " + t.name
-        self.emit(kinds + ";", 0)
-        self.emit("", 0)
-
 
 class KindsVisitor(EmitVisitor):
     def visitModule(self, mod):
@@ -162,7 +155,6 @@ class TypeDefVisitor(EmitVisitor):
             def __init__(self, name):
                 self.name = name
 
-        self.emit_kind_typeofs(name, map(lambda t: T(t.name + "Type"), sum.types))
         for type in sum.types:
             emit(f"export class {type.name + 'Type'} extends {name} {{")
             self.emit_tp_name(type.name)
@@ -191,7 +183,6 @@ class PrototypeVisitor(EmitVisitor):
         else:
             self.emit(f"/* ----- {name} ----- */", 0)
             self.emit_base(name, self.get_args(sum.attributes))
-            self.emit_kind_typeofs(name, sum.types)
 
             for t in sum.types:
                 self.visit(t, name, sum.attributes)
@@ -399,7 +390,7 @@ export type constant = pyConstant;
 """
     )
 
-    f.write("export enum ASTKind {")
+    f.write("export const enum ASTKind {")
     k = KindsVisitor(f)
     k.visit(mod)
     f.write("}")

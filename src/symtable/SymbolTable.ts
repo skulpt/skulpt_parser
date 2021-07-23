@@ -4,7 +4,7 @@
 import type * as astnode from "../ast/astnodes.ts";
 import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
-import { assert } from "../parser/pegen.ts";
+import { assert } from "../util/assert.ts";
 import { SymbolTableScope } from "./SymbolTableScope.ts";
 import { SYMTAB_CONSTS, mangle, BlockType } from "./util.ts";
 
@@ -799,7 +799,7 @@ export class SymbolTable {
                 this.SEQ(
                     this.visitExcepthandler,
                     try_.handlers as astnode.ExceptHandler[]
-                ); /** @todo Update adsl to make `handlers` of type ExceptHandler[] */
+                ); /** @todo Update asdl to make `handlers` of type ExceptHandler[] */
                 this.SEQ(this.visitStmt, try_.finalbody);
                 break;
             }

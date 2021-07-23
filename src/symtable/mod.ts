@@ -11,7 +11,7 @@ export type { Symbol_ } from "./Symbol.ts";
 export type { SymbolTableScope } from "./SymbolTableScope.ts";
 
 // deno-lint-ignore no-explicit-any
-export function buildSymbolTable(mod: mod, filename: string, future: any): SymbolTable {
+export function buildSymbolTable(mod: mod, filename = "<string>", future: any = null): SymbolTable {
     const st = new SymbolTable(filename, future);
     /* Make the initial symbol information gathering pass */
     st.enterBlock("top", BlockType.ModuleBlock, mod, 0, 0);

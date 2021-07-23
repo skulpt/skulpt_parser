@@ -1,4 +1,4 @@
-import { assert } from "../src/parser/pegen.ts";
+import { assert } from "../src/util/assert.ts";
 import type { SymbolTableScope, Symbol_, SymbolTable } from "../src/symtable/mod.ts";
 import { BlockType } from "../src/symtable/mod.ts";
 
