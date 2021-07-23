@@ -4,7 +4,7 @@ import { BlockType } from "../src/symtable/mod.ts";
 
 type Table = { [s: string]: boolean | BlockType | string | number | string[] | Table[] | null };
 
-function symboToDict(symbol: Symbol_): Table {
+function symbolToDict(symbol: Symbol_): Table {
     return {
         name: symbol.get_name(),
         referenced: symbol.is_referenced(),
@@ -51,7 +51,7 @@ function tableToDict(table: SymbolTableScope): Table {
         };
     }
 
-    res["identifiers"] = table.get_identifiers().map((s) => symboToDict(table.lookup(s)));
+    res["identifiers"] = table.get_identifiers().map((s) => symbolToDict(table.lookup(s)));
 
     return res;
 }

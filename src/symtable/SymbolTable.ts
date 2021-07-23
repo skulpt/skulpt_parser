@@ -6,18 +6,17 @@ import { ASTKind, Load } from "../ast/astnodes.ts";
 import { pySyntaxError } from "../ast/errors.ts";
 import { assert } from "../util/assert.ts";
 import { SymbolTableScope } from "./SymbolTableScope.ts";
-import { SYMTAB_CONSTS, mangle, BlockType } from "./util.ts";
+import { SYMTAB_CONSTS, mangle, BlockType, FlagMap } from "./util.ts";
 
 export class SymbolTable {
     filename: string;
     cur: SymbolTableScope | null = null;
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
-    global: { [name: string]: number } = {};
+    global: FlagMap = {};
     curClass: string | null = null;
     tmpname = 0;
-
-    stss: { [scopeId: number]: SymbolTableScope } = {};
+    blocks = new Map<astnode.AST, SymbolTableScope>();
 
     // deno-lint-ignore no-explicit-any
     constructor(filename: string, _future: any) {
@@ -28,9 +27,8 @@ export class SymbolTable {
         return this.curClass;
     }
 
-    getStsForAst(ast: astnode.AST) {
-        assert(ast.scopeId !== undefined, "ast wasn't added to st?");
-        const v = this.stss[ast.scopeId];
+    lookupScope(ast: astnode.AST) {
+        const v = this.blocks.get(ast);
         assert(v !== undefined, "unknown sym tab entry");
         return v;
     }
@@ -55,7 +53,7 @@ export class SymbolTable {
             val = flag;
         }
 
-        if (curSte.comp_iter_target) {
+        if (curSte.compIterTarget) {
             /* This name is an iteration variable in a comprehension,
              * so check for a binding conflict with any named expressions.
              * Otherwise, mark it as an iteration variable so subsequent
@@ -105,13 +103,7 @@ export class SymbolTable {
     recordDirective(name: string, lineno: number, colOffset: number) {
         assert(this.cur !== null);
 
-        if (this.cur.directives === null) {
-            this.cur.directives = [];
-        }
-
-        const mangled = mangle(this.private, name);
-
-        this.cur.directives.push([mangled, lineno, colOffset]);
+        this.cur.directives.push([mangle(this.private, name), lineno, colOffset]);
     }
 
     extendNamedexprScope(e: astnode.Name) {
@@ -170,7 +162,7 @@ export class SymbolTable {
 
     handleNamedExpr(e: astnode.NamedExpr) {
         assert(this.cur !== null, "need current scope for namedExpr");
-        if (this.cur.comp_iter_expr > 0) {
+        if (this.cur.compIterExpr > 0) {
             throw new pySyntaxError("Assignment isn't allowed in a comprehension iterable expression", [
                 this.filename,
                 e.lineno,
@@ -214,7 +206,7 @@ export class SymbolTable {
          * a nested comprehension or a lambda expression.
          */
         if (prev) {
-            ste.comp_iter_expr = prev.comp_iter_expr;
+            ste.compIterExpr = prev.compIterExpr;
         }
 
         this.cur = ste;
@@ -262,7 +254,7 @@ export class SymbolTable {
         const isGenerator = e._kind === ASTKind.GeneratorExp;
         const outermost = generators[0];
         /* Outermost iterator is evaluated in current scope */
-        this.cur.comp_iter_expr++;
+        this.cur.compIterExpr++;
         this.visitExpr(outermost.iter);
 
         /* Create comprehension scope for the rest */
@@ -278,9 +270,9 @@ export class SymbolTable {
         this.implicitArg(0);
 
         /* Visit iteration variable target, and mark them as such */
-        this.cur.comp_iter_target = true;
+        this.cur.compIterTarget = true;
         this.visitExpr(outermost.target);
-        this.cur.comp_iter_target = false;
+        this.cur.compIterTarget = false;
 
         /* Visit the rest of the comprehension body */
         this.SEQ(this.visitExpr, outermost.ifs);
@@ -334,12 +326,12 @@ export class SymbolTable {
 
     visitComprehension(lc: astnode.comprehension) {
         assert(this.cur);
-        this.cur.comp_iter_target = true;
+        this.cur.compIterTarget = true;
         this.visitExpr(lc.target);
-        this.cur.comp_iter_target = false;
-        this.cur.comp_iter_expr++;
+        this.cur.compIterTarget = false;
+        this.cur.compIterExpr++;
         this.visitExpr(lc.iter);
-        this.cur.comp_iter_expr--;
+        this.cur.compIterExpr--;
         this.SEQ(this.visitExpr, lc.ifs);
         if (lc.is_async) {
             this.cur.coroutine = true;
