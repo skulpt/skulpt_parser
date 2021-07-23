@@ -8,17 +8,20 @@ import { getPyAstDump } from "../support/py_ast_dump.ts";
 import { runParserFromFile } from "../src/parser/parse.ts";
 import type { expr, mod } from "../src/ast/astnodes.ts";
 import { doCompare, getFileNameOrRunTest } from "./helpers.ts";
+import { switchVersion } from "../src/util/switch_version.ts";
 
 const argv = parse(Deno.args, {
     default: { mode: "exec" },
-    boolean: ["no_compare", "ignore_attrs"],
-    alias: { mode: "m", no_compare: "nc" },
+    boolean: ["no_compare", "ignore_attrs", "python2"],
+    alias: { mode: "m", no_compare: "nc", python2: "py2" },
 });
 
-const { _: args, mode, no_compare: noCompare, ignore_attrs: ignoreAttrs } = argv;
+const { _: args, mode, no_compare: noCompare, ignore_attrs: ignoreAttrs, python2: py2 } = argv;
 
 const options = { indent: 2, include_attributes: !ignoreAttrs };
 const filename = getFileNameOrRunTest(args);
+
+py2 && switchVersion(!py2);
 
 let ast: mod | expr;
 try {
@@ -32,7 +35,7 @@ try {
 }
 
 const jsDump = dump(ast, options);
-if (noCompare) {
+if (noCompare || py2) {
     console.log(jsDump);
     Deno.exit();
 }

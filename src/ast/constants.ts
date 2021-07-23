@@ -48,9 +48,15 @@ export class pyInt extends pyConstant<number | bigint> {
     static _name = "int";
 }
 
+export class pyLong extends pyConstant<number | bigint> {
+    static _name = "long";
+    toString() {
+        return this._v.toString() + "L";
+    }
+}
+
 export class pyFloat extends pyConstant<number> {
     static _name = "float";
-    /** @todo - make this string a little more involved */
     toString() {
         const v = this._v;
         if ((v > 0 && v < 0.0001) || (v < 0 && v > -0.0001)) {

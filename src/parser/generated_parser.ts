@@ -320,7 +320,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
 
     @memoize
     small_stmt(): stmt | null {
-        // small_stmt: assignment | star_expressions | &'return' return_stmt | &('import' | 'from') import_stmt | &'raise' raise_stmt | 'pass' | &'del' del_stmt | &'yield' yield_stmt | &'assert' assert_stmt | 'break' | 'continue' | &'global' global_stmt | &'nonlocal' nonlocal_stmt
+        // small_stmt: assignment | star_expressions | &'return' return_stmt | &('import' | 'from') import_stmt | &'raise' raise_stmt | 'pass' | &'del' del_stmt | &'yield' yield_stmt | &'assert' assert_stmt | 'break' | 'continue' | &'global' global_stmt | &'nonlocal' nonlocal_stmt | &'print' print_stmt | 'debugger'
         let assert_stmt,
             assignment,
             del_stmt,
@@ -329,6 +329,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             import_stmt,
             keyword,
             nonlocal_stmt,
+            print_stmt,
             raise_stmt,
             return_stmt,
             yield_stmt;
@@ -387,6 +388,15 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         this._mark = mark;
         if (this.positive_lookahead(this.keyword, "nonlocal") && (nonlocal_stmt = this.nonlocal_stmt())) {
             return nonlocal_stmt;
+        }
+        this._mark = mark;
+        if (this.positive_lookahead(this.keyword, "print") && (print_stmt = this.print_stmt())) {
+            return print_stmt;
+        }
+        this._mark = mark;
+        if ((keyword = this.keyword("debugger"))) {
+            const EXTRA = this.extra(mark);
+            return new astnodes.Debugger(...EXTRA);
         }
         this._mark = mark;
 
@@ -1101,11 +1111,30 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
+    print_stmt(): stmt | null {
+        // print_stmt: 'print' ','.expression+ ','? | 'print'
+        let a, keyword, opt;
+        const mark = this._mark;
+        if ((keyword = this.keyword("print")) && (a = this._gather_50()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+            const EXTRA = this.extra(mark);
+            return new astnodes.Call(new astnodes.Name("print", astnodes.Load, ...EXTRA), a, null, ...EXTRA);
+        }
+        this._mark = mark;
+        if ((keyword = this.keyword("print"))) {
+            const EXTRA = this.extra(mark);
+            return new astnodes.Call(new astnodes.Name("print", astnodes.Load, ...EXTRA), null, null, ...EXTRA);
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    @memoize
     raise_stmt(): stmt | null {
         // raise_stmt: 'raise' expression ['from' expression] | 'raise'
         let a, b, keyword;
         const mark = this._mark;
-        if ((keyword = this.keyword("raise")) && (a = this.expression()) && ((b = this._tmp_50()), 1)) {
+        if ((keyword = this.keyword("raise")) && (a = this.expression()) && ((b = this._tmp_52()), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Raise(a, b, ...EXTRA);
         }
@@ -1147,7 +1176,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             (literal = this.expect(7 /* '(' */)) &&
             ((params = this.params()), 1) &&
             (literal_1 = this.expect(8 /* ')' */)) &&
-            ((a = this._tmp_51()), 1) &&
+            ((a = this._tmp_53()), 1) &&
             (literal_2 = this.expect(11 /* ':' */)) &&
             ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
@@ -1171,7 +1200,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             (literal = this.expect(7 /* '(' */)) &&
             ((params = this.params()), 1) &&
             (literal_1 = this.expect(8 /* ')' */)) &&
-            ((a = this._tmp_52()), 1) &&
+            ((a = this._tmp_54()), 1) &&
             (literal_2 = this.expect(11 /* ':' */)) &&
             ((tc = this.func_type_comment()), 1) &&
             (b = this.block())
@@ -1204,7 +1233,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (newline = this.expect(4 /* 'NEWLINE' */)) &&
             (t = this.expect(58 /* 'TYPE_COMMENT' */)) &&
-            this.positive_lookahead(this._tmp_53)
+            this.positive_lookahead(this._tmp_55)
         ) {
             return t;
         }
@@ -1245,22 +1274,22 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         const mark = this._mark;
         if (
             (a = this.slash_no_default()) &&
-            (b = this._loop0_54()) &&
-            (c = this._loop0_55()) &&
+            (b = this._loop0_56()) &&
+            (c = this._loop0_57()) &&
             ((d = this.star_etc()), 1)
         ) {
             return pegen.make_arguments(this, a, null, b, c, d);
         }
         this._mark = mark;
-        if ((a = this.slash_with_default()) && (b = this._loop0_56()) && ((c = this.star_etc()), 1)) {
+        if ((a = this.slash_with_default()) && (b = this._loop0_58()) && ((c = this.star_etc()), 1)) {
             return pegen.make_arguments(this, null, a, null, b, c);
         }
         this._mark = mark;
-        if ((a = this._loop1_57()) && (b = this._loop0_58()) && ((c = this.star_etc()), 1)) {
+        if ((a = this._loop1_59()) && (b = this._loop0_60()) && ((c = this.star_etc()), 1)) {
             return pegen.make_arguments(this, null, null, a, b, c);
         }
         this._mark = mark;
-        if ((a = this._loop1_59()) && ((b = this.star_etc()), 1)) {
+        if ((a = this._loop1_61()) && ((b = this.star_etc()), 1)) {
             return pegen.make_arguments(this, null, null, null, a, b);
         }
         this._mark = mark;
@@ -1278,7 +1307,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         let a, literal, literal_1;
         const mark = this._mark;
         if (
-            (a = this._loop1_60()) &&
+            (a = this._loop1_62()) &&
             (literal = this.expect(17 /* '/' */)) &&
             (literal_1 = this.expect(12 /* ',' */))
         ) {
@@ -1286,7 +1315,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         }
         this._mark = mark;
         if (
-            (a = this._loop1_61()) &&
+            (a = this._loop1_63()) &&
             (literal = this.expect(17 /* '/' */)) &&
             this.positive_lookahead(this.expect, 8 /* ')' */)
         ) {
@@ -1303,8 +1332,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         let a, b, literal, literal_1;
         const mark = this._mark;
         if (
-            (a = this._loop0_62()) &&
-            (b = this._loop1_63()) &&
+            (a = this._loop0_64()) &&
+            (b = this._loop1_65()) &&
             (literal = this.expect(17 /* '/' */)) &&
             (literal_1 = this.expect(12 /* ',' */))
         ) {
@@ -1312,8 +1341,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         }
         this._mark = mark;
         if (
-            (a = this._loop0_64()) &&
-            (b = this._loop1_65()) &&
+            (a = this._loop0_66()) &&
+            (b = this._loop1_67()) &&
             (literal = this.expect(17 /* '/' */)) &&
             this.positive_lookahead(this.expect, 8 /* ')' */)
         ) {
@@ -1332,7 +1361,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (literal = this.expect(16 /* '*' */)) &&
             (a = this.param_no_default()) &&
-            (b = this._loop0_66()) &&
+            (b = this._loop0_68()) &&
             ((c = this.kwds()), 1)
         ) {
             return new StarEtc(a, b, c);
@@ -1341,7 +1370,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (literal = this.expect(16 /* '*' */)) &&
             (literal_1 = this.expect(12 /* ',' */)) &&
-            (b = this._loop1_67()) &&
+            (b = this._loop1_69()) &&
             ((c = this.kwds()), 1)
         ) {
             return new StarEtc(null, b, c);
@@ -1496,7 +1525,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // decorators: (('@' named_expression NEWLINE))+
         let a;
         const mark = this._mark;
-        if ((a = this._loop1_68())) {
+        if ((a = this._loop1_70())) {
             return a;
         }
         this._mark = mark;
@@ -1529,7 +1558,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (keyword = this.keyword("class")) &&
             (a = this.name()) &&
-            ((b = this._tmp_69()), 1) &&
+            ((b = this._tmp_71()), 1) &&
             (literal = this.expect(11 /* ':' */)) &&
             (c = this.block())
         ) {
@@ -1572,7 +1601,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // star_expressions: star_expression ((',' star_expression))+ ','? | star_expression ',' | star_expression
         let a, b, literal, opt, star_expression;
         const mark = this._mark;
-        if ((a = this.star_expression()) && (b = this._loop1_70()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this.star_expression()) && (b = this._loop1_72()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA);
         }
@@ -1613,7 +1642,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // star_named_expressions: ','.star_named_expression+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_71()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this._gather_73()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -1685,7 +1714,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // expressions: expression ((',' expression))+ ','? | expression ',' | expression
         let a, b, expression, literal, opt;
         const mark = this._mark;
-        if ((a = this.expression()) && (b = this._loop1_73()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this.expression()) && (b = this._loop1_75()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Load, ...EXTRA);
         }
@@ -1774,22 +1803,22 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         const mark = this._mark;
         if (
             (a = this.lambda_slash_no_default()) &&
-            (b = this._loop0_74()) &&
-            (c = this._loop0_75()) &&
+            (b = this._loop0_76()) &&
+            (c = this._loop0_77()) &&
             ((d = this.lambda_star_etc()), 1)
         ) {
             return pegen.make_arguments(this, a, null, b, c, d);
         }
         this._mark = mark;
-        if ((a = this.lambda_slash_with_default()) && (b = this._loop0_76()) && ((c = this.lambda_star_etc()), 1)) {
+        if ((a = this.lambda_slash_with_default()) && (b = this._loop0_78()) && ((c = this.lambda_star_etc()), 1)) {
             return pegen.make_arguments(this, null, a, null, b, c);
         }
         this._mark = mark;
-        if ((a = this._loop1_77()) && (b = this._loop0_78()) && ((c = this.lambda_star_etc()), 1)) {
+        if ((a = this._loop1_79()) && (b = this._loop0_80()) && ((c = this.lambda_star_etc()), 1)) {
             return pegen.make_arguments(this, null, null, a, b, c);
         }
         this._mark = mark;
-        if ((a = this._loop1_79()) && ((b = this.lambda_star_etc()), 1)) {
+        if ((a = this._loop1_81()) && ((b = this.lambda_star_etc()), 1)) {
             return pegen.make_arguments(this, null, null, null, a, b);
         }
         this._mark = mark;
@@ -1807,7 +1836,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         let a, literal, literal_1;
         const mark = this._mark;
         if (
-            (a = this._loop1_80()) &&
+            (a = this._loop1_82()) &&
             (literal = this.expect(17 /* '/' */)) &&
             (literal_1 = this.expect(12 /* ',' */))
         ) {
@@ -1815,7 +1844,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         }
         this._mark = mark;
         if (
-            (a = this._loop1_81()) &&
+            (a = this._loop1_83()) &&
             (literal = this.expect(17 /* '/' */)) &&
             this.positive_lookahead(this.expect, 11 /* ':' */)
         ) {
@@ -1832,8 +1861,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         let a, b, literal, literal_1;
         const mark = this._mark;
         if (
-            (a = this._loop0_82()) &&
-            (b = this._loop1_83()) &&
+            (a = this._loop0_84()) &&
+            (b = this._loop1_85()) &&
             (literal = this.expect(17 /* '/' */)) &&
             (literal_1 = this.expect(12 /* ',' */))
         ) {
@@ -1841,8 +1870,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         }
         this._mark = mark;
         if (
-            (a = this._loop0_84()) &&
-            (b = this._loop1_85()) &&
+            (a = this._loop0_86()) &&
+            (b = this._loop1_87()) &&
             (literal = this.expect(17 /* '/' */)) &&
             this.positive_lookahead(this.expect, 11 /* ':' */)
         ) {
@@ -1861,7 +1890,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (literal = this.expect(16 /* '*' */)) &&
             (a = this.lambda_param_no_default()) &&
-            (b = this._loop0_86()) &&
+            (b = this._loop0_88()) &&
             ((c = this.lambda_kwds()), 1)
         ) {
             return new StarEtc(a, b, c);
@@ -1870,7 +1899,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (literal = this.expect(16 /* '*' */)) &&
             (literal_1 = this.expect(12 /* ',' */)) &&
-            (b = this._loop1_87()) &&
+            (b = this._loop1_89()) &&
             ((c = this.lambda_kwds()), 1)
         ) {
             return new StarEtc(null, b, c);
@@ -1975,7 +2004,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // disjunction: conjunction (('or' conjunction))+ | conjunction
         let a, b, conjunction;
         const mark = this._mark;
-        if ((a = this.conjunction()) && (b = this._loop1_88())) {
+        if ((a = this.conjunction()) && (b = this._loop1_90())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BoolOp(astnodes.Or, CHECK(pegen.seq_insert_in_front(this, a, b)), ...EXTRA);
         }
@@ -1993,7 +2022,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // conjunction: inversion (('and' inversion))+ | inversion
         let a, b, inversion;
         const mark = this._mark;
-        if ((a = this.inversion()) && (b = this._loop1_89())) {
+        if ((a = this.inversion()) && (b = this._loop1_91())) {
             const EXTRA = this.extra(mark);
             return new astnodes.BoolOp(astnodes.And, CHECK(pegen.seq_insert_in_front(this, a, b)), ...EXTRA);
         }
@@ -2029,7 +2058,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // comparison: bitwise_or compare_op_bitwise_or_pair+ | bitwise_or
         let a, b, bitwise_or;
         const mark = this._mark;
-        if ((a = this.bitwise_or()) && (b = this._loop1_90())) {
+        if ((a = this.bitwise_or()) && (b = this._loop1_92())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Compare(
                 a,
@@ -2493,7 +2522,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             return a;
         }
         this._mark = mark;
-        if ((a = this._gather_91()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this._gather_93()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(a, astnodes.Load, ...EXTRA);
         }
@@ -2511,7 +2540,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             ((a = this.expression()), 1) &&
             (literal = this.expect(11 /* ':' */)) &&
             ((b = this.expression()), 1) &&
-            ((c = this._tmp_93()), 1)
+            ((c = this._tmp_95()), 1)
         ) {
             const EXTRA = this.extra(mark);
             return new astnodes.Slice(a, b, c, ...EXTRA);
@@ -2528,7 +2557,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     atom(): expr | null {
         // atom: NAME | 'True' | 'False' | 'None' | '__peg_parser__' | &STRING strings | NUMBER | &'(' (tuple | group | genexp) | &'[' (list | listcomp) | &'{' (dict | set | dictcomp | setcomp) | '...'
-        let _tmp_94, _tmp_95, _tmp_96, keyword, literal, name, number, strings;
+        let _tmp_96, _tmp_97, _tmp_98, keyword, literal, name, number, strings;
         const mark = this._mark;
         if ((name = this.name())) {
             return name;
@@ -2561,16 +2590,16 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             return number;
         }
         this._mark = mark;
-        if (this.positive_lookahead(this.expect, 7 /* '(' */) && (_tmp_94 = this._tmp_94())) {
-            return _tmp_94;
-        }
-        this._mark = mark;
-        if (this.positive_lookahead(this.expect, 9 /* '[' */) && (_tmp_95 = this._tmp_95())) {
-            return _tmp_95;
-        }
-        this._mark = mark;
-        if (this.positive_lookahead(this.expect, 25 /* '{' */) && (_tmp_96 = this._tmp_96())) {
+        if (this.positive_lookahead(this.expect, 7 /* '(' */) && (_tmp_96 = this._tmp_96())) {
             return _tmp_96;
+        }
+        this._mark = mark;
+        if (this.positive_lookahead(this.expect, 9 /* '[' */) && (_tmp_97 = this._tmp_97())) {
+            return _tmp_97;
+        }
+        this._mark = mark;
+        if (this.positive_lookahead(this.expect, 25 /* '{' */) && (_tmp_98 = this._tmp_98())) {
+            return _tmp_98;
         }
         this._mark = mark;
         if ((literal = this.expect(52 /* '...' */))) {
@@ -2587,7 +2616,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // strings: STRING+
         let a;
         const mark = this._mark;
-        if ((a = this._loop1_97())) {
+        if ((a = this._loop1_99())) {
             return pegen.concatenate_strings(this, a);
         }
         this._mark = mark;
@@ -2646,7 +2675,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         const mark = this._mark;
         if (
             (literal = this.expect(7 /* '(' */)) &&
-            ((a = this._tmp_98()), 1) &&
+            ((a = this._tmp_100()), 1) &&
             (literal_1 = this.expect(8 /* ')' */))
         ) {
             const EXTRA = this.extra(mark);
@@ -2662,7 +2691,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // group: '(' (yield_expr | named_expression) ')' | invalid_group
         let a, invalid_group, literal, literal_1;
         const mark = this._mark;
-        if ((literal = this.expect(7 /* '(' */)) && (a = this._tmp_99()) && (literal_1 = this.expect(8 /* ')' */))) {
+        if ((literal = this.expect(7 /* '(' */)) && (a = this._tmp_101()) && (literal_1 = this.expect(8 /* ')' */))) {
             return a;
         }
         this._mark = mark;
@@ -2790,7 +2819,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // double_starred_kvpairs: ','.double_starred_kvpair+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_100()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this._gather_102()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -2831,10 +2860,10 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     for_if_clauses(): comprehension[] | null {
         // for_if_clauses: for_if_clause+
-        let _loop1_102;
+        let _loop1_104;
         const mark = this._mark;
-        if ((_loop1_102 = this._loop1_102())) {
-            return _loop1_102;
+        if ((_loop1_104 = this._loop1_104())) {
+            return _loop1_104;
         }
         this._mark = mark;
 
@@ -2854,7 +2883,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             (keyword_1 = this.keyword("in")) &&
             (cut = true) &&
             (b = this.disjunction()) &&
-            (c = this._loop0_103())
+            (c = this._loop0_105())
         ) {
             return CHECK_VERSION(6, "Async comprehensions are", new astnodes.comprehension(a, b, c, 1));
         }
@@ -2866,7 +2895,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             (keyword_1 = this.keyword("in")) &&
             (cut = true) &&
             (b = this.disjunction()) &&
-            (c = this._loop0_104())
+            (c = this._loop0_106())
         ) {
             return new astnodes.comprehension(a, b, c, 0);
         }
@@ -2925,7 +2954,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // args: ','.(starred_expression | named_expression !'=')+ [',' kwargs] | kwargs
         let a, b;
         const mark = this._mark;
-        if ((a = this._gather_105()) && ((b = this._tmp_107()), 1)) {
+        if ((a = this._gather_107()) && ((b = this._tmp_109()), 1)) {
             const EXTRA = this.extra(mark);
             return pegen.collect_call_seqs(this, a, b, ...EXTRA);
         }
@@ -2947,18 +2976,18 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     kwargs(): KeywordOrStarred[] | null {
         // kwargs: ','.kwarg_or_starred+ ',' ','.kwarg_or_double_starred+ | ','.kwarg_or_starred+ | ','.kwarg_or_double_starred+
-        let _gather_112, _gather_114, a, b, literal;
+        let _gather_114, _gather_116, a, b, literal;
         const mark = this._mark;
-        if ((a = this._gather_108()) && (literal = this.expect(12 /* ',' */)) && (b = this._gather_110())) {
+        if ((a = this._gather_110()) && (literal = this.expect(12 /* ',' */)) && (b = this._gather_112())) {
             return pegen.join_sequences(this, a, b);
-        }
-        this._mark = mark;
-        if ((_gather_112 = this._gather_112())) {
-            return _gather_112;
         }
         this._mark = mark;
         if ((_gather_114 = this._gather_114())) {
             return _gather_114;
+        }
+        this._mark = mark;
+        if ((_gather_116 = this._gather_116())) {
+            return _gather_116;
         }
         this._mark = mark;
 
@@ -3033,7 +3062,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             return a;
         }
         this._mark = mark;
-        if ((a = this.star_target()) && (b = this._loop0_116()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this.star_target()) && (b = this._loop0_118()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             const EXTRA = this.extra(mark);
             return new astnodes.Tuple(CHECK(pegen.seq_insert_in_front(this, a, b)), astnodes.Store, ...EXTRA);
         }
@@ -3047,7 +3076,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // star_targets_list_seq: ','.star_target+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_117()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this._gather_119()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -3060,7 +3089,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // star_targets_tuple_seq: star_target ((',' star_target))+ ','? | star_target ','
         let a, b, literal, opt;
         const mark = this._mark;
-        if ((a = this.star_target()) && (b = this._loop1_119()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this.star_target()) && (b = this._loop1_121()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return pegen.seq_insert_in_front(this, a, b);
         }
         this._mark = mark;
@@ -3077,7 +3106,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // star_target: '*' (!'*' star_target) | target_with_star_atom
         let a, literal, target_with_star_atom;
         const mark = this._mark;
-        if ((literal = this.expect(16 /* '*' */)) && (a = this._tmp_120())) {
+        if ((literal = this.expect(16 /* '*' */)) && (a = this._tmp_122())) {
             const EXTRA = this.extra(mark);
             return new astnodes.Starred(
                 CHECK(pegen.set_expr_context(this, a, astnodes.Store)),
@@ -3227,7 +3256,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // del_targets: ','.del_target+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_121()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this._gather_123()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -3313,7 +3342,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         // targets: ','.target+ ','?
         let a, opt;
         const mark = this._mark;
-        if ((a = this._gather_123()) && ((opt = this.expect(12 /* ',' */)), 1)) {
+        if ((a = this._gather_125()) && ((opt = this.expect(12 /* ',' */)), 1)) {
             return a;
         }
         this._mark = mark;
@@ -3474,7 +3503,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             (a = this.expression()) &&
             (for_if_clauses = this.for_if_clauses()) &&
             (literal = this.expect(12 /* ',' */)) &&
-            ((opt = this._tmp_125()), 1)
+            ((opt = this._tmp_127()), 1)
         ) {
             return this.raise_error_known_location(
                 pySyntaxError,
@@ -3550,7 +3579,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     invalid_assignment(): never | null {
         // invalid_assignment: invalid_ann_assign_target ':' expression | star_named_expression ',' star_named_expressions* ':' expression | expression ':' expression | ((star_targets '='))* star_expressions '=' | ((star_targets '='))* yield_expr '=' | star_expressions augassign (yield_expr | star_expressions)
-        let _loop0_126, _loop0_127, _loop0_128, _tmp_129, a, augassign, expression, literal, literal_1;
+        let _loop0_128, _loop0_129, _loop0_130, _tmp_131, a, augassign, expression, literal, literal_1;
         const mark = this._mark;
         if (
             (a = this.invalid_ann_assign_target()) &&
@@ -3569,7 +3598,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         if (
             (a = this.star_named_expression()) &&
             (literal = this.expect(12 /* ',' */)) &&
-            (_loop0_126 = this._loop0_126()) &&
+            (_loop0_128 = this._loop0_128()) &&
             (literal_1 = this.expect(11 /* ':' */)) &&
             (expression = this.expression())
         ) {
@@ -3591,14 +3620,14 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         }
         this._mark = mark;
         if (
-            (_loop0_127 = this._loop0_127()) &&
+            (_loop0_129 = this._loop0_129()) &&
             (a = this.star_expressions()) &&
             (literal = this.expect(22 /* '=' */))
         ) {
             return this.raise_error_invalid_target(STAR_TARGETS, a);
         }
         this._mark = mark;
-        if ((_loop0_128 = this._loop0_128()) && (a = this.yield_expr()) && (literal = this.expect(22 /* '=' */))) {
+        if ((_loop0_130 = this._loop0_130()) && (a = this.yield_expr()) && (literal = this.expect(22 /* '=' */))) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3607,7 +3636,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
             );
         }
         this._mark = mark;
-        if ((a = this.star_expressions()) && (augassign = this.augassign()) && (_tmp_129 = this._tmp_129())) {
+        if ((a = this.star_expressions()) && (augassign = this.augassign()) && (_tmp_131 = this._tmp_131())) {
             return this.raise_error_known_location(
                 pySyntaxError,
                 a.lineno,
@@ -3688,10 +3717,10 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     invalid_comprehension(): never | null {
         // invalid_comprehension: ('[' | '(' | '{') starred_expression for_if_clauses
-        let _tmp_130, a, for_if_clauses;
+        let _tmp_132, a, for_if_clauses;
         const mark = this._mark;
         if (
-            (_tmp_130 = this._tmp_130()) &&
+            (_tmp_132 = this._tmp_132()) &&
             (a = this.starred_expression()) &&
             (for_if_clauses = this.for_if_clauses())
         ) {
@@ -3734,11 +3763,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     invalid_parameters(): never | null {
         // invalid_parameters: param_no_default* (slash_with_default | param_with_default+) param_no_default
-        let _loop0_131, _tmp_132, param_no_default;
+        let _loop0_133, _tmp_134, param_no_default;
         const mark = this._mark;
         if (
-            (_loop0_131 = this._loop0_131()) &&
-            (_tmp_132 = this._tmp_132()) &&
+            (_loop0_133 = this._loop0_133()) &&
+            (_tmp_134 = this._tmp_134()) &&
             (param_no_default = this.param_no_default())
         ) {
             return this.raise_error(pySyntaxError, "non-default argument follows default argument");
@@ -3751,11 +3780,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     invalid_lambda_parameters(): never | null {
         // invalid_lambda_parameters: lambda_param_no_default* (lambda_slash_with_default | lambda_param_with_default+) lambda_param_no_default
-        let _loop0_133, _tmp_134, lambda_param_no_default;
+        let _loop0_135, _tmp_136, lambda_param_no_default;
         const mark = this._mark;
         if (
-            (_loop0_133 = this._loop0_133()) &&
-            (_tmp_134 = this._tmp_134()) &&
+            (_loop0_135 = this._loop0_135()) &&
+            (_tmp_136 = this._tmp_136()) &&
             (lambda_param_no_default = this.lambda_param_no_default())
         ) {
             return this.raise_error(pySyntaxError, "non-default argument follows default argument");
@@ -3768,9 +3797,9 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     invalid_star_etc(): never | null {
         // invalid_star_etc: '*' (')' | ',' (')' | '**')) | '*' ',' TYPE_COMMENT
-        let _tmp_135, literal, literal_1, type_comment;
+        let _tmp_137, literal, literal_1, type_comment;
         const mark = this._mark;
-        if ((literal = this.expect(16 /* '*' */)) && (_tmp_135 = this._tmp_135())) {
+        if ((literal = this.expect(16 /* '*' */)) && (_tmp_137 = this._tmp_137())) {
             return this.raise_error(pySyntaxError, "named arguments must follow bare *");
         }
         this._mark = mark;
@@ -3789,9 +3818,9 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     invalid_lambda_star_etc(): never | null {
         // invalid_lambda_star_etc: '*' (':' | ',' (':' | '**'))
-        let _tmp_136, literal;
+        let _tmp_138, literal;
         const mark = this._mark;
-        if ((literal = this.expect(16 /* '*' */)) && (_tmp_136 = this._tmp_136())) {
+        if ((literal = this.expect(16 /* '*' */)) && (_tmp_138 = this._tmp_138())) {
             return this.raise_error(pySyntaxError, "named arguments must follow bare *");
         }
         this._mark = mark;
@@ -4199,11 +4228,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     _loop1_22() {
         // _loop1_22: (star_targets '=')
-        let _tmp_137;
+        let _tmp_139;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_137 = this._tmp_137())) {
-            children.push(_tmp_137);
+        while ((_tmp_139 = this._tmp_139())) {
+            children.push(_tmp_139);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4330,11 +4359,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     _loop0_31() {
         // _loop0_31: ('.' | '...')
-        let _tmp_138;
+        let _tmp_140;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_138 = this._tmp_138())) {
-            children.push(_tmp_138);
+        while ((_tmp_140 = this._tmp_140())) {
+            children.push(_tmp_140);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4345,11 +4374,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     @memoize
     _loop1_32() {
         // _loop1_32: ('.' | '...')
-        let _tmp_139;
+        let _tmp_141;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_139 = this._tmp_139())) {
-            children.push(_tmp_139);
+        while ((_tmp_141 = this._tmp_141())) {
+            children.push(_tmp_141);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4596,8 +4625,36 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_50() {
-        // _tmp_50: 'from' expression
+    @memoize
+    _loop0_51() {
+        // _loop0_51: ',' expression
+        let elem, literal;
+        const children = [];
+        let mark = this._mark;
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.expression())) {
+            children.push(elem);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _gather_50() {
+        // _gather_50: expression _loop0_51
+        let elem, seq;
+        const mark = this._mark;
+        if ((elem = this.expression()) !== null && (seq = this._loop0_51()) !== null) {
+            return [elem, ...seq];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_52() {
+        // _tmp_52: 'from' expression
         let keyword, z;
         const mark = this._mark;
         if ((keyword = this.keyword("from")) && (z = this.expression())) {
@@ -4608,32 +4665,32 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_51() {
-        // _tmp_51: '->' expression
-        let literal, z;
-        const mark = this._mark;
-        if ((literal = this.expect(51 /* '->' */)) && (z = this.expression())) {
-            return z;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_52() {
-        // _tmp_52: '->' expression
-        let literal, z;
-        const mark = this._mark;
-        if ((literal = this.expect(51 /* '->' */)) && (z = this.expression())) {
-            return z;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
     _tmp_53() {
-        // _tmp_53: NEWLINE INDENT
+        // _tmp_53: '->' expression
+        let literal, z;
+        const mark = this._mark;
+        if ((literal = this.expect(51 /* '->' */)) && (z = this.expression())) {
+            return z;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_54() {
+        // _tmp_54: '->' expression
+        let literal, z;
+        const mark = this._mark;
+        if ((literal = this.expect(51 /* '->' */)) && (z = this.expression())) {
+            return z;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_55() {
+        // _tmp_55: NEWLINE INDENT
         let indent, newline;
         const mark = this._mark;
         if ((newline = this.expect(4 /* 'NEWLINE' */)) && (indent = this.expect(5 /* 'INDENT' */))) {
@@ -4645,38 +4702,23 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_54() {
-        // _loop0_54: param_no_default
-        let param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((param_no_default = this.param_no_default())) {
-            children.push(param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _loop0_55() {
-        // _loop0_55: param_with_default
-        let param_with_default;
-        const children = [];
-        let mark = this._mark;
-        while ((param_with_default = this.param_with_default())) {
-            children.push(param_with_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
     _loop0_56() {
-        // _loop0_56: param_with_default
+        // _loop0_56: param_no_default
+        let param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((param_no_default = this.param_no_default())) {
+            children.push(param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _loop0_57() {
+        // _loop0_57: param_with_default
         let param_with_default;
         const children = [];
         let mark = this._mark;
@@ -4687,21 +4729,6 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         this._mark = mark;
 
         return children;
-    }
-
-    @memoize
-    _loop1_57() {
-        // _loop1_57: param_no_default
-        let param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((param_no_default = this.param_no_default())) {
-            children.push(param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
     }
 
     @memoize
@@ -4721,57 +4748,27 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
 
     @memoize
     _loop1_59() {
-        // _loop1_59: param_with_default
+        // _loop1_59: param_no_default
+        let param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((param_no_default = this.param_no_default())) {
+            children.push(param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop0_60() {
+        // _loop0_60: param_with_default
         let param_with_default;
         const children = [];
         let mark = this._mark;
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop1_60() {
-        // _loop1_60: param_no_default
-        let param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((param_no_default = this.param_no_default())) {
-            children.push(param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop1_61() {
-        // _loop1_61: param_no_default
-        let param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((param_no_default = this.param_no_default())) {
-            children.push(param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop0_62() {
-        // _loop0_62: param_no_default
-        let param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((param_no_default = this.param_no_default())) {
-            children.push(param_no_default);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4780,13 +4777,43 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_63() {
-        // _loop1_63: param_with_default
+    _loop1_61() {
+        // _loop1_61: param_with_default
         let param_with_default;
         const children = [];
         let mark = this._mark;
         while ((param_with_default = this.param_with_default())) {
             children.push(param_with_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop1_62() {
+        // _loop1_62: param_no_default
+        let param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((param_no_default = this.param_no_default())) {
+            children.push(param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop1_63() {
+        // _loop1_63: param_no_default
+        let param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((param_no_default = this.param_no_default())) {
+            children.push(param_no_default);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4826,7 +4853,37 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
 
     @memoize
     _loop0_66() {
-        // _loop0_66: param_maybe_default
+        // _loop0_66: param_no_default
+        let param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((param_no_default = this.param_no_default())) {
+            children.push(param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _loop1_67() {
+        // _loop1_67: param_with_default
+        let param_with_default;
+        const children = [];
+        let mark = this._mark;
+        while ((param_with_default = this.param_with_default())) {
+            children.push(param_with_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop0_68() {
+        // _loop0_68: param_maybe_default
         let param_maybe_default;
         const children = [];
         let mark = this._mark;
@@ -4840,8 +4897,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_67() {
-        // _loop1_67: param_maybe_default
+    _loop1_69() {
+        // _loop1_69: param_maybe_default
         let param_maybe_default;
         const children = [];
         let mark = this._mark;
@@ -4855,13 +4912,13 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_68() {
-        // _loop1_68: ('@' named_expression NEWLINE)
-        let _tmp_140;
+    _loop1_70() {
+        // _loop1_70: ('@' named_expression NEWLINE)
+        let _tmp_142;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_140 = this._tmp_140())) {
-            children.push(_tmp_140);
+        while ((_tmp_142 = this._tmp_142())) {
+            children.push(_tmp_142);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4869,8 +4926,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children.length ? children : null;
     }
 
-    _tmp_69() {
-        // _tmp_69: '(' arguments_? ')'
+    _tmp_71() {
+        // _tmp_71: '(' arguments_? ')'
         let literal, literal_1, z;
         const mark = this._mark;
         if (
@@ -4886,13 +4943,13 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_70() {
-        // _loop1_70: (',' star_expression)
-        let _tmp_141;
+    _loop1_72() {
+        // _loop1_72: (',' star_expression)
+        let _tmp_143;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_141 = this._tmp_141())) {
-            children.push(_tmp_141);
+        while ((_tmp_143 = this._tmp_143())) {
+            children.push(_tmp_143);
             mark = this._mark;
         }
         this._mark = mark;
@@ -4901,8 +4958,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_72() {
-        // _loop0_72: ',' star_named_expression
+    _loop0_74() {
+        // _loop0_74: ',' star_named_expression
         let elem, literal;
         const children = [];
         let mark = this._mark;
@@ -4916,11 +4973,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _gather_71() {
-        // _gather_71: star_named_expression _loop0_72
+    _gather_73() {
+        // _gather_73: star_named_expression _loop0_74
         let elem, seq;
         const mark = this._mark;
-        if ((elem = this.star_named_expression()) !== null && (seq = this._loop0_72()) !== null) {
+        if ((elem = this.star_named_expression()) !== null && (seq = this._loop0_74()) !== null) {
             return [elem, ...seq];
         }
         this._mark = mark;
@@ -4929,53 +4986,38 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_73() {
-        // _loop1_73: (',' expression)
-        let _tmp_142;
+    _loop1_75() {
+        // _loop1_75: (',' expression)
+        let _tmp_144;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_142 = this._tmp_142())) {
-            children.push(_tmp_142);
+        while ((_tmp_144 = this._tmp_144())) {
+            children.push(_tmp_144);
             mark = this._mark;
         }
         this._mark = mark;
 
         return children.length ? children : null;
-    }
-
-    @memoize
-    _loop0_74() {
-        // _loop0_74: lambda_param_no_default
-        let lambda_param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((lambda_param_no_default = this.lambda_param_no_default())) {
-            children.push(lambda_param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _loop0_75() {
-        // _loop0_75: lambda_param_with_default
-        let lambda_param_with_default;
-        const children = [];
-        let mark = this._mark;
-        while ((lambda_param_with_default = this.lambda_param_with_default())) {
-            children.push(lambda_param_with_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
     }
 
     @memoize
     _loop0_76() {
-        // _loop0_76: lambda_param_with_default
+        // _loop0_76: lambda_param_no_default
+        let lambda_param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((lambda_param_no_default = this.lambda_param_no_default())) {
+            children.push(lambda_param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _loop0_77() {
+        // _loop0_77: lambda_param_with_default
         let lambda_param_with_default;
         const children = [];
         let mark = this._mark;
@@ -4986,21 +5028,6 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         this._mark = mark;
 
         return children;
-    }
-
-    @memoize
-    _loop1_77() {
-        // _loop1_77: lambda_param_no_default
-        let lambda_param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((lambda_param_no_default = this.lambda_param_no_default())) {
-            children.push(lambda_param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
     }
 
     @memoize
@@ -5020,57 +5047,27 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
 
     @memoize
     _loop1_79() {
-        // _loop1_79: lambda_param_with_default
+        // _loop1_79: lambda_param_no_default
+        let lambda_param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((lambda_param_no_default = this.lambda_param_no_default())) {
+            children.push(lambda_param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop0_80() {
+        // _loop0_80: lambda_param_with_default
         let lambda_param_with_default;
         const children = [];
         let mark = this._mark;
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop1_80() {
-        // _loop1_80: lambda_param_no_default
-        let lambda_param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((lambda_param_no_default = this.lambda_param_no_default())) {
-            children.push(lambda_param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop1_81() {
-        // _loop1_81: lambda_param_no_default
-        let lambda_param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((lambda_param_no_default = this.lambda_param_no_default())) {
-            children.push(lambda_param_no_default);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop0_82() {
-        // _loop0_82: lambda_param_no_default
-        let lambda_param_no_default;
-        const children = [];
-        let mark = this._mark;
-        while ((lambda_param_no_default = this.lambda_param_no_default())) {
-            children.push(lambda_param_no_default);
             mark = this._mark;
         }
         this._mark = mark;
@@ -5079,13 +5076,43 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_83() {
-        // _loop1_83: lambda_param_with_default
+    _loop1_81() {
+        // _loop1_81: lambda_param_with_default
         let lambda_param_with_default;
         const children = [];
         let mark = this._mark;
         while ((lambda_param_with_default = this.lambda_param_with_default())) {
             children.push(lambda_param_with_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop1_82() {
+        // _loop1_82: lambda_param_no_default
+        let lambda_param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((lambda_param_no_default = this.lambda_param_no_default())) {
+            children.push(lambda_param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop1_83() {
+        // _loop1_83: lambda_param_no_default
+        let lambda_param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((lambda_param_no_default = this.lambda_param_no_default())) {
+            children.push(lambda_param_no_default);
             mark = this._mark;
         }
         this._mark = mark;
@@ -5125,7 +5152,37 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
 
     @memoize
     _loop0_86() {
-        // _loop0_86: lambda_param_maybe_default
+        // _loop0_86: lambda_param_no_default
+        let lambda_param_no_default;
+        const children = [];
+        let mark = this._mark;
+        while ((lambda_param_no_default = this.lambda_param_no_default())) {
+            children.push(lambda_param_no_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _loop1_87() {
+        // _loop1_87: lambda_param_with_default
+        let lambda_param_with_default;
+        const children = [];
+        let mark = this._mark;
+        while ((lambda_param_with_default = this.lambda_param_with_default())) {
+            children.push(lambda_param_with_default);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop0_88() {
+        // _loop0_88: lambda_param_maybe_default
         let lambda_param_maybe_default;
         const children = [];
         let mark = this._mark;
@@ -5139,8 +5196,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_87() {
-        // _loop1_87: lambda_param_maybe_default
+    _loop1_89() {
+        // _loop1_89: lambda_param_maybe_default
         let lambda_param_maybe_default;
         const children = [];
         let mark = this._mark;
@@ -5154,38 +5211,38 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_88() {
-        // _loop1_88: ('or' conjunction)
-        let _tmp_143;
-        const children = [];
-        let mark = this._mark;
-        while ((_tmp_143 = this._tmp_143())) {
-            children.push(_tmp_143);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
-    _loop1_89() {
-        // _loop1_89: ('and' inversion)
-        let _tmp_144;
-        const children = [];
-        let mark = this._mark;
-        while ((_tmp_144 = this._tmp_144())) {
-            children.push(_tmp_144);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children.length ? children : null;
-    }
-
-    @memoize
     _loop1_90() {
-        // _loop1_90: compare_op_bitwise_or_pair
+        // _loop1_90: ('or' conjunction)
+        let _tmp_145;
+        const children = [];
+        let mark = this._mark;
+        while ((_tmp_145 = this._tmp_145())) {
+            children.push(_tmp_145);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop1_91() {
+        // _loop1_91: ('and' inversion)
+        let _tmp_146;
+        const children = [];
+        let mark = this._mark;
+        while ((_tmp_146 = this._tmp_146())) {
+            children.push(_tmp_146);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children.length ? children : null;
+    }
+
+    @memoize
+    _loop1_92() {
+        // _loop1_92: compare_op_bitwise_or_pair
         let compare_op_bitwise_or_pair;
         const children = [];
         let mark = this._mark;
@@ -5199,8 +5256,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_92() {
-        // _loop0_92: ',' slice
+    _loop0_94() {
+        // _loop0_94: ',' slice
         let elem, literal;
         const children = [];
         let mark = this._mark;
@@ -5214,11 +5271,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _gather_91() {
-        // _gather_91: slice _loop0_92
+    _gather_93() {
+        // _gather_93: slice _loop0_94
         let elem, seq;
         const mark = this._mark;
-        if ((elem = this.slice()) !== null && (seq = this._loop0_92()) !== null) {
+        if ((elem = this.slice()) !== null && (seq = this._loop0_94()) !== null) {
             return [elem, ...seq];
         }
         this._mark = mark;
@@ -5226,8 +5283,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_93() {
-        // _tmp_93: ':' expression?
+    _tmp_95() {
+        // _tmp_95: ':' expression?
         let d, literal;
         const mark = this._mark;
         if ((literal = this.expect(11 /* ':' */)) && ((d = this.expression()), 1)) {
@@ -5238,8 +5295,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_94() {
-        // _tmp_94: tuple | group | genexp
+    _tmp_96() {
+        // _tmp_96: tuple | group | genexp
         let genexp, group, tuple;
         const mark = this._mark;
         if ((tuple = this.tuple())) {
@@ -5258,8 +5315,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_95() {
-        // _tmp_95: list | listcomp
+    _tmp_97() {
+        // _tmp_97: list | listcomp
         let list, listcomp;
         const mark = this._mark;
         if ((list = this.list())) {
@@ -5274,8 +5331,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_96() {
-        // _tmp_96: dict | set | dictcomp | setcomp
+    _tmp_98() {
+        // _tmp_98: dict | set | dictcomp | setcomp
         let dict, dictcomp, set, setcomp;
         const mark = this._mark;
         if ((dict = this.dict())) {
@@ -5299,8 +5356,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_97() {
-        // _loop1_97: STRING
+    _loop1_99() {
+        // _loop1_99: STRING
         let string;
         const children = [];
         let mark = this._mark;
@@ -5313,8 +5370,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children.length ? children : null;
     }
 
-    _tmp_98() {
-        // _tmp_98: star_named_expression ',' star_named_expressions?
+    _tmp_100() {
+        // _tmp_100: star_named_expression ',' star_named_expressions?
         let literal, y, z;
         const mark = this._mark;
         if (
@@ -5329,8 +5386,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_99() {
-        // _tmp_99: yield_expr | named_expression
+    _tmp_101() {
+        // _tmp_101: yield_expr | named_expression
         let named_expression, yield_expr;
         const mark = this._mark;
         if ((yield_expr = this.yield_expr())) {
@@ -5346,8 +5403,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_101() {
-        // _loop0_101: ',' double_starred_kvpair
+    _loop0_103() {
+        // _loop0_103: ',' double_starred_kvpair
         let elem, literal;
         const children = [];
         let mark = this._mark;
@@ -5361,11 +5418,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _gather_100() {
-        // _gather_100: double_starred_kvpair _loop0_101
+    _gather_102() {
+        // _gather_102: double_starred_kvpair _loop0_103
         let elem, seq;
         const mark = this._mark;
-        if ((elem = this.double_starred_kvpair()) !== null && (seq = this._loop0_101()) !== null) {
+        if ((elem = this.double_starred_kvpair()) !== null && (seq = this._loop0_103()) !== null) {
             return [elem, ...seq];
         }
         this._mark = mark;
@@ -5374,8 +5431,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_102() {
-        // _loop1_102: for_if_clause
+    _loop1_104() {
+        // _loop1_104: for_if_clause
         let for_if_clause;
         const children = [];
         let mark = this._mark;
@@ -5389,28 +5446,13 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_103() {
-        // _loop0_103: ('if' disjunction)
-        let _tmp_145;
+    _loop0_105() {
+        // _loop0_105: ('if' disjunction)
+        let _tmp_147;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_145 = this._tmp_145())) {
-            children.push(_tmp_145);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _loop0_104() {
-        // _loop0_104: ('if' disjunction)
-        let _tmp_146;
-        const children = [];
-        let mark = this._mark;
-        while ((_tmp_146 = this._tmp_146())) {
-            children.push(_tmp_146);
+        while ((_tmp_147 = this._tmp_147())) {
+            children.push(_tmp_147);
             mark = this._mark;
         }
         this._mark = mark;
@@ -5420,159 +5462,7 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
 
     @memoize
     _loop0_106() {
-        // _loop0_106: ',' (starred_expression | named_expression !'=')
-        let elem, literal;
-        const children = [];
-        let mark = this._mark;
-        while ((literal = this.expect(12 /* ',' */)) && (elem = this._tmp_147())) {
-            children.push(elem);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _gather_105() {
-        // _gather_105: (starred_expression | named_expression !'=') _loop0_106
-        let elem, seq;
-        const mark = this._mark;
-        if ((elem = this._tmp_147()) !== null && (seq = this._loop0_106()) !== null) {
-            return [elem, ...seq];
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_107() {
-        // _tmp_107: ',' kwargs
-        let k, literal;
-        const mark = this._mark;
-        if ((literal = this.expect(12 /* ',' */)) && (k = this.kwargs())) {
-            return k;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    @memoize
-    _loop0_109() {
-        // _loop0_109: ',' kwarg_or_starred
-        let elem, literal;
-        const children = [];
-        let mark = this._mark;
-        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_starred())) {
-            children.push(elem);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _gather_108() {
-        // _gather_108: kwarg_or_starred _loop0_109
-        let elem, seq;
-        const mark = this._mark;
-        if ((elem = this.kwarg_or_starred()) !== null && (seq = this._loop0_109()) !== null) {
-            return [elem, ...seq];
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    @memoize
-    _loop0_111() {
-        // _loop0_111: ',' kwarg_or_double_starred
-        let elem, literal;
-        const children = [];
-        let mark = this._mark;
-        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_double_starred())) {
-            children.push(elem);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _gather_110() {
-        // _gather_110: kwarg_or_double_starred _loop0_111
-        let elem, seq;
-        const mark = this._mark;
-        if ((elem = this.kwarg_or_double_starred()) !== null && (seq = this._loop0_111()) !== null) {
-            return [elem, ...seq];
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    @memoize
-    _loop0_113() {
-        // _loop0_113: ',' kwarg_or_starred
-        let elem, literal;
-        const children = [];
-        let mark = this._mark;
-        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_starred())) {
-            children.push(elem);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _gather_112() {
-        // _gather_112: kwarg_or_starred _loop0_113
-        let elem, seq;
-        const mark = this._mark;
-        if ((elem = this.kwarg_or_starred()) !== null && (seq = this._loop0_113()) !== null) {
-            return [elem, ...seq];
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    @memoize
-    _loop0_115() {
-        // _loop0_115: ',' kwarg_or_double_starred
-        let elem, literal;
-        const children = [];
-        let mark = this._mark;
-        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_double_starred())) {
-            children.push(elem);
-            mark = this._mark;
-        }
-        this._mark = mark;
-
-        return children;
-    }
-
-    @memoize
-    _gather_114() {
-        // _gather_114: kwarg_or_double_starred _loop0_115
-        let elem, seq;
-        const mark = this._mark;
-        if ((elem = this.kwarg_or_double_starred()) !== null && (seq = this._loop0_115()) !== null) {
-            return [elem, ...seq];
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    @memoize
-    _loop0_116() {
-        // _loop0_116: (',' star_target)
+        // _loop0_106: ('if' disjunction)
         let _tmp_148;
         const children = [];
         let mark = this._mark;
@@ -5586,8 +5476,175 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
+    _loop0_108() {
+        // _loop0_108: ',' (starred_expression | named_expression !'=')
+        let elem, literal;
+        const children = [];
+        let mark = this._mark;
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this._tmp_149())) {
+            children.push(elem);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _gather_107() {
+        // _gather_107: (starred_expression | named_expression !'=') _loop0_108
+        let elem, seq;
+        const mark = this._mark;
+        if ((elem = this._tmp_149()) !== null && (seq = this._loop0_108()) !== null) {
+            return [elem, ...seq];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_109() {
+        // _tmp_109: ',' kwargs
+        let k, literal;
+        const mark = this._mark;
+        if ((literal = this.expect(12 /* ',' */)) && (k = this.kwargs())) {
+            return k;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    @memoize
+    _loop0_111() {
+        // _loop0_111: ',' kwarg_or_starred
+        let elem, literal;
+        const children = [];
+        let mark = this._mark;
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_starred())) {
+            children.push(elem);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _gather_110() {
+        // _gather_110: kwarg_or_starred _loop0_111
+        let elem, seq;
+        const mark = this._mark;
+        if ((elem = this.kwarg_or_starred()) !== null && (seq = this._loop0_111()) !== null) {
+            return [elem, ...seq];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    @memoize
+    _loop0_113() {
+        // _loop0_113: ',' kwarg_or_double_starred
+        let elem, literal;
+        const children = [];
+        let mark = this._mark;
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_double_starred())) {
+            children.push(elem);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _gather_112() {
+        // _gather_112: kwarg_or_double_starred _loop0_113
+        let elem, seq;
+        const mark = this._mark;
+        if ((elem = this.kwarg_or_double_starred()) !== null && (seq = this._loop0_113()) !== null) {
+            return [elem, ...seq];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    @memoize
+    _loop0_115() {
+        // _loop0_115: ',' kwarg_or_starred
+        let elem, literal;
+        const children = [];
+        let mark = this._mark;
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_starred())) {
+            children.push(elem);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _gather_114() {
+        // _gather_114: kwarg_or_starred _loop0_115
+        let elem, seq;
+        const mark = this._mark;
+        if ((elem = this.kwarg_or_starred()) !== null && (seq = this._loop0_115()) !== null) {
+            return [elem, ...seq];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    @memoize
+    _loop0_117() {
+        // _loop0_117: ',' kwarg_or_double_starred
+        let elem, literal;
+        const children = [];
+        let mark = this._mark;
+        while ((literal = this.expect(12 /* ',' */)) && (elem = this.kwarg_or_double_starred())) {
+            children.push(elem);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _gather_116() {
+        // _gather_116: kwarg_or_double_starred _loop0_117
+        let elem, seq;
+        const mark = this._mark;
+        if ((elem = this.kwarg_or_double_starred()) !== null && (seq = this._loop0_117()) !== null) {
+            return [elem, ...seq];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    @memoize
     _loop0_118() {
-        // _loop0_118: ',' star_target
+        // _loop0_118: (',' star_target)
+        let _tmp_150;
+        const children = [];
+        let mark = this._mark;
+        while ((_tmp_150 = this._tmp_150())) {
+            children.push(_tmp_150);
+            mark = this._mark;
+        }
+        this._mark = mark;
+
+        return children;
+    }
+
+    @memoize
+    _loop0_120() {
+        // _loop0_120: ',' star_target
         let elem, literal;
         const children = [];
         let mark = this._mark;
@@ -5601,11 +5658,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _gather_117() {
-        // _gather_117: star_target _loop0_118
+    _gather_119() {
+        // _gather_119: star_target _loop0_120
         let elem, seq;
         const mark = this._mark;
-        if ((elem = this.star_target()) !== null && (seq = this._loop0_118()) !== null) {
+        if ((elem = this.star_target()) !== null && (seq = this._loop0_120()) !== null) {
             return [elem, ...seq];
         }
         this._mark = mark;
@@ -5614,13 +5671,13 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_119() {
-        // _loop1_119: (',' star_target)
-        let _tmp_149;
+    _loop1_121() {
+        // _loop1_121: (',' star_target)
+        let _tmp_151;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_149 = this._tmp_149())) {
-            children.push(_tmp_149);
+        while ((_tmp_151 = this._tmp_151())) {
+            children.push(_tmp_151);
             mark = this._mark;
         }
         this._mark = mark;
@@ -5628,8 +5685,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children.length ? children : null;
     }
 
-    _tmp_120() {
-        // _tmp_120: !'*' star_target
+    _tmp_122() {
+        // _tmp_122: !'*' star_target
         let star_target;
         const mark = this._mark;
         if (this.negative_lookahead(this.expect, 16 /* '*' */) && (star_target = this.star_target())) {
@@ -5641,8 +5698,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_122() {
-        // _loop0_122: ',' del_target
+    _loop0_124() {
+        // _loop0_124: ',' del_target
         let elem, literal;
         const children = [];
         let mark = this._mark;
@@ -5656,11 +5713,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _gather_121() {
-        // _gather_121: del_target _loop0_122
+    _gather_123() {
+        // _gather_123: del_target _loop0_124
         let elem, seq;
         const mark = this._mark;
-        if ((elem = this.del_target()) !== null && (seq = this._loop0_122()) !== null) {
+        if ((elem = this.del_target()) !== null && (seq = this._loop0_124()) !== null) {
             return [elem, ...seq];
         }
         this._mark = mark;
@@ -5669,8 +5726,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_124() {
-        // _loop0_124: ',' target
+    _loop0_126() {
+        // _loop0_126: ',' target
         let elem, literal;
         const children = [];
         let mark = this._mark;
@@ -5684,11 +5741,11 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _gather_123() {
-        // _gather_123: target _loop0_124
+    _gather_125() {
+        // _gather_125: target _loop0_126
         let elem, seq;
         const mark = this._mark;
-        if ((elem = this.target()) !== null && (seq = this._loop0_124()) !== null) {
+        if ((elem = this.target()) !== null && (seq = this._loop0_126()) !== null) {
             return [elem, ...seq];
         }
         this._mark = mark;
@@ -5696,8 +5753,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_125() {
-        // _tmp_125: args | expression for_if_clauses
+    _tmp_127() {
+        // _tmp_127: args | expression for_if_clauses
         let args, expression, for_if_clauses;
         const mark = this._mark;
         if ((args = this.args())) {
@@ -5713,8 +5770,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_126() {
-        // _loop0_126: star_named_expressions
+    _loop0_128() {
+        // _loop0_128: star_named_expressions
         let star_named_expressions;
         const children = [];
         let mark = this._mark;
@@ -5728,13 +5785,13 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_127() {
-        // _loop0_127: (star_targets '=')
-        let _tmp_150;
+    _loop0_129() {
+        // _loop0_129: (star_targets '=')
+        let _tmp_152;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_150 = this._tmp_150())) {
-            children.push(_tmp_150);
+        while ((_tmp_152 = this._tmp_152())) {
+            children.push(_tmp_152);
             mark = this._mark;
         }
         this._mark = mark;
@@ -5743,13 +5800,13 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_128() {
-        // _loop0_128: (star_targets '=')
-        let _tmp_151;
+    _loop0_130() {
+        // _loop0_130: (star_targets '=')
+        let _tmp_153;
         const children = [];
         let mark = this._mark;
-        while ((_tmp_151 = this._tmp_151())) {
-            children.push(_tmp_151);
+        while ((_tmp_153 = this._tmp_153())) {
+            children.push(_tmp_153);
             mark = this._mark;
         }
         this._mark = mark;
@@ -5757,8 +5814,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children;
     }
 
-    _tmp_129() {
-        // _tmp_129: yield_expr | star_expressions
+    _tmp_131() {
+        // _tmp_131: yield_expr | star_expressions
         let star_expressions, yield_expr;
         const mark = this._mark;
         if ((yield_expr = this.yield_expr())) {
@@ -5773,8 +5830,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_130() {
-        // _tmp_130: '[' | '(' | '{'
+    _tmp_132() {
+        // _tmp_132: '[' | '(' | '{'
         let literal;
         const mark = this._mark;
         if ((literal = this.expect(9 /* '[' */))) {
@@ -5794,8 +5851,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_131() {
-        // _loop0_131: param_no_default
+    _loop0_133() {
+        // _loop0_133: param_no_default
         let param_no_default;
         const children = [];
         let mark = this._mark;
@@ -5808,16 +5865,16 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children;
     }
 
-    _tmp_132() {
-        // _tmp_132: slash_with_default | param_with_default+
-        let _loop1_152, slash_with_default;
+    _tmp_134() {
+        // _tmp_134: slash_with_default | param_with_default+
+        let _loop1_154, slash_with_default;
         const mark = this._mark;
         if ((slash_with_default = this.slash_with_default())) {
             return slash_with_default;
         }
         this._mark = mark;
-        if ((_loop1_152 = this._loop1_152())) {
-            return _loop1_152;
+        if ((_loop1_154 = this._loop1_154())) {
+            return _loop1_154;
         }
         this._mark = mark;
 
@@ -5825,8 +5882,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop0_133() {
-        // _loop0_133: lambda_param_no_default
+    _loop0_135() {
+        // _loop0_135: lambda_param_no_default
         let lambda_param_no_default;
         const children = [];
         let mark = this._mark;
@@ -5839,48 +5896,16 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children;
     }
 
-    _tmp_134() {
-        // _tmp_134: lambda_slash_with_default | lambda_param_with_default+
-        let _loop1_153, lambda_slash_with_default;
+    _tmp_136() {
+        // _tmp_136: lambda_slash_with_default | lambda_param_with_default+
+        let _loop1_155, lambda_slash_with_default;
         const mark = this._mark;
         if ((lambda_slash_with_default = this.lambda_slash_with_default())) {
             return lambda_slash_with_default;
         }
         this._mark = mark;
-        if ((_loop1_153 = this._loop1_153())) {
-            return _loop1_153;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_135() {
-        // _tmp_135: ')' | ',' (')' | '**')
-        let _tmp_154, literal;
-        const mark = this._mark;
-        if ((literal = this.expect(8 /* ')' */))) {
-            return literal;
-        }
-        this._mark = mark;
-        if ((literal = this.expect(12 /* ',' */)) && (_tmp_154 = this._tmp_154())) {
-            return [literal, _tmp_154];
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_136() {
-        // _tmp_136: ':' | ',' (':' | '**')
-        let _tmp_155, literal;
-        const mark = this._mark;
-        if ((literal = this.expect(11 /* ':' */))) {
-            return literal;
-        }
-        this._mark = mark;
-        if ((literal = this.expect(12 /* ',' */)) && (_tmp_155 = this._tmp_155())) {
-            return [literal, _tmp_155];
+        if ((_loop1_155 = this._loop1_155())) {
+            return _loop1_155;
         }
         this._mark = mark;
 
@@ -5888,7 +5913,39 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     _tmp_137() {
-        // _tmp_137: star_targets '='
+        // _tmp_137: ')' | ',' (')' | '**')
+        let _tmp_156, literal;
+        const mark = this._mark;
+        if ((literal = this.expect(8 /* ')' */))) {
+            return literal;
+        }
+        this._mark = mark;
+        if ((literal = this.expect(12 /* ',' */)) && (_tmp_156 = this._tmp_156())) {
+            return [literal, _tmp_156];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_138() {
+        // _tmp_138: ':' | ',' (':' | '**')
+        let _tmp_157, literal;
+        const mark = this._mark;
+        if ((literal = this.expect(11 /* ':' */))) {
+            return literal;
+        }
+        this._mark = mark;
+        if ((literal = this.expect(12 /* ',' */)) && (_tmp_157 = this._tmp_157())) {
+            return [literal, _tmp_157];
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_139() {
+        // _tmp_139: star_targets '='
         let literal, z;
         const mark = this._mark;
         if ((z = this.star_targets()) && (literal = this.expect(22 /* '=' */))) {
@@ -5899,40 +5956,40 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_138() {
-        // _tmp_138: '.' | '...'
-        let literal;
-        const mark = this._mark;
-        if ((literal = this.expect(23 /* '.' */))) {
-            return literal;
-        }
-        this._mark = mark;
-        if ((literal = this.expect(52 /* '...' */))) {
-            return literal;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_139() {
-        // _tmp_139: '.' | '...'
-        let literal;
-        const mark = this._mark;
-        if ((literal = this.expect(23 /* '.' */))) {
-            return literal;
-        }
-        this._mark = mark;
-        if ((literal = this.expect(52 /* '...' */))) {
-            return literal;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
     _tmp_140() {
-        // _tmp_140: '@' named_expression NEWLINE
+        // _tmp_140: '.' | '...'
+        let literal;
+        const mark = this._mark;
+        if ((literal = this.expect(23 /* '.' */))) {
+            return literal;
+        }
+        this._mark = mark;
+        if ((literal = this.expect(52 /* '...' */))) {
+            return literal;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_141() {
+        // _tmp_141: '.' | '...'
+        let literal;
+        const mark = this._mark;
+        if ((literal = this.expect(23 /* '.' */))) {
+            return literal;
+        }
+        this._mark = mark;
+        if ((literal = this.expect(52 /* '...' */))) {
+            return literal;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_142() {
+        // _tmp_142: '@' named_expression NEWLINE
         let f, literal, newline;
         const mark = this._mark;
         if (
@@ -5947,8 +6004,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_141() {
-        // _tmp_141: ',' star_expression
+    _tmp_143() {
+        // _tmp_143: ',' star_expression
         let c, literal;
         const mark = this._mark;
         if ((literal = this.expect(12 /* ',' */)) && (c = this.star_expression())) {
@@ -5959,8 +6016,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_142() {
-        // _tmp_142: ',' expression
+    _tmp_144() {
+        // _tmp_144: ',' expression
         let c, literal;
         const mark = this._mark;
         if ((literal = this.expect(12 /* ',' */)) && (c = this.expression())) {
@@ -5971,8 +6028,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_143() {
-        // _tmp_143: 'or' conjunction
+    _tmp_145() {
+        // _tmp_145: 'or' conjunction
         let c, keyword;
         const mark = this._mark;
         if ((keyword = this.keyword("or")) && (c = this.conjunction())) {
@@ -5983,8 +6040,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_144() {
-        // _tmp_144: 'and' inversion
+    _tmp_146() {
+        // _tmp_146: 'and' inversion
         let c, keyword;
         const mark = this._mark;
         if ((keyword = this.keyword("and")) && (c = this.inversion())) {
@@ -5995,32 +6052,32 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_145() {
-        // _tmp_145: 'if' disjunction
-        let keyword, z;
-        const mark = this._mark;
-        if ((keyword = this.keyword("if")) && (z = this.disjunction())) {
-            return z;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_146() {
-        // _tmp_146: 'if' disjunction
-        let keyword, z;
-        const mark = this._mark;
-        if ((keyword = this.keyword("if")) && (z = this.disjunction())) {
-            return z;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
     _tmp_147() {
-        // _tmp_147: starred_expression | named_expression !'='
+        // _tmp_147: 'if' disjunction
+        let keyword, z;
+        const mark = this._mark;
+        if ((keyword = this.keyword("if")) && (z = this.disjunction())) {
+            return z;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_148() {
+        // _tmp_148: 'if' disjunction
+        let keyword, z;
+        const mark = this._mark;
+        if ((keyword = this.keyword("if")) && (z = this.disjunction())) {
+            return z;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_149() {
+        // _tmp_149: starred_expression | named_expression !'='
         let named_expression, starred_expression;
         const mark = this._mark;
         if ((starred_expression = this.starred_expression())) {
@@ -6035,32 +6092,32 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_148() {
-        // _tmp_148: ',' star_target
-        let c, literal;
-        const mark = this._mark;
-        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_target())) {
-            return c;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
-    _tmp_149() {
-        // _tmp_149: ',' star_target
-        let c, literal;
-        const mark = this._mark;
-        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_target())) {
-            return c;
-        }
-        this._mark = mark;
-
-        return null;
-    }
-
     _tmp_150() {
-        // _tmp_150: star_targets '='
+        // _tmp_150: ',' star_target
+        let c, literal;
+        const mark = this._mark;
+        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_target())) {
+            return c;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_151() {
+        // _tmp_151: ',' star_target
+        let c, literal;
+        const mark = this._mark;
+        if ((literal = this.expect(12 /* ',' */)) && (c = this.star_target())) {
+            return c;
+        }
+        this._mark = mark;
+
+        return null;
+    }
+
+    _tmp_152() {
+        // _tmp_152: star_targets '='
         let literal, star_targets;
         const mark = this._mark;
         if ((star_targets = this.star_targets()) && (literal = this.expect(22 /* '=' */))) {
@@ -6071,8 +6128,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_151() {
-        // _tmp_151: star_targets '='
+    _tmp_153() {
+        // _tmp_153: star_targets '='
         let literal, star_targets;
         const mark = this._mark;
         if ((star_targets = this.star_targets()) && (literal = this.expect(22 /* '=' */))) {
@@ -6084,8 +6141,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_152() {
-        // _loop1_152: param_with_default
+    _loop1_154() {
+        // _loop1_154: param_with_default
         let param_with_default;
         const children = [];
         let mark = this._mark;
@@ -6099,8 +6156,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
     }
 
     @memoize
-    _loop1_153() {
-        // _loop1_153: lambda_param_with_default
+    _loop1_155() {
+        // _loop1_155: lambda_param_with_default
         let lambda_param_with_default;
         const children = [];
         let mark = this._mark;
@@ -6113,8 +6170,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return children.length ? children : null;
     }
 
-    _tmp_154() {
-        // _tmp_154: ')' | '**'
+    _tmp_156() {
+        // _tmp_156: ')' | '**'
         let literal;
         const mark = this._mark;
         if ((literal = this.expect(8 /* ')' */))) {
@@ -6129,8 +6186,8 @@ export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends
         return null;
     }
 
-    _tmp_155() {
-        // _tmp_155: ':' | '**'
+    _tmp_157() {
+        // _tmp_157: ':' | '**'
         let literal;
         const mark = this._mark;
         if ((literal = this.expect(11 /* ':' */))) {
@@ -6157,6 +6214,7 @@ export const KEYWORDS = new Set([
     "continue",
     "global",
     "nonlocal",
+    "debugger",
     "if",
     "try",
     "while",
