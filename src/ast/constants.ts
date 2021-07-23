@@ -42,7 +42,8 @@ export class pyStr extends pyConstant<string> {
     }
 }
 
-/** @todo we cant really have bigint here - we could use JSBI or string instead */
+// this could also be a JSBI.BigInt
+// relying on Skulpt adding JSBI to the window object if bigint isn't available
 export class pyInt extends pyConstant<number | bigint> {
     static _name = "int";
 }

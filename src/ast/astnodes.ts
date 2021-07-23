@@ -7,7 +7,6 @@
 
 import { pyConstant } from "./constants.ts";
 
-/** @todo should identifier be a python type? */
 export type identifier = string;
 export type constant = pyConstant;
 export const enum ASTKind {

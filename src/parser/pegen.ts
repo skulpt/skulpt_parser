@@ -135,8 +135,11 @@ export function get_expr_name(e: expr): string {
 }
 
 export function dummy_name(p: Parser): Name {
-    // we don't care about caching yet, but it's a smart move when we're
-    // creating big ol python string objects for this dummy thing everytime
+    /**
+     * @todo
+     * we don't care about caching yet, but it's a smart move when we're
+     * creating big ol python string objects for this dummy thing everytime
+     */
     return new Name(_create_dummy_identifier(p), Load, 1, 0, 1, 0);
 }
 
@@ -183,7 +186,6 @@ export function seq_flatten<A>(_p: Parser, seqs: A[][]): A[] {
 export function join_names_with_dot(_p: Parser, first_name: Name, second_name: Name): Name {
     const first_identifier = first_name.id;
     const second_identifier = second_name.id;
-    /** @todo if we make these pyStrings we'll have to change this */
     return new Name(first_identifier + "." + second_identifier, Load, ...EXTRA_EXPR(first_name, second_name));
 }
 
@@ -476,7 +478,6 @@ export function concatenate_strings(p: Parser, tokens: TokenInfo[]): JoinedStr |
         bytesmode = this_bytesmode;
         if (fmode) {
             fstringParser.concatFstring(s, 0, s.length, rawmode, 0, t);
-            /** @todo */
         } else if (bytesmode) {
             bytestr += s;
         } else {

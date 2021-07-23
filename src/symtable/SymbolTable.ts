@@ -799,7 +799,7 @@ export class SymbolTable {
                 this.SEQ(
                     this.visitExcepthandler,
                     try_.handlers as astnode.ExceptHandler[]
-                ); /** @todo Update adsl to make `handlers` of type ExceptHandler[] */
+                ); /** @todo Update asdl to make `handlers` of type ExceptHandler[] */
                 this.SEQ(this.visitStmt, try_.finalbody);
                 break;
             }
