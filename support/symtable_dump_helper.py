@@ -60,4 +60,4 @@ def table_to_dict(table: SymbolTable) -> Mapping[str, Union[str, int, bool]]:
     return res
 
 
-print(json.dumps(table_to_dict(table), indent=2))
+print(json.dumps(table_to_dict(table), indent=2), end="")

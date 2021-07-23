@@ -1,8 +1,8 @@
-/** @todo - mode */
 /** Simple name and function, compact form, but not configurable */
 export async function getPyAstDump(
     content: string,
-    options: { indent?: null | number; include_attributes?: boolean; js?: boolean }
+    options: { indent?: null | number; include_attributes?: boolean; js?: boolean },
+    mode = "exec"
 ): Promise<string> {
     const { indent = null, include_attributes: includeAttrs = false, js = false } = options;
     const cmd = Deno.run({
@@ -13,6 +13,7 @@ export async function getPyAstDump(
             `--indent=${indent === null ? -1 : indent}`,
             includeAttrs ? "--attrs=1" : "--attrs=0",
             js ? "--js=1" : "--js=0",
+            `--mode=${mode}`,
         ],
         stdout: "piped",
         stderr: "piped",
