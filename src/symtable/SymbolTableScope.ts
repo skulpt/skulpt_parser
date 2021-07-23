@@ -302,9 +302,9 @@ export class SymbolTableScope {
         current block.  The analyze_block() call modifies these
         dictionaries.
         */
-        const tempBound = new Set(bound);
-        const tempFree = new Set(free);
-        const tempGlobal = new Set(global);
+        const tempBound = new Set([...bound]);
+        const tempFree = new Set([...free]);
+        const tempGlobal = new Set([...global]);
 
         this.analyzeBlock(tempBound, tempFree, tempGlobal);
 
