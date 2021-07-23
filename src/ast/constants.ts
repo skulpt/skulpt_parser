@@ -3,7 +3,7 @@
 
 import { assert } from "../util/assert.ts";
 
-export enum ConstantType {
+export const enum ConstantType {
     str = "str",
     int = "int",
     float = "float",
