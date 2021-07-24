@@ -220,10 +220,10 @@ class PrototypeVisitor(EmitVisitor):
         ts_args = []
         for atype, aname, opt, seq in args:
             atype = atype
-            if opt or seq:
+            if (opt or seq) and not attrs:
                 # optional types really means can be null rather than optional
                 atype = atype if not opt and not seq else atype + " | null"
-            ts_args.append(f"{aname}{'?' if opt and attrs else ''}: {atype}")
+            ts_args.append(f"{aname}: {atype}")
         return ", ".join(ts_args)
 
     def visitConstructor(self, cons, type, attrs):
@@ -248,10 +248,10 @@ class FunctionVisitor(PrototypeVisitor):
     def emit_instance_types(self, args, attrs=False):
         for atype, aname, opt, seq in args:
             atype = atype
-            if opt:
+            if opt and not attrs:
                 # optional types really means can be null rather than optional
                 atype = atype if not opt else atype + " | null"
-            self.emit(f"{aname}{'?' if opt and attrs else ''}: {atype};", 1)
+            self.emit(f"{aname}: {atype};", 1)
 
     def emit_function(self, name, ts_type, args, attrs, union=1):
         emit = self.emit
@@ -414,7 +414,7 @@ AST.prototype._attributes = [];
 AST.prototype._fields = [];
 AST.prototype._enum = false;
 
-export type Attrs = [number, number, number | null | undefined, number | null | undefined];
+export type Attrs = [number, number, number, number];
 const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 
 """

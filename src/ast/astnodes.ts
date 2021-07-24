@@ -104,7 +104,7 @@ AST.prototype._attributes = [];
 AST.prototype._fields = [];
 AST.prototype._enum = false;
 
-export type Attrs = [number, number, number | null | undefined, number | null | undefined];
+export type Attrs = [number, number, number, number];
 const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 
 /* ---------------------- */
@@ -332,9 +332,9 @@ export class stmt extends AST {
     static _name = "stmt";
     lineno: number;
     col_offset: number;
-    end_lineno?: number | null;
-    end_col_offset?: number | null;
-    constructor(lineno: number, col_offset: number, end_lineno?: number | null, end_col_offset?: number | null) {
+    end_lineno: number;
+    end_col_offset: number;
+    constructor(lineno: number, col_offset: number, end_lineno: number, end_col_offset: number) {
         super();
         this.lineno = lineno;
         this.col_offset = col_offset;
@@ -758,9 +758,9 @@ export class expr extends AST {
     static _name = "expr";
     lineno: number;
     col_offset: number;
-    end_lineno?: number | null;
-    end_col_offset?: number | null;
-    constructor(lineno: number, col_offset: number, end_lineno?: number | null, end_col_offset?: number | null) {
+    end_lineno: number;
+    end_col_offset: number;
+    constructor(lineno: number, col_offset: number, end_lineno: number, end_col_offset: number) {
         super();
         this.lineno = lineno;
         this.col_offset = col_offset;
@@ -1152,9 +1152,9 @@ export class excepthandler extends AST {
     static _name = "excepthandler";
     lineno: number;
     col_offset: number;
-    end_lineno?: number | null;
-    end_col_offset?: number | null;
-    constructor(lineno: number, col_offset: number, end_lineno?: number | null, end_col_offset?: number | null) {
+    end_lineno: number;
+    end_col_offset: number;
+    constructor(lineno: number, col_offset: number, end_lineno: number, end_col_offset: number) {
         super();
         this.lineno = lineno;
         this.col_offset = col_offset;
@@ -1219,16 +1219,16 @@ export class arg extends AST {
     type_comment: string | null;
     lineno: number;
     col_offset: number;
-    end_lineno?: number | null;
-    end_col_offset?: number | null;
+    end_lineno: number;
+    end_col_offset: number;
     constructor(
         arg: identifier,
         annotation: expr | null,
         type_comment: string | null,
         lineno: number,
         col_offset: number,
-        end_lineno?: number | null,
-        end_col_offset?: number | null
+        end_lineno: number,
+        end_col_offset: number
     ) {
         super();
         this.arg = arg;
@@ -1251,15 +1251,15 @@ export class keyword extends AST {
     value: expr;
     lineno: number;
     col_offset: number;
-    end_lineno?: number | null;
-    end_col_offset?: number | null;
+    end_lineno: number;
+    end_col_offset: number;
     constructor(
         arg: identifier | null,
         value: expr,
         lineno: number,
         col_offset: number,
-        end_lineno?: number | null,
-        end_col_offset?: number | null
+        end_lineno: number,
+        end_col_offset: number
     ) {
         super();
         this.arg = arg;
