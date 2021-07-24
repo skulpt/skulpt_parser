@@ -12,7 +12,7 @@
  */
 import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
 import type { expr, mod } from "../src/ast/astnodes.ts";
-import { runParserFromString } from "../src/parser/parse.ts";
+import { runParserFromString } from "../src/parser/mod.ts";
 import { buildSymbolTable } from "../src/symtable/mod.ts";
 import { readString } from "../src/tokenize/readline.ts";
 import { tokenize } from "../src/tokenize/tokenize.ts";

@@ -5,7 +5,7 @@ import { tokenizerFromFile, tokenizerFromString } from "../tokenize/mod.ts";
 import { GeneratedParser } from "./generated_parser.ts";
 import { StartRule } from "./pegen_types.ts";
 
-type ModeStr = "exec" | "eval" | "single";
+export type ModeStr = "exec" | "eval" | "single";
 
 function modeStrToStartRule(mode: ModeStr): StartRule {
     switch (mode) {
@@ -39,3 +39,6 @@ export function parserFromFile(filename: string, mode: ModeStr = "exec") {
 export function runParserFromFile(filename: string, mode: ModeStr = "exec") {
     return parserFromFile(filename, mode).parse();
 }
+
+export var astFromString = runParserFromString;
+export var astFromFile = runParserFromFile;

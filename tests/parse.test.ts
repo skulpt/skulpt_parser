@@ -2,7 +2,7 @@ import { dump } from "../support/ast_dump.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 // replace with assertEquals when string comparison is better.
 import { assertEqualsString } from "../support/diff.ts";
-import { runParserFromString } from "../src/parser/parse.ts";
+import { runParserFromString } from "../src/parser/mod.ts";
 import { runTests } from "./run_tests_helper.ts";
 
 // deno-lint-ignore camelcase

@@ -1,15 +1,13 @@
 import { dump } from "../support/symtable_dump.ts";
 import { getPySymTableDump } from "../support/py_symtable_dump.ts";
-import { buildSymbolTable, SymbolTableScope } from "../src/symtable/mod.ts";
+import { symtableFromString, SymbolTableScope } from "../src/symtable/mod.ts";
 
-import { runParserFromString } from "../src/parser/parse.ts";
 import { runTests } from "./run_tests_helper.ts";
 import { assert, assertEquals, assertThrows } from "../deps.ts";
 
 async function doTest(source: string) {
     const pyDump = await getPySymTableDump(source);
-    const jsAST = runParserFromString(source);
-    const symtable = dump(buildSymbolTable(jsAST));
+    const symtable = dump(symtableFromString(source));
 
     assertEquals(symtable, JSON.parse(pyDump));
 }
@@ -65,20 +63,20 @@ function findBlock(block: SymbolTableScope | null, name: string): SymbolTableSco
     throw Error("block not found!");
 }
 
-const table = buildSymbolTable(runParserFromString(TEST_CODE), "?", "exec");
+const table = symtableFromString(TEST_CODE, "exec", "?");
 const top = table.top!;
 // These correspond to scopes in TEST_CODE
 const Mine = findBlock(top, "Mine");
-const a_method = findBlock(Mine, "a_method");
+const aMethod = findBlock(Mine, "a_method");
 const spam = findBlock(top, "spam");
 const internal = findBlock(spam, "internal");
-const other_internal = findBlock(spam, "other_internal");
+const otherInternal = findBlock(spam, "other_internal");
 const foo = findBlock(top, "foo");
 
 Deno.test("test_type", () => {
     assertEquals(top.get_type(), "module");
     assertEquals(Mine.get_type(), "class");
-    assertEquals(a_method.get_type(), "function");
+    assertEquals(aMethod.get_type(), "function");
     assertEquals(spam.get_type(), "function");
     assertEquals(internal.get_type(), "function");
 });
@@ -125,9 +123,9 @@ Deno.test("test_globals", () => {
 
 Deno.test("test_nonlocal", () => {
     assert(!spam.lookup("some_var").is_nonlocal());
-    assert(other_internal.lookup("some_var").is_nonlocal());
+    assert(otherInternal.lookup("some_var").is_nonlocal());
     const expected = ["some_var"];
-    assertEquals(other_internal.get_nonlocals(), expected);
+    assertEquals(otherInternal.get_nonlocals(), expected);
 });
 
 Deno.test("test_local", () => {
@@ -169,13 +167,13 @@ Deno.test("test_namespaces", () => {
     assert(!spam.lookup("x").is_namespace());
 
     assert(top.lookup("spam").get_namespace() === spam);
-    const ns_test = top.lookup("namespace_test");
-    assertEquals(ns_test.get_namespaces()?.length, 2);
-    assertThrows(() => ns_test.get_namespace());
+    const nsTest = top.lookup("namespace_test");
+    assertEquals(nsTest.get_namespaces()?.length, 2);
+    assertThrows(() => nsTest.get_namespace());
 
-    const ns_test_2 = top.lookup("glob");
-    assertEquals(ns_test_2.get_namespaces()?.length, 0);
-    assertThrows(() => ns_test_2.get_namespace());
+    const nsTest2 = top.lookup("glob");
+    assertEquals(nsTest2.get_namespaces()?.length, 0);
+    assertThrows(() => nsTest2.get_namespace());
 });
 
 Deno.test("test_assigned", () => {
@@ -187,27 +185,27 @@ Deno.test("test_assigned", () => {
 });
 
 Deno.test("test_annotated", () => {
-    const st1 = buildSymbolTable(runParserFromString("def f():\n    x: int\n"), "test", "exec").top!;
+    const st1 = symtableFromString("def f():\n    x: int\n", "exec", "test").top!;
     const st2 = st1.get_children()[0];
     assert(st2.lookup("x").is_local());
     assert(st2.lookup("x").is_annotated());
     assert(!st2.lookup("x").is_global());
-    const st3 = buildSymbolTable(runParserFromString("def f():\n    x = 1\n"), "test", "exec").top!;
+    const st3 = symtableFromString("def f():\n    x = 1\n", "exec", "test").top!;
     const st4 = st3.get_children()[0];
     assert(st4.lookup("x").is_local());
     assert(!st4.lookup("x").is_annotated());
 
     // Test that annotations in the global scope are valid after the
     // variable is declared as nonlocal.
-    const st5 = buildSymbolTable(runParserFromString("global x\nx: int"), "test", "exec").top!;
+    const st5 = symtableFromString("global x\nx: int", "exec", "test").top!;
     assert(st5.lookup("x").is_global());
 
     // Test that annotations for nonlocals are valid after the
     // variable is declared as nonlocal.
-    const st6 = buildSymbolTable(
-        runParserFromString("def g():\n" + "    x = 2\n" + "    def f():\n" + "        nonlocal x\n" + "    x: int"),
-        "test",
-        "exec"
+    const _st6 = symtableFromString(
+        "def g():\n" + "    x = 2\n" + "    def f():\n" + "        nonlocal x\n" + "    x: int",
+        "exec",
+        "test"
     );
 });
 
@@ -231,7 +229,7 @@ Deno.test("test_filename_correct", () => {
     // while parsing or building symbol table.
     function checkfilename(brokencode: string, offset: number) {
         try {
-            buildSymbolTable(runParserFromString(brokencode, "exec", "spam"), "spam", "exec");
+            symtableFromString(brokencode, "exec", "spam");
         } catch (e) {
             assertEquals(e.traceback[0], "spam");
             assertEquals(e.traceback[1], 1);
