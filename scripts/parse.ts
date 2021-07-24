@@ -5,7 +5,7 @@
 import { dump } from "../support/ast_dump.ts";
 import { parse } from "../deps.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
-import { runParserFromFile } from "../src/parser/parse.ts";
+import { runParserFromFile } from "../src/parser/mod.ts";
 import type { expr, mod } from "../src/ast/astnodes.ts";
 import { doCompare, getFileNameOrRunTest } from "./helpers.ts";
 import { switchVersion } from "../src/util/switch_version.ts";

@@ -1,7 +1,7 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-export const enum tokens {
+export enum tokens {
     ENDMARKER,
     NAME,
     NUMBER,

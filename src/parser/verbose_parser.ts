@@ -23,7 +23,7 @@ const log = (s: string, col: colors) => {
         console.log(Colors[col](`${s.replace(/\n/g, "\\n")}`));
     }
 };
-const argstr = (arg?: string) => (arg === undefined ? "" : `'${arg}'`);
+const argstr = (arg?: string | number) => (arg === undefined ? "" : `'${tokens[arg as number] || arg}'`);
 
 /** For non-memoized functions that we want to be logged.*/
 export function logger(_target: VerboseParser, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -149,7 +149,7 @@ export class VerboseParser extends BaseParser {
     constructor(tokenizer: Tokenizer) {
         super(tokenizer);
         this._level = 0;
-        this.rewrap(["name", "string", "number", "op", "expect"]);
+        this.rewrap(["name", "string", "number", "keyword", "expect"]);
     }
     showpeek(): string {
         const tok = this.peek();

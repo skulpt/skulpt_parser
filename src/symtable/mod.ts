@@ -3,6 +3,8 @@
 
 import type { Module, Expression, Interactive, mod } from "../ast/astnodes.ts";
 import { ASTKind } from "../ast/astnodes.ts";
+import { astFromFile, astFromString } from "../parser/mod.ts";
+import type { ModeStr } from "../parser/mod.ts";
 import { SymbolTable } from "./SymbolTable.ts";
 import { BlockType } from "./util.ts";
 
@@ -37,4 +39,14 @@ export function buildSymbolTable(mod: mod, filename = "<string>", future: any = 
     st.analyze();
 
     return st;
+}
+
+export function symtableFromString(source: string, mode: ModeStr = "exec", filename = "<string>"): SymbolTable {
+    const ast = astFromString(source, mode, filename);
+    return buildSymbolTable(ast, filename);
+}
+
+export function symtableFromFile(filename: string, mode: ModeStr = "exec"): SymbolTable {
+    const ast = astFromFile(filename, mode);
+    return buildSymbolTable(ast, filename);
 }
