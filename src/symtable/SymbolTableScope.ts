@@ -138,9 +138,14 @@ export class SymbolTableScope {
     }
 
     private identsMatching(f: (flag: number) => boolean): string[] {
-        return Object.entries(this.symbols)
-            .filter(([_, v]) => f(v))
-            .map(([k, _]) => k);
+        const idents = [];
+        for (const name in this.symbols) {
+            const flags = this.symbols[name];
+            if (f(flags)) {
+                idents.push(name);
+            }
+        }
+        return idents;
     }
 
     get_parameters(): string[] {
@@ -302,9 +307,9 @@ export class SymbolTableScope {
         current block.  The analyze_block() call modifies these
         dictionaries.
         */
-        const tempBound = new Set(bound);
-        const tempFree = new Set(free);
-        const tempGlobal = new Set(global);
+        const tempBound = new Set([...bound]);
+        const tempFree = new Set([...free]);
+        const tempGlobal = new Set([...global]);
 
         this.analyzeBlock(tempBound, tempFree, tempGlobal);
 
@@ -312,7 +317,8 @@ export class SymbolTableScope {
     }
 
     analyzeCells(scopes: NameToFlag, free: Set<string>) {
-        for (const [name, scope] of Object.entries(scopes)) {
+        for (const name in scopes) {
+            const scope = scopes[name];
             if (scope !== SYMTAB_CONSTS.LOCAL) {
                 continue;
             }
@@ -331,7 +337,8 @@ export class SymbolTableScope {
 
     updateSymbols(scopes: NameToFlag, bound: Set<string> | null, free: Set<string>, classFlag: boolean) {
         /* Update scope information for all symbols in this scope */
-        for (let [name, flags] of Object.entries(this.symbols)) {
+        for (const name in this.symbols) {
+            let flags = this.symbols[name];
             flags |= scopes[name] << SYMTAB_CONSTS.SCOPE_OFFSET;
             this.symbols[name] = flags;
         }
@@ -399,7 +406,8 @@ export class SymbolTableScope {
             }
         }
 
-        for (const [name, flags] of Object.entries(this.symbols)) {
+        for (const name in this.symbols) {
+            const flags = this.symbols[name];
             this.analyzeName(scopes, name, flags, bound, local, free, global);
         }
 

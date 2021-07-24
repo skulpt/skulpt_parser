@@ -87,7 +87,7 @@ export class SymbolTable {
     }
 
     SEQ<T>(visitor: (node: T) => void, nodes: (T | null)[]) {
-        assert(Array.isArray(nodes), "SEQ: nodes isn't array? got " + nodes.toString());
+        assert(Array.isArray(nodes), "SEQ: nodes isn't array? got " + typeof nodes);
         for (const node of nodes) {
             if (node) {
                 visitor.call(this, node);
