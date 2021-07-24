@@ -382,9 +382,8 @@ def main(asdlfile, outputfile):
     f.write("// deno-lint-ignore-file camelcase\n\n")
     f.write(
         """
-import { pyConstant } from "./constants.ts";
+import type { pyConstant } from "./constants.ts";
 
-/** @todo should identifier be a python type? */
 export type identifier = string;
 export type constant = pyConstant;
 """
