@@ -14,6 +14,7 @@ TABSIZE = 4
 MAX_COL = 119
 
 C_TO_TS_TYPES = {"int": "number"}
+TS_TYPES = {"identifier", "number", "string", "constant"}
 
 
 def clean_name(name: str) -> str:
@@ -128,6 +129,84 @@ class KindsVisitor(EmitVisitor):
         self.emit(f"{cons.name},", depth=1)
 
 
+class ASTVisitorVisitor(EmitVisitor):
+    simple_types = set()
+
+    def __init__(self, file):
+        super().__init__(file)
+        self.emit("visitSeq(seq: AST[] | null) {", depth=1)
+        self.emit("if (seq === null) return null", depth=2)
+        self.emit("for (const node of seq) {", depth=2)
+        self.emit("node.walkabout(this);", depth=3)
+        self.emit("}", depth=2)
+        self.emit("}", depth=1)
+        self.emit("", depth=0)
+
+        self.emit("defaultVisitor(_node: AST): any {", depth=1)
+        self.emit("throw new Error('NodeVisitor not implemented');", depth=2)
+        self.emit("}", depth=1)
+        self.emit("", depth=0)
+
+    def visitModule(self, mod):
+        for dfn in mod.dfns:
+            self.visit(dfn)
+
+    def visitType(self, type, depth=0):
+        self.visit(type.value, type.name, depth)
+
+    def visitSum(self, sum, name, depth):
+        if not is_simple(sum):
+            for t in sum.types:
+                self.visit(t, name, sum.attributes)
+
+    def visitConstructor(self, cons, type, attrs):
+        self.emit(f"visit_{cons.name}(node: {cons.name}): any {{", depth=1)
+        self.emit("return this.defaultVisitor(node);", depth=2)
+        self.emit("}", depth=1)
+
+    def visitProduct(self, prod, name, depth):
+        self.emit(f"visit_{name}(node: {name}): any {{", depth=1)
+        self.emit("return this.defaultVisitor(node);", depth=2)
+        self.emit("}", depth=1)
+
+
+class GenericASTVisitorVisitor(EmitVisitor):
+    def __init__(self, file):
+        super().__init__(file)
+        self.emit("visitSeq(seq: AST[] | null) {", depth=1)
+        self.emit("if (seq === null) return null", depth=2)
+        self.emit("for (const node of seq) {", depth=2)
+        self.emit("node.walkabout(this);", depth=3)
+        self.emit("}", depth=2)
+        self.emit("}", depth=1)
+        self.emit("", depth=0)
+
+        self.emit("defaultVisitor(_node: AST) {", depth=1)
+        self.emit("throw new Error('NodeVisitor not implemented');", depth=2)
+        self.emit("}", depth=1)
+        self.emit("", depth=0)
+
+    def visitModule(self, mod):
+        for dfn in mod.dfns:
+            self.visit(dfn)
+
+    def visitType(self, type, depth=0):
+        self.visit(type.value, type.name, depth)
+
+    def visitSum(self, sum, name, depth):
+        if not is_simple(sum):
+            for t in sum.types:
+                self.visit(t, name, sum.attributes)
+
+    def visitConstructor(self, cons, type, attrs):
+        self.emit(f"visit_{cons.name}(node: {cons.name}) {{", depth=1)
+        self.emit("return this.defaultVisitor(node);", depth=2)
+        self.emit("}", depth=1)
+
+
+simple_sum_types = set()
+
+
 class TypeDefVisitor(EmitVisitor):
     def visitModule(self, mod):
         for dfn in mod.dfns:
@@ -139,6 +218,7 @@ class TypeDefVisitor(EmitVisitor):
     def visitSum(self, sum, name, depth):
         if is_simple(sum):
             self.simple_sum(sum, name, depth)
+            simple_sum_types.add(name)
 
     def simple_sum(self, sum, name, depth):
         def emit(s, depth=depth):
@@ -277,9 +357,13 @@ class FunctionVisitor(PrototypeVisitor):
 
         if union:
             self.emit_body_union(name, args, attrs)
+            # print(name)
         else:
             self.emit_body_struct(name, args, attrs)
         emit("}", 1)
+
+        self.emit_mutate_over(name, args)
+
         emit("}")
         # keep this on the prototype because defining it inside the class, e.g.
         # _fields = ['arg0', 'arg1'];
@@ -300,6 +384,46 @@ class FunctionVisitor(PrototypeVisitor):
     def emit_body_union(self, name, args, attrs):
         self.emit_body_attrs(args)
         # don't both with the attrs since we inherit these from the super class
+
+    def emit_mutate_over(self, name, args):
+        emit = self.emit
+        emit("mutateOver(visitor: ASTVisitor) {", 1)
+        level = 2
+        # first = True
+        for a_type, argname, opt, seq in args:
+            optional_seq = argname == "kw_defaults" or argname == "keys"
+            typename = a_type.replace("[]", "")
+            if typename in TS_TYPES or typename in simple_sum_types:
+                continue
+            # if first:
+            #     emit("let newNode;", 2)
+            #     first = False
+            if opt:
+                emit(f"if (this.{argname}) {{", level)
+                level += 1
+            if seq:
+                emit(f"this.{argname}.forEach((node, i) => {{", level)
+                if optional_seq:
+                    emit("if (node === null) return;", level + 1)
+                # emit(f"newNode = node.mutateOver(visitor);", level+1)
+                # emit(f"newNode !== node && (this.{argname}[i] = newNode as {a_type.replace('[]', '')});", level+1)
+                emit(f"this.{argname}[i] = node.mutateOver(visitor) as {a_type.replace('[]', '')};", level + 1)
+                emit("})", level)
+            else:
+                #     emit(f"newNode = this.{argname}.mutateOver(visitor);", level)
+                #     emit(f"newNode !== this.{argname} && (this.{argname} = newNode as {a_type});", level)
+                emit(f"this.{argname} = this.{argname}.mutateOver(visitor) as {a_type.replace('[]', '')};", level + 1)
+
+            if opt:
+                level -= 1
+                emit("}", level)
+
+        emit(f"return visitor.visit_{name}(this)", 2)
+        emit("}", 1)
+
+        emit("walkabout(visitor: ASTVisitor) {", 1)
+        emit(f"return visitor.visit_{name}(this)", 2)
+        emit("}", 1)
 
     def emit_body_struct(self, name, args, attrs):
         self.emit_body_attrs(args)
@@ -402,12 +526,19 @@ export interface AST {
     _attributes: string[];
     _enum: boolean;
     _kind: ASTKind;
+    mutateOver(visitor: ASTVisitor): any;
 }
 
 export class AST {
     static _name = "AST";
     get [Symbol.toStringTag]() {
         return (this.constructor as typeof AST)._name;
+    }
+    mutateOver(visitor: ASTVisitor): any {
+        throw new Error("mutateOver() implementation not provided")
+    }
+    walkabout(visitor: ASTVisitor): any {
+        throw new Error("walkabout() implementation not provided")
     }
 }
 AST.prototype._attributes = [];
@@ -431,7 +562,13 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
     v = FunctionVisitor(f)
     v.visit(mod)
 
+    f.write("export class ASTVisitor {")
+    a = ASTVisitorVisitor(f)
+    a.visit(mod)
+    f.write("}")
+
     f.close()
+    print(simple_sum_types)
 
     # run prettier over the file
     subprocess.run(["pre-commit", "run", "prettier", "--files", outputfile])

@@ -11,8 +11,9 @@
  * deno run -A dist/bundle.min.js tmp.txt
  */
 import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
-import type { expr, mod } from "../src/ast/astnodes.ts";
+import type { AST, expr, mod } from "../src/ast/astnodes.ts";
 import { runParserFromString } from "../src/parser/mod.ts";
+import { ASTVisitor } from "../src/ast/astnodes.ts";
 import { buildSymbolTable } from "../src/symtable/mod.ts";
 import { readString } from "../src/tokenize/readline.ts";
 import { tokenize } from "../src/tokenize/tokenize.ts";
@@ -61,6 +62,24 @@ bench({
         astSym ??= runParserFromString(text);
         b.start();
         buildSymbolTable(astSym, filename);
+        b.stop();
+    },
+});
+
+class nullASTVitor extends ASTVisitor {
+    defaultVisitor(node: AST) {
+        return node;
+    }
+}
+
+bench({
+    name: "mutate",
+    runs: 2000,
+    func(b): void {
+        astSym ??= runParserFromString(text);
+        b.start();
+        const visitor = new nullASTVitor();
+        astSym.mutateOver(visitor);
         b.stop();
     },
 });

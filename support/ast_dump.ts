@@ -53,7 +53,7 @@ export function dump(node: AST, options: dumpOptions): string {
             }
             if (include_attributes && node._attributes.length) {
                 for (const attr of node._attributes) {
-                    let value = node[attr as keyof typeof node];
+                    let value = node[attr as keyof typeof node] as nodeType;
                     let simple: boolean;
                     [value, simple] = _format(value, level);
                     allsimple = allsimple && simple;
