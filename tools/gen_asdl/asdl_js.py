@@ -170,40 +170,6 @@ class ASTVisitorVisitor(EmitVisitor):
         self.emit("}", depth=1)
 
 
-class GenericASTVisitorVisitor(EmitVisitor):
-    def __init__(self, file):
-        super().__init__(file)
-        self.emit("visitSeq(seq: AST[] | null) {", depth=1)
-        self.emit("if (seq === null) return null", depth=2)
-        self.emit("for (const node of seq) {", depth=2)
-        self.emit("node.walkabout(this);", depth=3)
-        self.emit("}", depth=2)
-        self.emit("}", depth=1)
-        self.emit("", depth=0)
-
-        self.emit("defaultVisitor(_node: AST) {", depth=1)
-        self.emit("throw new Error('NodeVisitor not implemented');", depth=2)
-        self.emit("}", depth=1)
-        self.emit("", depth=0)
-
-    def visitModule(self, mod):
-        for dfn in mod.dfns:
-            self.visit(dfn)
-
-    def visitType(self, type, depth=0):
-        self.visit(type.value, type.name, depth)
-
-    def visitSum(self, sum, name, depth):
-        if not is_simple(sum):
-            for t in sum.types:
-                self.visit(t, name, sum.attributes)
-
-    def visitConstructor(self, cons, type, attrs):
-        self.emit(f"visit_{cons.name}(node: {cons.name}) {{", depth=1)
-        self.emit("return this.defaultVisitor(node);", depth=2)
-        self.emit("}", depth=1)
-
-
 simple_sum_types = set()
 
 
