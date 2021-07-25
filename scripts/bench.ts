@@ -17,6 +17,7 @@ import { ASTVisitor } from "../src/ast/astnodes.ts";
 import { buildSymbolTable } from "../src/symtable/mod.ts";
 import { readString } from "../src/tokenize/readline.ts";
 import { tokenize } from "../src/tokenize/tokenize.ts";
+import { astOptimize } from "../src/ast/optimize.ts";
 
 const { _: args } = parse(Deno.args);
 
@@ -66,25 +67,18 @@ bench({
     },
 });
 
-class nullASTVitor extends ASTVisitor {
-    defaultVisitor(node: AST) {
-        return node;
-    }
-}
-
 bench({
-    name: "mutate",
+    name: "optimize",
     runs: 2000,
     func(b): void {
-        astSym ??= runParserFromString(text);
+        const ast = runParserFromString(text);
         b.start();
-        const visitor = new nullASTVitor();
-        astSym.mutateOver(visitor);
+        astOptimize(ast);
         b.stop();
     },
 });
 
-runBenchmarks({ only: /parse/ }, (p) => {
+runBenchmarks({ only: /optimize/ }, (p) => {
     if (p.running && p.running.measuredRunsMs.length) {
         console.log(p.running.measuredRunsMs[p.running.measuredRunsMs.length - 1], "ms");
     } else if (p.results.length) {
