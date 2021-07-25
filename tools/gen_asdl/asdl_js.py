@@ -526,7 +526,6 @@ export interface AST {
     _attributes: string[];
     _enum: boolean;
     _kind: ASTKind;
-    mutateOver(visitor: ASTVisitor): any;
 }
 
 export class AST {
@@ -534,10 +533,10 @@ export class AST {
     get [Symbol.toStringTag]() {
         return (this.constructor as typeof AST)._name;
     }
-    mutateOver(visitor: ASTVisitor): any {
+    mutateOver(_visitor: ASTVisitor): any {
         throw new Error("mutateOver() implementation not provided")
     }
-    walkabout(visitor: ASTVisitor): any {
+    walkabout(_visitor: ASTVisitor): any {
         throw new Error("walkabout() implementation not provided")
     }
 }
@@ -568,7 +567,6 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
     f.write("}")
 
     f.close()
-    print(simple_sum_types)
 
     # run prettier over the file
     subprocess.run(["pre-commit", "run", "prettier", "--files", outputfile])

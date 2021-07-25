@@ -1,54 +1,84 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
+import type { AST, BinOp, BoolOp, cmpop, Compare, expr, mod, Subscript, Tuple, UnaryOp } from "./astnodes.ts";
 import {
     Add,
     And,
-    AST,
     ASTVisitor,
-    BinOp,
+    ASTKind,
     BitAnd,
     BitOr,
     BitXor,
-    BoolOp,
-    cmpop,
-    Compare,
     Constant,
     Div,
-    Expr,
-    expr,
     FloorDiv,
+    In,
     Invert,
+    Is,
+    IsNot,
     Load,
     LShift,
     Mod,
-    mod,
+    Not,
+    NotIn,
     Mult,
     Pow,
     RShift,
     Sub,
-    Subscript,
-    Tuple,
     UAdd,
-    UnaryOp,
     USub,
 } from "./astnodes.ts";
-import { ASTKind, Not, Is, IsNot, In, NotIn } from "./astnodes.ts";
-import { pyConstant, pyFalse, pyTrue, pyTuple } from "../mock_types/constants.ts";
+import { pyFalse, pyTrue, pyTuple } from "../mock_types/constants.ts";
+import type { pyConstant } from "../mock_types/constants.ts";
 import {
+    pyAdd,
+    pyAnd,
+    pyDiv,
+    pyFloorDiv,
+    pyGetItem,
+    pyInvert,
     pyIsTrue,
-    pyNumber_Add,
-    pyNumber_Sub,
-    pyNumber_Mult,
-    pyNumber_Neg,
-    pyNumber_Pos,
-    pyNumber_Invert,
-    pyNumber_Pow,
-} from "../mock_types/helpers.ts";
+    pyLshift,
+    pyMod,
+    pyMult,
+    pyNeg,
+    pyOr,
+    pyPos,
+    pyPow,
+    pyRshift,
+    pySub,
+    pyXor,
+} from "../mock_types/operator.ts";
 
 export function astOptimize(node: mod) {
     const visitor = new OptimizingVisitor();
     return node.mutateOver(visitor);
+}
+
+function asConstantTruth(node: AST) {
+    if (node._kind !== ASTKind.Constant) {
+        return null;
+    }
+    return pyIsTrue((node as Constant).value);
+}
+
+function makeConst(node: expr, newval: pyConstant | null) {
+    if (newval === null) {
+        return node;
+    }
+    return new Constant(newval, null, node.lineno, node.col_offset, node.end_lineno, node.end_col_offset);
+}
+
+function unaryNot(constant: pyConstant) {
+    return pyIsTrue(constant) ? pyTrue : pyFalse;
+}
+
+function makeConstTuple(elts: expr[]): null | pyTuple {
+    if (elts.some((e) => e._kind !== ASTKind.Constant)) {
+        return null;
+    }
+    return new pyTuple(elts.map((e) => (e as Constant).value));
 }
 
 class OptimizingVisitor extends ASTVisitor {
@@ -71,40 +101,40 @@ class OptimizingVisitor extends ASTVisitor {
 
         switch (node.op) {
             case Add:
-                newval = pyNumber_Add(lv, rv);
+                newval = pyAdd(lv, rv);
                 break;
             case Sub:
-                newval = pyNumber_Sub(lv, rv);
+                newval = pySub(lv, rv);
                 break;
             case Mult:
-                newval = pyNumber_Mult(lv, rv);
+                newval = pyMult(lv, rv);
                 break;
             case Div:
-                // newval = PyNumber_TrueDivide(lv, rv);
+                newval = pyDiv(lv, rv);
                 break;
             case FloorDiv:
-                // newval = pyNumber_FloorDivide(lv, rv);
+                newval = pyFloorDiv(lv, rv);
                 break;
             case Mod:
-                // newval = safe_mod(lv, rv);
+                newval = pyMod(lv, rv);
                 break;
             case Pow:
-                newval = pyNumber_Pow(lv, rv);
+                newval = pyPow(lv, rv);
                 break;
             case LShift:
-                // newval = safe_lshift(lv, rv);
+                newval = pyLshift(lv, rv);
                 break;
             case RShift:
-                // newval = pyNumber_Rshift(lv, rv);
+                newval = pyRshift(lv, rv);
                 break;
             case BitOr:
-                // newval = pyNumber_Or(lv, rv);
+                newval = pyOr(lv, rv);
                 break;
             case BitXor:
-                // newval = pyNumber_Xor(lv, rv);
+                newval = pyXor(lv, rv);
                 break;
             case BitAnd:
-                // newval = pyNumber_And(lv, rv);
+                newval = pyAnd(lv, rv);
                 break;
             default:
                 // Unknown operator
@@ -115,10 +145,10 @@ class OptimizingVisitor extends ASTVisitor {
     }
 
     visit_UnaryOp(node: UnaryOp) {
-        const arg = node.operand; // maybe;
+        const arg = node.operand;
         if (arg._kind !== ASTKind.Constant) {
             /* Fold not into comparison */
-            const compare = arg as Compare;
+            const compare = arg as Compare; // maybe
             if (node.op === Not && compare._kind === ASTKind.Compare && compare.ops.length === 1) {
                 /* Eq and NotEq are often implemented in terms of one another, so
                    folding not (self == other) into self != other breaks implementation
@@ -150,20 +180,20 @@ class OptimizingVisitor extends ASTVisitor {
             return node;
         }
 
-        /** @todo we could make these constant Astnodes simple values - this is what pypy and cpython do? */
+        /** @todo maybe we should make Invert, Not etc constant number values instead of subclasses of AST - this is what pypy and cpython do */
         let unaryOpFn;
         switch (node.op) {
             case Invert:
-                unaryOpFn = pyNumber_Invert;
+                unaryOpFn = pyInvert;
                 break;
             case Not:
                 unaryOpFn = unaryNot;
                 break;
             case UAdd:
-                unaryOpFn = pyNumber_Pos;
+                unaryOpFn = pyPos;
                 break;
             case USub:
-                unaryOpFn = pyNumber_Neg;
+                unaryOpFn = pyNeg;
                 break;
             default:
                 throw new Error("bad unary operator " + node.op);
@@ -217,39 +247,7 @@ class OptimizingVisitor extends ASTVisitor {
             return node;
         }
 
-        // const newval = pyObjectGetItem((arg as Constant).value, (idx as Constant).value);
-        const newval = null;
+        const newval = pyGetItem((arg as Constant).value, (idx as Constant).value);
         return makeConst(node, newval);
     }
-
-    // visit_Iter;
-}
-
-function asConstantTruth(node: AST) {
-    if (node._kind !== ASTKind.Constant) {
-        return null;
-    }
-    return pyIsTrue((node as Constant).value);
-}
-
-function makeConst(node: expr, newval: pyConstant | null) {
-    if (newval === null) {
-        return node;
-    }
-    return new Constant(newval, null, node.lineno, node.col_offset, node.end_lineno, node.end_col_offset);
-}
-
-function unaryNot(constant: pyConstant) {
-    return pyIsTrue(constant) ? pyTrue : pyFalse;
-}
-
-function makeConstTuple(elts: expr[]): null | pyTuple {
-    const copy = [];
-    for (const e of elts) {
-        if (e._kind !== ASTKind.Constant) {
-            return null;
-        }
-        copy.push((e as Constant).value);
-    }
-    return new pyTuple(copy);
 }

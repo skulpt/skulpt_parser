@@ -92,7 +92,6 @@ export interface AST {
     _attributes: string[];
     _enum: boolean;
     _kind: ASTKind;
-    mutateOver(visitor: ASTVisitor): any;
 }
 
 export class AST {
@@ -100,10 +99,10 @@ export class AST {
     get [Symbol.toStringTag]() {
         return (this.constructor as typeof AST)._name;
     }
-    mutateOver(visitor: ASTVisitor): any {
+    mutateOver(_visitor: ASTVisitor): any {
         throw new Error("mutateOver() implementation not provided");
     }
-    walkabout(visitor: ASTVisitor): any {
+    walkabout(_visitor: ASTVisitor): any {
         throw new Error("walkabout() implementation not provided");
     }
 }

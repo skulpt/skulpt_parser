@@ -1,8 +1,7 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-import { assert } from "../util/assert.ts";
-
+/** @todo make sure this get's minified to the exact values in production */
 export const enum ConstantType {
     str = "str",
     int = "int",
@@ -22,9 +21,6 @@ export abstract class pyConstant<V = any> {
     raw: V;
     constructor(v: V) {
         this.raw = v;
-    }
-    get [Symbol.toStringTag]() {
-        return `${this.type}(${this.toString()})`;
     }
     toString(): string {
         return String(this.raw);
@@ -80,6 +76,15 @@ export abstract class pyConstant<V = any> {
     _neg(): pyConstant | null {
         return null;
     }
+    _getitem(_idx: number): pyConstant | null {
+        return null;
+    }
+    get real(): null | number {
+        return null;
+    }
+    get imag(): null | number {
+        return null;
+    }
 }
 
 const _escape = { "\n": "n", "\r": "r", "\t": "t", "\\": "\\", "'": "'", '"': '"' };
@@ -116,24 +121,42 @@ export class pyStr extends pyConstant<string> {
         }
         return new pyStr(this.raw.repeat(int));
     }
+    _getitem(idx: number) {
+        const cc = this.raw.charCodeAt(idx);
+        if (cc >= 0xd800 && cc < 0xe000) {
+            return null;
+        }
+        return new pyStr(this.raw[idx]);
+    }
 }
 
-type intFn = (v: any, w: any) => any;
+// deno-lint-ignore no-explicit-any
+type IntFn<T = any> = (v: T, w: T) => T;
 
 let BIG_MAX: bigint;
 let BIG_MIN: bigint;
 let BIG_UPPER: bigint;
 let BIG_LOWER: bigint;
+let BIG_ZERO: bigint;
+let BIG_ONE: bigint;
+let BIG_DIV: (v: bigint, w: bigint) => bigint;
+if (typeof BigInt !== "undefined") {
+    // don't use 2n etc because that can't be compiled if BigInt is not supported
+    BIG_LOWER = BigInt(Number.MAX_SAFE_INTEGER + 1);
+    BIG_LOWER = BigInt(-Number.MAX_SAFE_INTEGER - 1);
+    BIG_MAX = BigInt(2) ** BigInt(128 - 1) - BigInt(1);
+    BIG_MIN = -BIG_MAX;
+    BIG_ZERO = BigInt(0);
+    BIG_ONE = BigInt(1);
+    // because BigInt division truncates rather than doing floor division
+    BIG_DIV = (v: bigint, w: bigint) =>
+        (v ^ w) > BIG_ZERO ? v / w : v < BIG_ZERO ? (v - BIG_ONE) / w : (v + BIG_ONE) / w;
+}
 const NUM_UPPER = Number.MAX_SAFE_INTEGER;
 const NUM_LOWER = -Number.MAX_SAFE_INTEGER;
 
+/** convert back to number if we're within the safe number range. If we're outside of 128 bits don't optimize */
 function convertBigResult(res: bigint): pyInt | null {
-    // lazy load these since we don't know if BigInt exists
-    // but if we've made it to this function then BigInt does exist.
-    BIG_LOWER ??= BigInt(Number.MAX_SAFE_INTEGER + 1);
-    BIG_LOWER ??= BigInt(-Number.MAX_SAFE_INTEGER - 1);
-    BIG_MAX ??= BigInt(2) ** BigInt(128 - 1) - BigInt(1);
-    BIG_MIN ??= -BIG_MAX;
     if (res < BIG_UPPER && res > BIG_LOWER) {
         return new pyInt(Number(res));
     }
@@ -143,32 +166,23 @@ function convertBigResult(res: bigint): pyInt | null {
     return null;
 }
 
-function checkComputableNumber(self: pyConstant, other: pyConstant, intRequired = true) {
-    const rawTypeSelf = typeof self.raw;
+/** If the other is not a pyInt or pyBool return false  */
+function checkComputableNumber(other: pyConstant) {
     const rawTypeOther = typeof other.raw;
-    if (rawTypeSelf === "number") {
-        if (intRequired && self.type === ConstantType.float) {
-            return false;
-        }
-    } else if (rawTypeSelf !== "bigint") {
+    if (rawTypeOther === "bigint") {
+        return true;
+    } else if (rawTypeOther !== "number") {
+        return false;
+    } else if (other.type === ConstantType.float) {
         return false;
     }
-    if (rawTypeOther === "number") {
-        if (intRequired && other.type === ConstantType.float) {
-            return false;
-        }
-    } else if (rawTypeOther !== "bigint") {
-        return false;
-    }
-    return true;
+    return true; // either other is a pyInt or pyBool
 }
 
-function doIntNumber(v: number | bigint, w: number | bigint, fn: intFn) {
-    const typev = typeof v;
-    const typew = typeof w;
-    let res;
-    if (typev === "number" && typew === "number") {
-        res = fn(v, w) as number;
+function doIntNumber(v: number | bigint, w: number | bigint, fn: IntFn) {
+    let res: bigint | number;
+    if (typeof v === "number" && typeof w === "number") {
+        res = (fn as IntFn<number>)(v, w);
         if (res < NUM_UPPER && res > -NUM_LOWER) {
             return new pyInt(res);
         }
@@ -176,8 +190,22 @@ function doIntNumber(v: number | bigint, w: number | bigint, fn: intFn) {
     if (typeof BigInt === "undefined") return null;
     v = BigInt(v);
     w = BigInt(w);
-    res = fn(v, w) as bigint;
+    res = (fn as IntFn<bigint>)(v, w);
     return convertBigResult(res);
+}
+
+function intDivision(v: number | bigint, w: number | bigint, numFn: IntFn<number>, bigFn: IntFn<bigint>) {
+    if (w === 0) {
+        return null; // can't divide by zero
+    }
+    let fn: IntFn;
+    if (typeof v === "number" && typeof w === "number") {
+        fn = numFn;
+    } else {
+        // we knowe we'll end up here and bigint division is like py floor division
+        fn = bigFn;
+    }
+    return doIntNumber(v, w, fn);
 }
 
 // this could also be a JSBI.BigInt
@@ -185,60 +213,62 @@ function doIntNumber(v: number | bigint, w: number | bigint, fn: intFn) {
 export class pyInt extends pyConstant<number | bigint> {
     type = ConstantType.int;
     _add(other: pyConstant): null | pyInt {
-        if (checkComputableNumber(this, other)) {
+        if (checkComputableNumber(other)) {
             return doIntNumber(this.raw, other.raw, (v, w) => v + w);
         }
         return null;
     }
     _sub(other: pyConstant): null | pyInt {
-        if (checkComputableNumber(this, other)) {
+        if (checkComputableNumber(other)) {
             return doIntNumber(this.raw, other.raw, (v, w) => v - w);
         }
         return null;
     }
     _mult(other: pyConstant): null | pyInt {
-        if (checkComputableNumber(this, other)) {
+        if (checkComputableNumber(other)) {
             return doIntNumber(this.raw, other.raw, (v, w) => v * w);
         }
         return null;
     }
     _pow(other: pyConstant): null | pyInt | pyFloat {
-        if (checkComputableNumber(this, other)) {
+        if (checkComputableNumber(other)) {
             const exponent = other.raw;
             const isNegExponent = other.raw < 0;
+            /** @todo we need to make sure that this doesn't get minified to Number.pow */
             const res = doIntNumber(this.raw, isNegExponent ? -exponent : exponent, (v, w) => v ** w);
             if (res === null) {
                 return res;
             } else if (isNegExponent) {
                 return new pyFloat(1 / Number(res.raw));
-            } else {
-                return res;
             }
+            return res;
         }
         return null;
     }
     _div(other: pyConstant): null | pyFloat {
         return pyFloat.prototype._div.call(this, other);
     }
+    _mod(other: pyConstant): null | pyInt {
+        if (checkComputableNumber(other)) {
+            return intDivision(
+                this.raw,
+                other.raw,
+                (v, w) => v - Math.floor(v / w) * w,
+                (v, w) => v - BIG_DIV(v, w) * w
+            );
+        }
+        return null;
+    }
     _floordiv(other: pyConstant): null | pyInt {
-        if (checkComputableNumber(this, other)) {
-            const v = this.raw;
-            const w = other.raw;
-            if (w === 0) return null;
-            let fn: intFn;
-            if (typeof v === "number" && typeof w === "number") {
-                fn = (v, w) => Math.floor(v / w);
-            } else {
-                fn = (v, w) => v / w;
-            }
-            return doIntNumber(v, w, fn);
+        if (checkComputableNumber(other)) {
+            return intDivision(this.raw, other.raw, (v, w) => Math.floor(v / w), BIG_DIV);
         }
         return null;
     }
     _pos() {
         const raw = this.raw;
         if (typeof raw === "object") return null;
-        return new pyInt(raw);
+        return new pyInt(raw); // could return this but we could also be a pyBool
     }
     _neg() {
         const raw = this.raw;
@@ -247,11 +277,51 @@ export class pyInt extends pyConstant<number | bigint> {
     }
     _invert() {
         const raw = this.raw;
-        if (typeof raw === "object") return null;
-        return new pyInt(~raw);
+        if (typeof raw === "number") {
+            if (raw < 2 ** 31 && raw > -(2 ** 31)) {
+                return new pyInt(~raw);
+            }
+            // fallthrough
+        }
+        if (typeof BigInt !== "undefined") {
+            return convertBigResult(~BigInt(raw));
+        }
+        return null;
+    }
+    // for bitshift slots we know `other` must be a pyInt (see pyLshift and friends)
+    // we also kno BigInt is defined
+    // just use bigint and scale back since
+    // javascript bitshift slots don't work like python
+    // but bigint bitshift slots do
+    _lshift(other: pyInt): pyInt | null {
+        const res = BigInt(this.raw) << BigInt(other.raw);
+        return convertBigResult(res);
+    }
+    _rshift(other: pyInt): pyInt | null {
+        const res = BigInt(this.raw) >> BigInt(other.raw);
+        return convertBigResult(res);
+    }
+    _or(other: pyInt): pyInt | null {
+        const res = BigInt(this.raw) | BigInt(other.raw);
+        return convertBigResult(res);
+    }
+    _and(other: pyInt): pyInt | null {
+        const res = BigInt(this.raw) & BigInt(other.raw);
+        return convertBigResult(res);
+    }
+    _xor(other: pyInt): pyInt | null {
+        const res = BigInt(this.raw) ^ BigInt(other.raw);
+        return convertBigResult(res);
+    }
+    get real() {
+        return Number(this.raw);
+    }
+    get imag() {
+        return 0;
     }
 }
 
+/** don't bother optimizing longs */
 export class pyLong extends pyConstant<number | bigint> {
     type = ConstantType.long;
     toString() {
@@ -259,6 +329,7 @@ export class pyLong extends pyConstant<number | bigint> {
     }
 }
 
+/** we allow the `this` argument of float to be any pyConstant. This means we don't need to worry about reversed slots. It's also what cpython does */
 function doFloatNumber(self: pyConstant, other: pyConstant, fn: (v: number, w: number) => number | null) {
     let v = self.raw;
     let w = other.raw;
@@ -296,7 +367,7 @@ export class pyFloat extends pyConstant<number> {
     _add(other: pyConstant): pyFloat | null {
         return doFloatNumber(this, other, (v, w) => v + w);
     }
-    _sub(other: pyConstant): pyFloat | null {
+    _sub(this: pyConstant, other: pyConstant): pyFloat | null {
         return doFloatNumber(this, other, (v, w) => v - w);
     }
     _mult(other: pyConstant): pyFloat | null {
@@ -313,14 +384,14 @@ export class pyFloat extends pyConstant<number> {
             return res;
         });
     }
-    _div(other: pyConstant): pyFloat | null {
+    _div(this: pyConstant, other: pyConstant): pyFloat | null {
         return doFloatNumber(this, other, (v, w) => {
-            if (w === 0) return null;
-            if (!isFinite(v) || !isFinite(w)) return null;
+            if (w === 0) return null; // can't divide by zero
+            if (!isFinite(v) || !isFinite(w)) return null; // let's not bother optimizing this
             return v / w;
         });
     }
-    _floordiv(other: pyConstant): pyFloat | null {
+    _floordiv(this: pyConstant, other: pyConstant): pyFloat | null {
         return doFloatNumber(this, other, (v, w) => {
             if (w === 0) return null;
             if (!isFinite(v) || !isFinite(w)) return null;
@@ -333,29 +404,83 @@ export class pyFloat extends pyConstant<number> {
     _neg() {
         return new pyFloat(-this.raw);
     }
+    get real() {
+        return this.raw;
+    }
+    get imag() {
+        return 0;
+    }
 }
 
+function doComplexNumber(
+    self: pyConstant,
+    other: pyConstant,
+    fn: (vreal: number, wreal: number, vimag: number, wimag: number) => pyComplex | null
+) {
+    const vreal = self.real;
+    const wreal = other.real;
+    if (vreal === null || wreal === null) {
+        return null;
+    }
+    const vimag = self.imag as number;
+    const wimag = other.imag as number;
+    return fn(vreal, wreal, vimag, wimag);
+}
 export class pyComplex extends pyConstant<{ real: number; imag: number }> {
     type = ConstantType.complex;
     constructor({ real = 0, imag }: { real?: number; imag: number }) {
-        // this is from the tokenizer and we shouldn't have a real except 0.
-        // assert(real === 0);
+        // tokenizer will always have a real=0. But optimizations might instantiate with something else;
         super({ real, imag });
     }
     toString() {
-        return this.raw.imag + "j";
+        let head = "";
+        let tail = "";
+        if (this.raw.real) {
+            head = "(" + this.raw.real;
+            if (this.raw.imag >= 0) {
+                head += "+";
+            }
+            tail = ")";
+        }
+        return head + this.raw.imag + "j" + tail;
     }
     _bool() {
         return this.raw.real === 0 && this.raw.imag === 0;
+    }
+    _add(other: pyConstant): pyComplex | null {
+        return doComplexNumber(this, other, (vreal, wreal, vimag, wimag) => {
+            const real = vreal + wreal;
+            const imag = vimag + wimag;
+            return new pyComplex({ real, imag });
+        });
+    }
+    _sub(other: pyConstant): pyComplex | null {
+        return doComplexNumber(this, other, (vreal, wreal, vimag, wimag) => {
+            const real = vreal - wreal;
+            const imag = vimag - wimag;
+            return new pyComplex({ real, imag });
+        });
+    }
+    _mult(other: pyConstant): pyComplex | null {
+        return doComplexNumber(this, other, (vreal, wreal, vimag, wimag) => {
+            const real = vreal * wreal - wimag * vimag;
+            const imag = vreal * wimag + vimag * wreal;
+            return new pyComplex({ real, imag });
+        });
     }
     _pos(): pyComplex {
         return this;
     }
     _neg() {
-        let { real, imag } = this.raw;
-        real = -real;
-        imag = -imag;
+        const real = -this.real;
+        const imag = -this.imag;
         return new pyComplex({ real, imag });
+    }
+    get real() {
+        return this.raw.real;
+    }
+    get imag() {
+        return this.raw.imag;
     }
 }
 
@@ -395,10 +520,17 @@ export class pyBytes extends pyConstant<Uint8Array> {
         }
         return new pyBytes(newRaw);
     }
+    _getitem(idx: number) {
+        return new pyInt(this.raw[idx]);
+    }
 }
 
+/** we only get constant tuples from optimizations */
 export class pyTuple extends pyConstant<pyConstant[]> {
     type = ConstantType.tuple;
+    toString() {
+        return "(" + this.raw.join(", ") + (this.raw.length === 1 ? "," : "") + ")";
+    }
     _bool() {
         return !!this.raw.length;
     }
@@ -429,8 +561,8 @@ export class pyTuple extends pyConstant<pyConstant[]> {
         }
         return new pyTuple(newRaw);
     }
-    toString() {
-        return "(" + this.raw.join(", ") + (this.raw.length === 1 ? "," : "") + ")";
+    _getitem(idx: number) {
+        return this.raw[idx];
     }
 }
 
@@ -445,6 +577,24 @@ export class pyBool extends pyInt {
     type = ConstantType.bool;
     toString() {
         return this.raw ? "True" : "False";
+    }
+    _and(other: pyInt): pyBool | pyInt | null {
+        if (other.type === ConstantType.bool) {
+            return new pyBool((this.raw as number) & (other.raw as number));
+        }
+        return super._and(other);
+    }
+    _or(other: pyInt): pyBool | pyInt | null {
+        if (other.type === ConstantType.bool) {
+            return new pyBool((this.raw as number) | (other.raw as number));
+        }
+        return super._or(other);
+    }
+    _xor(other: pyInt): pyBool | pyInt | null {
+        if (other.type === ConstantType.bool) {
+            return new pyBool((this.raw as number) ^ (other.raw as number));
+        }
+        return super._xor(other);
     }
 }
 
