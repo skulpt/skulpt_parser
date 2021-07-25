@@ -5,7 +5,7 @@
 import { w } from "../util/unicode.ts";
 import { initialIsIdentifier } from "../util/str_helpers.ts";
 import { tokens, EXACT_TOKEN_TYPES } from "./token.ts";
-import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
+import { pyIndentationError, pySyntaxError } from "../mock_types/errors.ts";
 
 type token = number;
 type position = [number, number];

@@ -39,10 +39,10 @@ import type {{ mod, expr, stmt, alias, withitem, excepthandler, arguments_, arg,
 import type {{ Tokenizer }} from "../tokenize/Tokenizer.ts";
 import type {{ TokenInfo }} from "../tokenize/tokenize.ts";
 import * as astnodes from "../ast/astnodes.ts";
-import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../ast/constants.ts";
+import {{ pyNone, pyTrue, pyFalse, pyEllipsis }} from "../mock_types/constants.ts";
 import {{ StartRule, CmpopExprPair, KeyValuePair, KeywordOrStarred, NameDefaultPair, SlashWithDefault, StarEtc, AugOperator, STAR_TARGETS, DEL_TARGETS, FOR_TARGETS  }} from "./pegen_types.ts";
 import * as pegen from "./pegen.ts";
-import {{ pySyntaxError, pyIndentationError }} from "../ast/errors.ts";
+import {{ pySyntaxError, pyIndentationError }} from "../mock_types/errors.ts";
 
 import {{ memoize, memoizeLeftRec, logger, Parser}} from "./parser.ts";
 

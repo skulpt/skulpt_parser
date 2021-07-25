@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import type { AST } from "../ast/astnodes.ts";
-import { pySyntaxError } from "../ast/errors.ts";
+import { pySyntaxError } from "../mock_types/errors.ts";
 import { assert } from "../util/assert.ts";
 import type { SymbolTable } from "./SymbolTable.ts";
 import { Symbol_ } from "./Symbol.ts";

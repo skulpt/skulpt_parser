@@ -25,8 +25,8 @@ import {
     Subscript,
     Tuple,
 } from "../ast/astnodes.ts";
-import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../ast/constants.ts";
-import { pySyntaxError } from "../ast/errors.ts";
+import { pyBytes, pyEllipsis, pyFalse, pyNone, pyTrue } from "../mock_types/constants.ts";
+import { pySyntaxError } from "../mock_types/errors.ts";
 import { DOT, ELLIPSIS } from "../tokenize/token.ts";
 import type { TokenInfo } from "../tokenize/tokenize.ts";
 import { assert } from "../util/assert.ts";

@@ -5,7 +5,7 @@
 /* module that holds all nodes */
 // deno-lint-ignore-file camelcase
 
-import type { pyConstant } from "./constants.ts";
+import type { pyConstant } from "../mock_types/constants.ts";
 
 export type identifier = string;
 export type constant = pyConstant;

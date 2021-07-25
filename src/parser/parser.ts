@@ -10,7 +10,7 @@ import { StartRule, TARGETS_TYPE } from "./pegen_types.ts";
 import type { AST } from "../ast/astnodes.ts";
 import { get_expr_name, get_invalid_target } from "./pegen.ts";
 import { parsenumber } from "./parse_number.ts";
-import { pyIndentationError, pySyntaxError } from "../ast/errors.ts";
+import { pyIndentationError, pySyntaxError } from "../mock_types/errors.ts";
 import { KEYWORDS } from "./generated_parser.ts";
 
 /** If we have a memoized parser method that has a different call signature we'd need to adapt this */

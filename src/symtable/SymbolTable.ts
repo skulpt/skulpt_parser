@@ -3,7 +3,7 @@
 
 import type * as astnode from "../ast/astnodes.ts";
 import { ASTKind, Load } from "../ast/astnodes.ts";
-import { pySyntaxError } from "../ast/errors.ts";
+import { pySyntaxError } from "../mock_types/errors.ts";
 import { assert } from "../util/assert.ts";
 import { SymbolTableScope } from "./SymbolTableScope.ts";
 import { SYMTAB_CONSTS, mangle, BlockType, NameToFlag } from "./util.ts";

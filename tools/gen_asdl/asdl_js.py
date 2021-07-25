@@ -506,7 +506,7 @@ def main(asdlfile, outputfile):
     f.write("// deno-lint-ignore-file camelcase\n\n")
     f.write(
         """
-import type { pyConstant } from "./constants.ts";
+import type { pyConstant } from "../mock_types/constants.ts";
 
 export type identifier = string;
 export type constant = pyConstant;

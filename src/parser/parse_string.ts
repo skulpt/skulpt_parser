@@ -3,8 +3,8 @@
 
 // deno-lint-ignore-file camelcase
 import { Constant, expr, FormattedValue, JoinedStr } from "../ast/astnodes.ts";
-import { pyStr } from "../ast/constants.ts";
-import { pySyntaxError } from "../ast/errors.ts";
+import { pyStr } from "../mock_types/constants.ts";
+import { pySyntaxError } from "../mock_types/errors.ts";
 import { tokenizerFromString } from "../tokenize/mod.ts";
 import { TokenInfo } from "../tokenize/tokenize.ts";
 import { GeneratedParser } from "./generated_parser.ts";
