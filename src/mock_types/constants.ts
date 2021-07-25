@@ -183,7 +183,7 @@ function doIntNumber(v: number | bigint, w: number | bigint, fn: IntFn) {
     let res: bigint | number;
     if (typeof v === "number" && typeof w === "number") {
         res = (fn as IntFn<number>)(v, w);
-        if (res < NUM_UPPER && res > -NUM_LOWER) {
+        if (res < NUM_UPPER && res > NUM_LOWER) {
             return new pyInt(res);
         }
     }
@@ -235,6 +235,7 @@ export class pyInt extends pyConstant<number | bigint> {
             const exponent = other.raw;
             const isNegExponent = other.raw < 0;
             /** @todo we need to make sure that this doesn't get minified to Number.pow */
+            if (this.raw === 0 && isNegExponent) return null;
             const res = doIntNumber(this.raw, isNegExponent ? -exponent : exponent, (v, w) => v ** w);
             if (res === null) {
                 return res;
@@ -294,10 +295,12 @@ export class pyInt extends pyConstant<number | bigint> {
     // javascript bitshift slots don't work like python
     // but bigint bitshift slots do
     _lshift(other: pyInt): pyInt | null {
+        if (other.raw < 0) return null;
         const res = BigInt(this.raw) << BigInt(other.raw);
         return convertBigResult(res);
     }
     _rshift(other: pyInt): pyInt | null {
+        if (other.raw < 0) return null;
         const res = BigInt(this.raw) >> BigInt(other.raw);
         return convertBigResult(res);
     }
@@ -445,7 +448,7 @@ export class pyComplex extends pyConstant<{ real: number; imag: number }> {
         return head + this.raw.imag + "j" + tail;
     }
     _bool() {
-        return this.raw.real === 0 && this.raw.imag === 0;
+        return !(this.raw.real === 0 && this.raw.imag === 0);
     }
     _add(other: pyConstant): pyComplex | null {
         return doComplexNumber(this, other, (vreal, wreal, vimag, wimag) => {

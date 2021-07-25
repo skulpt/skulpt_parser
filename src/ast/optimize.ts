@@ -71,7 +71,7 @@ function makeConst(node: expr, newval: pyConstant | null) {
 }
 
 function unaryNot(constant: pyConstant) {
-    return pyIsTrue(constant) ? pyTrue : pyFalse;
+    return pyIsTrue(constant) ? pyFalse : pyTrue;
 }
 
 function makeConstTuple(elts: expr[]): null | pyTuple {

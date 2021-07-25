@@ -20,12 +20,12 @@ const colorPrefix = "(?:\\[\\d{1,2}m){1,}";
 const prePostBracket = new RegExp("^(" + colorPrefix + "\\s+)[\\[\\]]", "gm");
 const line = new RegExp("^(" + colorPrefix + '[+-]?\\s+)["`](.*)["`],', "gm");
 
-export function assertEqualsString(A: string, B: string): void {
+export function assertEqualsString(A: string, B: string, msg?: string): void {
     if (A === B) {
         return;
     }
     try {
-        assertEquals(A.split("\n"), B.split("\n"));
+        assertEquals(A.split("\n"), B.split("\n"), msg);
     } catch (e) {
         // this is temporary until https://github.com/denoland/deno_std/issues/929
         // is resolved by https://github.com/denoland/deno_std/pull/948

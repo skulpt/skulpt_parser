@@ -7,7 +7,7 @@ const args = parse(Deno.args, { boolean: ["f"], alias: { f: "fail-fast" } });
 const test = args._[0];
 
 const extra = [];
-const validShortnames = ["parse", "pypeg", "symtable", "dump"];
+const validShortnames = ["parse", "pypeg", "symtable", "dump", "optimize"];
 if (!validShortnames.includes(test as string)) {
     throw new AssertionError(
         Colors.bgRed(
@@ -41,6 +41,9 @@ switch (test) {
         break;
     case "dump":
         extra.push("tests/ast_dump.test.ts");
+        break;
+    case "optimize":
+        extra.push("tests/optimize.test.ts");
         break;
 }
 
