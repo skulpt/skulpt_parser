@@ -353,7 +353,7 @@ class FunctionVisitor(PrototypeVisitor):
 
     def emit_mutate_over(self, name, args):
         emit = self.emit
-        emit("mutateOver(visitor: ASTVisitor) {", 1)
+        emit(f"mutateOver(visitor: ASTVisitor): {name} {{", 1)
         level = 2
         # first = True
         for a_type, argname, opt, seq in args:
@@ -373,12 +373,12 @@ class FunctionVisitor(PrototypeVisitor):
                     emit("if (node === null) return;", level + 1)
                 # emit(f"newNode = node.mutateOver(visitor);", level+1)
                 # emit(f"newNode !== node && (this.{argname}[i] = newNode as {a_type.replace('[]', '')});", level+1)
-                emit(f"this.{argname}[i] = node.mutateOver(visitor) as {a_type.replace('[]', '')};", level + 1)
+                emit(f"this.{argname}[i] = node.mutateOver(visitor);", level + 1)
                 emit("})", level)
             else:
                 #     emit(f"newNode = this.{argname}.mutateOver(visitor);", level)
                 #     emit(f"newNode !== this.{argname} && (this.{argname} = newNode as {a_type});", level)
-                emit(f"this.{argname} = this.{argname}.mutateOver(visitor) as {a_type.replace('[]', '')};", level + 1)
+                emit(f"this.{argname} = this.{argname}.mutateOver(visitor);", level + 1)
 
             if opt:
                 level -= 1
@@ -406,13 +406,13 @@ class FunctionVisitor(PrototypeVisitor):
         emit = self.emit
 
         if not attrs:
-            emit(f"export class {name} extends AST {{")
+            emit(f"export abstract class {name} extends AST {{")
             self.emit_tp_name(name)
             emit("}")
             emit("")
             return
 
-        emit(f"export class {name} extends AST {{")
+        emit(f"export abstract class {name} extends AST {{")
         self.emit_tp_name(name)
 
         self.emit_instance_types(attrs, True)
@@ -421,6 +421,9 @@ class FunctionVisitor(PrototypeVisitor):
         emit(f"constructor({_attrs}) {{", 1)
         emit("super();", 2)
         self.emit_body_attrs(attrs)
+        emit("}", 1)
+        emit(f"mutateOver(_visitor: ASTVisitor): {name} {{", 1)
+        emit('throw new Error("mutateOver() implementation not provided");', 2)
         emit("}", 1)
         emit("}")
         emit(f"{name}.prototype._attributes = _attrs;")
@@ -494,12 +497,12 @@ export interface AST {
     _kind: ASTKind;
 }
 
-export class AST {
+export abstract class AST {
     static _name = "AST";
     get [Symbol.toStringTag]() {
         return (this.constructor as typeof AST)._name;
     }
-    mutateOver(_visitor: ASTVisitor): any {
+    mutateOver(_visitor: ASTVisitor): AST {
         throw new Error("mutateOver() implementation not provided")
     }
     walkabout(_visitor: ASTVisitor): any {
@@ -527,7 +530,7 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
     v = FunctionVisitor(f)
     v.visit(mod)
 
-    f.write("export class ASTVisitor {")
+    f.write("export abstract class ASTVisitor {")
     a = ASTVisitorVisitor(f)
     a.visit(mod)
     f.write("}")

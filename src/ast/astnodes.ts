@@ -94,12 +94,12 @@ export interface AST {
     _kind: ASTKind;
 }
 
-export class AST {
+export abstract class AST {
     static _name = "AST";
     get [Symbol.toStringTag]() {
         return (this.constructor as typeof AST)._name;
     }
-    mutateOver(_visitor: ASTVisitor): any {
+    mutateOver(_visitor: ASTVisitor): AST {
         throw new Error("mutateOver() implementation not provided");
     }
     walkabout(_visitor: ASTVisitor): any {
@@ -281,7 +281,7 @@ export const In = new InType();
 export const NotIn = new NotInType();
 
 /* ----- mod ----- */
-export class mod extends AST {
+export abstract class mod extends AST {
     static _name = "mod";
 }
 
@@ -294,12 +294,12 @@ export class Module extends mod {
         this.body = body || [];
         this.type_ignores = type_ignores || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Module {
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.type_ignores.forEach((node, i) => {
-            this.type_ignores[i] = node.mutateOver(visitor) as type_ignore;
+            this.type_ignores[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Module(this);
     }
@@ -317,9 +317,9 @@ export class Interactive extends mod {
         super();
         this.body = body || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Interactive {
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Interactive(this);
     }
@@ -337,8 +337,8 @@ export class Expression extends mod {
         super();
         this.body = body;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.body = this.body.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Expression {
+        this.body = this.body.mutateOver(visitor);
         return visitor.visit_Expression(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -357,11 +357,11 @@ export class FunctionType extends mod {
         this.argtypes = argtypes || [];
         this.returns = returns;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): FunctionType {
         this.argtypes.forEach((node, i) => {
-            this.argtypes[i] = node.mutateOver(visitor) as expr;
+            this.argtypes[i] = node.mutateOver(visitor);
         });
-        this.returns = this.returns.mutateOver(visitor) as expr;
+        this.returns = this.returns.mutateOver(visitor);
         return visitor.visit_FunctionType(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -372,7 +372,7 @@ FunctionType.prototype._fields = ["argtypes", "returns"];
 FunctionType.prototype._kind = ASTKind.FunctionType;
 
 /* ----- stmt ----- */
-export class stmt extends AST {
+export abstract class stmt extends AST {
     static _name = "stmt";
     lineno: number;
     col_offset: number;
@@ -384,6 +384,9 @@ export class stmt extends AST {
         this.col_offset = col_offset;
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
+    }
+    mutateOver(_visitor: ASTVisitor): stmt {
+        throw new Error("mutateOver() implementation not provided");
     }
 }
 stmt.prototype._attributes = _attrs;
@@ -413,16 +416,16 @@ export class FunctionDef extends stmt {
         this.returns = returns;
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.args = this.args.mutateOver(visitor) as arguments_;
+    mutateOver(visitor: ASTVisitor): FunctionDef {
+        this.args = this.args.mutateOver(visitor);
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.decorator_list.forEach((node, i) => {
-            this.decorator_list[i] = node.mutateOver(visitor) as expr;
+            this.decorator_list[i] = node.mutateOver(visitor);
         });
         if (this.returns) {
-            this.returns = this.returns.mutateOver(visitor) as expr;
+            this.returns = this.returns.mutateOver(visitor);
         }
         return visitor.visit_FunctionDef(this);
     }
@@ -458,16 +461,16 @@ export class AsyncFunctionDef extends stmt {
         this.returns = returns;
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.args = this.args.mutateOver(visitor) as arguments_;
+    mutateOver(visitor: ASTVisitor): AsyncFunctionDef {
+        this.args = this.args.mutateOver(visitor);
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.decorator_list.forEach((node, i) => {
-            this.decorator_list[i] = node.mutateOver(visitor) as expr;
+            this.decorator_list[i] = node.mutateOver(visitor);
         });
         if (this.returns) {
-            this.returns = this.returns.mutateOver(visitor) as expr;
+            this.returns = this.returns.mutateOver(visitor);
         }
         return visitor.visit_AsyncFunctionDef(this);
     }
@@ -500,18 +503,18 @@ export class ClassDef extends stmt {
         this.body = body || [];
         this.decorator_list = decorator_list || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): ClassDef {
         this.bases.forEach((node, i) => {
-            this.bases[i] = node.mutateOver(visitor) as expr;
+            this.bases[i] = node.mutateOver(visitor);
         });
         this.keywords.forEach((node, i) => {
-            this.keywords[i] = node.mutateOver(visitor) as keyword;
+            this.keywords[i] = node.mutateOver(visitor);
         });
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.decorator_list.forEach((node, i) => {
-            this.decorator_list[i] = node.mutateOver(visitor) as expr;
+            this.decorator_list[i] = node.mutateOver(visitor);
         });
         return visitor.visit_ClassDef(this);
     }
@@ -529,9 +532,9 @@ export class Return extends stmt {
         super(...attrs);
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Return {
         if (this.value) {
-            this.value = this.value.mutateOver(visitor) as expr;
+            this.value = this.value.mutateOver(visitor);
         }
         return visitor.visit_Return(this);
     }
@@ -549,9 +552,9 @@ export class Delete extends stmt {
         super(...attrs);
         this.targets = targets || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Delete {
         this.targets.forEach((node, i) => {
-            this.targets[i] = node.mutateOver(visitor) as expr;
+            this.targets[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Delete(this);
     }
@@ -573,11 +576,11 @@ export class Assign extends stmt {
         this.value = value;
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Assign {
         this.targets.forEach((node, i) => {
-            this.targets[i] = node.mutateOver(visitor) as expr;
+            this.targets[i] = node.mutateOver(visitor);
         });
-        this.value = this.value.mutateOver(visitor) as expr;
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_Assign(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -598,9 +601,9 @@ export class AugAssign extends stmt {
         this.op = op;
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.target = this.target.mutateOver(visitor) as expr;
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): AugAssign {
+        this.target = this.target.mutateOver(visitor);
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_AugAssign(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -623,11 +626,11 @@ export class AnnAssign extends stmt {
         this.value = value;
         this.simple = simple;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.target = this.target.mutateOver(visitor) as expr;
-        this.annotation = this.annotation.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): AnnAssign {
+        this.target = this.target.mutateOver(visitor);
+        this.annotation = this.annotation.mutateOver(visitor);
         if (this.value) {
-            this.value = this.value.mutateOver(visitor) as expr;
+            this.value = this.value.mutateOver(visitor);
         }
         return visitor.visit_AnnAssign(this);
     }
@@ -660,14 +663,14 @@ export class For extends stmt {
         this.orelse = orelse || [];
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.target = this.target.mutateOver(visitor) as expr;
-        this.iter = this.iter.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): For {
+        this.target = this.target.mutateOver(visitor);
+        this.iter = this.iter.mutateOver(visitor);
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.orelse.forEach((node, i) => {
-            this.orelse[i] = node.mutateOver(visitor) as stmt;
+            this.orelse[i] = node.mutateOver(visitor);
         });
         return visitor.visit_For(this);
     }
@@ -700,14 +703,14 @@ export class AsyncFor extends stmt {
         this.orelse = orelse || [];
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.target = this.target.mutateOver(visitor) as expr;
-        this.iter = this.iter.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): AsyncFor {
+        this.target = this.target.mutateOver(visitor);
+        this.iter = this.iter.mutateOver(visitor);
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.orelse.forEach((node, i) => {
-            this.orelse[i] = node.mutateOver(visitor) as stmt;
+            this.orelse[i] = node.mutateOver(visitor);
         });
         return visitor.visit_AsyncFor(this);
     }
@@ -729,13 +732,13 @@ export class While extends stmt {
         this.body = body || [];
         this.orelse = orelse || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.test = this.test.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): While {
+        this.test = this.test.mutateOver(visitor);
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.orelse.forEach((node, i) => {
-            this.orelse[i] = node.mutateOver(visitor) as stmt;
+            this.orelse[i] = node.mutateOver(visitor);
         });
         return visitor.visit_While(this);
     }
@@ -757,13 +760,13 @@ export class If extends stmt {
         this.body = body || [];
         this.orelse = orelse || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.test = this.test.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): If {
+        this.test = this.test.mutateOver(visitor);
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.orelse.forEach((node, i) => {
-            this.orelse[i] = node.mutateOver(visitor) as stmt;
+            this.orelse[i] = node.mutateOver(visitor);
         });
         return visitor.visit_If(this);
     }
@@ -785,12 +788,12 @@ export class With extends stmt {
         this.body = body || [];
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): With {
         this.items.forEach((node, i) => {
-            this.items[i] = node.mutateOver(visitor) as withitem;
+            this.items[i] = node.mutateOver(visitor);
         });
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         return visitor.visit_With(this);
     }
@@ -812,12 +815,12 @@ export class AsyncWith extends stmt {
         this.body = body || [];
         this.type_comment = type_comment;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): AsyncWith {
         this.items.forEach((node, i) => {
-            this.items[i] = node.mutateOver(visitor) as withitem;
+            this.items[i] = node.mutateOver(visitor);
         });
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         return visitor.visit_AsyncWith(this);
     }
@@ -837,12 +840,12 @@ export class Raise extends stmt {
         this.exc = exc;
         this.cause = cause;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Raise {
         if (this.exc) {
-            this.exc = this.exc.mutateOver(visitor) as expr;
+            this.exc = this.exc.mutateOver(visitor);
         }
         if (this.cause) {
-            this.cause = this.cause.mutateOver(visitor) as expr;
+            this.cause = this.cause.mutateOver(visitor);
         }
         return visitor.visit_Raise(this);
     }
@@ -872,18 +875,18 @@ export class Try extends stmt {
         this.orelse = orelse || [];
         this.finalbody = finalbody || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Try {
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         this.handlers.forEach((node, i) => {
-            this.handlers[i] = node.mutateOver(visitor) as excepthandler;
+            this.handlers[i] = node.mutateOver(visitor);
         });
         this.orelse.forEach((node, i) => {
-            this.orelse[i] = node.mutateOver(visitor) as stmt;
+            this.orelse[i] = node.mutateOver(visitor);
         });
         this.finalbody.forEach((node, i) => {
-            this.finalbody[i] = node.mutateOver(visitor) as stmt;
+            this.finalbody[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Try(this);
     }
@@ -903,10 +906,10 @@ export class Assert extends stmt {
         this.test = test;
         this.msg = msg;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.test = this.test.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Assert {
+        this.test = this.test.mutateOver(visitor);
         if (this.msg) {
-            this.msg = this.msg.mutateOver(visitor) as expr;
+            this.msg = this.msg.mutateOver(visitor);
         }
         return visitor.visit_Assert(this);
     }
@@ -924,9 +927,9 @@ export class Import extends stmt {
         super(...attrs);
         this.names = names || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Import {
         this.names.forEach((node, i) => {
-            this.names[i] = node.mutateOver(visitor) as alias;
+            this.names[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Import(this);
     }
@@ -948,9 +951,9 @@ export class ImportFrom extends stmt {
         this.names = names || [];
         this.level = level;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): ImportFrom {
         this.names.forEach((node, i) => {
-            this.names[i] = node.mutateOver(visitor) as alias;
+            this.names[i] = node.mutateOver(visitor);
         });
         return visitor.visit_ImportFrom(this);
     }
@@ -968,7 +971,7 @@ export class Global extends stmt {
         super(...attrs);
         this.names = names || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Global {
         return visitor.visit_Global(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -985,7 +988,7 @@ export class Nonlocal extends stmt {
         super(...attrs);
         this.names = names || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Nonlocal {
         return visitor.visit_Nonlocal(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1002,8 +1005,8 @@ export class Expr extends stmt {
         super(...attrs);
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Expr {
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_Expr(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1018,7 +1021,7 @@ export class Pass extends stmt {
     constructor(...attrs: Attrs) {
         super(...attrs);
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Pass {
         return visitor.visit_Pass(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1033,7 +1036,7 @@ export class Break extends stmt {
     constructor(...attrs: Attrs) {
         super(...attrs);
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Break {
         return visitor.visit_Break(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1048,7 +1051,7 @@ export class Continue extends stmt {
     constructor(...attrs: Attrs) {
         super(...attrs);
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Continue {
         return visitor.visit_Continue(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1063,7 +1066,7 @@ export class Debugger extends stmt {
     constructor(...attrs: Attrs) {
         super(...attrs);
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Debugger {
         return visitor.visit_Debugger(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1074,7 +1077,7 @@ Debugger.prototype._fields = [];
 Debugger.prototype._kind = ASTKind.Debugger;
 
 /* ----- expr ----- */
-export class expr extends AST {
+export abstract class expr extends AST {
     static _name = "expr";
     lineno: number;
     col_offset: number;
@@ -1086,6 +1089,9 @@ export class expr extends AST {
         this.col_offset = col_offset;
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
+    }
+    mutateOver(_visitor: ASTVisitor): expr {
+        throw new Error("mutateOver() implementation not provided");
     }
 }
 expr.prototype._attributes = _attrs;
@@ -1099,9 +1105,9 @@ export class BoolOp extends expr {
         this.op = op;
         this.values = values || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): BoolOp {
         this.values.forEach((node, i) => {
-            this.values[i] = node.mutateOver(visitor) as expr;
+            this.values[i] = node.mutateOver(visitor);
         });
         return visitor.visit_BoolOp(this);
     }
@@ -1121,9 +1127,9 @@ export class NamedExpr extends expr {
         this.target = target;
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.target = this.target.mutateOver(visitor) as expr;
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): NamedExpr {
+        this.target = this.target.mutateOver(visitor);
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_NamedExpr(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1144,9 +1150,9 @@ export class BinOp extends expr {
         this.op = op;
         this.right = right;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.left = this.left.mutateOver(visitor) as expr;
-        this.right = this.right.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): BinOp {
+        this.left = this.left.mutateOver(visitor);
+        this.right = this.right.mutateOver(visitor);
         return visitor.visit_BinOp(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1165,8 +1171,8 @@ export class UnaryOp extends expr {
         this.op = op;
         this.operand = operand;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.operand = this.operand.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): UnaryOp {
+        this.operand = this.operand.mutateOver(visitor);
         return visitor.visit_UnaryOp(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1185,9 +1191,9 @@ export class Lambda extends expr {
         this.args = args;
         this.body = body;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.args = this.args.mutateOver(visitor) as arguments_;
-        this.body = this.body.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Lambda {
+        this.args = this.args.mutateOver(visitor);
+        this.body = this.body.mutateOver(visitor);
         return visitor.visit_Lambda(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1208,10 +1214,10 @@ export class IfExp extends expr {
         this.body = body;
         this.orelse = orelse;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.test = this.test.mutateOver(visitor) as expr;
-        this.body = this.body.mutateOver(visitor) as expr;
-        this.orelse = this.orelse.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): IfExp {
+        this.test = this.test.mutateOver(visitor);
+        this.body = this.body.mutateOver(visitor);
+        this.orelse = this.orelse.mutateOver(visitor);
         return visitor.visit_IfExp(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1230,13 +1236,13 @@ export class Dict extends expr {
         this.keys = keys || [];
         this.values = values || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Dict {
         this.keys.forEach((node, i) => {
             if (node === null) return;
-            this.keys[i] = node.mutateOver(visitor) as expr | null;
+            this.keys[i] = node.mutateOver(visitor);
         });
         this.values.forEach((node, i) => {
-            this.values[i] = node.mutateOver(visitor) as expr;
+            this.values[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Dict(this);
     }
@@ -1254,9 +1260,9 @@ export class Set_ extends expr {
         super(...attrs);
         this.elts = elts || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Set_ {
         this.elts.forEach((node, i) => {
-            this.elts[i] = node.mutateOver(visitor) as expr;
+            this.elts[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Set_(this);
     }
@@ -1276,10 +1282,10 @@ export class ListComp extends expr {
         this.elt = elt;
         this.generators = generators || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.elt = this.elt.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): ListComp {
+        this.elt = this.elt.mutateOver(visitor);
         this.generators.forEach((node, i) => {
-            this.generators[i] = node.mutateOver(visitor) as comprehension;
+            this.generators[i] = node.mutateOver(visitor);
         });
         return visitor.visit_ListComp(this);
     }
@@ -1299,10 +1305,10 @@ export class SetComp extends expr {
         this.elt = elt;
         this.generators = generators || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.elt = this.elt.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): SetComp {
+        this.elt = this.elt.mutateOver(visitor);
         this.generators.forEach((node, i) => {
-            this.generators[i] = node.mutateOver(visitor) as comprehension;
+            this.generators[i] = node.mutateOver(visitor);
         });
         return visitor.visit_SetComp(this);
     }
@@ -1324,11 +1330,11 @@ export class DictComp extends expr {
         this.value = value;
         this.generators = generators || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.key = this.key.mutateOver(visitor) as expr;
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): DictComp {
+        this.key = this.key.mutateOver(visitor);
+        this.value = this.value.mutateOver(visitor);
         this.generators.forEach((node, i) => {
-            this.generators[i] = node.mutateOver(visitor) as comprehension;
+            this.generators[i] = node.mutateOver(visitor);
         });
         return visitor.visit_DictComp(this);
     }
@@ -1348,10 +1354,10 @@ export class GeneratorExp extends expr {
         this.elt = elt;
         this.generators = generators || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.elt = this.elt.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): GeneratorExp {
+        this.elt = this.elt.mutateOver(visitor);
         this.generators.forEach((node, i) => {
-            this.generators[i] = node.mutateOver(visitor) as comprehension;
+            this.generators[i] = node.mutateOver(visitor);
         });
         return visitor.visit_GeneratorExp(this);
     }
@@ -1369,8 +1375,8 @@ export class Await extends expr {
         super(...attrs);
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Await {
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_Await(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1387,9 +1393,9 @@ export class Yield extends expr {
         super(...attrs);
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Yield {
         if (this.value) {
-            this.value = this.value.mutateOver(visitor) as expr;
+            this.value = this.value.mutateOver(visitor);
         }
         return visitor.visit_Yield(this);
     }
@@ -1407,8 +1413,8 @@ export class YieldFrom extends expr {
         super(...attrs);
         this.value = value;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): YieldFrom {
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_YieldFrom(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1429,10 +1435,10 @@ export class Compare extends expr {
         this.ops = ops || [];
         this.comparators = comparators || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.left = this.left.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Compare {
+        this.left = this.left.mutateOver(visitor);
         this.comparators.forEach((node, i) => {
-            this.comparators[i] = node.mutateOver(visitor) as expr;
+            this.comparators[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Compare(this);
     }
@@ -1454,13 +1460,13 @@ export class Call extends expr {
         this.args = args || [];
         this.keywords = keywords || [];
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.func = this.func.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Call {
+        this.func = this.func.mutateOver(visitor);
         this.args.forEach((node, i) => {
-            this.args[i] = node.mutateOver(visitor) as expr;
+            this.args[i] = node.mutateOver(visitor);
         });
         this.keywords.forEach((node, i) => {
-            this.keywords[i] = node.mutateOver(visitor) as keyword;
+            this.keywords[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Call(this);
     }
@@ -1482,10 +1488,10 @@ export class FormattedValue extends expr {
         this.conversion = conversion;
         this.format_spec = format_spec;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): FormattedValue {
+        this.value = this.value.mutateOver(visitor);
         if (this.format_spec) {
-            this.format_spec = this.format_spec.mutateOver(visitor) as expr;
+            this.format_spec = this.format_spec.mutateOver(visitor);
         }
         return visitor.visit_FormattedValue(this);
     }
@@ -1503,9 +1509,9 @@ export class JoinedStr extends expr {
         super(...attrs);
         this.values = values || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): JoinedStr {
         this.values.forEach((node, i) => {
-            this.values[i] = node.mutateOver(visitor) as expr;
+            this.values[i] = node.mutateOver(visitor);
         });
         return visitor.visit_JoinedStr(this);
     }
@@ -1525,7 +1531,7 @@ export class Constant extends expr {
         this.value = value;
         this.kind = kind;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Constant {
         return visitor.visit_Constant(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1546,8 +1552,8 @@ export class Attribute extends expr {
         this.attr = attr;
         this.ctx = ctx;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Attribute {
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_Attribute(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1568,9 +1574,9 @@ export class Subscript extends expr {
         this.slice = slice;
         this.ctx = ctx;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
-        this.slice = this.slice.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Subscript {
+        this.value = this.value.mutateOver(visitor);
+        this.slice = this.slice.mutateOver(visitor);
         return visitor.visit_Subscript(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1589,8 +1595,8 @@ export class Starred extends expr {
         this.value = value;
         this.ctx = ctx;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): Starred {
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_Starred(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1609,7 +1615,7 @@ export class Name extends expr {
         this.id = id;
         this.ctx = ctx;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Name {
         return visitor.visit_Name(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1628,9 +1634,9 @@ export class List extends expr {
         this.elts = elts || [];
         this.ctx = ctx;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): List {
         this.elts.forEach((node, i) => {
-            this.elts[i] = node.mutateOver(visitor) as expr;
+            this.elts[i] = node.mutateOver(visitor);
         });
         return visitor.visit_List(this);
     }
@@ -1650,9 +1656,9 @@ export class Tuple extends expr {
         this.elts = elts || [];
         this.ctx = ctx;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Tuple {
         this.elts.forEach((node, i) => {
-            this.elts[i] = node.mutateOver(visitor) as expr;
+            this.elts[i] = node.mutateOver(visitor);
         });
         return visitor.visit_Tuple(this);
     }
@@ -1674,15 +1680,15 @@ export class Slice extends expr {
         this.upper = upper;
         this.step = step;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): Slice {
         if (this.lower) {
-            this.lower = this.lower.mutateOver(visitor) as expr;
+            this.lower = this.lower.mutateOver(visitor);
         }
         if (this.upper) {
-            this.upper = this.upper.mutateOver(visitor) as expr;
+            this.upper = this.upper.mutateOver(visitor);
         }
         if (this.step) {
-            this.step = this.step.mutateOver(visitor) as expr;
+            this.step = this.step.mutateOver(visitor);
         }
         return visitor.visit_Slice(this);
     }
@@ -1707,11 +1713,11 @@ export class comprehension extends AST {
         this.ifs = ifs || [];
         this.is_async = is_async;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.target = this.target.mutateOver(visitor) as expr;
-        this.iter = this.iter.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): comprehension {
+        this.target = this.target.mutateOver(visitor);
+        this.iter = this.iter.mutateOver(visitor);
         this.ifs.forEach((node, i) => {
-            this.ifs[i] = node.mutateOver(visitor) as expr;
+            this.ifs[i] = node.mutateOver(visitor);
         });
         return visitor.visit_comprehension(this);
     }
@@ -1723,7 +1729,7 @@ comprehension.prototype._fields = ["target", "iter", "ifs", "is_async"];
 comprehension.prototype._kind = ASTKind.comprehension;
 
 /* ----- excepthandler ----- */
-export class excepthandler extends AST {
+export abstract class excepthandler extends AST {
     static _name = "excepthandler";
     lineno: number;
     col_offset: number;
@@ -1735,6 +1741,9 @@ export class excepthandler extends AST {
         this.col_offset = col_offset;
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
+    }
+    mutateOver(_visitor: ASTVisitor): excepthandler {
+        throw new Error("mutateOver() implementation not provided");
     }
 }
 excepthandler.prototype._attributes = _attrs;
@@ -1750,12 +1759,12 @@ export class ExceptHandler extends excepthandler {
         this.name = name;
         this.body = body || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): ExceptHandler {
         if (this.type) {
-            this.type = this.type.mutateOver(visitor) as expr;
+            this.type = this.type.mutateOver(visitor);
         }
         this.body.forEach((node, i) => {
-            this.body[i] = node.mutateOver(visitor) as stmt;
+            this.body[i] = node.mutateOver(visitor);
         });
         return visitor.visit_ExceptHandler(this);
     }
@@ -1794,28 +1803,28 @@ export class arguments_ extends AST {
         this.kwarg = kwarg;
         this.defaults = defaults || [];
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): arguments_ {
         this.posonlyargs.forEach((node, i) => {
-            this.posonlyargs[i] = node.mutateOver(visitor) as arg;
+            this.posonlyargs[i] = node.mutateOver(visitor);
         });
         this.args.forEach((node, i) => {
-            this.args[i] = node.mutateOver(visitor) as arg;
+            this.args[i] = node.mutateOver(visitor);
         });
         if (this.vararg) {
-            this.vararg = this.vararg.mutateOver(visitor) as arg;
+            this.vararg = this.vararg.mutateOver(visitor);
         }
         this.kwonlyargs.forEach((node, i) => {
-            this.kwonlyargs[i] = node.mutateOver(visitor) as arg;
+            this.kwonlyargs[i] = node.mutateOver(visitor);
         });
         this.kw_defaults.forEach((node, i) => {
             if (node === null) return;
-            this.kw_defaults[i] = node.mutateOver(visitor) as expr | null;
+            this.kw_defaults[i] = node.mutateOver(visitor);
         });
         if (this.kwarg) {
-            this.kwarg = this.kwarg.mutateOver(visitor) as arg;
+            this.kwarg = this.kwarg.mutateOver(visitor);
         }
         this.defaults.forEach((node, i) => {
-            this.defaults[i] = node.mutateOver(visitor) as expr;
+            this.defaults[i] = node.mutateOver(visitor);
         });
         return visitor.visit_arguments_(this);
     }
@@ -1854,9 +1863,9 @@ export class arg extends AST {
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): arg {
         if (this.annotation) {
-            this.annotation = this.annotation.mutateOver(visitor) as expr;
+            this.annotation = this.annotation.mutateOver(visitor);
         }
         return visitor.visit_arg(this);
     }
@@ -1893,8 +1902,8 @@ export class keyword extends AST {
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.value = this.value.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): keyword {
+        this.value = this.value.mutateOver(visitor);
         return visitor.visit_keyword(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1915,7 +1924,7 @@ export class alias extends AST {
         this.name = name;
         this.asname = asname;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): alias {
         return visitor.visit_alias(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1935,10 +1944,10 @@ export class withitem extends AST {
         this.context_expr = context_expr;
         this.optional_vars = optional_vars;
     }
-    mutateOver(visitor: ASTVisitor) {
-        this.context_expr = this.context_expr.mutateOver(visitor) as expr;
+    mutateOver(visitor: ASTVisitor): withitem {
+        this.context_expr = this.context_expr.mutateOver(visitor);
         if (this.optional_vars) {
-            this.optional_vars = this.optional_vars.mutateOver(visitor) as expr;
+            this.optional_vars = this.optional_vars.mutateOver(visitor);
         }
         return visitor.visit_withitem(this);
     }
@@ -1950,7 +1959,7 @@ withitem.prototype._fields = ["context_expr", "optional_vars"];
 withitem.prototype._kind = ASTKind.withitem;
 
 /* ----- type_ignore ----- */
-export class type_ignore extends AST {
+export abstract class type_ignore extends AST {
     static _name = "type_ignore";
 }
 
@@ -1963,7 +1972,7 @@ export class TypeIgnore extends type_ignore {
         this.lineno = lineno;
         this.tag = tag;
     }
-    mutateOver(visitor: ASTVisitor) {
+    mutateOver(visitor: ASTVisitor): TypeIgnore {
         return visitor.visit_TypeIgnore(this);
     }
     walkabout(visitor: ASTVisitor) {
@@ -1973,7 +1982,7 @@ export class TypeIgnore extends type_ignore {
 TypeIgnore.prototype._fields = ["lineno", "tag"];
 TypeIgnore.prototype._kind = ASTKind.TypeIgnore;
 
-export class ASTVisitor {
+export abstract class ASTVisitor {
     visitSeq(seq: AST[] | null) {
         if (seq === null) return null;
         for (const node of seq) {
