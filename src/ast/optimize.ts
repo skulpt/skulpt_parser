@@ -1,6 +1,10 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
+/**
+ * This file is based on ast_opt.c from cpython: https://github.com/python/cpython/blob/v3.9.5/Python/ast_opt.c
+ * and optimize.py from pypy:  https://github.com/mozillazg/pypy/blob/master/pypy/interpreter/astcompiler/optimize.py
+ */
 import type { AST, BinOp, BoolOp, cmpop, Compare, expr, mod, Subscript, Tuple, UnaryOp } from "./astnodes.ts";
 import {
     Add,
@@ -51,6 +55,11 @@ import {
     pyXor,
 } from "../mock_types/operator.ts";
 
+/**
+ * walks the AST folding AST Nodes where possible.
+ * Optimizations are largely based on folding python constant types and related operations.
+ * Our mock python types implement enough of the number operations to make certain binary/unary operations possible.
+ */
 export function astOptimize(node: mod) {
     const visitor = new OptimizingVisitor();
     return node.mutateOver(visitor);
@@ -63,6 +72,10 @@ function asConstantTruth(node: AST) {
     return pyIsTrue((node as Constant).value);
 }
 
+/**
+ * If we weren't able to do any ast folding newval will be null so return the original node.
+ * Otherwise return a new Constant node whose `value` is `newval`
+ */
 function makeConst(node: expr, newval: pyConstant | null) {
     if (newval === null) {
         return node;
@@ -74,6 +87,12 @@ function unaryNot(constant: pyConstant) {
     return pyIsTrue(constant) ? pyFalse : pyTrue;
 }
 
+/**
+ * Takes the elts from a Tuple astnode and checks whether they are all Constants
+ * If any elt is a non Constant return null - no optimizing available
+ * If all elts are Constants then we can convert the Tuple astnode
+ * into a Constant node whose value is a pyTuple made up of pyConstants
+ */
 function makeConstTuple(elts: expr[]): null | pyTuple {
     if (elts.some((e) => e._kind !== ASTKind.Constant)) {
         return null;
@@ -81,11 +100,19 @@ function makeConstTuple(elts: expr[]): null | pyTuple {
     return new pyTuple(elts.map((e) => (e as Constant).value));
 }
 
+/**
+ * Based largely on pypy implementation of optimize.py
+ */
 class OptimizingVisitor extends ASTVisitor {
     defaultVisitor<T>(node: T) {
         return node;
     }
 
+    /**
+     * Do simple Binary Operations on Constant types. E.g. `1 + 2` => `3`
+     * If the operation might fail or can't be optimized the python methods return null
+     * e.g. pyDiv(1, 0) => null
+     */
     visit_BinOp(node: BinOp) {
         const lhs = node.left;
         const rhs = node.right;
@@ -137,13 +164,17 @@ class OptimizingVisitor extends ASTVisitor {
                 newval = pyAnd(lv, rv);
                 break;
             default:
-                // Unknown operator
+                // Unknown operator (MatMul)
                 return node;
         }
 
         return makeConst(node, newval);
     }
 
+    /**
+     * Convert `not 1 in (1, 2)`  => `1 not in (1, 2)`
+     * Do simple Unary Operations on Constant types. E.g. -2
+     */
     visit_UnaryOp(node: UnaryOp) {
         const arg = node.operand;
         if (arg._kind !== ASTKind.Constant) {
@@ -203,6 +234,7 @@ class OptimizingVisitor extends ASTVisitor {
         return makeConst(node, newval);
     }
 
+    /** remove unneessary chained `and`/`or` constants. `1 and 2 and 3` => `3` */
     visit_BoolOp(node: BoolOp) {
         const values = node.values;
         const weAreAnd = node.op === And;
@@ -226,6 +258,7 @@ class OptimizingVisitor extends ASTVisitor {
         return node;
     }
 
+    /** a tuple of all constant elements can be turned into a constant astnode */
     visit_Tuple(node: Tuple) {
         if (node.ctx !== Load) {
             return node;
@@ -234,6 +267,10 @@ class OptimizingVisitor extends ASTVisitor {
         return makeConst(node, newval);
     }
 
+    /**
+     * Fold Constant lookups of constant types `'abc'[0]` => `a`
+     * pyGetItem returns null for an invalid lookup
+     */
     visit_Subscript(node: Subscript) {
         if (node.ctx !== Load) {
             return node;

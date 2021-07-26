@@ -20,7 +20,6 @@ const optimized = astOptimize(runParserFromFile(filename));
 
 const jsDump = dump(ast, options);
 const optDump = dump(optimized, options);
-console.log(jsDump == optDump);
 
 const res = getDiff(jsDump, optDump);
 console.log(res);
