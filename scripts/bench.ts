@@ -11,11 +11,13 @@
  * deno run -A dist/bundle.min.js tmp.txt
  */
 import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
-import type { expr, mod } from "../src/ast/astnodes.ts";
+import type { AST, expr, mod } from "../src/ast/astnodes.ts";
 import { runParserFromString } from "../src/parser/mod.ts";
+import { ASTVisitor } from "../src/ast/astnodes.ts";
 import { buildSymbolTable } from "../src/symtable/mod.ts";
 import { readString } from "../src/tokenize/readline.ts";
 import { tokenize } from "../src/tokenize/tokenize.ts";
+import { astOptimize } from "../src/ast/optimize.ts";
 
 const { _: args } = parse(Deno.args);
 
@@ -65,7 +67,18 @@ bench({
     },
 });
 
-runBenchmarks({ only: /parse/ }, (p) => {
+bench({
+    name: "optimize",
+    runs: 2000,
+    func(b): void {
+        const ast = runParserFromString(text);
+        b.start();
+        astOptimize(ast);
+        b.stop();
+    },
+});
+
+runBenchmarks({ only: /optimize/ }, (p) => {
     if (p.running && p.running.measuredRunsMs.length) {
         console.log(p.running.measuredRunsMs[p.running.measuredRunsMs.length - 1], "ms");
     } else if (p.results.length) {

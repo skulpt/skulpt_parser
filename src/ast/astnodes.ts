@@ -5,17 +5,16 @@
 /* module that holds all nodes */
 // deno-lint-ignore-file camelcase
 
-import type { pyConstant } from "./constants.ts";
+import type { pyConstant } from "../mock_types/constants.ts";
+import type { ASTVisitor } from "./visitor.ts";
 
 export type identifier = string;
 export type constant = pyConstant;
 export const enum ASTKind {
-    mod,
     Module,
     Interactive,
     Expression,
     FunctionType,
-    stmt,
     FunctionDef,
     AsyncFunctionDef,
     ClassDef,
@@ -42,7 +41,6 @@ export const enum ASTKind {
     Break,
     Continue,
     Debugger,
-    expr,
     BoolOp,
     NamedExpr,
     BinOp,
@@ -70,39 +68,37 @@ export const enum ASTKind {
     List,
     Tuple,
     Slice,
-    expr_context,
-    boolop,
-    operator,
-    unaryop,
-    cmpop,
     comprehension,
-    excepthandler,
     ExceptHandler,
     arguments_,
     arg,
     keyword,
     alias,
     withitem,
-    type_ignore,
     TypeIgnore,
 }
 /** base class for all AST nodes */
 export interface AST {
     _fields: string[];
     _attributes: string[];
-    _enum: boolean;
     _kind: ASTKind;
 }
 
-export class AST {
+export abstract class AST {
     static _name = "AST";
     get [Symbol.toStringTag]() {
         return (this.constructor as typeof AST)._name;
     }
+    mutateOver(_visitor: ASTVisitor): AST {
+        throw new Error("mutateOver() implementation not provided");
+    }
+    // deno-lint-ignore no-explicit-any
+    walkabout(_visitor: ASTVisitor): any {
+        throw new Error("walkabout() implementation not provided");
+    }
 }
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
-AST.prototype._enum = false;
 
 export type Attrs = [number, number, number, number];
 const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
@@ -112,170 +108,96 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 /* ---------------------- */
 
 /* ----- expr_context ----- */
-export class expr_context extends AST {
-    static _name = "expr_context";
+export enum expr_context {
+    Load,
+    Store,
+    Del,
 }
-expr_context.prototype._enum = true;
 
-export class LoadType extends expr_context {
-    static _name = "Load";
-}
-export class StoreType extends expr_context {
-    static _name = "Store";
-}
-export class DelType extends expr_context {
-    static _name = "Del";
-}
-export const Load = new LoadType();
-export const Store = new StoreType();
-export const Del = new DelType();
+export const Load = expr_context.Load;
+export const Store = expr_context.Store;
+export const Del = expr_context.Del;
 
 /* ----- boolop ----- */
-export class boolop extends AST {
-    static _name = "boolop";
+export enum boolop {
+    And = 3,
+    Or,
 }
-boolop.prototype._enum = true;
 
-export class AndType extends boolop {
-    static _name = "And";
-}
-export class OrType extends boolop {
-    static _name = "Or";
-}
-export const And = new AndType();
-export const Or = new OrType();
+export const And = boolop.And;
+export const Or = boolop.Or;
 
 /* ----- operator ----- */
-export class operator extends AST {
-    static _name = "operator";
+export enum operator {
+    Add = 5,
+    Sub,
+    Mult,
+    MatMult,
+    Div,
+    Mod,
+    Pow,
+    LShift,
+    RShift,
+    BitOr,
+    BitXor,
+    BitAnd,
+    FloorDiv,
 }
-operator.prototype._enum = true;
 
-export class AddType extends operator {
-    static _name = "Add";
-}
-export class SubType extends operator {
-    static _name = "Sub";
-}
-export class MultType extends operator {
-    static _name = "Mult";
-}
-export class MatMultType extends operator {
-    static _name = "MatMult";
-}
-export class DivType extends operator {
-    static _name = "Div";
-}
-export class ModType extends operator {
-    static _name = "Mod";
-}
-export class PowType extends operator {
-    static _name = "Pow";
-}
-export class LShiftType extends operator {
-    static _name = "LShift";
-}
-export class RShiftType extends operator {
-    static _name = "RShift";
-}
-export class BitOrType extends operator {
-    static _name = "BitOr";
-}
-export class BitXorType extends operator {
-    static _name = "BitXor";
-}
-export class BitAndType extends operator {
-    static _name = "BitAnd";
-}
-export class FloorDivType extends operator {
-    static _name = "FloorDiv";
-}
-export const Add = new AddType();
-export const Sub = new SubType();
-export const Mult = new MultType();
-export const MatMult = new MatMultType();
-export const Div = new DivType();
-export const Mod = new ModType();
-export const Pow = new PowType();
-export const LShift = new LShiftType();
-export const RShift = new RShiftType();
-export const BitOr = new BitOrType();
-export const BitXor = new BitXorType();
-export const BitAnd = new BitAndType();
-export const FloorDiv = new FloorDivType();
+export const Add = operator.Add;
+export const Sub = operator.Sub;
+export const Mult = operator.Mult;
+export const MatMult = operator.MatMult;
+export const Div = operator.Div;
+export const Mod = operator.Mod;
+export const Pow = operator.Pow;
+export const LShift = operator.LShift;
+export const RShift = operator.RShift;
+export const BitOr = operator.BitOr;
+export const BitXor = operator.BitXor;
+export const BitAnd = operator.BitAnd;
+export const FloorDiv = operator.FloorDiv;
 
 /* ----- unaryop ----- */
-export class unaryop extends AST {
-    static _name = "unaryop";
+export enum unaryop {
+    Invert = 18,
+    Not,
+    UAdd,
+    USub,
 }
-unaryop.prototype._enum = true;
 
-export class InvertType extends unaryop {
-    static _name = "Invert";
-}
-export class NotType extends unaryop {
-    static _name = "Not";
-}
-export class UAddType extends unaryop {
-    static _name = "UAdd";
-}
-export class USubType extends unaryop {
-    static _name = "USub";
-}
-export const Invert = new InvertType();
-export const Not = new NotType();
-export const UAdd = new UAddType();
-export const USub = new USubType();
+export const Invert = unaryop.Invert;
+export const Not = unaryop.Not;
+export const UAdd = unaryop.UAdd;
+export const USub = unaryop.USub;
 
 /* ----- cmpop ----- */
-export class cmpop extends AST {
-    static _name = "cmpop";
+export enum cmpop {
+    Eq = 22,
+    NotEq,
+    Lt,
+    LtE,
+    Gt,
+    GtE,
+    Is,
+    IsNot,
+    In,
+    NotIn,
 }
-cmpop.prototype._enum = true;
 
-export class EqType extends cmpop {
-    static _name = "Eq";
-}
-export class NotEqType extends cmpop {
-    static _name = "NotEq";
-}
-export class LtType extends cmpop {
-    static _name = "Lt";
-}
-export class LtEType extends cmpop {
-    static _name = "LtE";
-}
-export class GtType extends cmpop {
-    static _name = "Gt";
-}
-export class GtEType extends cmpop {
-    static _name = "GtE";
-}
-export class IsType extends cmpop {
-    static _name = "Is";
-}
-export class IsNotType extends cmpop {
-    static _name = "IsNot";
-}
-export class InType extends cmpop {
-    static _name = "In";
-}
-export class NotInType extends cmpop {
-    static _name = "NotIn";
-}
-export const Eq = new EqType();
-export const NotEq = new NotEqType();
-export const Lt = new LtType();
-export const LtE = new LtEType();
-export const Gt = new GtType();
-export const GtE = new GtEType();
-export const Is = new IsType();
-export const IsNot = new IsNotType();
-export const In = new InType();
-export const NotIn = new NotInType();
+export const Eq = cmpop.Eq;
+export const NotEq = cmpop.NotEq;
+export const Lt = cmpop.Lt;
+export const LtE = cmpop.LtE;
+export const Gt = cmpop.Gt;
+export const GtE = cmpop.GtE;
+export const Is = cmpop.Is;
+export const IsNot = cmpop.IsNot;
+export const In = cmpop.In;
+export const NotIn = cmpop.NotIn;
 
 /* ----- mod ----- */
-export class mod extends AST {
+export abstract class mod extends AST {
     static _name = "mod";
 }
 
@@ -288,6 +210,18 @@ export class Module extends mod {
         this.body = body || [];
         this.type_ignores = type_ignores || [];
     }
+    mutateOver(visitor: ASTVisitor): Module {
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.type_ignores.forEach((node, i) => {
+            this.type_ignores[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Module(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Module(this);
+    }
 }
 Module.prototype._fields = ["body", "type_ignores"];
 Module.prototype._kind = ASTKind.Module;
@@ -299,6 +233,15 @@ export class Interactive extends mod {
         super();
         this.body = body || [];
     }
+    mutateOver(visitor: ASTVisitor): Interactive {
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Interactive(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Interactive(this);
+    }
 }
 Interactive.prototype._fields = ["body"];
 Interactive.prototype._kind = ASTKind.Interactive;
@@ -309,6 +252,13 @@ export class Expression extends mod {
     constructor(body: expr) {
         super();
         this.body = body;
+    }
+    mutateOver(visitor: ASTVisitor): Expression {
+        this.body = this.body.mutateOver(visitor);
+        return visitor.visit_Expression(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Expression(this);
     }
 }
 Expression.prototype._fields = ["body"];
@@ -323,12 +273,22 @@ export class FunctionType extends mod {
         this.argtypes = argtypes || [];
         this.returns = returns;
     }
+    mutateOver(visitor: ASTVisitor): FunctionType {
+        this.argtypes.forEach((node, i) => {
+            this.argtypes[i] = node.mutateOver(visitor);
+        });
+        this.returns = this.returns.mutateOver(visitor);
+        return visitor.visit_FunctionType(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_FunctionType(this);
+    }
 }
 FunctionType.prototype._fields = ["argtypes", "returns"];
 FunctionType.prototype._kind = ASTKind.FunctionType;
 
 /* ----- stmt ----- */
-export class stmt extends AST {
+export abstract class stmt extends AST {
     static _name = "stmt";
     lineno: number;
     col_offset: number;
@@ -340,6 +300,9 @@ export class stmt extends AST {
         this.col_offset = col_offset;
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
+    }
+    mutateOver(_visitor: ASTVisitor): stmt {
+        throw new Error("mutateOver() implementation not provided");
     }
 }
 stmt.prototype._attributes = _attrs;
@@ -368,6 +331,22 @@ export class FunctionDef extends stmt {
         this.decorator_list = decorator_list || [];
         this.returns = returns;
         this.type_comment = type_comment;
+    }
+    mutateOver(visitor: ASTVisitor): FunctionDef {
+        this.args = this.args.mutateOver(visitor);
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.decorator_list.forEach((node, i) => {
+            this.decorator_list[i] = node.mutateOver(visitor);
+        });
+        if (this.returns) {
+            this.returns = this.returns.mutateOver(visitor);
+        }
+        return visitor.visit_FunctionDef(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_FunctionDef(this);
     }
 }
 FunctionDef.prototype._fields = ["name", "args", "body", "decorator_list", "returns", "type_comment"];
@@ -398,6 +377,22 @@ export class AsyncFunctionDef extends stmt {
         this.returns = returns;
         this.type_comment = type_comment;
     }
+    mutateOver(visitor: ASTVisitor): AsyncFunctionDef {
+        this.args = this.args.mutateOver(visitor);
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.decorator_list.forEach((node, i) => {
+            this.decorator_list[i] = node.mutateOver(visitor);
+        });
+        if (this.returns) {
+            this.returns = this.returns.mutateOver(visitor);
+        }
+        return visitor.visit_AsyncFunctionDef(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_AsyncFunctionDef(this);
+    }
 }
 AsyncFunctionDef.prototype._fields = ["name", "args", "body", "decorator_list", "returns", "type_comment"];
 AsyncFunctionDef.prototype._kind = ASTKind.AsyncFunctionDef;
@@ -424,6 +419,24 @@ export class ClassDef extends stmt {
         this.body = body || [];
         this.decorator_list = decorator_list || [];
     }
+    mutateOver(visitor: ASTVisitor): ClassDef {
+        this.bases.forEach((node, i) => {
+            this.bases[i] = node.mutateOver(visitor);
+        });
+        this.keywords.forEach((node, i) => {
+            this.keywords[i] = node.mutateOver(visitor);
+        });
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.decorator_list.forEach((node, i) => {
+            this.decorator_list[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_ClassDef(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_ClassDef(this);
+    }
 }
 ClassDef.prototype._fields = ["name", "bases", "keywords", "body", "decorator_list"];
 ClassDef.prototype._kind = ASTKind.ClassDef;
@@ -435,6 +448,15 @@ export class Return extends stmt {
         super(...attrs);
         this.value = value;
     }
+    mutateOver(visitor: ASTVisitor): Return {
+        if (this.value) {
+            this.value = this.value.mutateOver(visitor);
+        }
+        return visitor.visit_Return(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Return(this);
+    }
 }
 Return.prototype._fields = ["value"];
 Return.prototype._kind = ASTKind.Return;
@@ -445,6 +467,15 @@ export class Delete extends stmt {
     constructor(targets: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.targets = targets || [];
+    }
+    mutateOver(visitor: ASTVisitor): Delete {
+        this.targets.forEach((node, i) => {
+            this.targets[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Delete(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Delete(this);
     }
 }
 Delete.prototype._fields = ["targets"];
@@ -461,6 +492,16 @@ export class Assign extends stmt {
         this.value = value;
         this.type_comment = type_comment;
     }
+    mutateOver(visitor: ASTVisitor): Assign {
+        this.targets.forEach((node, i) => {
+            this.targets[i] = node.mutateOver(visitor);
+        });
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_Assign(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Assign(this);
+    }
 }
 Assign.prototype._fields = ["targets", "value", "type_comment"];
 Assign.prototype._kind = ASTKind.Assign;
@@ -475,6 +516,14 @@ export class AugAssign extends stmt {
         this.target = target;
         this.op = op;
         this.value = value;
+    }
+    mutateOver(visitor: ASTVisitor): AugAssign {
+        this.target = this.target.mutateOver(visitor);
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_AugAssign(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_AugAssign(this);
     }
 }
 AugAssign.prototype._fields = ["target", "op", "value"];
@@ -492,6 +541,17 @@ export class AnnAssign extends stmt {
         this.annotation = annotation;
         this.value = value;
         this.simple = simple;
+    }
+    mutateOver(visitor: ASTVisitor): AnnAssign {
+        this.target = this.target.mutateOver(visitor);
+        this.annotation = this.annotation.mutateOver(visitor);
+        if (this.value) {
+            this.value = this.value.mutateOver(visitor);
+        }
+        return visitor.visit_AnnAssign(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_AnnAssign(this);
     }
 }
 AnnAssign.prototype._fields = ["target", "annotation", "value", "simple"];
@@ -519,6 +579,20 @@ export class For extends stmt {
         this.orelse = orelse || [];
         this.type_comment = type_comment;
     }
+    mutateOver(visitor: ASTVisitor): For {
+        this.target = this.target.mutateOver(visitor);
+        this.iter = this.iter.mutateOver(visitor);
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.orelse.forEach((node, i) => {
+            this.orelse[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_For(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_For(this);
+    }
 }
 For.prototype._fields = ["target", "iter", "body", "orelse", "type_comment"];
 For.prototype._kind = ASTKind.For;
@@ -545,6 +619,20 @@ export class AsyncFor extends stmt {
         this.orelse = orelse || [];
         this.type_comment = type_comment;
     }
+    mutateOver(visitor: ASTVisitor): AsyncFor {
+        this.target = this.target.mutateOver(visitor);
+        this.iter = this.iter.mutateOver(visitor);
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.orelse.forEach((node, i) => {
+            this.orelse[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_AsyncFor(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_AsyncFor(this);
+    }
 }
 AsyncFor.prototype._fields = ["target", "iter", "body", "orelse", "type_comment"];
 AsyncFor.prototype._kind = ASTKind.AsyncFor;
@@ -559,6 +647,19 @@ export class While extends stmt {
         this.test = test;
         this.body = body || [];
         this.orelse = orelse || [];
+    }
+    mutateOver(visitor: ASTVisitor): While {
+        this.test = this.test.mutateOver(visitor);
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.orelse.forEach((node, i) => {
+            this.orelse[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_While(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_While(this);
     }
 }
 While.prototype._fields = ["test", "body", "orelse"];
@@ -575,6 +676,19 @@ export class If extends stmt {
         this.body = body || [];
         this.orelse = orelse || [];
     }
+    mutateOver(visitor: ASTVisitor): If {
+        this.test = this.test.mutateOver(visitor);
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.orelse.forEach((node, i) => {
+            this.orelse[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_If(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_If(this);
+    }
 }
 If.prototype._fields = ["test", "body", "orelse"];
 If.prototype._kind = ASTKind.If;
@@ -589,6 +703,18 @@ export class With extends stmt {
         this.items = items || [];
         this.body = body || [];
         this.type_comment = type_comment;
+    }
+    mutateOver(visitor: ASTVisitor): With {
+        this.items.forEach((node, i) => {
+            this.items[i] = node.mutateOver(visitor);
+        });
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_With(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_With(this);
     }
 }
 With.prototype._fields = ["items", "body", "type_comment"];
@@ -605,6 +731,18 @@ export class AsyncWith extends stmt {
         this.body = body || [];
         this.type_comment = type_comment;
     }
+    mutateOver(visitor: ASTVisitor): AsyncWith {
+        this.items.forEach((node, i) => {
+            this.items[i] = node.mutateOver(visitor);
+        });
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_AsyncWith(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_AsyncWith(this);
+    }
 }
 AsyncWith.prototype._fields = ["items", "body", "type_comment"];
 AsyncWith.prototype._kind = ASTKind.AsyncWith;
@@ -617,6 +755,18 @@ export class Raise extends stmt {
         super(...attrs);
         this.exc = exc;
         this.cause = cause;
+    }
+    mutateOver(visitor: ASTVisitor): Raise {
+        if (this.exc) {
+            this.exc = this.exc.mutateOver(visitor);
+        }
+        if (this.cause) {
+            this.cause = this.cause.mutateOver(visitor);
+        }
+        return visitor.visit_Raise(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Raise(this);
     }
 }
 Raise.prototype._fields = ["exc", "cause"];
@@ -641,6 +791,24 @@ export class Try extends stmt {
         this.orelse = orelse || [];
         this.finalbody = finalbody || [];
     }
+    mutateOver(visitor: ASTVisitor): Try {
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        this.handlers.forEach((node, i) => {
+            this.handlers[i] = node.mutateOver(visitor);
+        });
+        this.orelse.forEach((node, i) => {
+            this.orelse[i] = node.mutateOver(visitor);
+        });
+        this.finalbody.forEach((node, i) => {
+            this.finalbody[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Try(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Try(this);
+    }
 }
 Try.prototype._fields = ["body", "handlers", "orelse", "finalbody"];
 Try.prototype._kind = ASTKind.Try;
@@ -654,6 +822,16 @@ export class Assert extends stmt {
         this.test = test;
         this.msg = msg;
     }
+    mutateOver(visitor: ASTVisitor): Assert {
+        this.test = this.test.mutateOver(visitor);
+        if (this.msg) {
+            this.msg = this.msg.mutateOver(visitor);
+        }
+        return visitor.visit_Assert(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Assert(this);
+    }
 }
 Assert.prototype._fields = ["test", "msg"];
 Assert.prototype._kind = ASTKind.Assert;
@@ -664,6 +842,15 @@ export class Import extends stmt {
     constructor(names: alias[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.names = names || [];
+    }
+    mutateOver(visitor: ASTVisitor): Import {
+        this.names.forEach((node, i) => {
+            this.names[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Import(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Import(this);
     }
 }
 Import.prototype._fields = ["names"];
@@ -680,6 +867,15 @@ export class ImportFrom extends stmt {
         this.names = names || [];
         this.level = level;
     }
+    mutateOver(visitor: ASTVisitor): ImportFrom {
+        this.names.forEach((node, i) => {
+            this.names[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_ImportFrom(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_ImportFrom(this);
+    }
 }
 ImportFrom.prototype._fields = ["module", "names", "level"];
 ImportFrom.prototype._kind = ASTKind.ImportFrom;
@@ -690,6 +886,12 @@ export class Global extends stmt {
     constructor(names: identifier[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.names = names || [];
+    }
+    mutateOver(visitor: ASTVisitor): Global {
+        return visitor.visit_Global(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Global(this);
     }
 }
 Global.prototype._fields = ["names"];
@@ -702,6 +904,12 @@ export class Nonlocal extends stmt {
         super(...attrs);
         this.names = names || [];
     }
+    mutateOver(visitor: ASTVisitor): Nonlocal {
+        return visitor.visit_Nonlocal(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Nonlocal(this);
+    }
 }
 Nonlocal.prototype._fields = ["names"];
 Nonlocal.prototype._kind = ASTKind.Nonlocal;
@@ -713,6 +921,13 @@ export class Expr extends stmt {
         super(...attrs);
         this.value = value;
     }
+    mutateOver(visitor: ASTVisitor): Expr {
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_Expr(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Expr(this);
+    }
 }
 Expr.prototype._fields = ["value"];
 Expr.prototype._kind = ASTKind.Expr;
@@ -721,6 +936,12 @@ export class Pass extends stmt {
     static _name = "Pass";
     constructor(...attrs: Attrs) {
         super(...attrs);
+    }
+    mutateOver(visitor: ASTVisitor): Pass {
+        return visitor.visit_Pass(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Pass(this);
     }
 }
 Pass.prototype._fields = [];
@@ -731,6 +952,12 @@ export class Break extends stmt {
     constructor(...attrs: Attrs) {
         super(...attrs);
     }
+    mutateOver(visitor: ASTVisitor): Break {
+        return visitor.visit_Break(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Break(this);
+    }
 }
 Break.prototype._fields = [];
 Break.prototype._kind = ASTKind.Break;
@@ -739,6 +966,12 @@ export class Continue extends stmt {
     static _name = "Continue";
     constructor(...attrs: Attrs) {
         super(...attrs);
+    }
+    mutateOver(visitor: ASTVisitor): Continue {
+        return visitor.visit_Continue(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Continue(this);
     }
 }
 Continue.prototype._fields = [];
@@ -749,12 +982,18 @@ export class Debugger extends stmt {
     constructor(...attrs: Attrs) {
         super(...attrs);
     }
+    mutateOver(visitor: ASTVisitor): Debugger {
+        return visitor.visit_Debugger(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Debugger(this);
+    }
 }
 Debugger.prototype._fields = [];
 Debugger.prototype._kind = ASTKind.Debugger;
 
 /* ----- expr ----- */
-export class expr extends AST {
+export abstract class expr extends AST {
     static _name = "expr";
     lineno: number;
     col_offset: number;
@@ -766,6 +1005,9 @@ export class expr extends AST {
         this.col_offset = col_offset;
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
+    }
+    mutateOver(_visitor: ASTVisitor): expr {
+        throw new Error("mutateOver() implementation not provided");
     }
 }
 expr.prototype._attributes = _attrs;
@@ -779,6 +1021,15 @@ export class BoolOp extends expr {
         this.op = op;
         this.values = values || [];
     }
+    mutateOver(visitor: ASTVisitor): BoolOp {
+        this.values.forEach((node, i) => {
+            this.values[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_BoolOp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_BoolOp(this);
+    }
 }
 BoolOp.prototype._fields = ["op", "values"];
 BoolOp.prototype._kind = ASTKind.BoolOp;
@@ -791,6 +1042,14 @@ export class NamedExpr extends expr {
         super(...attrs);
         this.target = target;
         this.value = value;
+    }
+    mutateOver(visitor: ASTVisitor): NamedExpr {
+        this.target = this.target.mutateOver(visitor);
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_NamedExpr(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_NamedExpr(this);
     }
 }
 NamedExpr.prototype._fields = ["target", "value"];
@@ -807,6 +1066,14 @@ export class BinOp extends expr {
         this.op = op;
         this.right = right;
     }
+    mutateOver(visitor: ASTVisitor): BinOp {
+        this.left = this.left.mutateOver(visitor);
+        this.right = this.right.mutateOver(visitor);
+        return visitor.visit_BinOp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_BinOp(this);
+    }
 }
 BinOp.prototype._fields = ["left", "op", "right"];
 BinOp.prototype._kind = ASTKind.BinOp;
@@ -820,6 +1087,13 @@ export class UnaryOp extends expr {
         this.op = op;
         this.operand = operand;
     }
+    mutateOver(visitor: ASTVisitor): UnaryOp {
+        this.operand = this.operand.mutateOver(visitor);
+        return visitor.visit_UnaryOp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_UnaryOp(this);
+    }
 }
 UnaryOp.prototype._fields = ["op", "operand"];
 UnaryOp.prototype._kind = ASTKind.UnaryOp;
@@ -832,6 +1106,14 @@ export class Lambda extends expr {
         super(...attrs);
         this.args = args;
         this.body = body;
+    }
+    mutateOver(visitor: ASTVisitor): Lambda {
+        this.args = this.args.mutateOver(visitor);
+        this.body = this.body.mutateOver(visitor);
+        return visitor.visit_Lambda(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Lambda(this);
     }
 }
 Lambda.prototype._fields = ["args", "body"];
@@ -848,6 +1130,15 @@ export class IfExp extends expr {
         this.body = body;
         this.orelse = orelse;
     }
+    mutateOver(visitor: ASTVisitor): IfExp {
+        this.test = this.test.mutateOver(visitor);
+        this.body = this.body.mutateOver(visitor);
+        this.orelse = this.orelse.mutateOver(visitor);
+        return visitor.visit_IfExp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_IfExp(this);
+    }
 }
 IfExp.prototype._fields = ["test", "body", "orelse"];
 IfExp.prototype._kind = ASTKind.IfExp;
@@ -861,6 +1152,19 @@ export class Dict extends expr {
         this.keys = keys || [];
         this.values = values || [];
     }
+    mutateOver(visitor: ASTVisitor): Dict {
+        this.keys.forEach((node, i) => {
+            if (node === null) return;
+            this.keys[i] = node.mutateOver(visitor);
+        });
+        this.values.forEach((node, i) => {
+            this.values[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Dict(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Dict(this);
+    }
 }
 Dict.prototype._fields = ["keys", "values"];
 Dict.prototype._kind = ASTKind.Dict;
@@ -871,6 +1175,15 @@ export class Set_ extends expr {
     constructor(elts: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.elts = elts || [];
+    }
+    mutateOver(visitor: ASTVisitor): Set_ {
+        this.elts.forEach((node, i) => {
+            this.elts[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Set_(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Set_(this);
     }
 }
 Set_.prototype._fields = ["elts"];
@@ -885,6 +1198,16 @@ export class ListComp extends expr {
         this.elt = elt;
         this.generators = generators || [];
     }
+    mutateOver(visitor: ASTVisitor): ListComp {
+        this.elt = this.elt.mutateOver(visitor);
+        this.generators.forEach((node, i) => {
+            this.generators[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_ListComp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_ListComp(this);
+    }
 }
 ListComp.prototype._fields = ["elt", "generators"];
 ListComp.prototype._kind = ASTKind.ListComp;
@@ -897,6 +1220,16 @@ export class SetComp extends expr {
         super(...attrs);
         this.elt = elt;
         this.generators = generators || [];
+    }
+    mutateOver(visitor: ASTVisitor): SetComp {
+        this.elt = this.elt.mutateOver(visitor);
+        this.generators.forEach((node, i) => {
+            this.generators[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_SetComp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_SetComp(this);
     }
 }
 SetComp.prototype._fields = ["elt", "generators"];
@@ -913,6 +1246,17 @@ export class DictComp extends expr {
         this.value = value;
         this.generators = generators || [];
     }
+    mutateOver(visitor: ASTVisitor): DictComp {
+        this.key = this.key.mutateOver(visitor);
+        this.value = this.value.mutateOver(visitor);
+        this.generators.forEach((node, i) => {
+            this.generators[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_DictComp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_DictComp(this);
+    }
 }
 DictComp.prototype._fields = ["key", "value", "generators"];
 DictComp.prototype._kind = ASTKind.DictComp;
@@ -926,6 +1270,16 @@ export class GeneratorExp extends expr {
         this.elt = elt;
         this.generators = generators || [];
     }
+    mutateOver(visitor: ASTVisitor): GeneratorExp {
+        this.elt = this.elt.mutateOver(visitor);
+        this.generators.forEach((node, i) => {
+            this.generators[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_GeneratorExp(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_GeneratorExp(this);
+    }
 }
 GeneratorExp.prototype._fields = ["elt", "generators"];
 GeneratorExp.prototype._kind = ASTKind.GeneratorExp;
@@ -936,6 +1290,13 @@ export class Await extends expr {
     constructor(value: expr, ...attrs: Attrs) {
         super(...attrs);
         this.value = value;
+    }
+    mutateOver(visitor: ASTVisitor): Await {
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_Await(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Await(this);
     }
 }
 Await.prototype._fields = ["value"];
@@ -948,6 +1309,15 @@ export class Yield extends expr {
         super(...attrs);
         this.value = value;
     }
+    mutateOver(visitor: ASTVisitor): Yield {
+        if (this.value) {
+            this.value = this.value.mutateOver(visitor);
+        }
+        return visitor.visit_Yield(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Yield(this);
+    }
 }
 Yield.prototype._fields = ["value"];
 Yield.prototype._kind = ASTKind.Yield;
@@ -958,6 +1328,13 @@ export class YieldFrom extends expr {
     constructor(value: expr, ...attrs: Attrs) {
         super(...attrs);
         this.value = value;
+    }
+    mutateOver(visitor: ASTVisitor): YieldFrom {
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_YieldFrom(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_YieldFrom(this);
     }
 }
 YieldFrom.prototype._fields = ["value"];
@@ -974,6 +1351,16 @@ export class Compare extends expr {
         this.ops = ops || [];
         this.comparators = comparators || [];
     }
+    mutateOver(visitor: ASTVisitor): Compare {
+        this.left = this.left.mutateOver(visitor);
+        this.comparators.forEach((node, i) => {
+            this.comparators[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Compare(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Compare(this);
+    }
 }
 Compare.prototype._fields = ["left", "ops", "comparators"];
 Compare.prototype._kind = ASTKind.Compare;
@@ -988,6 +1375,19 @@ export class Call extends expr {
         this.func = func;
         this.args = args || [];
         this.keywords = keywords || [];
+    }
+    mutateOver(visitor: ASTVisitor): Call {
+        this.func = this.func.mutateOver(visitor);
+        this.args.forEach((node, i) => {
+            this.args[i] = node.mutateOver(visitor);
+        });
+        this.keywords.forEach((node, i) => {
+            this.keywords[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Call(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Call(this);
     }
 }
 Call.prototype._fields = ["func", "args", "keywords"];
@@ -1004,6 +1404,16 @@ export class FormattedValue extends expr {
         this.conversion = conversion;
         this.format_spec = format_spec;
     }
+    mutateOver(visitor: ASTVisitor): FormattedValue {
+        this.value = this.value.mutateOver(visitor);
+        if (this.format_spec) {
+            this.format_spec = this.format_spec.mutateOver(visitor);
+        }
+        return visitor.visit_FormattedValue(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_FormattedValue(this);
+    }
 }
 FormattedValue.prototype._fields = ["value", "conversion", "format_spec"];
 FormattedValue.prototype._kind = ASTKind.FormattedValue;
@@ -1014,6 +1424,15 @@ export class JoinedStr extends expr {
     constructor(values: expr[] | null, ...attrs: Attrs) {
         super(...attrs);
         this.values = values || [];
+    }
+    mutateOver(visitor: ASTVisitor): JoinedStr {
+        this.values.forEach((node, i) => {
+            this.values[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_JoinedStr(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_JoinedStr(this);
     }
 }
 JoinedStr.prototype._fields = ["values"];
@@ -1027,6 +1446,12 @@ export class Constant extends expr {
         super(...attrs);
         this.value = value;
         this.kind = kind;
+    }
+    mutateOver(visitor: ASTVisitor): Constant {
+        return visitor.visit_Constant(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Constant(this);
     }
 }
 Constant.prototype._fields = ["value", "kind"];
@@ -1043,6 +1468,13 @@ export class Attribute extends expr {
         this.attr = attr;
         this.ctx = ctx;
     }
+    mutateOver(visitor: ASTVisitor): Attribute {
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_Attribute(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Attribute(this);
+    }
 }
 Attribute.prototype._fields = ["value", "attr", "ctx"];
 Attribute.prototype._kind = ASTKind.Attribute;
@@ -1058,6 +1490,14 @@ export class Subscript extends expr {
         this.slice = slice;
         this.ctx = ctx;
     }
+    mutateOver(visitor: ASTVisitor): Subscript {
+        this.value = this.value.mutateOver(visitor);
+        this.slice = this.slice.mutateOver(visitor);
+        return visitor.visit_Subscript(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Subscript(this);
+    }
 }
 Subscript.prototype._fields = ["value", "slice", "ctx"];
 Subscript.prototype._kind = ASTKind.Subscript;
@@ -1070,6 +1510,13 @@ export class Starred extends expr {
         super(...attrs);
         this.value = value;
         this.ctx = ctx;
+    }
+    mutateOver(visitor: ASTVisitor): Starred {
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_Starred(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Starred(this);
     }
 }
 Starred.prototype._fields = ["value", "ctx"];
@@ -1084,6 +1531,12 @@ export class Name extends expr {
         this.id = id;
         this.ctx = ctx;
     }
+    mutateOver(visitor: ASTVisitor): Name {
+        return visitor.visit_Name(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Name(this);
+    }
 }
 Name.prototype._fields = ["id", "ctx"];
 Name.prototype._kind = ASTKind.Name;
@@ -1097,6 +1550,15 @@ export class List extends expr {
         this.elts = elts || [];
         this.ctx = ctx;
     }
+    mutateOver(visitor: ASTVisitor): List {
+        this.elts.forEach((node, i) => {
+            this.elts[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_List(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_List(this);
+    }
 }
 List.prototype._fields = ["elts", "ctx"];
 List.prototype._kind = ASTKind.List;
@@ -1109,6 +1571,15 @@ export class Tuple extends expr {
         super(...attrs);
         this.elts = elts || [];
         this.ctx = ctx;
+    }
+    mutateOver(visitor: ASTVisitor): Tuple {
+        this.elts.forEach((node, i) => {
+            this.elts[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_Tuple(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Tuple(this);
     }
 }
 Tuple.prototype._fields = ["elts", "ctx"];
@@ -1124,6 +1595,21 @@ export class Slice extends expr {
         this.lower = lower;
         this.upper = upper;
         this.step = step;
+    }
+    mutateOver(visitor: ASTVisitor): Slice {
+        if (this.lower) {
+            this.lower = this.lower.mutateOver(visitor);
+        }
+        if (this.upper) {
+            this.upper = this.upper.mutateOver(visitor);
+        }
+        if (this.step) {
+            this.step = this.step.mutateOver(visitor);
+        }
+        return visitor.visit_Slice(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_Slice(this);
     }
 }
 Slice.prototype._fields = ["lower", "upper", "step"];
@@ -1143,12 +1629,23 @@ export class comprehension extends AST {
         this.ifs = ifs || [];
         this.is_async = is_async;
     }
+    mutateOver(visitor: ASTVisitor): comprehension {
+        this.target = this.target.mutateOver(visitor);
+        this.iter = this.iter.mutateOver(visitor);
+        this.ifs.forEach((node, i) => {
+            this.ifs[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_comprehension(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_comprehension(this);
+    }
 }
 comprehension.prototype._fields = ["target", "iter", "ifs", "is_async"];
 comprehension.prototype._kind = ASTKind.comprehension;
 
 /* ----- excepthandler ----- */
-export class excepthandler extends AST {
+export abstract class excepthandler extends AST {
     static _name = "excepthandler";
     lineno: number;
     col_offset: number;
@@ -1160,6 +1657,9 @@ export class excepthandler extends AST {
         this.col_offset = col_offset;
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
+    }
+    mutateOver(_visitor: ASTVisitor): excepthandler {
+        throw new Error("mutateOver() implementation not provided");
     }
 }
 excepthandler.prototype._attributes = _attrs;
@@ -1174,6 +1674,18 @@ export class ExceptHandler extends excepthandler {
         this.type = type;
         this.name = name;
         this.body = body || [];
+    }
+    mutateOver(visitor: ASTVisitor): ExceptHandler {
+        if (this.type) {
+            this.type = this.type.mutateOver(visitor);
+        }
+        this.body.forEach((node, i) => {
+            this.body[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_ExceptHandler(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_ExceptHandler(this);
     }
 }
 ExceptHandler.prototype._fields = ["type", "name", "body"];
@@ -1207,6 +1719,34 @@ export class arguments_ extends AST {
         this.kwarg = kwarg;
         this.defaults = defaults || [];
     }
+    mutateOver(visitor: ASTVisitor): arguments_ {
+        this.posonlyargs.forEach((node, i) => {
+            this.posonlyargs[i] = node.mutateOver(visitor);
+        });
+        this.args.forEach((node, i) => {
+            this.args[i] = node.mutateOver(visitor);
+        });
+        if (this.vararg) {
+            this.vararg = this.vararg.mutateOver(visitor);
+        }
+        this.kwonlyargs.forEach((node, i) => {
+            this.kwonlyargs[i] = node.mutateOver(visitor);
+        });
+        this.kw_defaults.forEach((node, i) => {
+            if (node === null) return;
+            this.kw_defaults[i] = node.mutateOver(visitor);
+        });
+        if (this.kwarg) {
+            this.kwarg = this.kwarg.mutateOver(visitor);
+        }
+        this.defaults.forEach((node, i) => {
+            this.defaults[i] = node.mutateOver(visitor);
+        });
+        return visitor.visit_arguments_(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_arguments_(this);
+    }
 }
 arguments_.prototype._fields = ["posonlyargs", "args", "vararg", "kwonlyargs", "kw_defaults", "kwarg", "defaults"];
 arguments_.prototype._kind = ASTKind.arguments_;
@@ -1239,6 +1779,15 @@ export class arg extends AST {
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
     }
+    mutateOver(visitor: ASTVisitor): arg {
+        if (this.annotation) {
+            this.annotation = this.annotation.mutateOver(visitor);
+        }
+        return visitor.visit_arg(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_arg(this);
+    }
 }
 arg.prototype._fields = ["arg", "annotation", "type_comment"];
 arg.prototype._kind = ASTKind.arg;
@@ -1269,6 +1818,13 @@ export class keyword extends AST {
         this.end_lineno = end_lineno;
         this.end_col_offset = end_col_offset;
     }
+    mutateOver(visitor: ASTVisitor): keyword {
+        this.value = this.value.mutateOver(visitor);
+        return visitor.visit_keyword(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_keyword(this);
+    }
 }
 keyword.prototype._fields = ["arg", "value"];
 keyword.prototype._kind = ASTKind.keyword;
@@ -1284,6 +1840,12 @@ export class alias extends AST {
         this.name = name;
         this.asname = asname;
     }
+    mutateOver(visitor: ASTVisitor): alias {
+        return visitor.visit_alias(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_alias(this);
+    }
 }
 alias.prototype._fields = ["name", "asname"];
 alias.prototype._kind = ASTKind.alias;
@@ -1298,12 +1860,22 @@ export class withitem extends AST {
         this.context_expr = context_expr;
         this.optional_vars = optional_vars;
     }
+    mutateOver(visitor: ASTVisitor): withitem {
+        this.context_expr = this.context_expr.mutateOver(visitor);
+        if (this.optional_vars) {
+            this.optional_vars = this.optional_vars.mutateOver(visitor);
+        }
+        return visitor.visit_withitem(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_withitem(this);
+    }
 }
 withitem.prototype._fields = ["context_expr", "optional_vars"];
 withitem.prototype._kind = ASTKind.withitem;
 
 /* ----- type_ignore ----- */
-export class type_ignore extends AST {
+export abstract class type_ignore extends AST {
     static _name = "type_ignore";
 }
 
@@ -1315,6 +1887,12 @@ export class TypeIgnore extends type_ignore {
         super();
         this.lineno = lineno;
         this.tag = tag;
+    }
+    mutateOver(visitor: ASTVisitor): TypeIgnore {
+        return visitor.visit_TypeIgnore(this);
+    }
+    walkabout(visitor: ASTVisitor) {
+        return visitor.visit_TypeIgnore(this);
     }
 }
 TypeIgnore.prototype._fields = ["lineno", "tag"];

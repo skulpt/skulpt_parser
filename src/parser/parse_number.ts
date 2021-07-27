@@ -1,7 +1,7 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-import { pyComplex, pyFloat, pyInt, pyLong } from "../ast/constants.ts";
+import { pyComplex, pyFloat, pyInt, pyLong } from "../mock_types/constants.ts";
 import { Floatnumber } from "../tokenize/tokenize.ts";
 declare global {
     var JSBI: { BigInt: typeof BigInt };
@@ -14,7 +14,7 @@ const FLOAT_RE = new RegExp(Floatnumber);
  * Much of the checking has been done in the tokenizer
  * we can rely on the resulting number being valid and positive
  * */
-export function parsenumber(s: string): pyFloat | pyComplex | pyInt {
+export function parsenumber(s: string): pyLong | pyFloat | pyComplex | pyInt {
     /**@todo invalid decimal literals with bad underscores should be thrown in the tokenizer - this is thrown in cpython's tokenizer */
     s = s.replaceAll("_", ""); // we already know that we have a valid underscore number from the tokenizer
 

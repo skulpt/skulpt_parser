@@ -4,7 +4,11 @@
 import { Colors } from "../deps.ts";
 import { getDiff } from "../support/diff.ts";
 
-export async function doCompare(jsDump: string, filename: string, getPythonDump: (source: string) => Promise<string>) {
+export async function doCompare(
+    jsDump: string,
+    filename: string,
+    getPythonDump: (source: string) => string | Promise<string>
+) {
     console.log();
     console.log(Colors.bold(Colors.magenta("##### py (EXPECTED) #####")));
     const pyDump = await getPythonDump(Deno.readTextFileSync(filename));

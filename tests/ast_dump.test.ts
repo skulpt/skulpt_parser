@@ -1,5 +1,5 @@
 import * as astnodes from "../src/ast/astnodes.ts";
-import { pyFloat, pyInt, pyTrue, pyFalse, pyNone, pyStr } from "../src/ast/constants.ts";
+import { pyFloat, pyInt, pyTrue, pyFalse, pyNone, pyStr } from "../src/mock_types/constants.ts";
 import { dump } from "../support/ast_dump.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
 // replace with assertEquals when string comparison is better.
@@ -22,7 +22,7 @@ async function convertToTs(content: string): Promise<string> {
             if (m2 === "arguments") {
                 m2 += "_";
             }
-            return `${m1} astnodes.${m2}._enum ? astnodes.${m2} : new astnodes.${m2}`;
+            return `${m1} typeof astnodes.${m2} === "number" ? astnodes.${m2} : new astnodes.${m2}`;
         })
         .replace(
             /new astnodes.Constant\(\n(\s+\-?[0-9](?:e[\-0-9]+))/g,
