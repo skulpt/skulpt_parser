@@ -1,5 +1,5 @@
 // deno-lint-ignore-file camelcase
-import { AST } from "../src/ast/astnodes.ts";
+import { AST, expr_context, operator, boolop, unaryop, cmpop } from "../src/ast/astnodes.ts";
 import type { pyConstant } from "../src/mock_types/constants.ts";
 
 type nodeType = AST | boolean | string | null | pyConstant | number;
@@ -8,6 +8,16 @@ interface dumpOptions {
     annotate_fields?: boolean;
     include_attributes?: boolean;
 }
+
+const fieldToEnum = {
+    ...expr_context,
+    ...boolop,
+    ...operator,
+    ...unaryop,
+    ...cmpop,
+};
+
+const numberFields = new Set(["is_async", "level", "conversion", "simple", "lineno"]);
 
 export function dump(node: AST, options: dumpOptions): string {
     if (!(node instanceof AST)) {
@@ -42,8 +52,11 @@ export function dump(node: AST, options: dumpOptions): string {
                 let simple: boolean;
                 if (value === null) {
                     continue;
+                } else if (typeof value === "number" && !numberFields.has(field)) {
+                    [value, simple] = [`${fieldToEnum[value]}()`, true];
+                } else {
+                    [value, simple] = _format(value, level);
                 }
-                [value, simple] = _format(value, level);
                 allsimple = allsimple && simple;
                 if (annotate_fields) {
                     args.push(`${field}=${value}`);
@@ -68,7 +81,18 @@ export function dump(node: AST, options: dumpOptions): string {
             if (node.length === 0) {
                 return ["[]", true];
             }
-            return [`[${prefix}${node.map((x) => _format(x, level)[0]).join(sep)}]`, false];
+            return [
+                `[${prefix}${node
+                    .map((x) => {
+                        if (typeof x === "number") {
+                            return fieldToEnum[x] + "()";
+                        } else {
+                            return _format(x, level)[0];
+                        }
+                    })
+                    .join(sep)}]`,
+                false,
+            ];
         } else {
             if (typeof node === "boolean") {
                 return [node ? "True" : "False", true];
