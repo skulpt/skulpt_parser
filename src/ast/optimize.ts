@@ -9,7 +9,6 @@ import type { AST, BinOp, BoolOp, cmpop, Compare, expr, mod, Subscript, Tuple, U
 import {
     Add,
     And,
-    ASTVisitor,
     ASTKind,
     BitAnd,
     BitOr,
@@ -33,6 +32,7 @@ import {
     UAdd,
     USub,
 } from "./astnodes.ts";
+import { ASTVisitor } from "./visitor.ts";
 import { pyFalse, pyTrue, pyTuple } from "../mock_types/constants.ts";
 import type { pyConstant } from "../mock_types/constants.ts";
 import {

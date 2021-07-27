@@ -6,16 +6,15 @@
 // deno-lint-ignore-file camelcase
 
 import type { pyConstant } from "../mock_types/constants.ts";
+import type { ASTVisitor } from "./visitor.ts";
 
 export type identifier = string;
 export type constant = pyConstant;
 export const enum ASTKind {
-    mod,
     Module,
     Interactive,
     Expression,
     FunctionType,
-    stmt,
     FunctionDef,
     AsyncFunctionDef,
     ClassDef,
@@ -42,7 +41,6 @@ export const enum ASTKind {
     Break,
     Continue,
     Debugger,
-    expr,
     BoolOp,
     NamedExpr,
     BinOp,
@@ -70,27 +68,19 @@ export const enum ASTKind {
     List,
     Tuple,
     Slice,
-    expr_context,
-    boolop,
-    operator,
-    unaryop,
-    cmpop,
     comprehension,
-    excepthandler,
     ExceptHandler,
     arguments_,
     arg,
     keyword,
     alias,
     withitem,
-    type_ignore,
     TypeIgnore,
 }
 /** base class for all AST nodes */
 export interface AST {
     _fields: string[];
     _attributes: string[];
-    _enum: boolean;
     _kind: ASTKind;
 }
 
@@ -102,13 +92,13 @@ export abstract class AST {
     mutateOver(_visitor: ASTVisitor): AST {
         throw new Error("mutateOver() implementation not provided");
     }
+    // deno-lint-ignore no-explicit-any
     walkabout(_visitor: ASTVisitor): any {
         throw new Error("walkabout() implementation not provided");
     }
 }
 AST.prototype._attributes = [];
 AST.prototype._fields = [];
-AST.prototype._enum = false;
 
 export type Attrs = [number, number, number, number];
 const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
@@ -118,167 +108,93 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
 /* ---------------------- */
 
 /* ----- expr_context ----- */
-export class expr_context extends AST {
-    static _name = "expr_context";
+export enum expr_context {
+    Load,
+    Store,
+    Del,
 }
-expr_context.prototype._enum = true;
 
-export class LoadType extends expr_context {
-    static _name = "Load";
-}
-export class StoreType extends expr_context {
-    static _name = "Store";
-}
-export class DelType extends expr_context {
-    static _name = "Del";
-}
-export const Load = new LoadType();
-export const Store = new StoreType();
-export const Del = new DelType();
+export const Load = expr_context.Load;
+export const Store = expr_context.Store;
+export const Del = expr_context.Del;
 
 /* ----- boolop ----- */
-export class boolop extends AST {
-    static _name = "boolop";
+export enum boolop {
+    And = 3,
+    Or,
 }
-boolop.prototype._enum = true;
 
-export class AndType extends boolop {
-    static _name = "And";
-}
-export class OrType extends boolop {
-    static _name = "Or";
-}
-export const And = new AndType();
-export const Or = new OrType();
+export const And = boolop.And;
+export const Or = boolop.Or;
 
 /* ----- operator ----- */
-export class operator extends AST {
-    static _name = "operator";
+export enum operator {
+    Add = 5,
+    Sub,
+    Mult,
+    MatMult,
+    Div,
+    Mod,
+    Pow,
+    LShift,
+    RShift,
+    BitOr,
+    BitXor,
+    BitAnd,
+    FloorDiv,
 }
-operator.prototype._enum = true;
 
-export class AddType extends operator {
-    static _name = "Add";
-}
-export class SubType extends operator {
-    static _name = "Sub";
-}
-export class MultType extends operator {
-    static _name = "Mult";
-}
-export class MatMultType extends operator {
-    static _name = "MatMult";
-}
-export class DivType extends operator {
-    static _name = "Div";
-}
-export class ModType extends operator {
-    static _name = "Mod";
-}
-export class PowType extends operator {
-    static _name = "Pow";
-}
-export class LShiftType extends operator {
-    static _name = "LShift";
-}
-export class RShiftType extends operator {
-    static _name = "RShift";
-}
-export class BitOrType extends operator {
-    static _name = "BitOr";
-}
-export class BitXorType extends operator {
-    static _name = "BitXor";
-}
-export class BitAndType extends operator {
-    static _name = "BitAnd";
-}
-export class FloorDivType extends operator {
-    static _name = "FloorDiv";
-}
-export const Add = new AddType();
-export const Sub = new SubType();
-export const Mult = new MultType();
-export const MatMult = new MatMultType();
-export const Div = new DivType();
-export const Mod = new ModType();
-export const Pow = new PowType();
-export const LShift = new LShiftType();
-export const RShift = new RShiftType();
-export const BitOr = new BitOrType();
-export const BitXor = new BitXorType();
-export const BitAnd = new BitAndType();
-export const FloorDiv = new FloorDivType();
+export const Add = operator.Add;
+export const Sub = operator.Sub;
+export const Mult = operator.Mult;
+export const MatMult = operator.MatMult;
+export const Div = operator.Div;
+export const Mod = operator.Mod;
+export const Pow = operator.Pow;
+export const LShift = operator.LShift;
+export const RShift = operator.RShift;
+export const BitOr = operator.BitOr;
+export const BitXor = operator.BitXor;
+export const BitAnd = operator.BitAnd;
+export const FloorDiv = operator.FloorDiv;
 
 /* ----- unaryop ----- */
-export class unaryop extends AST {
-    static _name = "unaryop";
+export enum unaryop {
+    Invert = 18,
+    Not,
+    UAdd,
+    USub,
 }
-unaryop.prototype._enum = true;
 
-export class InvertType extends unaryop {
-    static _name = "Invert";
-}
-export class NotType extends unaryop {
-    static _name = "Not";
-}
-export class UAddType extends unaryop {
-    static _name = "UAdd";
-}
-export class USubType extends unaryop {
-    static _name = "USub";
-}
-export const Invert = new InvertType();
-export const Not = new NotType();
-export const UAdd = new UAddType();
-export const USub = new USubType();
+export const Invert = unaryop.Invert;
+export const Not = unaryop.Not;
+export const UAdd = unaryop.UAdd;
+export const USub = unaryop.USub;
 
 /* ----- cmpop ----- */
-export class cmpop extends AST {
-    static _name = "cmpop";
+export enum cmpop {
+    Eq = 22,
+    NotEq,
+    Lt,
+    LtE,
+    Gt,
+    GtE,
+    Is,
+    IsNot,
+    In,
+    NotIn,
 }
-cmpop.prototype._enum = true;
 
-export class EqType extends cmpop {
-    static _name = "Eq";
-}
-export class NotEqType extends cmpop {
-    static _name = "NotEq";
-}
-export class LtType extends cmpop {
-    static _name = "Lt";
-}
-export class LtEType extends cmpop {
-    static _name = "LtE";
-}
-export class GtType extends cmpop {
-    static _name = "Gt";
-}
-export class GtEType extends cmpop {
-    static _name = "GtE";
-}
-export class IsType extends cmpop {
-    static _name = "Is";
-}
-export class IsNotType extends cmpop {
-    static _name = "IsNot";
-}
-export class InType extends cmpop {
-    static _name = "In";
-}
-export class NotInType extends cmpop {
-    static _name = "NotIn";
-}
-export const Eq = new EqType();
-export const NotEq = new NotEqType();
-export const Lt = new LtType();
-export const LtE = new LtEType();
-export const Gt = new GtType();
-export const GtE = new GtEType();
-export const Is = new IsType();
-export const IsNot = new IsNotType();
-export const In = new InType();
-export const NotIn = new NotInType();
+export const Eq = cmpop.Eq;
+export const NotEq = cmpop.NotEq;
+export const Lt = cmpop.Lt;
+export const LtE = cmpop.LtE;
+export const Gt = cmpop.Gt;
+export const GtE = cmpop.GtE;
+export const Is = cmpop.Is;
+export const IsNot = cmpop.IsNot;
+export const In = cmpop.In;
+export const NotIn = cmpop.NotIn;
 
 /* ----- mod ----- */
 export abstract class mod extends AST {
@@ -1981,212 +1897,3 @@ export class TypeIgnore extends type_ignore {
 }
 TypeIgnore.prototype._fields = ["lineno", "tag"];
 TypeIgnore.prototype._kind = ASTKind.TypeIgnore;
-
-export abstract class ASTVisitor {
-    visitSeq(seq: AST[] | null) {
-        if (seq === null) return null;
-        for (const node of seq) {
-            node.walkabout(this);
-        }
-    }
-
-    defaultVisitor(_node: AST): any {
-        throw new Error("NodeVisitor not implemented");
-    }
-
-    visit_Module(node: Module): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Interactive(node: Interactive): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Expression(node: Expression): any {
-        return this.defaultVisitor(node);
-    }
-    visit_FunctionType(node: FunctionType): any {
-        return this.defaultVisitor(node);
-    }
-    visit_FunctionDef(node: FunctionDef): any {
-        return this.defaultVisitor(node);
-    }
-    visit_AsyncFunctionDef(node: AsyncFunctionDef): any {
-        return this.defaultVisitor(node);
-    }
-    visit_ClassDef(node: ClassDef): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Return(node: Return): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Delete(node: Delete): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Assign(node: Assign): any {
-        return this.defaultVisitor(node);
-    }
-    visit_AugAssign(node: AugAssign): any {
-        return this.defaultVisitor(node);
-    }
-    visit_AnnAssign(node: AnnAssign): any {
-        return this.defaultVisitor(node);
-    }
-    visit_For(node: For): any {
-        return this.defaultVisitor(node);
-    }
-    visit_AsyncFor(node: AsyncFor): any {
-        return this.defaultVisitor(node);
-    }
-    visit_While(node: While): any {
-        return this.defaultVisitor(node);
-    }
-    visit_If(node: If): any {
-        return this.defaultVisitor(node);
-    }
-    visit_With(node: With): any {
-        return this.defaultVisitor(node);
-    }
-    visit_AsyncWith(node: AsyncWith): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Raise(node: Raise): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Try(node: Try): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Assert(node: Assert): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Import(node: Import): any {
-        return this.defaultVisitor(node);
-    }
-    visit_ImportFrom(node: ImportFrom): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Global(node: Global): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Nonlocal(node: Nonlocal): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Expr(node: Expr): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Pass(node: Pass): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Break(node: Break): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Continue(node: Continue): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Debugger(node: Debugger): any {
-        return this.defaultVisitor(node);
-    }
-    visit_BoolOp(node: BoolOp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_NamedExpr(node: NamedExpr): any {
-        return this.defaultVisitor(node);
-    }
-    visit_BinOp(node: BinOp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_UnaryOp(node: UnaryOp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Lambda(node: Lambda): any {
-        return this.defaultVisitor(node);
-    }
-    visit_IfExp(node: IfExp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Dict(node: Dict): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Set_(node: Set_): any {
-        return this.defaultVisitor(node);
-    }
-    visit_ListComp(node: ListComp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_SetComp(node: SetComp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_DictComp(node: DictComp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_GeneratorExp(node: GeneratorExp): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Await(node: Await): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Yield(node: Yield): any {
-        return this.defaultVisitor(node);
-    }
-    visit_YieldFrom(node: YieldFrom): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Compare(node: Compare): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Call(node: Call): any {
-        return this.defaultVisitor(node);
-    }
-    visit_FormattedValue(node: FormattedValue): any {
-        return this.defaultVisitor(node);
-    }
-    visit_JoinedStr(node: JoinedStr): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Constant(node: Constant): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Attribute(node: Attribute): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Subscript(node: Subscript): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Starred(node: Starred): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Name(node: Name): any {
-        return this.defaultVisitor(node);
-    }
-    visit_List(node: List): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Tuple(node: Tuple): any {
-        return this.defaultVisitor(node);
-    }
-    visit_Slice(node: Slice): any {
-        return this.defaultVisitor(node);
-    }
-    visit_comprehension(node: comprehension): any {
-        return this.defaultVisitor(node);
-    }
-    visit_ExceptHandler(node: ExceptHandler): any {
-        return this.defaultVisitor(node);
-    }
-    visit_arguments_(node: arguments_): any {
-        return this.defaultVisitor(node);
-    }
-    visit_arg(node: arg): any {
-        return this.defaultVisitor(node);
-    }
-    visit_keyword(node: keyword): any {
-        return this.defaultVisitor(node);
-    }
-    visit_alias(node: alias): any {
-        return this.defaultVisitor(node);
-    }
-    visit_withitem(node: withitem): any {
-        return this.defaultVisitor(node);
-    }
-    visit_TypeIgnore(node: TypeIgnore): any {
-        return this.defaultVisitor(node);
-    }
-}
