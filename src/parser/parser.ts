@@ -91,19 +91,16 @@ export interface Parser {
 /** The base class for the generated Parser. Largely based on cpython/Tools/peg_generator/pegen/parser.py */
 export class Parser {
     _tok: Tokenizer;
-    _cache: Map<string | number, [AST | TokenInfo | null, number]>[];
-    _mark: number;
+    _cache: Map<string | number, [AST | TokenInfo | null, number]>[] = [new Map()];
+    _mark = 0;
     _tokens: TokenInfo[];
-    filename: string;
+    filename = "<unknown>";
 
     type_ignore_comments: TypeIgnore[] = [];
 
     constructor(tokenizer: Tokenizer) {
         this._tok = tokenizer;
-        this._mark = 0;
-        this._cache = [new Map()];
         this._tokens = this._tok._tokens;
-        this.filename = "<unknown>";
     }
 
     extra(start: number): [number, number, number, number] {

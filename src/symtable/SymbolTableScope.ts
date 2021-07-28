@@ -11,15 +11,6 @@ import { BlockType, SYMTAB_CONSTS, inplaceMerge, NameToFlag } from "./util.ts";
 type Directive = [string, number, number];
 
 export class SymbolTableScope {
-    table: SymbolTable;
-    name: string;
-    blockType: BlockType;
-    filename: string;
-    lineno: number;
-    colOffset: number;
-    endLineno: number | null | undefined;
-    endColOffset: number | null | undefined;
-
     children: SymbolTableScope[] | null = null;
     varnames: string[] = [];
     isNested = false;
@@ -45,25 +36,16 @@ export class SymbolTableScope {
     directives: Directive[] = [];
 
     constructor(
-        table: SymbolTable,
-        name: string,
-        type: BlockType,
+        readonly table: SymbolTable,
+        readonly name: string,
+        readonly blockType: BlockType,
         ast: AST,
-        filename: string,
-        lineno: number,
-        colOffset: number,
-        endLineno?: number | null,
-        endColOffset?: number | null
+        readonly filename: string,
+        readonly lineno: number,
+        readonly colOffset: number,
+        readonly endLineno?: number | null,
+        readonly endColOffset?: number | null
     ) {
-        this.table = table;
-        this.name = name;
-        this.blockType = type;
-        this.filename = filename;
-        this.lineno = lineno;
-        this.colOffset = colOffset;
-        this.endLineno = endLineno;
-        this.endColOffset = endColOffset;
-
         if (table.cur && (table.cur.isNested || table.cur.blockType === BlockType.FunctionBlock)) {
             this.isNested = true;
         }

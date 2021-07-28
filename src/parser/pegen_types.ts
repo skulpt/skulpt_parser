@@ -1,61 +1,34 @@
 // Copyright (c) 2021 the Skulpt Project
 // SPDX-License-Identifier: MIT
 
-// deno-lint-ignore-file camelcase
 import { arg, Attrs, cmpop, expr, keyword, operator, Starred } from "../ast/astnodes.ts";
 
 export class CmpopExprPair {
-    cmpop: cmpop;
-    expr: expr;
-
-    constructor(cmpop: cmpop, expr: expr) {
-        this.cmpop = cmpop;
-        this.expr = expr;
-    }
+    constructor(readonly cmpop: cmpop, readonly expr: expr) {}
 }
 
 export class KeyValuePair<K = expr | null> {
-    key: K; // null signals that we're an unpacking like **a
-    value: expr;
-    constructor(key: K, value: expr) {
-        this.key = key;
-        this.value = value;
-    }
+    // K null signals that we're an unpacking like **a
+    constructor(readonly key: K, readonly value: expr) {}
 }
 
 export class AugOperator {
-    kind: operator;
-    constructor(kind: operator) {
-        this.kind = kind;
-    }
+    constructor(readonly kind: operator) {}
 }
 
 export class NameDefaultPair<V = expr | null> {
-    arg: arg;
-    value: V;
-    constructor(arg: arg, value: V) {
-        this.arg = arg;
-        this.value = value;
-    }
+    constructor(readonly arg: arg, readonly value: V) {}
 }
 
 export class SlashWithDefault {
-    plain_names: arg[];
-    names_with_defaults: NameDefaultPair<expr>[]; // asdl_seq* of NameDefaultsPair's
-    constructor(plain_names: arg[], names_with_defaults: NameDefaultPair<expr>[]) {
-        this.plain_names = plain_names;
-        this.names_with_defaults = names_with_defaults;
-    }
+    constructor(readonly plain_names: arg[], readonly names_with_defaults: NameDefaultPair<expr>[]) {}
 }
 export class StarEtc {
-    vararg: arg | null;
-    kwonlyargs: NameDefaultPair<expr | null>[] | null; // asdl_seq* of NameDefaultsPair's
-    kwarg: arg | null;
-    constructor(vararg: arg | null, kwonlyargs: NameDefaultPair<expr | null>[] | null, kwarg: arg | null) {
-        this.vararg = vararg;
-        this.kwonlyargs = kwonlyargs;
-        this.kwarg = kwarg;
-    }
+    constructor(
+        readonly vararg: arg | null,
+        readonly kwonlyargs: NameDefaultPair<expr | null>[] | null,
+        readonly kwarg: arg | null
+    ) {}
 }
 
 type KeywordOrStarredElement<IsKeyword> = IsKeyword extends true
@@ -65,13 +38,7 @@ type KeywordOrStarredElement<IsKeyword> = IsKeyword extends true
     : keyword | Starred;
 
 export class KeywordOrStarred<IsKeyword extends boolean = boolean> {
-    element: KeywordOrStarredElement<IsKeyword>;
-    is_keyword: IsKeyword;
-
-    constructor(element: KeywordOrStarredElement<IsKeyword>, is_keyword: IsKeyword) {
-        this.element = element;
-        this.is_keyword = is_keyword;
-    }
+    constructor(readonly element: KeywordOrStarredElement<IsKeyword>, readonly is_keyword: IsKeyword) {}
 }
 
 /** TARGET_TYPES used in error handling */

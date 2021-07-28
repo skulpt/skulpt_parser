@@ -7,16 +7,12 @@ import type { TokenInfo } from "./tokenize.ts";
 
 export class Tokenizer {
     _gen: Iterator<TokenInfo, TokenInfo>;
-    _tokens: TokenInfo[];
-    _fmode: boolean;
-    _lineno: number;
-    _offset: number;
+    _tokens: TokenInfo[] = [];
+    _fmode = false;
+    _lineno = 0;
+    _offset = 0;
     constructor(tokengen: Iterator<TokenInfo, TokenInfo>) {
         this._gen = tokengen;
-        this._tokens = [];
-        this._fmode = false;
-        this._lineno = 0;
-        this._offset = 0;
     }
     _adjust_offset(tok: TokenInfo) {
         const start = tok.start;

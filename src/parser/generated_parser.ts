@@ -61,13 +61,8 @@ function CHECK_NULL_ALLOWED<R>(result: R) {
 type ParseResult<T> = T extends StartRule.FSTRING_INPUT | StartRule.EVAL_INPUT ? expr : mod;
 
 export class GeneratedParser<T extends StartRule = StartRule.FILE_INPUT> extends Parser {
-    start_rule: StartRule;
-    flags: number;
-
-    constructor(T: Tokenizer, start_rule: T = StartRule.FILE_INPUT as T, flags = 0) {
+    constructor(T: Tokenizer, readonly start_rule: T = StartRule.FILE_INPUT as T, readonly flags = 0) {
         super(T);
-        this.start_rule = start_rule;
-        this.flags = flags; // unused
     }
 
     parse(): ParseResult<T> {

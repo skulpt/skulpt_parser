@@ -469,24 +469,15 @@ export function fstring_find_literal_and_expr(
 }
 
 export class FstringParser {
-    last_str: string;
-    fmode: boolean;
-    expr_list: (Constant | FormattedValue)[];
-    parser: Parser;
-    first: TokenInfo;
-    last: TokenInfo;
+    last_str = "";
+    fmode = false;
+    expr_list: (Constant | FormattedValue)[] = [];
     a0: number;
     a1: number;
     a2: number;
     a3: number;
     kind: "u" | null;
-    constructor(p: Parser, first: TokenInfo, last: TokenInfo) {
-        this.parser = p;
-        this.last_str = "";
-        this.fmode = false;
-        this.expr_list = [];
-        this.first = first;
-        this.last = last;
+    constructor(readonly parser: Parser, readonly first: TokenInfo, readonly last: TokenInfo) {
         // attrs aka lineno, col_offset, end_lineno, end_col_offset
         this.a0 = first.start[0];
         this.a1 = first.start[1];

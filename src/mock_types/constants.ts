@@ -18,10 +18,7 @@ export const enum ConstantType {
 // deno-lint-ignore no-explicit-any
 export abstract class pyConstant<V = any> {
     abstract type: ConstantType;
-    raw: V;
-    constructor(v: V) {
-        this.raw = v;
-    }
+    constructor(readonly raw: V) {}
     toString(): string {
         return String(this.raw);
     }
