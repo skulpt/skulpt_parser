@@ -1,3 +1,5 @@
+import { Colors } from "../deps.ts";
+
 async function populateFiles(files: string[]) {
     for await (const dirEntry of Deno.readDir("run-tests/")) {
         if (!dirEntry.name.endsWith(".py")) {
@@ -22,6 +24,7 @@ export async function runTests(doTest: (text: string) => void, options: runTests
 
     for (const test of files) {
         if (skip.has(test)) {
+            console.log(`test ${test} ... ${Colors.yellow("skipped")}`);
             continue;
         }
         Deno.test({
