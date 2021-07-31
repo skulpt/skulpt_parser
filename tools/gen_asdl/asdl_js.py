@@ -136,10 +136,10 @@ class ASTVisitorVisitor(EmitVisitor):
 
     def __init__(self, file):
         super().__init__(file)
-        self.emit("visitSeq(seq: AST[] | null) {", depth=1)
+        self.emit("visitSeq(seq: (AST | null)[] | null) {", depth=1)
         self.emit("if (seq === null) return null", depth=2)
         self.emit("for (const node of seq) {", depth=2)
-        self.emit("node.walkabout(this);", depth=3)
+        self.emit("node?.walkabout(this);", depth=3)
         self.emit("}", depth=2)
         self.emit("}", depth=1)
         self.emit("", depth=0)
@@ -169,6 +169,56 @@ class ASTVisitorVisitor(EmitVisitor):
     def visitProduct(self, prod, name, depth):
         self.emit(f"visit_{name}(node: {name}): any {{", depth=1)
         self.emit("return this.defaultVisitor(node);", depth=2)
+        self.emit("}", depth=1)
+
+
+class GenericASTVisitorVisitor(EmitVisitor):
+    simple_types = set()
+
+    def __init__(self, file):
+        super().__init__(file)
+
+    def visitModule(self, mod):
+        for dfn in mod.dfns:
+            self.visit(dfn)
+
+    def visitType(self, type, depth=0):
+        self.visit(type.value, type.name, depth)
+
+    def visitSum(self, sum, name, depth):
+        if not is_simple(sum):
+            for t in sum.types:
+                self.visit(t, name, sum.attributes)
+
+    def visitConstructor(self, cons, type, attrs):
+        self.make_visitor_method(cons.name, cons.fields)
+
+    def visitProduct(self, prod, name, depth):
+        # print(prod.fields)
+        self.make_visitor_method(name, prod.fields)
+        # self.emit(f"visit_{name}(node: {name}): any {{", depth=1)
+        # self.emit("return this.defaultVisitor(node);", depth=2)
+        # self.emit("}", depth=1)
+
+    def make_visitor_method(self, node_name, args):
+        args = PrototypeVisitor.get_args(self, args)
+        args = list(
+            filter(lambda arg: (arg := arg[0].replace("[]", "")) not in TS_TYPES and arg not in simple_sum_types, args)
+        )
+        self.emit(f"visit_{node_name}({'_' if not args else ''}node: {node_name}) {{", depth=1)
+        for type, name, opt, seq in args:
+            type = type.replace("[]", "")
+            if type in TS_TYPES or type in simple_sum_types:
+                continue
+            if seq and not opt:
+                self.emit(f"this.visitSeq(node.{name});", depth=2)
+            elif seq:
+                self.emit(f"if (node.{name}) this.visitSeq(node.{name});", depth=2)
+            elif not opt:
+                self.emit(f"node.{name}.walkabout(this);", depth=2)
+            else:
+                self.emit(f"if (node.{name}) node.{name}.walkabout(this);", depth=2)
+
         self.emit("}", depth=1)
 
 
@@ -558,6 +608,22 @@ const _attrs = ["lineno", "col_offset", "end_lineno", "end_col_offset"];
     f.write("}")
     f.close()
 
+    f = open(outfolder + "generic_visitor.ts", "w")
+    f.write(license_prelude)
+    f.write(auto_gen_msg)
+    f.write("// deno-lint-ignore-file no-explicit-any\n\n")
+    f.write("import {ASTVisitor} from './visitor.ts';\n")
+    f.write("import type {")
+    k = KindsVisitor(f)
+    k.visit(mod)
+    f.write("} from './astnodes.ts';\n\n")
+    f.write("export abstract class GenericASTVisitor extends ASTVisitor {\n")
+    a = GenericASTVisitorVisitor(f)
+    a.visit(mod)
+    f.write("}")
+    f.close()
+
     # run prettier over the file
     subprocess.run(["pre-commit", "run", "prettier", "--files", outfolder + "astnodes.ts"])
     subprocess.run(["pre-commit", "run", "prettier", "--files", outfolder + "visitor.ts"])
+    subprocess.run(["pre-commit", "run", "prettier", "--files", outfolder + "generic_visitor.ts"])
