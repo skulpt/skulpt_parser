@@ -145,10 +145,9 @@ export function memoizeLeftRec(_target: VerboseParser, propertyKey: string, desc
 }
 
 export class VerboseParser extends BaseParser {
-    _level: number;
+    _level = 0;
     constructor(tokenizer: Tokenizer) {
         super(tokenizer);
-        this._level = 0;
         this.rewrap(["name", "string", "number", "keyword", "expect"]);
     }
     showpeek(): string {

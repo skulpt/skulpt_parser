@@ -9,7 +9,6 @@ import { SymbolTableScope } from "./SymbolTableScope.ts";
 import { SYMTAB_CONSTS, mangle, BlockType, NameToFlag } from "./util.ts";
 
 export class SymbolTable {
-    filename: string;
     cur: SymbolTableScope | null = null;
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
@@ -18,9 +17,7 @@ export class SymbolTable {
     blocks = new Map<astnode.AST, SymbolTableScope>();
 
     // deno-lint-ignore no-explicit-any
-    constructor(filename: string, _future: any) {
-        this.filename = filename;
-    }
+    constructor(readonly filename: string, _future: any) {}
 
     lookupScope(ast: astnode.AST) {
         const v = this.blocks.get(ast);

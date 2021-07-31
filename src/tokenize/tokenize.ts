@@ -11,18 +11,13 @@ type token = number;
 type position = [number, number];
 
 export class TokenInfo {
-    type: token;
-    string: string;
-    start: position;
-    end: position;
-    line: string;
-    constructor(type: token, string: string, start: position, end: position, line: string) {
-        this.type = type;
-        this.string = string;
-        this.start = start;
-        this.end = end;
-        this.line = line;
-    }
+    constructor(
+        readonly type: token,
+        readonly string: string,
+        readonly start: position,
+        readonly end: position,
+        readonly line: string
+    ) {}
     get lineno() {
         return this.start[0];
     }
