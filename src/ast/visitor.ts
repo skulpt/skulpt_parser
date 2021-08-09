@@ -74,10 +74,10 @@ import type {
 } from "./astnodes.ts";
 
 export abstract class ASTVisitor {
-    visitSeq(seq: AST[] | null) {
+    visitSeq(seq: (AST | null)[] | null) {
         if (seq === null) return null;
         for (const node of seq) {
-            node.walkabout(this);
+            node?.walkabout(this);
         }
     }
 
