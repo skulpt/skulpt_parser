@@ -7,7 +7,7 @@ declare global {
     var JSBI: { BigInt: typeof BigInt };
 }
 
-const FLOAT_RE = new RegExp(Floatnumber);
+const FLOAT_RE = new RegExp("^" + Floatnumber + "$");
 
 /**
  * convert string to complex, float or int.
