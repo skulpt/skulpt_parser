@@ -1,5 +1,5 @@
 diff --git a/Grammar/python.gram b/Grammar/python.gram
-index 64e205e7fd..7170845e8b 100644
+index 38405b72d8..5604e5119a 100644
 --- a/Grammar/python.gram
 +++ b/Grammar/python.gram
 @@ -2,7 +2,7 @@
@@ -605,7 +605,7 @@ index 64e205e7fd..7170845e8b 100644
      | eq_bitwise_or
      | noteq_bitwise_or
      | lte_bitwise_or
-@@ -410,242 +414,242 @@ compare_op_bitwise_or_pair[CmpopExprPair*]:
+@@ -410,231 +414,231 @@ compare_op_bitwise_or_pair[CmpopExprPair*]:
      | in_bitwise_or
      | isnot_bitwise_or
      | is_bitwise_or
@@ -927,21 +927,6 @@ index 64e205e7fd..7170845e8b 100644
 -    | '(' a=[del_targets] ')' { _Py_Tuple(a, Del, EXTRA) }
 -    | '[' a=[del_targets] ']' { _Py_List(a, Del, EXTRA) }
 -
--targets[asdl_seq*]: a=','.target+ [','] { a }
--target[expr_ty] (memo):
--    | a=t_primary '.' b=NAME !t_lookahead { _Py_Attribute(a, b->v.Name.id, Store, EXTRA) }
--    | a=t_primary '[' b=slices ']' !t_lookahead { _Py_Subscript(a, b, Store, EXTRA) }
-+del_t_atom[expr]:
-+    | a=NAME { pegen.set_expr_context(this, a, astnodes.Del) }
-+    | '(' a=del_target ')' { pegen.set_expr_context(this, a, astnodes.Del) }
-+    | '(' a=[del_targets] ')' { new astnodes.Tuple(a, astnodes.Del, ...EXTRA) }
-+    | '[' a=[del_targets] ']' { new astnodes.List(a, astnodes.Del, ...EXTRA) }
-+
-+targets[expr_ARRAY]: a=','.target+ [','] { a }
-+target[expr] (memo):
-+    | a=t_primary '.' b=NAME !t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Store, ...EXTRA) }
-+    | a=t_primary '[' b=slices ']' !t_lookahead { new astnodes.Subscript(a, b, astnodes.Store, ...EXTRA) }
-     | t_atom
 -t_primary[expr_ty]:
 -    | a=t_primary '.' b=NAME &t_lookahead { _Py_Attribute(a, b->v.Name.id, Load, EXTRA) }
 -    | a=t_primary '[' b=slices ']' &t_lookahead { _Py_Subscript(a, b, Load, EXTRA) }
@@ -951,6 +936,12 @@ index 64e205e7fd..7170845e8b 100644
 -                 (b) ? ((expr_ty) b)->v.Call.args : NULL,
 -                 (b) ? ((expr_ty) b)->v.Call.keywords : NULL,
 -                 EXTRA) }
++del_t_atom[expr]:
++    | a=NAME { pegen.set_expr_context(this, a, astnodes.Del) }
++    | '(' a=del_target ')' { pegen.set_expr_context(this, a, astnodes.Del) }
++    | '(' a=[del_targets] ')' { new astnodes.Tuple(a, astnodes.Del, ...EXTRA) }
++    | '[' a=[del_targets] ']' { new astnodes.List(a, astnodes.Del, ...EXTRA) }
++
 +t_primary[expr]:
 +    | a=t_primary '.' b=NAME &t_lookahead { new astnodes.Attribute(a, b.id, astnodes.Load, ...EXTRA) }
 +    | a=t_primary '[' b=slices ']' &t_lookahead { new astnodes.Subscript(a, b, astnodes.Load, ...EXTRA) }
@@ -962,18 +953,7 @@ index 64e205e7fd..7170845e8b 100644
 +                 ...EXTRA) }
      | a=atom &t_lookahead { a }
 -t_lookahead: '(' | '[' | '.'
--t_atom[expr_ty]:
--    | a=NAME { _PyPegen_set_expr_context(p, a, Store) }
--    | '(' a=target ')' { _PyPegen_set_expr_context(p, a, Store) }
--    | '(' b=[targets] ')' { _Py_Tuple(b, Store, EXTRA) }
--    | '[' b=[targets] ']' { _Py_List(b, Store, EXTRA) }
 +t_lookahead[TokenInfo]: '(' | '[' | '.'
-+t_atom[expr]:
-+    | a=NAME { pegen.set_expr_context(this, a, astnodes.Store) }
-+    | '(' a=target ')' { pegen.set_expr_context(this, a, astnodes.Store) }
-+    | '(' b=[targets] ')' { new astnodes.Tuple(b, astnodes.Store, ...EXTRA) }
-+    | '[' b=[targets] ']' { new astnodes.List(b, astnodes.Store, ...EXTRA) }
- 
  
  # From here on, there are rules for invalid syntax with specialised error messages
 -invalid_arguments:
@@ -989,7 +969,7 @@ index 64e205e7fd..7170845e8b 100644
 -invalid_kwarg:
 +    | a=args ',' args { pegen.arguments_parsing_error(this, a) }
 +invalid_kwarg[never]:
-     | a=expression '=' {
+     | !(NAME '=') a=expression b='=' {
          RAISE_SYNTAX_ERROR_KNOWN_LOCATION(
              a, "expression cannot contain assignment, perhaps you meant \"==\"?") }
 -invalid_named_expression:
@@ -1009,7 +989,7 @@ index 64e205e7fd..7170845e8b 100644
          )}
      | a=star_named_expression ',' star_named_expressions* ':' expression {
          RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "only single target (not tuple) can be annotated") }
-@@ -658,50 +662,50 @@ invalid_assignment:
+@@ -647,50 +651,50 @@ invalid_assignment:
          RAISE_SYNTAX_ERROR_KNOWN_LOCATION( 
              a,
              "'%s' is an illegal expression for augmented assignment",
@@ -1074,5 +1054,5 @@ index 64e205e7fd..7170845e8b 100644
          RAISE_SYNTAX_ERROR_KNOWN_LOCATION(a, "can't use starred expression here") }
 -invalid_import_from_targets:
 +invalid_import_from_targets[never]:
-     | import_from_as_names ',' {
+     | import_from_as_names ',' NEWLINE {
          RAISE_SYNTAX_ERROR("trailing comma not allowed without surrounding parentheses") }
