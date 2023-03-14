@@ -35,4 +35,3 @@ Deno.bench({
         Sk.astFromParse(parse.cst, filename, parse.flags);
     },
 });
-
