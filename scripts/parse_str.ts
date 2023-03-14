@@ -25,7 +25,7 @@ try {
 const filename = await Deno.makeTempFile({ dir: tmpPath, suffix: ".txt" });
 try {
     await Deno.writeTextFile(filename, "\n" + code + "\n");
-    await Deno.run({ cmd: ["vr", "parse", filename, ...args] }).status();
+    await Deno.run({ cmd: ["deno", "task", "parse", filename, ...args] }).status();
 } finally {
     await Deno.remove(filename);
     await Deno.remove(tmpPath);

@@ -4,7 +4,7 @@
 /**
  * deno run -A scripts/bench.ts tmp.txt
  *
- * Note it's also a good idea to bundle this first using vr build
+ * Note it's also a good idea to bundle this first using deno task build
  * changing scripts/build.ts to build this file instead
  *
  * then adjust the above command to

@@ -8,29 +8,29 @@
 
 ### Scripts
 
-- `vr build`
+- `deno task build`
   - _bundles the typescript files into a javascript bundle)_
-- `vr bundle`
+- `deno task bundle`
   - _an alternative to build - uses deno bundle - no minified version_
-- `vr format`
+- `deno task format`
   - _runs the precommit hooks for all files_
-- `vr gen_parser [-v --verbose --verbosity]=1|2`
+- `deno task gen_parser [-v --verbose --verbosity]=1|2`
   - _generates the javascript parser. Use `--verbose|-v|--verbosity` to generate a verbose parser._
-- `vr gen_asdl`
+- `deno task gen_asdl`
   - _generates the javascript astnodes_
-- `vr gen_ast`
+- `deno task gen_ast`
   - _regenerates the ast for the run-test files from python and dumps the ast in .ast files_
-- `vr gen_gramar_patch`
+- `deno task gen_gramar_patch`
   - _run this after you manually changed the gramar file to store your changes_
-- `vr apply_gramar_patch`
+- `deno task apply_gramar_patch`
   - _run this patch the gramar with the changes stored in the patch_
-- `vr parse <filename|number> [--nc --no_comapre] [--mode=exec]`
+- `deno task parse <filename|number> [--nc --no_comapre] [--mode=exec]`
   - _parses a python file and logs the generated ast vs the python ast_
-- `vr parse_str <code string> [--nc --no_comapre] [--mode=exec]`
+- `deno task parse_str <code string> [--nc --no_comapre] [--mode=exec]`
   - _parses a python file and logs the generated ast vs the python ast_
-- `vr symtable <filename|number>`
+- `deno task symtable <filename|number>`
   - _parses the file and created a symbol table for that ast and prints it_
-- `vr test <shortname> [-f --fail-fast] [-v]`
+- `deno task test <shortname> [-f --fail-fast] [-v]`
   - _run a test - shortnames: `pypeg`, `parse`, `dump`, `symtable`_
 
 ### Debugging/Pofiling
