@@ -50,7 +50,6 @@ class jsVisitor(ast.NodeTransformer):
             elif isinstance(old_value, ast.AST):
                 fields.append(self.visit(old_value))
             elif isinstance(old_value, list):
-
                 fields.append(
                     list(
                         map(

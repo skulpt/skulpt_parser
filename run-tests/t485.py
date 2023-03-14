@@ -41,7 +41,7 @@ except BaseException:
     print("Did not catch NameError")
 
 try:
-    print(0.0000000000000000000000000000000000000000000000000000000000000001 ** -30)
+    print(0.0000000000000000000000000000000000000000000000000000000000000001**-30)
 except OverflowError:
     print("Caught OverflowError")
 except BaseException:

@@ -999,7 +999,6 @@ def cleanup_source(source: Any) -> str:
 def prepare_test_cases(
     test_cases: Iterable[Tuple[str, Union[str, Iterable[str]]]]
 ) -> Tuple[Iterable[str], Iterable[str]]:
-
     test_ids, _test_sources = zip(*test_cases)
     test_sources = list(_test_sources)
     for index, source in enumerate(test_sources):

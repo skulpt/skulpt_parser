@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 /** deno run -A --unstable scripts/sk_bench.ts tmp.txt */
-import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
+import { Colors, parse, createRequire } from "../deps.ts";
 // don't make this part of the deps.ts because it's unstable and means an unstable flag everywher
-import { createRequire } from "https://deno.land/std@0.100.0/node/module.ts";
 
 const require = createRequire(import.meta.url);
-// Loads extensionless module.
 require("../../skulpt/dist/skulpt.min.js");
 
 // deno-lint-ignore no-explicit-any
@@ -21,7 +19,8 @@ console.assert(args.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pa
 const filearg = args[0];
 
 let filename: string;
-if (typeof filearg === "number") {
+
+if (typeof filearg === "number" || Number.parseInt(filearg)) {
     filename = `run-tests/t${filearg.toString().padStart(3, "0")}.py`;
 } else {
     filename = filearg;
@@ -29,19 +28,10 @@ if (typeof filearg === "number") {
 
 const text = Deno.readTextFileSync(filename);
 
-bench({
+Deno.bench({
     name: "parse",
-    runs: 50,
-    func(b): void {
-        b.start();
+    fn(): void {
         const parse = Sk.parse(filename, text);
         Sk.astFromParse(parse.cst, filename, parse.flags);
-        b.stop();
     },
-});
-
-runBenchmarks({}, (p) => {
-    if (p.running && p.running.measuredRunsMs.length) {
-        console.log(p.running.measuredRunsMs[p.running.measuredRunsMs.length - 1], "ms");
-    }
 });

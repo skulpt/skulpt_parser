@@ -22,7 +22,7 @@ verbosity = args.verbosity
 
 checkout_python_branch()
 # apply the grammar patch
-subprocess.run(["vr", "apply_grammar_patch"])
+subprocess.run(["deno", "task", "apply_grammar_patch"])
 
 # make a tmp copy of the python_parser
 with tempfile.NamedTemporaryFile("w+", suffix=".py") as tmp:

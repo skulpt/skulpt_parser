@@ -12,7 +12,7 @@ if (!validShortnames.includes(test as string)) {
     throw new AssertionError(
         Colors.bgRed(
             Colors.white(
-                "Unrecognised shortname for 'vr test', expected one of " +
+                "Unrecognised shortname for 'deno task test', expected one of " +
                     [...validShortnames].map((name) => `'${name}'`).join(", ")
             )
         )
@@ -52,7 +52,7 @@ if (args["f"]) {
 }
 
 /** set this in Deno env which other test files can retrieve
- * example use: `vr test parse 1`
+ * example use: `deno task test parse 1`
  */
 const files = args._.filter((x) => typeof x === "number").map((x) => `t${x.toString().padStart(3, "0")}.py`);
 Deno.env.set("_TESTFILES", JSON.stringify(files));

@@ -1,13 +1,13 @@
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.0.1
+      rev: v4.4.0
       hooks:
           - id: check-yaml
           - id: end-of-file-fixer
           - id: trailing-whitespace
             exclude: grammar.patch
     - repo: https://github.com/psf/black
-      rev: 21.10b0 # Replace by any tag/version: https://github.com/psf/black/tags
+      rev: 23.1.0 # Replace by any tag/version: https://github.com/psf/black/tags
       hooks:
           - id: black
             args: # arguments to configure black
@@ -16,16 +16,16 @@ repos:
             exclude: src/parser/generated_parser.py
     # flake8
     - repo: https://github.com/PyCQA/flake8
-      rev: 4.0.1
+      rev: 6.0.0
       hooks:
           - id: flake8
     - repo: https://github.com/pre-commit/mirrors-prettier
-      rev: v2.4.1 # Use the sha or tag you want to point at
+      rev: v3.0.0-alpha.6 # Use the sha or tag you want to point at
       hooks:
           - id: prettier
 
     - repo: https://github.com/Lucas-C/pre-commit-hooks
-      rev: v1.1.10
+      rev: v1.4.2
       hooks:
           - id: insert-license
             files: "^(src|scripts)/.*ts$"

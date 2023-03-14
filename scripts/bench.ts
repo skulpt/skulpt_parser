@@ -4,16 +4,15 @@
 /**
  * deno run -A scripts/bench.ts tmp.txt
  *
- * Note it's also a good idea to bundle this first using vr build
+ * Note it's also a good idea to bundle this first using deno task build
  * changing scripts/build.ts to build this file instead
  *
  * then adjust the above command to
  * deno run -A dist/bundle.min.js tmp.txt
  */
-import { bench, Colors, parse, runBenchmarks } from "../deps.ts";
-import type { AST, expr, mod } from "../src/ast/astnodes.ts";
+import { Colors, parse } from "../deps.ts";
+import type { expr, mod } from "../src/ast/astnodes.ts";
 import { runParserFromString } from "../src/parser/mod.ts";
-import { ASTVisitor } from "../src/ast/astnodes.ts";
 import { buildSymbolTable } from "../src/symtable/mod.ts";
 import { readString } from "../src/tokenize/readline.ts";
 import { tokenize } from "../src/tokenize/tokenize.ts";
@@ -26,7 +25,8 @@ console.assert(args.length == 1, Colors.bold(Colors.bgRed(Colors.white(" Must pa
 const filearg = args[0];
 
 let filename: string;
-if (typeof filearg === "number") {
+
+if (typeof filearg === "number" || Number.parseInt(filearg)) {
     filename = `run-tests/t${filearg.toString().padStart(3, "0")}.py`;
 } else {
     filename = filearg;
@@ -34,56 +34,33 @@ if (typeof filearg === "number") {
 
 const text = Deno.readTextFileSync(filename);
 
-bench({
+Deno.bench({
     name: "parse",
-    runs: 200,
-    func(b): void {
-        b.start();
+    fn() {
         runParserFromString(text);
-        b.stop();
     },
 });
 
-bench({
+Deno.bench({
     name: "tokenize",
-    runs: 200,
-    func(b): void {
-        b.start();
+    fn() {
         [...tokenize(readString(text), filename)];
-        b.stop();
     },
 });
 
-let astSym: mod | expr;
+const astSym: mod | expr = runParserFromString(text);
 
-bench({
+Deno.bench({
     name: "symtable",
-    runs: 200,
-    func(b): void {
-        astSym ??= runParserFromString(text);
-        b.start();
+    fn() {
         buildSymbolTable(astSym, filename);
-        b.stop();
     },
 });
 
-bench({
+Deno.bench({
     name: "optimize",
-    runs: 2000,
-    func(b): void {
+    fn() {
         const ast = runParserFromString(text);
-        b.start();
         astOptimize(ast);
-        b.stop();
     },
-});
-
-runBenchmarks({ only: /optimize/ }, (p) => {
-    if (p.running && p.running.measuredRunsMs.length) {
-        console.log(p.running.measuredRunsMs[p.running.measuredRunsMs.length - 1], "ms");
-    } else if (p.results.length) {
-        const res = p.results[0].measuredRunsMs;
-        res.sort((a, b) => a - b);
-        console.log(res[0], res[res.length - 1]);
-    }
 });
