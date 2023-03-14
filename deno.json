@@ -1,0 +1,26 @@
+{
+    "tasks": {
+        "build": "deno run -A scripts/build.ts",
+        "bundle": "deno bundle src/mod.ts dist/bundle.js",
+        "gen-parser": "python -m tools.gen_parser",
+        "gen-asdl": "python -m tools.gen_asdl",
+        "gen-ast": "cd run-tests && ls -1 *.py | xargs -n1 python3 tools/dump-ast.py",
+        "apply-grammar-patch": "cd ../cpython/Grammar && git checkout -- python.gram && git apply ../../skulpt_parser/tools/patch/grammar.patch",
+        "gen-grammar-patch": "cd ../cpython/Grammar && git diff -- python.gram -p > ../../skulpt_parser/tools/patch/grammar.patch",
+        "symtable": "deno run --allow-read --allow-run scripts/symtable.ts",
+        "test": "deno run --allow-read --allow-run --allow-env scripts/test.ts",
+        "parse": "deno run --allow-read --allow-run scripts/parse.ts",
+        "parse-str": "deno run --allow-read --allow-run --allow-write scripts/parse_str.ts",
+        "bench": "deno run --allow-read --allow-run --allow-write scripts/bench.ts"
+    },
+    "fmt": {
+        "options": {
+            "indentWidth": 4,
+            "lineWidth": 119,
+            "proseWrap": "never"
+        }
+    },
+    "imports": {
+        "flags": "https://deno.land/std@0.179.0/flags/mod.ts"
+    }
+}
