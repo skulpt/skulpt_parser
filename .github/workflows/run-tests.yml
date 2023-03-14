@@ -32,7 +32,7 @@ jobs:
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - run: pip install --user pre-commit
             - name: build parser
-              run: deno task gen_parser
+              run: deno task gen-parser
               working-directory: "./skulpt_parser"
             - name: assert clean repo
               run: git diff-index --quiet --cached HEAD --
