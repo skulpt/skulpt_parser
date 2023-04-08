@@ -39,16 +39,18 @@ jobs:
               working-directory: "./skulpt_parser"
     run-tests:
         runs-on: ubuntu-latest
-        outputs:
-            tests: ${{ steps.run-tests.outputs.test }}
         steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: actions/setup-python@v2
+            - name: Check out repository
+              uses: actions/checkout@v2
+            - name: Set up Python 3.9.16
+              uses: actions/setup-python@v2
               with:
                   python-version: "3.9.16"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              run: deno test -A --unstable
+            - name: Set up Deno
+              uses: denoland/setup-deno@main
+              with:
+                  deno-version: v1.x
+            - name: Run tests
+              run: |
+                  export DENO_PYTHON_PATH="/opt/hostedtoolcache/Python/3.9.16/x64/bin/python3.9"
+                  deno test -A --unstable
