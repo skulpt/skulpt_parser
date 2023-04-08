@@ -324,7 +324,7 @@ function fstring_find_expr(
 
     const expr_end = i;
 
-    if (expr_start >= expr_end) {
+    if (expr_end >= end) {
         unexpected_end_of_string(p);
     }
 
