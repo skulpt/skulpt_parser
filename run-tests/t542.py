@@ -14,3 +14,4 @@ x = "string"
 # print type(x)
 print(len(x))
 print(x)
+# comment because of unicode characters
