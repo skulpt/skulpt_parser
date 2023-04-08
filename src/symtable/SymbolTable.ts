@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: MIT
 
 import type * as astnode from "../ast/astnodes.ts";
-import { ASTKind, Load } from "../ast/astnodes.ts";
+import { ASTKind, Load, mod } from "../ast/astnodes.ts";
+import { GenericASTVisitor } from "../ast/generic_visitor.ts";
 import { pySyntaxError } from "../mock_types/errors.ts";
 import { assert } from "../util/assert.ts";
 import { SymbolTableScope } from "./SymbolTableScope.ts";
 import { SYMTAB_CONSTS, mangle, BlockType, NameToFlag } from "./util.ts";
 
-export class SymbolTable {
+export class SymbolTable extends GenericASTVisitor {
     cur: SymbolTableScope | null = null;
     top: SymbolTableScope | null = null;
     stack: SymbolTableScope[] = [];
@@ -17,7 +18,9 @@ export class SymbolTable {
     blocks = new Map<astnode.AST, SymbolTableScope>();
 
     // deno-lint-ignore no-explicit-any
-    constructor(readonly filename: string, _future: any) {}
+    constructor(readonly filename: string, _future: any) {
+        super();
+    }
 
     lookupScope(ast: astnode.AST) {
         const v = this.blocks.get(ast);
@@ -71,24 +74,6 @@ export class SymbolTable {
                 val |= fromGlobal;
             }
             this.global[mangled] = val;
-        }
-    }
-
-    SEQTail<T>(visitor: (elem: T) => void, nodes: T[], start: number) {
-        for (let i = start; i < nodes.length; i++) {
-            const node = nodes[i];
-            if (node) {
-                visitor.call(this, node);
-            }
-        }
-    }
-
-    SEQ<T>(visitor: (node: T) => void, nodes: (T | null)[]) {
-        assert(Array.isArray(nodes), "SEQ: nodes isn't array? got " + typeof nodes);
-        for (const node of nodes) {
-            if (node) {
-                visitor.call(this, node);
-            }
         }
     }
 
@@ -166,8 +151,8 @@ export class SymbolTable {
             /* Inside a comprehension body, so find the right target scope */
             this.extendNamedexprScope(e.target as astnode.Name);
         }
-        this.visitExpr(e.value);
-        this.visitExpr(e.target);
+        e.value.walkabout(this);
+        e.target.walkabout(this);
     }
 
     enterBlock(
@@ -247,7 +232,7 @@ export class SymbolTable {
         const outermost = generators[0];
         /* Outermost iterator is evaluated in current scope */
         this.cur.compIterExpr++;
-        this.visitExpr(outermost.iter);
+        outermost.iter.walkabout(this);
 
         /* Create comprehension scope for the rest */
         this.enterBlock(scopeName, BlockType.FunctionBlock, e, e.lineno, e.col_offset, e.end_lineno, e.end_col_offset);
@@ -263,17 +248,18 @@ export class SymbolTable {
 
         /* Visit iteration variable target, and mark them as such */
         this.cur.compIterTarget = true;
-        this.visitExpr(outermost.target);
+        outermost.target.walkabout(this);
         this.cur.compIterTarget = false;
 
         /* Visit the rest of the comprehension body */
-        this.SEQ(this.visitExpr, outermost.ifs);
-        this.SEQTail(this.visitComprehension, generators, 1);
+        this.visitSeq(outermost.ifs);
+
+        this.visitSeq(generators.slice(1));
         if (value) {
-            this.visitExpr(value);
+            value.walkabout(this);
         }
 
-        this.visitExpr(elt);
+        elt.walkabout(this);
 
         if (this.cur.generator) {
             throw new pySyntaxError(
@@ -296,197 +282,33 @@ export class SymbolTable {
         }
     }
 
-    visitKeyword(k: astnode.keyword) {
-        this.visitExpr(k.value);
-    }
-
-    visitGenexp(e: astnode.GeneratorExp) {
+    visit_GeneratorExp(e: astnode.GeneratorExp) {
         return this.handleComprehension(e, "genexpr", e.generators, e.elt, null);
     }
 
-    visitListcomp(e: astnode.ListComp) {
+    visit_ListComp(e: astnode.ListComp) {
         return this.handleComprehension(e, "listcomp", e.generators, e.elt, null);
     }
 
-    visitSetcomp(e: astnode.SetComp) {
+    visit_SetComp(e: astnode.SetComp) {
         return this.handleComprehension(e, "setcomp", e.generators, e.elt, null);
     }
 
-    visitDictcomp(e: astnode.DictComp) {
+    visit_DictComp(e: astnode.DictComp) {
         return this.handleComprehension(e, "dictcomp", e.generators, e.key, e.value);
     }
 
     visitComprehension(lc: astnode.comprehension) {
         assert(this.cur);
         this.cur.compIterTarget = true;
-        this.visitExpr(lc.target);
+        lc.target.walkabout(this);
         this.cur.compIterTarget = false;
         this.cur.compIterExpr++;
-        this.visitExpr(lc.iter);
+        lc.iter.walkabout(this);
         this.cur.compIterExpr--;
-        this.SEQ(this.visitExpr, lc.ifs);
+        this.visitSeq(lc.ifs);
         if (lc.is_async) {
             this.cur.coroutine = true;
-        }
-    }
-
-    visitExpr(e: astnode.expr) {
-        switch (e._kind) {
-            case ASTKind.NamedExpr:
-                this.handleNamedExpr(e as astnode.NamedExpr);
-                break;
-            case ASTKind.BoolOp:
-                this.SEQ(this.visitExpr, (e as astnode.BoolOp).values);
-                break;
-            case ASTKind.BinOp: {
-                const binOp = e as astnode.BinOp;
-                this.visitExpr(binOp.left);
-                this.visitExpr(binOp.right);
-                break;
-            }
-            case ASTKind.UnaryOp:
-                this.visitExpr((e as astnode.UnaryOp).operand);
-                break;
-            case ASTKind.Lambda: {
-                const lambda = e as astnode.Lambda;
-                if (lambda.args.defaults.length !== 0) {
-                    this.SEQ(this.visitExpr, lambda.args.defaults);
-                }
-                if (lambda.args.kw_defaults.length !== 0) {
-                    this.SEQ(this.visitExpr, lambda.args.kw_defaults);
-                }
-                this.enterBlock(
-                    "lambda",
-                    BlockType.FunctionBlock,
-                    lambda,
-                    e.lineno,
-                    e.col_offset,
-                    e.end_lineno,
-                    e.end_col_offset
-                );
-                this.visitArguments(lambda.args);
-                this.visitExpr(lambda.body);
-                this.exitBlock();
-                break;
-            }
-            case ASTKind.IfExp: {
-                const ifExp = e as astnode.IfExp;
-                this.visitExpr(ifExp.test);
-                this.visitExpr(ifExp.body);
-                this.visitExpr(ifExp.orelse);
-                break;
-            }
-            case ASTKind.Dict: {
-                const dict = e as astnode.Dict;
-                this.SEQ(this.visitExpr, dict.keys);
-                this.SEQ(this.visitExpr, dict.values);
-                break;
-            }
-            case ASTKind.Set_:
-                this.SEQ(this.visitExpr, (e as astnode.Set_).elts);
-                break;
-            case ASTKind.GeneratorExp:
-                this.visitGenexp(e as astnode.GeneratorExp);
-                break;
-            case ASTKind.ListComp:
-                this.visitListcomp(e as astnode.ListComp);
-                break;
-            case ASTKind.SetComp:
-                this.visitSetcomp(e as astnode.SetComp);
-                break;
-            case ASTKind.DictComp:
-                this.visitDictcomp(e as astnode.DictComp);
-                break;
-            case ASTKind.Yield: {
-                assert(this.cur !== null);
-                const yield_ = e as astnode.Yield;
-                if (yield_.value) {
-                    this.visitExpr(yield_.value);
-                }
-                this.cur.generator = true;
-                break;
-            }
-            case ASTKind.YieldFrom:
-                assert(this.cur !== null);
-                this.visitExpr((e as astnode.YieldFrom).value);
-                this.cur.generator = true;
-                break;
-            case ASTKind.Await:
-                assert(this.cur !== null);
-                this.visitExpr((e as astnode.Await).value);
-                this.cur.coroutine = true;
-                break;
-            case ASTKind.Compare: {
-                const compare = e as astnode.Compare;
-                this.visitExpr(compare.left);
-                this.SEQ(this.visitExpr, compare.comparators);
-                break;
-            }
-            case ASTKind.Call: {
-                const call = e as astnode.Call;
-                this.visitExpr(call.func);
-                this.SEQ(this.visitExpr, call.args);
-                this.SEQ(this.visitKeyword, call.keywords);
-                break;
-            }
-            case ASTKind.FormattedValue: {
-                const formattedValue = e as astnode.FormattedValue;
-                this.visitExpr(formattedValue.value);
-                if (formattedValue.format_spec) {
-                    this.visitExpr(formattedValue.format_spec);
-                }
-                break;
-            }
-            case ASTKind.JoinedStr: {
-                this.SEQ(this.visitExpr, (e as astnode.JoinedStr).values);
-                break;
-            }
-            case ASTKind.Constant:
-                /* Nothing to do here. */
-                break;
-            /* The following exprs can be assignment targets. */
-            case ASTKind.Attribute:
-                this.visitExpr((e as astnode.Attribute).value);
-                break;
-            case ASTKind.Subscript: {
-                const subscript = e as astnode.Subscript;
-                this.visitExpr(subscript.value);
-                this.visitExpr(subscript.slice);
-                break;
-            }
-            case ASTKind.Starred:
-                this.visitExpr((e as astnode.Starred).value);
-                break;
-            case ASTKind.Slice: {
-                const slice = e as astnode.Slice;
-                if (slice.lower) {
-                    this.visitExpr(slice.lower);
-                }
-                if (slice.upper) {
-                    this.visitExpr(slice.upper);
-                }
-                if (slice.step) {
-                    this.visitExpr(slice.step);
-                }
-                break;
-            }
-            case ASTKind.Name: {
-                assert(this.cur);
-                const name = e as astnode.Name;
-                this.addDef(name.id, name.ctx === Load ? SYMTAB_CONSTS.USE : SYMTAB_CONSTS.DEF_LOCAL);
-                /* Special-case super: it counts as a use of __class__ */
-                if (name.ctx === Load && this.cur.blockType === BlockType.FunctionBlock && name.id === "super") {
-                    this.addDef("__class__", SYMTAB_CONSTS.USE);
-                }
-                break;
-            }
-            /* child nodes of List and Tuple will have expr_context set */
-            case ASTKind.List:
-                this.SEQ(this.visitExpr, (e as astnode.List).elts);
-                break;
-            case ASTKind.Tuple:
-                this.SEQ(this.visitExpr, (e as astnode.Tuple).elts);
-                break;
         }
     }
 
@@ -496,7 +318,7 @@ export class SymbolTable {
         }
     }
 
-    visitArguments(a: astnode.arguments_) {
+    visit_arguments_(a: astnode.arguments_) {
         /* skip default arguments inside function block
         XXX should ast be different?
         */
@@ -526,9 +348,7 @@ export class SymbolTable {
 
     visitArgannotations(args: astnode.arg[]) {
         for (const a of args) {
-            if (a.annotation) {
-                this.visitExpr(a.annotation);
-            }
+            a.annotation?.walkabout(this);
         }
     }
 
@@ -541,7 +361,7 @@ export class SymbolTable {
         //                           annotation->end_col_offset)) {
         //     VISIT_QUIT(st, 0);
         // }
-        this.visitExpr(annotation);
+        annotation.walkabout(this);
         // if (future_annotations && !symtable_exit_block(st)) {
         //     VISIT_QUIT(st, 0);
         // }
@@ -562,10 +382,10 @@ export class SymbolTable {
             this.visitArgannotations(a.args);
         }
         if (a.vararg && a.vararg.annotation) {
-            this.visitExpr(a.vararg.annotation);
+            a.vararg.annotation.walkabout(this);
         }
         if (a.kwarg && a.kwarg.annotation) {
-            this.visitExpr(a.kwarg.annotation);
+            a.kwarg.annotation.walkabout(this);
         }
         if (a.kwonlyargs.length !== 0) {
             this.visitArgannotations(a.kwonlyargs);
@@ -584,7 +404,126 @@ export class SymbolTable {
         return this.cur.getSymbol(mangled);
     }
 
-    visitAlias(a: astnode.alias) {
+    visit_ExceptHandler(eh: astnode.ExceptHandler) {
+        if (eh.type) {
+            eh.type.walkabout(this);
+        }
+        if (eh.name) {
+            this.addDef(eh.name, SYMTAB_CONSTS.DEF_LOCAL);
+        }
+        this.visitSeq(eh.body);
+    }
+
+    visit_FunctionDef(funcDef: astnode.FunctionDef) {
+        this.addDef(funcDef.name, SYMTAB_CONSTS.DEF_LOCAL);
+        if (funcDef.args.defaults.length !== 0) {
+            this.visitSeq(funcDef.args.defaults);
+        }
+        if (funcDef.decorator_list.length !== 0) {
+            this.visitSeq(funcDef.decorator_list);
+        }
+
+        this.visitAnnotations(funcDef.args, funcDef.returns);
+        this.enterBlock(funcDef.name, BlockType.FunctionBlock, funcDef, funcDef.lineno, funcDef.col_offset);
+        funcDef.args.walkabout(this);
+        this.visitSeq(funcDef.body);
+        this.exitBlock();
+    }
+
+    visit_AsyncFunctionDef(asyncFunctionDef: astnode.AsyncFunctionDef) {
+        assert(this.cur !== null);
+        this.addDef(asyncFunctionDef.name, SYMTAB_CONSTS.DEF_LOCAL);
+        if (asyncFunctionDef.args.defaults.length !== 0) {
+            this.visitSeq(asyncFunctionDef.args.defaults);
+        }
+        if (asyncFunctionDef.args.kw_defaults.length !== 0) {
+            this.visitSeq(asyncFunctionDef.args.kw_defaults);
+        }
+        this.visitAnnotations(asyncFunctionDef.args, asyncFunctionDef.returns);
+
+        if (asyncFunctionDef.decorator_list.length !== 0) {
+            this.visitSeq(asyncFunctionDef.decorator_list);
+        }
+
+        this.enterBlock(
+            asyncFunctionDef.name,
+            BlockType.FunctionBlock,
+            asyncFunctionDef,
+            asyncFunctionDef.lineno,
+            asyncFunctionDef.col_offset
+        );
+
+        this.cur.coroutine = true;
+
+        asyncFunctionDef.args.walkabout(this);
+        this.visitSeq(asyncFunctionDef.body);
+        this.exitBlock();
+    }
+
+    visit_ClassDef(classDef: astnode.ClassDef) {
+        this.addDef(classDef.name, SYMTAB_CONSTS.DEF_LOCAL);
+        this.visitSeq(classDef.bases);
+        this.visitSeq(classDef.keywords);
+        if (classDef.decorator_list.length !== 0) {
+            this.visitSeq(classDef.decorator_list);
+        }
+        this.enterBlock(
+            classDef.name,
+            BlockType.ClassBlock,
+            classDef,
+            classDef.lineno,
+            classDef.col_offset,
+            classDef.end_lineno,
+            classDef.end_col_offset
+        );
+        const tmp = this.private;
+        this.private = classDef.name;
+        this.visitSeq(classDef.body);
+        this.private = tmp;
+        this.exitBlock();
+    }
+
+    visit_Return(node: astnode.Return) {
+        assert(this.cur);
+        if (node.value) {
+            super.visit_Return(node);
+            this.cur.returnsValue = true;
+        }
+    }
+
+    visit_AnnAssign(annAssign: astnode.AnnAssign) {
+        if (annAssign.target._kind === ASTKind.Name) {
+            assert(this.cur);
+            const eName = annAssign.target as astnode.Name;
+            const cur = this.lookup(eName.id);
+            if (
+                cur & (SYMTAB_CONSTS.DEF_GLOBAL | SYMTAB_CONSTS.DEF_NONLOCAL) &&
+                this.cur.symbols !== this.global &&
+                annAssign.simple
+            ) {
+                throw new pySyntaxError(
+                    cur & SYMTAB_CONSTS.DEF_GLOBAL
+                        ? `annotated name '${eName.id}' can't be global`
+                        : `annotated name '${eName.id}' can't be nonlocal`,
+                    [this.filename, annAssign.lineno, annAssign.col_offset + 1, ""]
+                );
+            }
+
+            if (annAssign.simple) {
+                this.addDef(eName.id, SYMTAB_CONSTS.DEF_ANNOT | SYMTAB_CONSTS.DEF_LOCAL);
+            } else if (annAssign.value) {
+                this.addDef(eName.id, SYMTAB_CONSTS.DEF_LOCAL);
+            }
+        } else {
+            annAssign.target.walkabout(this);
+        }
+        annAssign.annotation.walkabout(this);
+        if (annAssign.value) {
+            annAssign.value.walkabout(this);
+        }
+    }
+
+    visit_alias(a: astnode.alias) {
         /* Compute storeName, the name actually bound by the import
            operation.  It is different than a->name when a->name is a
            dotted package name (e.g. spam.eggs)
@@ -613,323 +552,105 @@ export class SymbolTable {
         }
     }
 
-    visitWithItem(item: astnode.withitem) {
-        this.visitExpr(item.context_expr);
-        if (item.optional_vars) {
-            this.visitExpr(item.optional_vars);
-        }
+    visit_Yield(yield_: astnode.Yield) {
+        assert(this.cur !== null);
+        yield_.value?.walkabout(this);
+        this.cur.generator = true;
     }
 
-    visitExcepthandler(eh: astnode.ExceptHandler) {
-        if (eh.type) {
-            this.visitExpr(eh.type);
-        }
-        if (eh.name) {
-            this.addDef(eh.name, SYMTAB_CONSTS.DEF_LOCAL);
-        }
-        this.SEQ(this.visitStmt, eh.body);
+    visit_YieldFrom(yield_: astnode.YieldFrom) {
+        assert(this.cur !== null);
+        yield_.value.walkabout(this);
+        this.cur.generator = true;
     }
 
-    visitStmt(s: astnode.stmt) {
-        assert(s !== undefined, "visitStmt called with undefined");
-        switch (s._kind) {
-            case ASTKind.FunctionDef: {
-                const funcDef = s as astnode.FunctionDef;
-                this.addDef(funcDef.name, SYMTAB_CONSTS.DEF_LOCAL);
-                if (funcDef.args.defaults.length !== 0) {
-                    this.SEQ(this.visitExpr, funcDef.args.defaults);
-                }
-                if (funcDef.decorator_list.length !== 0) {
-                    this.SEQ(this.visitExpr, funcDef.decorator_list);
-                }
-                this.visitAnnotations(funcDef.args, funcDef.returns);
-                this.enterBlock(funcDef.name, BlockType.FunctionBlock, s, s.lineno, s.col_offset);
-                this.visitArguments(funcDef.args);
-                this.SEQ(this.visitStmt, funcDef.body);
-                this.exitBlock();
-                break;
-            }
-            case ASTKind.ClassDef: {
-                const classDef = s as astnode.ClassDef;
-                this.addDef(classDef.name, SYMTAB_CONSTS.DEF_LOCAL);
-                this.SEQ(this.visitExpr, classDef.bases);
-                this.SEQ(this.visitKeyword, classDef.keywords);
-                if (classDef.decorator_list.length !== 0) {
-                    this.SEQ(this.visitExpr, classDef.decorator_list);
-                }
-                this.enterBlock(
-                    classDef.name,
-                    BlockType.ClassBlock,
-                    classDef,
-                    classDef.lineno,
-                    classDef.col_offset,
-                    classDef.end_lineno,
-                    classDef.end_col_offset
-                );
-                const tmp = this.private;
-                this.private = classDef.name;
-                this.SEQ(this.visitStmt, classDef.body);
-                this.private = tmp;
-                this.exitBlock();
-                break;
-            }
-            case ASTKind.Return: {
-                assert(this.cur);
-                const return_ = s as astnode.Return;
-                if (return_.value) {
-                    this.visitExpr(return_.value);
-                    this.cur.returnsValue = true;
-                }
-                break;
-            }
-            case ASTKind.Delete:
-                this.SEQ(this.visitExpr, (s as astnode.Delete).targets);
-                break;
-            case ASTKind.Assign: {
-                const assign = s as astnode.Assign;
-                this.SEQ(this.visitExpr, assign.targets);
-                this.visitExpr(assign.value);
-                break;
-            }
-            case ASTKind.AnnAssign: {
-                const annAssign = s as astnode.AnnAssign;
-                if (annAssign.target._kind === ASTKind.Name) {
-                    assert(this.cur);
-                    const eName = annAssign.target as astnode.Name;
-                    const cur = this.lookup(eName.id);
-                    if (
-                        cur & (SYMTAB_CONSTS.DEF_GLOBAL | SYMTAB_CONSTS.DEF_NONLOCAL) &&
-                        this.cur.symbols !== this.global &&
-                        annAssign.simple
-                    ) {
-                        throw new pySyntaxError(
-                            cur & SYMTAB_CONSTS.DEF_GLOBAL
-                                ? `annotated name '${eName.id}' can't be global`
-                                : `annotated name '${eName.id}' can't be nonlocal`,
-                            [this.filename, s.lineno, s.col_offset + 1, ""]
-                        );
-                    }
+    visit_Await(await_: astnode.Await) {
+        assert(this.cur !== null);
+        await_.value.walkabout(this);
+        this.cur.coroutine = true;
+    }
 
-                    if (annAssign.simple) {
-                        this.addDef(eName.id, SYMTAB_CONSTS.DEF_ANNOT | SYMTAB_CONSTS.DEF_LOCAL);
-                    } else if (annAssign.value) {
-                        this.addDef(eName.id, SYMTAB_CONSTS.DEF_LOCAL);
-                    }
+    visit_Global(global: astnode.Global) {
+        for (const name of global.names) {
+            const cur = this.lookup(name);
+            if (
+                cur &
+                (SYMTAB_CONSTS.DEF_PARAM | SYMTAB_CONSTS.DEF_LOCAL | SYMTAB_CONSTS.USE | SYMTAB_CONSTS.DEF_ANNOT)
+            ) {
+                let msg = "";
+                if (cur & SYMTAB_CONSTS.DEF_PARAM) {
+                    msg = `name '${name}' is parameter and global`;
+                } else if (cur & SYMTAB_CONSTS.USE) {
+                    msg = `name '${name}' is used prior to global declaration`;
+                } else if (cur & SYMTAB_CONSTS.DEF_ANNOT) {
+                    msg = `annotated name '${name}' can't be global`;
                 } else {
-                    this.visitExpr(annAssign.target);
+                    msg = `name '${name}' is assigned to before global declaration`;
                 }
 
-                this.visitExpr(annAssign.annotation);
-                if (annAssign.value) {
-                    this.visitExpr(annAssign.value);
-                }
-                break;
+                throw new pySyntaxError(msg, [this.filename, global.lineno, global.col_offset + 1, ""]);
             }
-            case ASTKind.AugAssign: {
-                const augAssign = s as astnode.AugAssign;
+            this.addDef(name, SYMTAB_CONSTS.DEF_GLOBAL);
+            this.recordDirective(name, global.lineno, global.col_offset);
+        }
+    }
 
-                this.visitExpr(augAssign.target);
-                this.visitExpr(augAssign.value);
-                break;
-            }
-            case ASTKind.For: {
-                const for_ = s as astnode.For;
-
-                this.visitExpr(for_.target);
-                this.visitExpr(for_.iter);
-                this.SEQ(this.visitStmt, for_.body);
-                if (for_.orelse.length !== 0) {
-                    this.SEQ(this.visitStmt, for_.orelse);
-                }
-                break;
-            }
-            case ASTKind.While: {
-                const while_ = s as astnode.While;
-
-                this.visitExpr(while_.test);
-                this.SEQ(this.visitStmt, while_.body);
-                if (while_.orelse.length !== 0) {
-                    this.SEQ(this.visitStmt, while_.orelse);
-                }
-                break;
-            }
-            case ASTKind.If: {
-                const if_ = s as astnode.If;
-
-                /* XXX if 0: and lookup_yield() hacks */
-                this.visitExpr(if_.test);
-                this.SEQ(this.visitStmt, if_.body);
-                if (if_.orelse.length !== 0) {
-                    this.SEQ(this.visitStmt, if_.orelse);
-                }
-                break;
-            }
-            case ASTKind.Raise: {
-                const raise = s as astnode.Raise;
-
-                if (raise.exc) {
-                    this.visitExpr(raise.exc);
-                    if (raise.cause) {
-                        this.visitExpr(raise.cause);
-                    }
-                }
-                break;
-            }
-            case ASTKind.Try: {
-                const try_ = s as astnode.Try;
-
-                this.SEQ(this.visitStmt, try_.body);
-                this.SEQ(this.visitStmt, try_.orelse);
-                this.SEQ(
-                    this.visitExcepthandler,
-                    try_.handlers as astnode.ExceptHandler[]
-                ); /** @todo Update asdl to make `handlers` of type ExceptHandler[] */
-                this.SEQ(this.visitStmt, try_.finalbody);
-                break;
-            }
-            case ASTKind.Assert: {
-                const assert = s as astnode.Assert;
-                this.visitExpr(assert.test);
-                if (assert.msg) {
-                    this.visitExpr(assert.msg);
-                }
-                break;
-            }
-            case ASTKind.Import: {
-                const import_ = s as astnode.Import;
-                this.SEQ(this.visitAlias, import_.names);
-                break;
-            }
-            case ASTKind.ImportFrom: {
-                const importFrom = s as astnode.ImportFrom;
-                this.SEQ(this.visitAlias, importFrom.names);
-                break;
-            }
-            case ASTKind.Global: {
-                const global = s as astnode.Global;
-
-                for (const name of global.names) {
-                    const cur = this.lookup(name);
-                    if (
-                        cur &
-                        (SYMTAB_CONSTS.DEF_PARAM |
-                            SYMTAB_CONSTS.DEF_LOCAL |
-                            SYMTAB_CONSTS.USE |
-                            SYMTAB_CONSTS.DEF_ANNOT)
-                    ) {
-                        let msg = "";
-                        if (cur & SYMTAB_CONSTS.DEF_PARAM) {
-                            msg = `name '${name}' is parameter and global`;
-                        } else if (cur & SYMTAB_CONSTS.USE) {
-                            msg = `name '${name}' is used prior to global declaration`;
-                        } else if (cur & SYMTAB_CONSTS.DEF_ANNOT) {
-                            msg = `annotated name '${name}' can't be global`;
-                        } else {
-                            msg = `name '${name}' is assigned to before global declaration`;
-                        }
-
-                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset + 1, ""]);
-                    }
-                    this.addDef(name, SYMTAB_CONSTS.DEF_GLOBAL);
-                    this.recordDirective(name, s.lineno, s.col_offset);
-                }
-                break;
-            }
-            case ASTKind.Nonlocal: {
-                const nonlolal = s as astnode.Nonlocal;
-
-                for (const name of nonlolal.names) {
-                    const cur = this.lookup(name);
-                    if (
-                        cur &
-                        (SYMTAB_CONSTS.DEF_PARAM |
-                            SYMTAB_CONSTS.DEF_LOCAL |
-                            SYMTAB_CONSTS.USE |
-                            SYMTAB_CONSTS.DEF_ANNOT)
-                    ) {
-                        let msg = "";
-                        if (cur & SYMTAB_CONSTS.DEF_PARAM) {
-                            msg = `name '${name}' is parameter and nonlocal`;
-                        } else if (cur & SYMTAB_CONSTS.USE) {
-                            msg = `name '${name}' is used prior to nonlocal declaration`;
-                        } else if (cur & SYMTAB_CONSTS.DEF_ANNOT) {
-                            msg = `annotated name '${name}' can't be nonlocal`;
-                        } else {
-                            msg = `name '${name}' is assigned to before nonlocal declaration`;
-                        }
-
-                        throw new pySyntaxError(msg, [this.filename, s.lineno, s.col_offset + 1, ""]);
-                    }
-                    this.addDef(name, SYMTAB_CONSTS.DEF_NONLOCAL);
-                    this.recordDirective(name, s.lineno, s.col_offset);
-                }
-                break;
-            }
-            case ASTKind.Expr: {
-                this.visitExpr((s as astnode.Expr).value);
-                break;
-            }
-            case ASTKind.Pass:
-            case ASTKind.Break:
-            case ASTKind.Continue:
-                /* nothing to do here */
-                break;
-            case ASTKind.With: {
-                const with_ = s as astnode.With;
-                this.SEQ(this.visitWithItem, with_.items);
-                this.SEQ(this.visitStmt, with_.body);
-                break;
-            }
-            case ASTKind.AsyncFunctionDef: {
-                assert(this.cur);
-                const asyncFunctionDef = s as astnode.AsyncFunctionDef;
-
-                this.addDef(asyncFunctionDef.name, SYMTAB_CONSTS.DEF_LOCAL);
-                if (asyncFunctionDef.args.defaults.length !== 0) {
-                    this.SEQ(this.visitExpr, asyncFunctionDef.args.defaults);
-                }
-                if (asyncFunctionDef.args.kw_defaults.length !== 0) {
-                    this.SEQ(this.visitExpr, asyncFunctionDef.args.kw_defaults);
-                }
-                this.visitAnnotations(asyncFunctionDef.args, asyncFunctionDef.returns);
-
-                if (asyncFunctionDef.decorator_list.length !== 0) {
-                    this.SEQ(this.visitExpr, asyncFunctionDef.decorator_list);
+    visit_Nonlocal(nonlocal: astnode.Nonlocal) {
+        for (const name of nonlocal.names) {
+            const cur = this.lookup(name);
+            if (
+                cur &
+                (SYMTAB_CONSTS.DEF_PARAM | SYMTAB_CONSTS.DEF_LOCAL | SYMTAB_CONSTS.USE | SYMTAB_CONSTS.DEF_ANNOT)
+            ) {
+                let msg = "";
+                if (cur & SYMTAB_CONSTS.DEF_PARAM) {
+                    msg = `name '${name}' is parameter and nonlocal`;
+                } else if (cur & SYMTAB_CONSTS.USE) {
+                    msg = `name '${name}' is used prior to nonlocal declaration`;
+                } else if (cur & SYMTAB_CONSTS.DEF_ANNOT) {
+                    msg = `annotated name '${name}' can't be nonlocal`;
+                } else {
+                    msg = `name '${name}' is assigned to before nonlocal declaration`;
                 }
 
-                this.enterBlock(
-                    asyncFunctionDef.name,
-                    BlockType.FunctionBlock,
-                    asyncFunctionDef,
-                    s.lineno,
-                    s.col_offset
-                );
+                throw new pySyntaxError(msg, [this.filename, nonlocal.lineno, nonlocal.col_offset + 1, ""]);
+            }
+            this.addDef(name, SYMTAB_CONSTS.DEF_NONLOCAL);
+            this.recordDirective(name, nonlocal.lineno, nonlocal.col_offset);
+        }
+    }
 
-                this.cur.coroutine = true;
+    visit_Lambda(lambda: astnode.Lambda) {
+        if (lambda.args.defaults.length !== 0) {
+            this.visitSeq(lambda.args.defaults);
+        }
+        if (lambda.args.kw_defaults.length !== 0) {
+            this.visitSeq(lambda.args.kw_defaults);
+        }
+        this.enterBlock(
+            "lambda",
+            BlockType.FunctionBlock,
+            lambda,
+            lambda.lineno,
+            lambda.col_offset,
+            lambda.end_lineno,
+            lambda.end_col_offset
+        );
+        lambda.args.walkabout(this);
+        lambda.body.walkabout(this);
+        this.exitBlock();
+    }
 
-                this.visitArguments(asyncFunctionDef.args);
-                this.SEQ(this.visitStmt, asyncFunctionDef.body);
-                this.exitBlock();
-                break;
-            }
-            case ASTKind.AsyncWith: {
-                const asyncWith = s as astnode.AsyncWith;
-                this.SEQ(this.visitWithItem, asyncWith.items);
-                this.SEQ(this.visitStmt, asyncWith.body);
-                break;
-            }
-            case ASTKind.AsyncFor: {
-                const asyncFor = s as astnode.AsyncFor;
-                this.visitExpr(asyncFor.target);
-                this.visitExpr(asyncFor.iter);
-                this.SEQ(this.visitStmt, asyncFor.body);
-                if (asyncFor.orelse.length !== 0) {
-                    this.SEQ(this.visitStmt, asyncFor.orelse);
-                }
-                break;
-            }
-            default:
-                assert(false, "Unhandled type " + s.constructor.name + " in visitStmt");
+    visit_NamedExpr(namedExpr: astnode.NamedExpr) {
+        this.handleNamedExpr(namedExpr);
+    }
+
+    visit_Name(name: astnode.Name) {
+        assert(this.cur);
+        this.addDef(name.id, name.ctx === Load ? SYMTAB_CONSTS.USE : SYMTAB_CONSTS.DEF_LOCAL);
+        /* Special-case super: it counts as a use of __class__ */
+        if (name.ctx === Load && this.cur.blockType === BlockType.FunctionBlock && name.id === "super") {
+            this.addDef("__class__", SYMTAB_CONSTS.USE);
         }
     }
 

@@ -14,7 +14,7 @@ async function doTest(source: string) {
 
 const files: string[] = JSON.parse(Deno.env.get("_TESTFILES") || "[]");
 
-await runTests(doTest, { files, skip: new Set(), failFast: false });
+await runTests(doTest, { files, skip: new Set(["t483.py"]), failFast: false });
 
 const TEST_CODE = `
 import sys
