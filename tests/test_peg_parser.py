@@ -1148,3 +1148,7 @@ class ASTGenerationTest(unittest.TestCase):
     def run(self, test_result=None):
         self.test_result = test_result
         super().run(test_result)
+
+
+# if __name__ == "__main__":
+# unittest.main()

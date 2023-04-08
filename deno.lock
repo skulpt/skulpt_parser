@@ -536,6 +536,11 @@
     "https://deno.land/x/esbuild@v0.11.10/mod.d.ts": "7b99b06fe1439ecfff9b43c934f2956633f4bab76a22af619b16a19f0e3095b6",
     "https://deno.land/x/esbuild@v0.11.10/mod.js": "3731083557491e6458d6e54b81e4a9ddf268706e907d705f4c5e803ea950c861",
     "https://deno.land/x/esbuild@v0.17.11/mod.d.ts": "dc279a3a46f084484453e617c0cabcd5b8bd1920c0e562e4ea02dfc828c8f968",
-    "https://deno.land/x/esbuild@v0.17.11/mod.js": "4f4e61964a551d9c0baf5bb19e973cf631cf8c66ddaf01e70070f8a100fc938c"
+    "https://deno.land/x/esbuild@v0.17.11/mod.js": "4f4e61964a551d9c0baf5bb19e973cf631cf8c66ddaf01e70070f8a100fc938c",
+    "https://deno.land/x/python@0.2.4/mod.ts": "36292020f3a7e8c9774d5de7fe32e261b3b5ddfbb6689a78bb499014d40baa82",
+    "https://deno.land/x/python@0.2.4/src/ffi.ts": "507237560989233ea5594c64c94425017025e5740891c242bf3c1b818e4531a7",
+    "https://deno.land/x/python@0.2.4/src/python.ts": "dfb1e266cb64acb34cf7ba146d1b38e033c12061c266cab16bc0ef4680abfe35",
+    "https://deno.land/x/python@0.2.4/src/symbols.ts": "2c87cb1a468bea2e36df21c015232d49cf019e12ecd96a53069d9fa26dd60503",
+    "https://deno.land/x/python@0.2.4/src/util.ts": "440bd1d13558c2a826df60f98d8448abe57e40949d91fd73a9a81f10708547ef"
   }
 }
