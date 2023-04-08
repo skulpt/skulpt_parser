@@ -50,7 +50,8 @@ jobs:
               uses: denoland/setup-deno@main
               with:
                   deno-version: v1.x
+            - name: Find Python path
+              run: echo "DENO_PYTHON_PATH=$(which python3.9)" >> $GITHUB_ENV
+
             - name: Run tests
-              run: |
-                  export DENO_PYTHON_PATH="/opt/hostedtoolcache/Python/3.9.16/x64/bin/python3.9"
-                  deno test -A --unstable
+              run: deno test -A --unstable
