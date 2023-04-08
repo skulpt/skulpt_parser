@@ -1008,6 +1008,7 @@ def prepare_test_cases(
 
 
 TEST_IDS, TEST_SOURCES = prepare_test_cases(TEST_CASES)
+TEST_CASES = list(zip(TEST_IDS, TEST_SOURCES))
 
 GOOD_BUT_FAIL_TEST_IDS, GOOD_BUT_FAIL_SOURCES = prepare_test_cases(GOOD_BUT_FAIL_TEST_CASES)
 
