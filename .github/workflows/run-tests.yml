@@ -51,7 +51,9 @@ jobs:
               with:
                   deno-version: v1.x
             - name: Find Python path
-              run: echo "DENO_PYTHON_PATH=$(which python3.9)" >> $GITHUB_ENV
+              run: |
+                  PYTHON_LIB_PATH=$(find /opt/hostedtoolcache/Python/3.9.16 -name "libpython3.9.so")
+                  echo "DENO_PYTHON_PATH=$PYTHON_LIB_PATH" >> $GITHUB_ENV
 
             - name: Run tests
               run: deno test -A --unstable
