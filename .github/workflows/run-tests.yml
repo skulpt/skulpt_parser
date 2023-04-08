@@ -37,21 +37,7 @@ jobs:
             - name: assert clean repo
               run: git diff-index --quiet --cached HEAD --
               working-directory: "./skulpt_parser"
-    run-ast-tests:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.16"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              run: deno task test dump
-              # working-directory: "./skulpt_parser"
-    run-parse-tests:
+    run-tests:
         runs-on: ubuntu-latest
         outputs:
             tests: ${{ steps.run-tests.outputs.test }}
@@ -65,52 +51,4 @@ jobs:
             - uses: actions/checkout@master
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - name: run tests
-              id: run-tests
-              run: |
-                  deno task test parse
-            #       vr test parse > results
-            #       echo "::set-output name=results::$(cat results | grep "test result" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?(;[0-9]{1,2})?)?[mGK]//g")"
-            # - uses: actions/github-script@v4
-            #   if: github.event_name == 'pull_request'
-            #   with:
-            #       script: |
-            #           github.issues.createComment({
-            #             issue_number: context.issue.number,
-            #             owner: context.repo.owner,
-            #             repo: context.repo.repo,
-            #             body: '${{steps.run-tests.outputs.results}}'
-            #           })
-    run-pypeg-tests:
-        runs-on: ubuntu-latest
-        outputs:
-            tests: ${{ steps.run-tests.outputs.test }}
-        steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.16"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              id: run-tests
-              run: |
-                  deno task test pypeg
-    run-symtable-tests:
-        runs-on: ubuntu-latest
-        outputs:
-            tests: ${{ steps.run-tests.outputs.test }}
-        steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.16"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              id: run-tests
-              run: |
-                  deno task test symtable
+              run: deno test -A --unstable
