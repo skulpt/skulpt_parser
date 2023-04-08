@@ -1,161 +1,12 @@
+# slightly amended from python 3.9.13
+# note this file is not available in 3.10+
+
 import ast
 import _peg_parser as peg_parser
 import unittest
-from unittest import TextTestResult, TextTestRunner, TestProgram
 from typing import Any, Union, Iterable, Tuple
 from textwrap import dedent
 from test import support
-
-
-import subprocess
-import os
-import tempfile
-import atexit
-
-COLOR_MAP = {"green": 32, "red": 31, "yellow": 33}
-
-
-class colors:
-    def wrap_color(color):
-        color = color.lower()
-        return lambda text: f"[{COLOR_MAP.get(color, 37)}m" + text + "[39m"
-
-    green = staticmethod(wrap_color("green"))
-    red = staticmethod(wrap_color("red"))
-    yellow = staticmethod(wrap_color("yellow"))
-
-
-if not os.path.isdir("tmp"):
-    os.mkdir("tmp")
-
-TEMP_FILE = tempfile.mktemp(suffix=".txt", dir="./tmp")
-
-
-def exit_handler():
-    os.remove(TEMP_FILE)
-    os.removedirs("tmp")
-
-
-atexit.register(exit_handler)
-
-
-def run_process(source, mode="exec", include_attributes=True):
-    with open(TEMP_FILE, "w+") as f:
-        f.write(source)
-
-    args = [
-        "deno",
-        "run",
-        "--allow-read",
-        "--allow-run",
-        "scripts/parse.ts",
-        TEMP_FILE,
-        "--no_compare",
-        "--mode=" + mode,
-    ]
-    if not include_attributes:
-        args.append("--ignore_attrs")
-
-    run = subprocess.run(
-        args,
-        stderr=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-    )
-    return str(run.stdout or b"", "utf"), str(run.stderr or b"", "utf")
-
-
-# prime deno otherwise we get a weird race condition
-_, err = run_process("x")
-print(colors.red(err))
-
-
-def ts_ast_dump(source, mode="exec", include_attributes=True):
-    dumped, err = run_process(source, mode, include_attributes)
-    if err:
-        raise Exception("".join(err.splitlines(True)[:6]))
-    return dumped.strip()
-
-
-class PegenTestResult(TextTestResult):
-    """A test result class that can print formatted text results to a stream.
-
-    Used by TextTestRunner.
-    """
-
-    def getDescription(self, test):
-        try:
-            msg = test._message[:47]
-            if len(msg) == 47:
-                msg += "..."
-            return f"{msg:<50}   {test.params['source']!s}"
-        except AttributeError:
-            return super().getDescription(test)
-
-    def addSubTest(self, test, subtest, err=None):
-        self.testsRun += 1
-        return super().addSubTest(test, subtest, err)
-
-    def addSuccess(self, test):
-        super(TextTestResult, self).addSuccess(test)
-        # if self.showAll:
-        desc = self.getDescription(test)
-        self.stream.writeln(colors.green("ok   : " + desc))
-
-    def addSubFailure(self, test, err):
-        flavour = "FAIL " if test.failureException is type(err) else "ERROR"
-        if self.showAll:
-            self.printFail(test, err, flavour)
-        else:
-            desc = self.getDescription(test)
-            self.stream.writeln(colors.red(flavour + ": " + desc))
-
-    def printFail(self, test, err, flavour):
-        self.stream.writeln(self.separator1)
-        self.stream.writeln(colors.red("%s: %s" % (flavour, self.getDescription(test))))
-        errlines = str(err).splitlines(True)
-        for i, line in enumerate(errlines):
-            if line.startswith("+"):
-                errlines[i] = colors.green(line)
-            elif line.startswith("-"):
-                errlines[i] = colors.red(line)
-        err = "".join(errlines)
-        self.stream.writeln("%s" % err)
-        self.stream.writeln(self.separator2)
-
-    def printErrorList(self, flavour, errors):
-        # don't print the errors
-        return
-        # if self.showAll or True:
-        #     # don't print these again
-        #     return
-        # for test, err in errors:
-        #     self.printFail(test, err, flavour)
-
-
-class PegenTestRunner(TextTestRunner):
-    resultclass = PegenTestResult
-
-
-## dirty hack to use our test runner
-def wrapRunTests(oldRunTests):
-    def newRunTests(self, *args):
-        self.testRunner = PegenTestRunner
-        return oldRunTests(self, *args)
-
-    return newRunTests
-
-
-TestProgram.runTests = wrapRunTests(TestProgram.runTests)
-
-# these test give incorrect linenos because cpython doesn't handle format specs in fstrings correctly
-# https://bugs.python.org/issue35212
-IGNORE_ATTRS = {
-    "f-string_repr",
-    "f-string_str",
-    "f-string_ascii",
-    "f-string_debug",
-    "f-string_padding",
-}
 
 
 TEST_CASES = [
@@ -426,11 +277,6 @@ TEST_CASES = [
     ("f-string_doublestarred", "f'{ {**x} }'"),
     ("f-string_escape_brace", "f'{{Escape'"),
     ("f-string_escape_closing_brace", "f'Escape}}'"),
-    ("f-string_repr", "f'{a!r}'"),
-    ("f-string_str", "f'{a!s}'"),
-    ("f-string_ascii", "f'{a!a}'"),
-    ("f-string_debug", "f'{a=}'"),
-    ("f-string_padding", "f'{a:03d}'"),
     (
         "f-string_multiline",
         """
@@ -900,10 +746,7 @@ FAIL_TEST_CASES = [
 ]
 
 FAIL_SPECIALIZED_MESSAGE_CASES = [
-    (
-        "f(x, y, z=1, **b, *a",
-        "iterable argument unpacking follows keyword argument unpacking",
-    ),
+    ("f(x, y, z=1, **b, *a", "iterable argument unpacking follows keyword argument unpacking"),
     ("f(x, y=1, *z, **a, b", "positional argument follows keyword argument unpacking"),
     ("f(x, y, z=1, a=2, b", "positional argument follows keyword argument"),
     ("True = 1", "cannot assign to True"),
@@ -921,14 +764,8 @@ FAIL_SPECIALIZED_MESSAGE_CASES = [
     ("lambda *,: pass", "named arguments must follow bare *"),
     ("lambda *, **a: pass", "named arguments must follow bare *"),
     ("f(g()=2", 'expression cannot contain assignment, perhaps you meant "=="?'),
-    (
-        "f(a, b, *c, d.e=2",
-        'expression cannot contain assignment, perhaps you meant "=="?',
-    ),
-    (
-        "f(*a, **b, c=0, d[1]=3)",
-        'expression cannot contain assignment, perhaps you meant "=="?',
-    ),
+    ("f(a, b, *c, d.e=2", 'expression cannot contain assignment, perhaps you meant "=="?'),
+    ("f(*a, **b, c=0, d[1]=3)", 'expression cannot contain assignment, perhaps you meant "=="?'),
 ]
 
 GOOD_BUT_FAIL_TEST_CASES = [
@@ -999,7 +836,6 @@ def cleanup_source(source: Any) -> str:
 def prepare_test_cases(
     test_cases: Iterable[Tuple[str, Union[str, Iterable[str]]]]
 ) -> Tuple[Iterable[str], Iterable[str]]:
-
     test_ids, _test_sources = zip(*test_cases)
     test_sources = list(_test_sources)
     for index, source in enumerate(test_sources):
@@ -1016,136 +852,74 @@ FAIL_TEST_IDS, FAIL_SOURCES = prepare_test_cases(FAIL_TEST_CASES)
 
 EXPRESSIONS_TEST_IDS, EXPRESSIONS_TEST_SOURCES = prepare_test_cases(EXPRESSIONS_TEST_CASES)
 
+FSTRING_TEST_CASES = [(name, item[0]) for name, item in FSTRINGS_TRACEBACKS.items()]
+FSTRING_TEST_IDS, FSTRING_TEST_SOURCES = prepare_test_cases(FSTRING_TEST_CASES)
+
 
 class ASTGenerationTest(unittest.TestCase):
-    testRunner = PegenTestRunner
-    maxDiff = None
-
-    def ast_runner(self, desc, source, mode="exec"):
-        with self.subTest(desc, source=source):
-            include_attributes = desc not in IGNORE_ATTRS
-            try:
-                actual_ast_dump = ts_ast_dump(source, mode=mode, include_attributes=include_attributes)
-            except Exception as e:
-                self.test_result.addSubFailure(self._subtest, e)
-                raise e
-
-            expected_ast = peg_parser.parse_string(source, mode=mode)
-            expected_ast_dump = ast.dump(expected_ast, include_attributes=include_attributes, indent=2)
-            try:
-                self.assertEqual(
-                    actual_ast_dump,
-                    expected_ast_dump,
-                    colors.yellow(f"\nWrong AST generation for source: {source}"),
-                )
-                self.test_result.addSuccess(self._subtest)
-            except Exception as e:
-                self.test_result.addSubFailure(self._subtest, e)
-                raise e
-
-    def ast_fail_runner(self, desc, source, mode="exec", exc=None, msg="", error_text=None, error_line=None):
-        with self.subTest(desc, source=source):
-            # with self.assertRaises(exc, msg=msg) as e:
-            err = None
-            err_type = None
-            try:
-                ts_ast_dump(source, mode=mode)
-            except Exception as e:
-                as_str = str(e)
-                lines = as_str.split("\n")
-                _, _type, _msg = lines[0].split(": ", 2)
-                _type = _type.replace("Uncaught ", "")
-                err_type = __builtins__.get(_type)
-                file, lineno, col_offset, line = lines[1].split(",", 3)
-                line += "\n"
-                if err_type is not None and issubclass(err_type, exc):
-                    err = err_type(_msg)
-                else:
-                    err = e
-            if err is None:
-                err = AssertionError(msg or f"{exc.__name__} not raised")
-                self.test_result.addSubFailure(self._subtest, err)
-                raise err
-            elif not isinstance(err, exc):
-                self.test_result.addSubFailure(
-                    self._subtest,
-                    AssertionError(f"{exc.__name__} not raised got:\n{err}"),
-                )
-                raise err
-
-            self.test_result.addSuccess(self._subtest)
-
-            if error_text is not None:
-                with self.subTest("checking error text for", source=source):
-                    try:
-                        self.assertTrue(
-                            error_text in str(err),
-                            f"Actual error message does not match expexted for {source}\ngot   : {str(err)}\nwanted: {error_text}",
-                        )
-                        self.test_result.addSuccess(self._subtest)
-                    except Exception as e:
-                        self.test_result.addSubFailure(self._subtest, e)
-                        raise e
-            if error_line is not None:
-                with self.subTest("checking error line for", source=source):
-                    try:
-                        self.assertTrue(
-                            error_line == line,
-                            f"Actual error line does not match expexted for {source}\ngot   : {line}\nwanted: {error_line}",
-                        )
-                        self.test_result.addSuccess(self._subtest)
-                    except Exception as e:
-                        self.test_result.addSubFailure(self._subtest, e)
-                        raise e
-
     def test_correct_ast_generation_on_source_files(self) -> None:
-        print()
-        for desc, source in zip(TEST_IDS, TEST_SOURCES):
-            self.ast_runner(desc, source)
+        self.maxDiff = None
+        for source in TEST_SOURCES:
+            actual_ast = peg_parser.parse_string(source)
+            expected_ast = peg_parser.parse_string(source, oldparser=True)
+            self.assertEqual(
+                ast.dump(actual_ast, include_attributes=True),
+                ast.dump(expected_ast, include_attributes=True),
+                f"Wrong AST generation for source: {source}",
+            )
 
     def test_incorrect_ast_generation_on_source_files(self) -> None:
-        for desc, source in zip(FAIL_TEST_IDS, FAIL_SOURCES):
-            self.ast_fail_runner(
-                desc,
-                source,
-                exc=SyntaxError,
-                msg=f"Parsing {source} did not raise an exception",
-            )
+        for source in FAIL_SOURCES:
+            with self.assertRaises(SyntaxError, msg=f"Parsing {source} did not raise an exception"):
+                peg_parser.parse_string(source)
 
     def test_incorrect_ast_generation_with_specialized_errors(self) -> None:
         for source, error_text in FAIL_SPECIALIZED_MESSAGE_CASES:
             exc = IndentationError if "indent" in error_text else SyntaxError
-            self.ast_fail_runner(error_text, source, exc=exc, error_text=error_text)
+            with self.assertRaises(exc) as se:
+                peg_parser.parse_string(source)
+            self.assertTrue(
+                error_text in se.exception.msg, f"Actual error message does not match expexted for {source}"
+            )
 
-    # @unittest.expectedFailure
-    # def test_correct_but_known_to_fail_ast_generation_on_source_files(self) -> None:
-    #     # failure is because the attributes don't match
-    #     print()
-    #     for desc, source in zip(GOOD_BUT_FAIL_TEST_IDS, GOOD_BUT_FAIL_SOURCES):
-    #         self.ast_runner(desc, source)
+    @unittest.expectedFailure
+    def test_correct_but_known_to_fail_ast_generation_on_source_files(self) -> None:
+        for source in GOOD_BUT_FAIL_SOURCES:
+            actual_ast = peg_parser.parse_string(source)
+            expected_ast = peg_parser.parse_string(source, oldparser=True)
+            self.assertEqual(
+                ast.dump(actual_ast, include_attributes=True),
+                ast.dump(expected_ast, include_attributes=True),
+                f"Wrong AST generation for source: {source}",
+            )
 
     def test_correct_ast_generation_without_pos_info(self) -> None:
-        print()
-        for desc, source in zip(GOOD_BUT_FAIL_TEST_IDS, GOOD_BUT_FAIL_SOURCES):
-            self.ast_runner(desc, source)
+        for source in GOOD_BUT_FAIL_SOURCES:
+            actual_ast = peg_parser.parse_string(source)
+            expected_ast = peg_parser.parse_string(source, oldparser=True)
+            self.assertEqual(
+                ast.dump(actual_ast),
+                ast.dump(expected_ast),
+                f"Wrong AST generation for source: {source}",
+            )
 
     def test_fstring_parse_error_tracebacks(self) -> None:
-        exc = SyntaxError
-        for source, error_line in FSTRINGS_TRACEBACKS.values():
-            self.ast_fail_runner(error_line, dedent(source), exc=exc, error_line=error_line)
+        for source, error_text in FSTRINGS_TRACEBACKS.values():
+            with self.assertRaises(SyntaxError) as se:
+                peg_parser.parse_string(dedent(source))
+            self.assertEqual(error_text, se.exception.text)
 
     def test_correct_ast_generatrion_eval(self) -> None:
-        print()
-        for desc, source in zip(EXPRESSIONS_TEST_IDS, EXPRESSIONS_TEST_SOURCES):
-            self.ast_runner(desc, source, mode="eval")
+        for source in EXPRESSIONS_TEST_SOURCES:
+            actual_ast = peg_parser.parse_string(source, mode="eval")
+            expected_ast = peg_parser.parse_string(source, mode="eval", oldparser=True)
+            self.assertEqual(
+                ast.dump(actual_ast, include_attributes=True),
+                ast.dump(expected_ast, include_attributes=True),
+                f"Wrong AST generation for source: {source}",
+            )
 
-    # @TODO
-    @unittest.skip("Syntax Errors not yet implemented")
     def test_tokenizer_errors_are_propagated(self) -> None:
         n = 201
         with self.assertRaisesRegex(SyntaxError, "too many nested parentheses"):
             peg_parser.parse_string(n * "(" + ")" * n)
-
-    def run(self, test_result=None):
-        self.test_result = test_result
-        super().run(test_result)

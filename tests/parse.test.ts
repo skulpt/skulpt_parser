@@ -9,7 +9,7 @@ import { runTests } from "./run_tests_helper.ts";
 const options = { indent: 2, include_attributes: true };
 
 async function doTest(source: string) {
-    const pyDump = await getPyAstDump(source, options);
+    const pyDump = getPyAstDump(source, options);
     const jsAST = runParserFromString(source);
     const jsDump = jsAST === null ? "null" : dump(jsAST, options);
     assertEqualsString(jsDump, pyDump);

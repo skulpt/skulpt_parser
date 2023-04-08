@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * This file is based on ast_opt.c from cpython: https://github.com/python/cpython/blob/v3.9.5/Python/ast_opt.c
+ * This file is based on ast_opt.c from cpython: https://github.com/python/cpython/blob/v3.9.16/Python/ast_opt.c
  * and optimize.py from pypy:  https://github.com/mozillazg/pypy/blob/master/pypy/interpreter/astcompiler/optimize.py
  */
 import type { AST, BinOp, BoolOp, cmpop, Compare, expr, mod, Subscript, Tuple, UnaryOp } from "./astnodes.ts";

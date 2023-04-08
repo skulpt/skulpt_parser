@@ -12,7 +12,7 @@ if (!validShortnames.includes(test as string)) {
     throw new AssertionError(
         Colors.bgRed(
             Colors.white(
-                "Unrecognised shortname for 'vr test', expected one of " +
+                "Unrecognised shortname for 'deno task test', expected one of " +
                     [...validShortnames].map((name) => `'${name}'`).join(", ")
             )
         )
@@ -24,16 +24,7 @@ switch (test) {
         extra.push("tests/parse.test.ts");
         break;
     case "pypeg": {
-        const res = await Deno.run({
-            cmd: [
-                "python",
-                "-m",
-                "unittest",
-                "tests/test_peg_parser.py",
-                ...Deno.args.filter((arg) => arg !== "pypeg"),
-            ],
-        }).status();
-        Deno.exit(res.code);
+        extra.push("tests/peg_parser.test.ts");
         break; // just to keep ts happy
     }
     case "symtable":
@@ -52,13 +43,13 @@ if (args["f"]) {
 }
 
 /** set this in Deno env which other test files can retrieve
- * example use: `vr test parse 1`
+ * example use: `deno task test parse 1`
  */
 const files = args._.filter((x) => typeof x === "number").map((x) => `t${x.toString().padStart(3, "0")}.py`);
 Deno.env.set("_TESTFILES", JSON.stringify(files));
 
 const cmd = Deno.run({
-    cmd: ["deno", "test", "--allow-read", "--allow-run", "--allow-env", ...extra],
+    cmd: ["deno", "test", "--allow-read", "--allow-run", "--allow-env", "--allow-ffi", "--unstable", ...extra],
 });
 
 const result = await cmd.status();

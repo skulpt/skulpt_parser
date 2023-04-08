@@ -1,28 +1,6 @@
 import ast
-import argparse
-
-parser = argparse.ArgumentParser(description="Dump AST from file to file")
-
-parser.add_argument("content", type=str, help="source to be parsed")
-parser.add_argument("--indent", type=int, default=None, required=False, help="indent")
-parser.add_argument("--attrs", type=int, default=0, required=False, help="show attrs")
-parser.add_argument(
-    "--js",
-    type=int,
-    default=0,
-    required=False,
-    help="are we generating js sanitized version",
-)
-parser.add_argument("--mode", type=str, default="exec", required=False, help="mode")
-
-args = parser.parse_args()
-mode = args.mode
-
-parsed = ast.parse(args.content, mode=mode)
-indent = args.indent if args.indent != -1 else None
 
 
-# We need null values to fill empty fields
 class Null:
     def __repr__(self):
         return "null"
@@ -50,7 +28,6 @@ class jsVisitor(ast.NodeTransformer):
             elif isinstance(old_value, ast.AST):
                 fields.append(self.visit(old_value))
             elif isinstance(old_value, list):
-
                 fields.append(
                     list(
                         map(
@@ -68,7 +45,8 @@ class jsVisitor(ast.NodeTransformer):
             raise
 
 
-if args.js:
-    parsed = jsVisitor().generic_visit(parsed)
-
-print(ast.dump(parsed, annotate_fields=not args.js, include_attributes=args.attrs, indent=indent), end="")
+def dump(source, include_attributes=False, js=False, indent=None, mode="exec"):
+    parsed = ast.parse(source, mode=mode)
+    if js:
+        parsed = jsVisitor().generic_visit(parsed)
+    return ast.dump(parsed, annotate_fields=not js, include_attributes=include_attributes, indent=indent)

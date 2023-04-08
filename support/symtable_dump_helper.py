@@ -1,15 +1,6 @@
 from symtable import Class, Function, Symbol, SymbolTable, symtable
 from typing import Mapping, Union, cast
 import json
-import argparse
-
-parser = argparse.ArgumentParser(description="Dump SymbolTable from input to stdout")
-
-parser.add_argument("content", type=str, help="source to be parsed")
-
-args = parser.parse_args()
-
-table = symtable(args.content, "<stdin>", "exec")
 
 
 def symbol_to_dict(symbol: Symbol):
@@ -60,4 +51,6 @@ def table_to_dict(table: SymbolTable) -> Mapping[str, Union[str, int, bool]]:
     return res
 
 
-print(json.dumps(table_to_dict(table), indent=2), end="")
+def dump(content):
+    table = symtable(content, "<stdin>", "exec")
+    return json.dumps(table_to_dict(table), indent=2)

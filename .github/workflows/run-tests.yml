@@ -18,14 +18,13 @@ jobs:
             - uses: denoland/setup-deno@v1
               with:
                   deno-version: v1.x
-            - uses: jurassiscripts/setup-velociraptor@v1
             - uses: actions/setup-python@v2
               with:
-                  python-version: "3.9.5"
+                  python-version: "3.9.16"
             - uses: actions/checkout@master
               with:
                   repository: python/cpython
-                  ref: "v3.9.5"
+                  ref: "v3.9.16"
                   path: cpython
             - uses: actions/checkout@master
               with:
@@ -33,89 +32,28 @@ jobs:
             - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
             - run: pip install --user pre-commit
             - name: build parser
-              run: vr gen_parser
+              run: deno task gen-parser
               working-directory: "./skulpt_parser"
             - name: assert clean repo
               run: git diff-index --quiet --cached HEAD --
               working-directory: "./skulpt_parser"
-    run-ast-tests:
+    run-tests:
         runs-on: ubuntu-latest
         steps:
-            - uses: denoland/setup-deno@v1
+            - name: Check out repository
+              uses: actions/checkout@v2
+            - name: Set up Python 3.9.16
+              uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9.16"
+            - name: Set up Deno
+              uses: denoland/setup-deno@main
               with:
                   deno-version: v1.x
-            - uses: jurassiscripts/setup-velociraptor@v1
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.5"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              run: vr test dump
-              # working-directory: "./skulpt_parser"
-    run-parse-tests:
-        runs-on: ubuntu-latest
-        outputs:
-            tests: ${{ steps.run-tests.outputs.test }}
-        steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: jurassiscripts/setup-velociraptor@v1
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.5"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              id: run-tests
+            - name: Find Python path
               run: |
-                  vr test parse
-            #       vr test parse > results
-            #       echo "::set-output name=results::$(cat results | grep "test result" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?(;[0-9]{1,2})?)?[mGK]//g")"
-            # - uses: actions/github-script@v4
-            #   if: github.event_name == 'pull_request'
-            #   with:
-            #       script: |
-            #           github.issues.createComment({
-            #             issue_number: context.issue.number,
-            #             owner: context.repo.owner,
-            #             repo: context.repo.repo,
-            #             body: '${{steps.run-tests.outputs.results}}'
-            #           })
-    run-pypeg-tests:
-        runs-on: ubuntu-latest
-        outputs:
-            tests: ${{ steps.run-tests.outputs.test }}
-        steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: jurassiscripts/setup-velociraptor@v1
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.5"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              id: run-tests
-              run: |
-                  vr test pypeg
-    run-symtable-tests:
-        runs-on: ubuntu-latest
-        outputs:
-            tests: ${{ steps.run-tests.outputs.test }}
-        steps:
-            - uses: denoland/setup-deno@v1
-              with:
-                  deno-version: v1.x
-            - uses: jurassiscripts/setup-velociraptor@v1
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: "3.9.5"
-            - uses: actions/checkout@master
-            - run: echo "$HOME/.deno/bin" >> $GITHUB_PATH
-            - name: run tests
-              id: run-tests
-              run: |
-                  vr test symtable
+                  PYTHON_LIB_PATH=$(find /opt/hostedtoolcache/Python/3.9.16 -name "libpython3.9.so")
+                  echo "DENO_PYTHON_PATH=$PYTHON_LIB_PATH" >> $GITHUB_ENV
+
+            - name: Run tests
+              run: deno test -A --unstable
