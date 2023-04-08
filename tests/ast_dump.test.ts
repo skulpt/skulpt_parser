@@ -10,7 +10,7 @@ const unEscape = { n: "\n", r: "\r", t: "\t", "\\": "\\", "'": "'", '"': '"' };
 
 /** helper function to generate an ast tree that can be converted in typescript - you'll need to add in missing null values */
 async function convertToTs(content: string): Promise<string> {
-    let pyAstDump = await getPyAstDump(content, { indent: 4, include_attributes: true, js: true });
+    let pyAstDump = getPyAstDump(content, { indent: 4, include_attributes: true, js: true });
     pyAstDump = pyAstDump
         .replace(/^(\s+)([a-z_]+=)/gm, (_m, m1, m2) => m1 + " ".repeat(m2.length))
         .replace(/^(\s*)([A-Za-z_]+)/gm, (_m, m1, m2) => {

@@ -8,7 +8,7 @@
         "apply-grammar-patch": "cd ../cpython/Grammar && git checkout -- python.gram && git apply ../../skulpt_parser/tools/patch/grammar.patch",
         "gen-grammar-patch": "cd ../cpython/Grammar && git diff -- python.gram -p > ../../skulpt_parser/tools/patch/grammar.patch",
         "symtable": "deno run --allow-read --allow-run scripts/symtable.ts",
-        "test": "deno run --allow-read --allow-run --allow-env scripts/test.ts",
+        "test": "deno run --allow-read --allow-run --allow-env --allow-ffi --unstable scripts/test.ts",
         "parse": "deno run --allow-read --allow-run scripts/parse.ts",
         "parse-str": "deno run --allow-read --allow-run --allow-write scripts/parse_str.ts",
         "bench": "deno run --allow-read --allow-run --allow-write scripts/bench.ts"

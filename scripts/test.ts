@@ -24,16 +24,7 @@ switch (test) {
         extra.push("tests/parse.test.ts");
         break;
     case "pypeg": {
-        const res = await Deno.run({
-            cmd: [
-                "python",
-                "-m",
-                "unittest",
-                "tests/test_peg_parser.py",
-                ...Deno.args.filter((arg) => arg !== "pypeg"),
-            ],
-        }).status();
-        Deno.exit(res.code);
+        extra.push("tests/peg_parser.test.ts");
         break; // just to keep ts happy
     }
     case "symtable":
@@ -58,7 +49,7 @@ const files = args._.filter((x) => typeof x === "number").map((x) => `t${x.toStr
 Deno.env.set("_TESTFILES", JSON.stringify(files));
 
 const cmd = Deno.run({
-    cmd: ["deno", "test", "--allow-read", "--allow-run", "--allow-env", ...extra],
+    cmd: ["deno", "test", "--allow-read", "--allow-run", "--allow-env", "--allow-ffi", "--unstable", ...extra],
 });
 
 const result = await cmd.status();

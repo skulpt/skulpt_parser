@@ -5,7 +5,7 @@
 import { dump } from "../support/ast_dump.ts";
 import { parse } from "../deps.ts";
 import { getPyAstDump } from "../support/py_ast_dump.ts";
-import { runParserFromFile } from "../src/parser/mod.ts";
+import { ModeStr, runParserFromFile } from "../src/parser/mod.ts";
 import type { expr, mod } from "../src/ast/astnodes.ts";
 import { doCompare, getFileNameOrRunTest } from "./helpers.ts";
 import { switchVersion } from "../src/util/switch_version.ts";
@@ -39,4 +39,4 @@ if (noCompare || py2) {
     console.log(jsDump);
     Deno.exit();
 }
-await doCompare(jsDump, filename, (source) => getPyAstDump(source, options, mode));
+await doCompare(jsDump, filename, (source) => getPyAstDump(source, options, mode as ModeStr));
